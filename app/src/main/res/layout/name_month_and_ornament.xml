@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="com.artmaster.android.orthodoxcalendar.common.OrtUtils" />
+
+        <variable
+            name="holiday"
+            type="com.artmaster.android.orthodoxcalendar.domain.HolidayEntity" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/nameMonthAndOrnament"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/ornament_for_headers_left"
+            android:textColor="@color/colorRed"
+            app:customFont="ornament.ttf" />
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:id="@+id/monthName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{holiday.day+" "+OrtUtils.getMonthName(context, holiday.month)}'
+            android:textAlignment="center"
+            android:textSize="@dimen/size_text_basic"
+            app:customFont="@string/font_basic" />
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="@string/ornament_for_headers_right"
+            android:textColor="@color/colorRed"
+            app:customFont="ornament.ttf" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1054686371225",
+    "firebase_url": "https://orthodox-calendar-ecce0.firebaseio.com",
+    "project_id": "orthodox-calendar-ecce0",
+    "storage_bucket": "orthodox-calendar-ecce0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054686371225:android:a7714a262dcc47c0",
+        "android_client_info": {
+          "package_name": "com.artmaster.android.orthodoxcalendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054686371225-tp29u04jmnn9km56vra5nqn94qu38lo4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-YRpz1LkvPd8VjHGt8Z-MWIqKYJwIW3U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

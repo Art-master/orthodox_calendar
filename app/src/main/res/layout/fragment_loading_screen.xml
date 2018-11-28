@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/loading_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/window_background"
+    android:orientation="vertical">
+
+    <com.artmaster.android.orthodoxcalendar.data.text_style.CustomizableTextView
+        android:id="@+id/loadingScreenText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.5"
+        android:textAlignment="center"
+        android:textColor="@color/colorBasicFont"
+        android:textSize="@dimen/size_text_for_loading_string"
+        app:customFont="@string/font_church_slavonic" />
+</android.support.v7.widget.LinearLayoutCompat>

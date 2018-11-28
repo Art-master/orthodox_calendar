@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="buttonOk">Слава Богу</string>
+    <string name="fatalErrorHeader">Системная ошибка</string>
+    <string name="fatalErrorText">Ошибка загрузки данных. \n Переустановите приложение и попробуйте снова</string>
+</resources>

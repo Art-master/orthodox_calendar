@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Православный календарь</string>
+
+    <!--ornament for ornament font-->
+    <string name="ornament_for_headers_left">A</string>
+    <string name="ornament_for_headers_right">a</string>
+    <string name="ornament_for_name_date_left">v</string>
+    <string name="ornament_for_name_date_right">V</string>
+
+    <!--name item for toolbar -->
+    <string name="item_name_about">о сем творении</string>
+    <string name="item_name_settings">настройки</string>
+    <string name="toolbar_header">&lt; %1$d &gt;</string>
+    <string name="toolbar_header_arrow_right">    %1$d &gt;</string>
+    <string name="toolbar_header_arrow_left">&lt; %1$d     </string>
+
+    <string name="new_style_date_string">по новому стилю</string>
+    <string name="old_style_date_string">по старому стилю</string>
+
+    <!--Settings-->
+    <string name="check_box_sett_typycon_icon">показывать знаки типикона</string>
+    <string name="check_box_allow_average_holidays">показывать средние праздники</string>
+    <string name="text_view_sett_time_notification">напоминать о праздниках за:</string>
+    <string name="text_view_sett_time_notification_all">напоминать о праздниках</string>
+    <string name="text_view_hours">дн.</string>
+    <string name="edit_text_time_notification">24</string>
+    <string name="check_box_allow_image_grayscale">черно-белые изображения</string>
+
+    <!--Tipicon image code-->
+    <string name="head_holiday">^</string>
+    <string name="twelve_movable_holiday">^</string>
+    <string name="twelve_not_movable_holiday">^</string>
+    <string name="average">^</string>
+    <string name="average_polyleic_holiday">$</string>
+    <string name="average_peppy_holiday">%</string>
+
+    <!--notification text-->
+    <string name="notif_holiday_today">Сегодня праздник </string>
+    <string name="notif_holiday_tomorrow">Завтра отмечают праздник </string>
+    <string name="notif_holiday_later"> отмечают праздник </string>
+    <string name="text_view_about_app_email">ggn.master@gmail.com</string>
+
+    <!--the app load string-->
+    <string name="loading_data_string0">\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</string>
+    <string name="loading_data_string1">\"Воззови ко Мне - и Я отвечу тебе, \n покажу тебе великое и недоступное, \n чего ты не знаешь.\" \n (Иер.33:3)</string>
+    <string name="loading_data_string2">\"Утешайся Господом,\n и Он  исполнит желание \n сердца твоего.\" \n (Пс.37:4)</string>
+    <string name="loading_data_string3">\"Ищите же прежде \n Царства Божия\n и правды Его,\n и это все\n приложится вам.\" \n (Мф. 6:33)</string>
+    <string name="loading_data_string4">\"..какой мерой отмерите,\n такой же\n отмерится и вам.\" \n (Лк.6:38)</string>
+    <string name="loading_data_string5">\"Просите и воздастся вам,\n ищите и найдёте.\"\n (Мф.7:7)</string>
+    <string name="loading_data_string6">\"Блаженны, изгнанные\n за правду,\n ибо их есть\n  Царство Небесное.\"\n (Мф.5:10)</string>
+    <string name="loading_data_string7">\"Много званых,\n  но мало избранных.\"\n (Лк.14:24)</string>
+    <string name="loading_data_string8">\"Терпением вашим\n спасайте души ваши.\"\n (Лк.21:19)</string>
+    <string name="loading_data_string9">\"Блаженны чистые сердцем,\n ибо они Бога узрят.\"\n (Лк.21:19)</string>
+</resources>
