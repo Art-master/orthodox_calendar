@@ -41,6 +41,11 @@ object Time {
             return calendar
         }
 
+
+    fun calculateDate(year: Int, month: Int, day: Int, param: Int, dateCalc: Int): Calendar {
+        return calculateDate(year, month, day, 0, param, dateCalc)
+    }
+
     /**
      * Calculate date
      * @param month begin with 0
@@ -48,10 +53,10 @@ object Time {
      * @param dateCalc calculated data (num days or hours or other) May be minus in value
      * @return calendar object
      */
-    fun calculateDate(year: Int, month: Int, day: Int, param: Int, dateCalc: Int): Calendar {
+    fun calculateDate(year: Int, month: Int, day: Int, hour: Int, param: Int, dateCalc: Int): Calendar {
         val calendar = Calendar.getInstance()
         calendar.timeZone = TimeZone.getDefault()
-        calendar.set(year, month, day)
+        calendar.set(year, month, day, hour, 0)
         calendar.add(param, dateCalc)
         return calendar
     }
