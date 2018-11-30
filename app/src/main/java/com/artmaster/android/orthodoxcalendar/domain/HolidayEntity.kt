@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
 class HolidayEntity : Comparable<HolidayEntity> {
 
     @PrimaryKey(autoGenerate = true)
-    var id = 0
+    var id = 0L
 
     var uuid = ""
 
