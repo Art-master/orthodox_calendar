@@ -21,6 +21,7 @@ class Constants {
         const val DATABASE_FILE_NAME = "holidays.db"
         const val FONT_ASSETS_DIRECTORY = "fonts/"
         const val SETTINGS_FILE_NAME = "calendar_settings"
+        const val LOADING_ANIMATION = 3000
     }
 }
 
