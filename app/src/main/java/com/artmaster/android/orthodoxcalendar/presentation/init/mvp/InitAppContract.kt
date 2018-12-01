@@ -13,9 +13,7 @@ interface InitAppContract {
         fun nextScreen()
     }
 
-    interface Presenter : AppPresenter<View> {
-        fun loadingScreenIsShowed()
-    }
+    interface Presenter : AppPresenter<View>
 
     interface Model : AppModel {
         fun getDataFromFile(): List<HolidayEntity>

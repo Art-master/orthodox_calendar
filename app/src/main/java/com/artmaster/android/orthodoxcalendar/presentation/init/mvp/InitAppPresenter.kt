@@ -10,6 +10,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class InitAppPresenter(
         private var appPreferences: CalendarPreferences,
@@ -17,7 +18,11 @@ class InitAppPresenter(
         AbstractAppPresenter<InitAppContract.View>(), InitAppContract.Presenter {
 
     override fun viewIsReady() {
-        Single.fromCallable { getData() }
+        Single.fromCallable {
+            getData()
+            getView().showLoadingScreen()
+        }
+                .delay(6000L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -26,10 +31,6 @@ class InitAppPresenter(
                             it.printStackTrace()
                             getView().showErrorMassage(Message.ERROR.INIT_DATABASE)
                         })
-    }
-
-    override fun loadingScreenIsShowed() {
-        getView().nextScreen()
     }
 
     private fun getData(): List<HolidayEntity> {

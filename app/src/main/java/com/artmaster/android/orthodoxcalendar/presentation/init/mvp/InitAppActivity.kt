@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.presentation.init.mvp
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.data.MassageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.presentation.calendar.mvp.CalendarListActivity
@@ -19,12 +20,16 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_init_app)
 
         presenter.attachView(this)
         presenter.viewIsReady()
     }
 
     override fun showLoadingScreen() {
+        val fm = supportFragmentManager
+        val fr = LoadingScreenFragment()
+        fm.beginTransaction().add(R.id.activity_init, fr).commit()
     }
 
     override fun showErrorMassage(msgType: Message.ERROR) {
