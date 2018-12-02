@@ -33,15 +33,20 @@ class CalendarListActivity : AppCompatActivity(), CalendarListContract.View {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_calendar)
+        setSupportActionBar(findViewById(R.id.toolbar))
 
         presenter.attachView(this)
         presenter.viewIsReady()
     }
 
     override fun showActionBar() {
+        supportActionBar!!.show()
     }
 
     override fun hideActionBar() {
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.hide()
+
     }
 
     override fun showHolidayList() {

@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.presentation.init.mvp
 
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.Settings
@@ -22,7 +23,7 @@ class InitAppPresenter(
             getData()
             getView().showLoadingScreen()
         }
-                .delay(6000L, TimeUnit.MILLISECONDS)
+                .delay(Constants.LOADING_ANIMATION.toLong().shl(1), TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(

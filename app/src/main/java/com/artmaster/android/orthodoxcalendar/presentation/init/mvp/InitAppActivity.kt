@@ -7,6 +7,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.data.MassageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.presentation.calendar.mvp.CalendarListActivity
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -17,10 +18,14 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     @Inject
     lateinit var presenter: InitAppContract.Presenter
 
+    lateinit var bundle: Bundle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_init_app)
+
+        bundle = savedInstanceState ?: Bundle.EMPTY
 
         presenter.attachView(this)
         presenter.viewIsReady()
@@ -29,7 +34,12 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     override fun showLoadingScreen() {
         val fm = supportFragmentManager
         val fr = LoadingScreenFragment()
-        fm.beginTransaction().add(R.id.activity_init, fr).commit()
+        fr.retainInstance = false
+        if (bundle.isEmpty) {
+            fm.beginTransaction().add(R.id.activity_init, fr).commit()
+        } else {
+            fr.onDestroy()
+        }
     }
 
     override fun showErrorMassage(msgType: Message.ERROR) {
