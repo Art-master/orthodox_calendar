@@ -32,7 +32,7 @@
                     android:pathPrefix="/jobs" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.init.mvp.InitAppActivity" />
-        <activity android:name=".presentation.calendar.mvp.CalendarListActivity" />
+        <activity android:name=".ui.init.mvp.InitAppActivity" />
+        <activity android:name=".ui.calendar.mvp.CalendarListActivity" />
     </application>
 </manifest>

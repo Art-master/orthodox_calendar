@@ -2,12 +2,12 @@ package com.artmaster.android.orthodoxcalendar.data.di
 
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.di.CalendarActivityModule
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.di.CalendarActivityScope
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.mvp.CalendarListActivity
-import com.artmaster.android.orthodoxcalendar.presentation.init.di.InitAppActivityModule
-import com.artmaster.android.orthodoxcalendar.presentation.init.di.InitAppActivityScope
-import com.artmaster.android.orthodoxcalendar.presentation.init.mvp.InitAppActivity
+import com.artmaster.android.orthodoxcalendar.ui.calendar.di.CalendarActivityModule
+import com.artmaster.android.orthodoxcalendar.ui.calendar.di.CalendarActivityScope
+import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityModule
+import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityScope
+import com.artmaster.android.orthodoxcalendar.ui.init.mvp.InitAppActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

@@ -10,9 +10,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:background="@color/window_background"
         android:elevation="3dp"
-        android:layout_gravity="top"
         android:minHeight="?attr/actionBarSize">
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
@@ -24,10 +24,9 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recyclerView"
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/menu_fragments_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/window_background" />
+        android:layout_height="wrap_content" />
 
 </android.support.v7.widget.LinearLayoutCompat>

@@ -50,15 +50,15 @@ class CustomizableTextView : AppCompatTextView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
         CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+                R.styleable.customizableView,
+                R.styleable.customizableView_customFont)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
         init()
         CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+                R.styleable.customizableView,
+                R.styleable.customizableView_customFont)
     }
 
     private fun init() {
