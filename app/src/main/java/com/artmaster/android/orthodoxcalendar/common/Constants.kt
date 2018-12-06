@@ -23,5 +23,10 @@ class Constants {
         const val SETTINGS_FILE_NAME = "calendar_settings"
         const val LOADING_ANIMATION = 3000
     }
+
+    enum class Keys constructor(private val value: String) {
+        HOLIDAY_ID("com.artmaster.android.orthodoxcalendar.common.holiday_id"),
+        HOLIDAY("com.artmaster.android.orthodoxcalendar.common.holiday"),
+    }
 }
 

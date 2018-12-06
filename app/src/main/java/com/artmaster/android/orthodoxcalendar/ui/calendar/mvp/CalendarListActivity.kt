@@ -9,7 +9,8 @@ import com.artmaster.android.orthodoxcalendar.R
 import kotlinx.android.synthetic.main.activity_calendar.*
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import com.artmaster.android.orthodoxcalendar.data.MassageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
+import com.artmaster.android.orthodoxcalendar.ui.MassageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
@@ -95,12 +96,6 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentInjector
-    }
-
-    private fun checkFragment(element: Any): Fragment {
-        if (element is Fragment) {
-            return element
-        } else throw TypeCastException()
     }
 
     private fun showFragment(fragment: Fragment) {

@@ -17,8 +17,7 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfo
 /**
  * Fragment, what show info app
  */
-
-class FragmentAboutApp : Fragment(), AppInfoView {
+class FragmentAppInfo : Fragment(), AppInfoView {
     lateinit var spannableString: SpannableString
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,13 +45,6 @@ class FragmentAboutApp : Fragment(), AppInfoView {
         return view
     }
 
-    /**
-     * Устанавливает цвет для строки
-     * @param span - объект MutableForegroundSpa(указывает на часть стоки для стилизации)
-     * @param index - число, означающее начальный символ строки для обработки
-     * @param text - текст, в котором происходит поиск стилизация
-     * @param string - строка, которая ищется
-     */
     private fun setColorForText(span: MutableForegroundSpan?, index: Int, text: String, string: String) {
         val stringCompare1 = text.indexOf(string, index)
         var stringCompare2 = text.indexOf(" ", stringCompare1)
@@ -75,12 +67,6 @@ class FragmentAboutApp : Fragment(), AppInfoView {
 
     /**
      * Find relapse in the [text] and styling the [spans]
-     * Функция ищет совпадения в тексте по заданной строке и выделяет ее
-     * @param spans - участки текста, подлежащие дополнительной стилизации
-     * @param initIndex- индекс для управления массивом. Начальное значение массива,
-     * в который будут складываться объекты типа Span
-     * @param index - начальный индекс. Должен быть равен 0
-     * @param stringFind - строка или часть ее, которая должна быть стилизована
      */
     private fun setStyleForText(text: String, spans: Array<MutableForegroundSpan?>,
                                 stringFind: String, initIndex: Int = 0, index: Int = 0) {

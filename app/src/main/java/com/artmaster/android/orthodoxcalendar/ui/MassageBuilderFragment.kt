@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.data
+package com.artmaster.android.orthodoxcalendar.ui
 
 import android.app.Dialog
 import android.content.DialogInterface

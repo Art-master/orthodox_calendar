@@ -1,21 +1,28 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar
 
 import android.arch.paging.PagedListAdapter
+import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
+import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
-class HolidaysAdapter(itemCallback: ListViewContract.CallBack<HolidayEntity>)
+class HolidaysAdapter(val context: Context, itemCallback: ListViewContract.CallBack<HolidayEntity>)
     : PagedListAdapter<HolidayEntity,
         HolidaysAdapter.HolidayViewHolder>(itemCallback as DiffUtil.ItemCallback<HolidayEntity>),
         ListViewContract.Adapter {
+
+    private var itemId = ""
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int): HolidayViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
@@ -24,6 +31,13 @@ class HolidaysAdapter(itemCallback: ListViewContract.CallBack<HolidayEntity>)
     }
 
     override fun onBindViewHolder(viewHolder: HolidayViewHolder, index: Int) {
+        itemId = getItem(index)!!.uuid
+        viewHolder.itemView.setOnClickListener {
+            val intent = Intent(context, HolidayViewPagerActivity::class.java)
+            intent.putExtra(Constants.Keys.HOLIDAY_ID.name, itemId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            context.startActivity(intent)
+        }
         viewHolder.bind(getItem(index))
     }
 

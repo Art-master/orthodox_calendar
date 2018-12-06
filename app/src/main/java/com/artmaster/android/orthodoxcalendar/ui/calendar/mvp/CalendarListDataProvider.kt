@@ -2,14 +2,24 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
 
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.DynamicHoliday
+import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
 /**
  * Get data from storage and prepare it
  */
-class CalendarListDataModel(private val dataBase: AppDatabase) : CalendarListContract.Model {
+class CalendarListDataProvider(private val dataBase: AppDatabase)
+    : CalendarListContract.Model, AppDataProvider {
+
+    override fun getData(): List<HolidayEntity> {
+        return getAllData()
+    }
 
     override fun getDataSequence(start: Int, size: Int): List<HolidayEntity> {
+        return setFirstPosition(getAllData().sorted())
+    }
+
+    private fun getAllData(): List<HolidayEntity> {
         val holidaysFromDb: List<HolidayEntity> = getDataFromDb()
         for (holiday in holidaysFromDb) {
             holiday.year = 2018
@@ -19,7 +29,7 @@ class CalendarListDataModel(private val dataBase: AppDatabase) : CalendarListCon
                 holiday.month = dynamic.month
             }
         }
-        return setFirstPosition(holidaysFromDb.sorted())
+        return holidaysFromDb
     }
 
     private fun getDataFromDb(): List<HolidayEntity> {

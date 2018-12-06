@@ -4,41 +4,44 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 @Entity(tableName = "holidays")
-class HolidayEntity : Comparable<HolidayEntity> {
+data class HolidayEntity(
 
-    @PrimaryKey(autoGenerate = true)
-    var id = 0L
+        @PrimaryKey(autoGenerate = true)
+        var id: Long = 0,
 
-    var uuid = ""
+        var uuid: String = "",
 
-    @SerializedName("title")
-    var title = ""
+        @SerializedName("title")
+        var title: String = "",
 
-    @SerializedName("day")
-    var day = 0
+        @SerializedName("day")
+        var day: Int = 0,
 
-    @SerializedName("month")
-    var month = 0
+        @SerializedName("month")
+        var month: Int = 0,
 
-    @Ignore
-    var year = 0
+        @Ignore
+        var year: Int = 0,
 
-    @SerializedName("type")
-    var type = ""
+        @SerializedName("type")
+        var type: String = "",
 
-    @SerializedName("description")
-    var description = ""
+        @SerializedName("description")
+        var description: String = "",
 
-    @SerializedName("image")
-    @ColumnInfo(name = "image_link")
-    var imageLink = ""
+        @SerializedName("image")
+        @ColumnInfo(name = "image_link")
+        var imageLink: String = "",
 
-    @Ignore
-    var firstInGroup = false
+        @Ignore
+        var firstInGroup: Boolean = false
+) : Comparable<HolidayEntity>, Parcelable {
 
     override fun compareTo(other: HolidayEntity): Int {
         val monthComparison = month.compareTo(other.month)

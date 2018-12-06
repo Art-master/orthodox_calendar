@@ -37,9 +37,9 @@ open class CalendarListBuilderModule {
 
     @FragmentScope
     @Provides
-    fun provideAdapter(diffCallback: ListViewContract.CallBack<HolidayEntity>,
+    fun provideAdapter(context: Context, diffCallback: ListViewContract.CallBack<HolidayEntity>,
                        list: ListViewContract.PagedList<HolidayEntity>): ListViewContract.Adapter {
-        val adapter = HolidaysAdapter(diffCallback)
+        val adapter = HolidaysAdapter(context, diffCallback)
         adapter.submitList(list.get())
         return adapter
     }
