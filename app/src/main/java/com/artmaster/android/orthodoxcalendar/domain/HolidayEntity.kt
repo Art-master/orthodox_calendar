@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 @Entity(tableName = "holidays")
@@ -15,7 +16,7 @@ data class HolidayEntity(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 
-        var uuid: String = "",
+        var uuid: String = UUID.randomUUID().toString(),
 
         @SerializedName("title")
         var title: String = "",

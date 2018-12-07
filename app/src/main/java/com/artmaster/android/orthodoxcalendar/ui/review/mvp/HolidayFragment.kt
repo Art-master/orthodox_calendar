@@ -11,7 +11,9 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
+import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_holiday.*
 import kotlinx.android.synthetic.main.fragment_holiday.view.*
 import javax.inject.Inject
 
@@ -29,6 +31,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         fun newInstance(holiday: HolidayEntity): HolidayFragment {
             val intent = Intent()
             intent.putExtra(Constants.Keys.HOLIDAY.name, holiday)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
             fragment.arguments = intent.extras
@@ -45,30 +48,41 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.fragment_holiday, groupContainer, false)
+        holidayView = inflater.inflate(R.layout.fragment_holiday, groupContainer, false)
         presenter.attachView(this)
-        holidayView = v
         presenter.viewIsReady()
-        return v
+        return holidayView
     }
 
     override fun showHolidayName(name: String) {
         holidayView.holiday_name_in_page.text = name
     }
 
-    override fun showDescription(description: String) {
+    override fun showDescription(initialLater: String, description: String) {
+        holidayView.initial_later_text_view.text = initialLater
         holidayView.description_text_view.text = description
     }
 
     override fun showNewStyleDate(date: String) {
-        holidayView.new_date_style_text_view.text = date
+        if (date.isEmpty()) return
+
+        val str = getString(R.string.new_style_date_string, date)
+        holidayView.new_date_style_text_view.text = str
     }
 
     override fun showOldStyleDate(date: String) {
-        holidayView.old_date_style_text_view.text = date
+        if (date.isEmpty()) return
+
+        val str = getString(R.string.old_style_date_string, date)
+        holidayView.old_date_style_text_view.text = str
     }
 
-    override fun showImageHoliday() {
+    override fun showImageHoliday(resId: Int, placeholderId: Int) {
+        Picasso.with(context)
+                .load(resId)
+                .placeholder(placeholderId)
+                .error(placeholderId)
+                .into(holidayView.image_holiday)
     }
 
     override fun showErrorMassage(msgType: Message.ERROR) {

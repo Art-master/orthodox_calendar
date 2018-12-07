@@ -9,7 +9,7 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfo
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListContract
-import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListDataProvider
+import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListPresenter
 import dagger.Module
 import dagger.Provides
@@ -19,7 +19,7 @@ class CalendarActivityModule {
     @CalendarActivityScope
     @Provides
     fun provideModel(database: AppDatabase): CalendarListContract.Model {
-        return CalendarListDataProvider(database)
+        return DataProvider(database)
     }
 
     @CalendarActivityScope

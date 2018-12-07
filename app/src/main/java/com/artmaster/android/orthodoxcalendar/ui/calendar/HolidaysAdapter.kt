@@ -22,8 +22,6 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewContract.CallB
         HolidaysAdapter.HolidayViewHolder>(itemCallback as DiffUtil.ItemCallback<HolidayEntity>),
         ListViewContract.Adapter {
 
-    private var itemId = ""
-
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int): HolidayViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
         val binding: ListItemHolidayBinding = DataBindingUtil.inflate(inflater, R.layout.list_item_holiday, viewGroup, false)
@@ -31,7 +29,7 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewContract.CallB
     }
 
     override fun onBindViewHolder(viewHolder: HolidayViewHolder, index: Int) {
-        itemId = getItem(index)!!.uuid
+        val itemId = getItem(index)!!.uuid
         viewHolder.itemView.setOnClickListener {
             val intent = Intent(context, HolidayViewPagerActivity::class.java)
             intent.putExtra(Constants.Keys.HOLIDAY_ID.name, itemId)

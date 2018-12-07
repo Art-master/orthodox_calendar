@@ -26,15 +26,17 @@
                 android:layout_weight="1"
                 android:text="@string/ornament_for_headers_left"
                 android:textAlignment="textEnd"
-                app:customFont="ornament.ttf" />
+                app:customFont="@string/font_ornament" />
 
-            <TextView
+            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
                 android:id="@+id/holiday_name_in_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="10"
                 android:maxWidth="@dimen/activity_horizontal_margin"
+                app:customFont="@string/font_basic"
+                android:textSize="@dimen/size_text_holiday_name"
                 android:textAlignment="center" />
 
             <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
@@ -43,10 +45,8 @@
                 android:layout_weight="1"
                 android:text="@string/ornament_for_headers_right"
                 android:textAlignment="textStart"
-                app:customFont="ornament.ttf" />
-
+                app:customFont="@string/font_ornament" />
         </LinearLayout>
-
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/image_holiday"
@@ -69,6 +69,9 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="20dp"
                 android:paddingRight="10dp"
+                android:text="@string/new_style_date_string"
+                app:customFont="@string/font_basic"
+                android:textSize="@dimen/size_text_basic"
                 android:textAlignment="center" />
 
             <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
@@ -79,6 +82,8 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="20dp"
                 android:paddingRight="10dp"
+                app:customFont="@string/font_basic"
+                android:textSize="@dimen/size_text_basic"
                 android:textAlignment="center" />
 
         </android.support.v7.widget.LinearLayoutCompat>
@@ -94,12 +99,17 @@
                 android:id="@+id/initial_later_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorRed"
+                app:customFont="@string/font_for_bukvica"
+                android:textSize="@dimen/size_text_bukvica"
                 android:padding="10dp" />
 
             <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
                 android:id="@+id/description_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:customFont="@string/font_basic"
+                android:textSize="@dimen/size_text_basic"
                 android:padding="20dp" />
         </android.widget.RelativeLayout>
 

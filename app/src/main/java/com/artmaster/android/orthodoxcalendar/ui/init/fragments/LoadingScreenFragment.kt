@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.init.mvp
+package com.artmaster.android.orthodoxcalendar.ui.init.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

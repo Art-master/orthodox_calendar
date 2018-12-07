@@ -14,8 +14,8 @@
     <string name="toolbar_header_arrow_right">    %1$d &gt;</string>
     <string name="toolbar_header_arrow_left">&lt; %1$d     </string>
 
-    <string name="new_style_date_string">по новому стилю</string>
-    <string name="old_style_date_string">по старому стилю</string>
+    <string name="new_style_date_string">по новому стилю \n %1$s</string>
+    <string name="old_style_date_string">по старому стилю \n %1$s</string>
 
     <!--Settings-->
     <string name="check_box_sett_typycon_icon">показывать знаки типикона</string>

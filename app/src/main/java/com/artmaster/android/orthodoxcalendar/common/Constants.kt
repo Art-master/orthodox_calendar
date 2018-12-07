@@ -22,6 +22,8 @@ class Constants {
         const val FONT_ASSETS_DIRECTORY = "fonts/"
         const val SETTINGS_FILE_NAME = "calendar_settings"
         const val LOADING_ANIMATION = 3000
+        const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
+        const val RESOURCE_FOR_IMAGE = "drawable"
     }
 
     enum class Keys constructor(private val value: String) {

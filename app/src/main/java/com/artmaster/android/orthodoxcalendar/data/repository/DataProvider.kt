@@ -1,18 +1,19 @@
-package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
+package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.DynamicHoliday
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
+import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListContract
 
 /**
  * Get data from storage and prepare it
  */
-class CalendarListDataProvider(private val dataBase: AppDatabase)
+class DataProvider(private val dataBase: AppDatabase)
     : CalendarListContract.Model, AppDataProvider {
 
     override fun getData(): List<HolidayEntity> {
-        return getAllData()
+        return getAllData().sorted()
     }
 
     override fun getDataSequence(start: Int, size: Int): List<HolidayEntity> {

@@ -9,10 +9,10 @@ interface HolidayReviewContract {
     interface View : AppView {
         fun showErrorMassage(msgType: Message.ERROR)
         fun showHolidayName(name: String)
-        fun showDescription(description: String)
+        fun showDescription(initialLater: String, description: String)
         fun showNewStyleDate(date: String)
         fun showOldStyleDate(date: String)
-        fun showImageHoliday()
+        fun showImageHoliday(resId: Int, placeholderId: Int)
     }
 
     interface Presenter : AppPresenter<View> {
