@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.common
 import android.content.Context
 import android.util.TypedValue
 import android.content.Intent
+import android.support.v4.app.Fragment
 
 /**
  * Various functions for this application
@@ -60,5 +61,12 @@ object OrtUtils {
         a.addCategory(Intent.CATEGORY_HOME)
         a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(a)
+    }
+
+    /** Check if an [element]  is Fragment*/
+    fun checkFragment(element: Any): Fragment {
+        if (element is Fragment) {
+            return element
+        } else throw TypeCastException()
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="wifi"
+        android:summary="gj"
+        android:title="fghfg" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="hints"
+        android:summary="fghfgh"
+        android:title="fghffgh" />
+
+</PreferenceScreen>

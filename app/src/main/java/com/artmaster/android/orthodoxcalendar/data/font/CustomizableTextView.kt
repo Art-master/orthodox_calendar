@@ -9,6 +9,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.util.AttributeSet
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants
 
 /**
  * This class execute text animation
@@ -29,7 +30,7 @@ class CustomizableTextView : AppCompatTextView {
     private var isVisible = false
     private var isTextResetting = false
 
-    private var durationAnim = 2500
+    private var durationAnim = Constants.LOADING_ANIMATION
 
     private var animator: ValueAnimator? = null
 
@@ -49,15 +50,15 @@ class CustomizableTextView : AppCompatTextView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
         CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+                R.styleable.customizableView,
+                R.styleable.customizableView_customFont)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
         init()
         CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+                R.styleable.customizableView,
+                R.styleable.customizableView_customFont)
     }
 
     private fun init() {
@@ -167,5 +168,11 @@ class CustomizableTextView : AppCompatTextView {
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {}
         })
+    }
+
+    fun cancelAnimation() {
+        animator!!.end()
+        animator!!.removeAllListeners()
+        animator!!.removeAllUpdateListeners()
     }
 }

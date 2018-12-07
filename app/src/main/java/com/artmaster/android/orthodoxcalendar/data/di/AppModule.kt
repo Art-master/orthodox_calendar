@@ -2,12 +2,15 @@ package com.artmaster.android.orthodoxcalendar.data.di
 
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.di.CalendarActivityModule
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.di.CalendarActivityScope
-import com.artmaster.android.orthodoxcalendar.presentation.calendar.mvp.CalendarListActivity
-import com.artmaster.android.orthodoxcalendar.presentation.init.di.InitAppActivityModule
-import com.artmaster.android.orthodoxcalendar.presentation.init.di.InitAppActivityScope
-import com.artmaster.android.orthodoxcalendar.presentation.init.mvp.InitAppActivity
+import com.artmaster.android.orthodoxcalendar.ui.calendar.di.CalendarActivityModule
+import com.artmaster.android.orthodoxcalendar.ui.calendar.di.CalendarActivityScope
+import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityModule
+import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityScope
+import com.artmaster.android.orthodoxcalendar.ui.init.mvp.InitAppActivity
+import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
+import com.artmaster.android.orthodoxcalendar.ui.review.di.HolidayViewPagerActivityModule
+import com.artmaster.android.orthodoxcalendar.ui.review.di.HolidayViewPagerActivityScope
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -30,4 +33,8 @@ interface AppModule {
     @CalendarActivityScope
     @ContributesAndroidInjector(modules = [CalendarActivityModule::class])
     fun calendarListActivityInjector(): CalendarListActivity
+
+    @HolidayViewPagerActivityScope
+    @ContributesAndroidInjector(modules = [HolidayViewPagerActivityModule::class])
+    fun holidayViewPagerActivityInjector(): HolidayViewPagerActivity
 }

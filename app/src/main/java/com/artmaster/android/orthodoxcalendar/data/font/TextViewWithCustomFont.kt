@@ -11,14 +11,16 @@ class TextViewWithCustomFont : AppCompatTextView {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+        setCustomFont(context, attrs)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+        setCustomFont(context, attrs)
+    }
+
+    private fun setCustomFont(context: Context, attrs: AttributeSet) {
         CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableTextView,
-                R.styleable.customizableTextView_customFont)
+                R.styleable.customizableView,
+                R.styleable.customizableView_customFont)
     }
 }
