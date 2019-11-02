@@ -45,7 +45,7 @@ object CustomFont {
         return true
     }
 
-    private fun getFont(context: Context, name: String?): Typeface {
+    public fun getFont(context: Context, name: String?): Typeface {
         synchronized(fontCache) {
             return if (fontCache[name] != null) {
                 fontCache[name]!!.get()!!

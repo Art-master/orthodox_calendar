@@ -38,7 +38,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasSupportFragmentInjector
         super.onCreate(savedInstanceState)
         setContentView(R.layout.holiday_review_pager)
 
-        Single.fromCallable { dataProvider.getData() }
+        Single.fromCallable { dataProvider.getData(2018) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(

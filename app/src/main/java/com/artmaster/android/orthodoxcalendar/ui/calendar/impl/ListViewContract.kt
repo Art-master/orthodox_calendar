@@ -21,4 +21,5 @@ interface ListViewContract {
     interface Adapter
 
     interface ViewList
+    interface ViewListPager
 }

@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.data.di
 
+import com.artmaster.android.orthodoxcalendar.data.di.modules.DatabaseModule
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.ui.calendar.di.CalendarActivityModule

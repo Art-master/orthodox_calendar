@@ -16,6 +16,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
 
     @Inject
     lateinit var model: InitAppContract.Model
+
     @Inject
     lateinit var presenter: InitAppContract.Presenter
 
@@ -55,6 +56,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
 
     override fun nextScreen() {
         val intent = Intent(applicationContext, CalendarListActivity::class.java)
+        //val intent = Intent(applicationContext, CalendarTileMonthFragment::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         startActivity(intent)
         finish()

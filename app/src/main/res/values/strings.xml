@@ -10,6 +10,7 @@
     <!--name item for toolbar -->
     <string name="item_name_about">о сем творении</string>
     <string name="item_name_settings">настройки</string>
+    <string name="item_view_settings">смена вида</string>
     <string name="toolbar_header">&lt; %1$d &gt;</string>
     <string name="toolbar_header_arrow_right">    %1$d &gt;</string>
     <string name="toolbar_header_arrow_left">&lt; %1$d     </string>
@@ -39,6 +40,17 @@
     <string name="notif_holiday_tomorrow">Завтра отмечают праздник </string>
     <string name="notif_holiday_later"> отмечают праздник </string>
     <string name="text_view_about_app_email">ggn.master@gmail.com</string>
+
+    <!--days of week names-->
+    <string name="monday">ПН.</string>
+    <string name="tuesday">ВТ.</string>
+    <string name="wednesday">СР.</string>
+    <string name="thursday">ЧТ.</string>
+    <string name="friday">ПТ.</string>
+    <string name="saturday">СБ.</string>
+    <string name="sunday">ВС.</string>
+
+
 
     <string-array name="loading_strings_array">
         <item>\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</item>

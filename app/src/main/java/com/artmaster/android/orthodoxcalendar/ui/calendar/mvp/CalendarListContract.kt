@@ -17,6 +17,6 @@ interface CalendarListContract {
     interface Presenter : AppPresenter<View>
 
     interface Model : AppModel {
-        fun getDataSequence(start: Int, size: Int): List<HolidayEntity>
+        fun getDataSequence(start: Int, size: Int, year: Int): List<HolidayEntity>
     }
 }

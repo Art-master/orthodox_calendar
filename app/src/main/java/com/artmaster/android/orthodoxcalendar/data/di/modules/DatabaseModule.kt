@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.data.di
+package com.artmaster.android.orthodoxcalendar.data.di.modules
 
 import android.content.Context
 import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase

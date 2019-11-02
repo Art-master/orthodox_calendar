@@ -1,8 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-import java.util.Calendar
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 
 /**
  * Wrapper for work with time
@@ -14,6 +12,12 @@ object Time {
 
     val dayOfMonth: Int
         get() = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val daysInMonth: Int
+        get() = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+    val dayOfWeek: Int
+        get() = calendar.get(Calendar.DAY_OF_WEEK)
 
     val dayOfYear: Int
         get() = calendar.get(Calendar.DAY_OF_YEAR)
@@ -31,16 +35,14 @@ object Time {
     /**
      * init the time object
      */
-    private val calendar: Calendar
+    val calendar: Calendar
         get() {
             val date = Date()
-            date.time
             val calendar = Calendar.getInstance()
             calendar.time = date
             calendar.timeZone = TimeZone.getDefault()
             return calendar
         }
-
 
     fun calculateDate(year: Int, month: Int, day: Int, param: Int, dateCalc: Int): Calendar {
         return calculateDate(year, month, day, 0, param, dateCalc)
@@ -60,4 +62,17 @@ object Time {
         calendar.add(param, dateCalc)
         return calendar
     }
+
+    fun setGregorianCalendar(): Calendar {
+        val date = Date()
+        val calendar = GregorianCalendar()
+        calendar.time = date
+        calendar.timeZone = TimeZone.getDefault()
+        return calendar
+    }
+/*    fun getDay(){
+        calendar.get(Calendar.)
+    }*/
+
+
 }

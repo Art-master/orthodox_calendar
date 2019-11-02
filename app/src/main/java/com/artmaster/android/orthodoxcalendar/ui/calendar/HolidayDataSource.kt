@@ -36,7 +36,7 @@ class HolidayDataSource(val context: Context) : PositionalDataSource<HolidayEnti
     private fun getData(start: Int, size: Int): List<HolidayEntity> {
         mOldData = mNewData
         val db = HolidayDatabase.getAppDataBase(context)!!
-        mNewData = DataProvider(db).getDataSequence(start, size)
+        mNewData = DataProvider(db).getDataSequence(start, size, 2018)
         return mNewData
     }
 

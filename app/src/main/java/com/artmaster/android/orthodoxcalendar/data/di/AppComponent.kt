@@ -1,21 +1,17 @@
 package com.artmaster.android.orthodoxcalendar.data.di
 
 import android.content.Context
-import com.artmaster.android.orthodoxcalendar.App
-import dagger.BindsInstance
+import com.artmaster.android.orthodoxcalendar.data.di.modules.ContextModule
+import com.artmaster.android.orthodoxcalendar.data.di.modules.RepositoryModule
+import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
+import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class])
+@Component(modules = [ContextModule::class, RepositoryModule::class])
 interface AppComponent {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun context(context: Context): Builder
-
-        fun build(): AppComponent
-    }
-
-    fun inject(app: App)
+    fun getContext(): Context
+    //fun getPreferences(): AppPreferences
+    fun getRepository(): AppDataProvider
 }

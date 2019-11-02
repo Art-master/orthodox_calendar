@@ -42,6 +42,7 @@ data class HolidayEntity(
 
         @Ignore
         var firstInGroup: Boolean = false
+
 ) : Comparable<HolidayEntity>, Parcelable {
 
     override fun compareTo(other: HolidayEntity): Int {
@@ -50,5 +51,9 @@ data class HolidayEntity(
             return day.compareTo(other.day)
         }
         return monthComparison
+    }
+
+    enum class Type(name: String){
+        GREAT("великий")
     }
 }

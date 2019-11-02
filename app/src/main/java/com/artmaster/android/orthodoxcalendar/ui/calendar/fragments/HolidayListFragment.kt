@@ -9,22 +9,35 @@ import android.view.View
 import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.R
-import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.calendar_list_fragment.*
-import javax.inject.Inject
+import com.artmaster.android.orthodoxcalendar.ui.calendar.*
+import kotlinx.android.synthetic.main.calendar_list_fragment.view.*
 
 class HolidayListFragment : Fragment(), ListViewContract.ViewList {
-    @Inject
+
     lateinit var recyclerAdapter: ListViewContract.Adapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        AndroidSupportInjection.inject(this)
         return inflater.inflate(R.layout.calendar_list_fragment, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        recyclerAdapter = getAdapter()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView!!.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = recyclerAdapter as? RecyclerView.Adapter<*>
         super.onViewCreated(view, savedInstanceState)
+        view.recyclerView!!.layoutManager = LinearLayoutManager(context)
+        view.recyclerView.adapter = recyclerAdapter as? RecyclerView.Adapter<*>
+    }
+
+    private fun getAdapter() : ListViewContract.Adapter{
+        val config = PageConfig
+        val dataSource = HolidayDataSource(context!!)
+        val list = PagedList(dataSource, config)
+        val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
+        val adapter = HolidaysAdapter(context!!, diffCallback)
+        adapter.submitList(list.get())
+        return adapter
     }
 }

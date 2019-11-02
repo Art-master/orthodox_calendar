@@ -15,6 +15,7 @@ import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
+import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -25,14 +26,18 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     @Inject
     lateinit var database: AppDatabase
+
     @Inject
     lateinit var model: CalendarListContract.Model
+
     @Inject
     lateinit var presenter: CalendarListContract.Presenter
+
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
     @Inject
-    lateinit var listHolidayFragment: ListViewContract.ViewList
+    lateinit var listHolidayFragment: ListViewContract.ViewListPager
 
     @Inject
     lateinit var appInfoFragment: AppInfoView
@@ -40,12 +45,18 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     @Inject
     lateinit var appSettingsFragment: AppSettingView
 
+    @Inject
+    lateinit var appViewFragment: ContractTileView
+
+    private lateinit var mainFragment : Fragment
+    private var fragment : Fragment = Fragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
         setSupportActionBar(toolbar)
-
+        mainFragment = listHolidayFragment as Fragment
         presenter.attachView(this)
         presenter.viewIsReady()
     }
@@ -63,25 +74,40 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        var fragment: Fragment? = null
-        when (item!!.itemId) {
-            R.id.item_about -> fragment = checkFragment(appInfoFragment)
-            R.id.item_settings -> fragment = checkFragment(appSettingsFragment)
+        val fragment = when (item!!.itemId) {
+            R.id.item_about -> checkFragment(appInfoFragment)
+            R.id.item_settings -> checkFragment(appSettingsFragment)
+            else -> null
         }
+        changeMainFragment(item)
         if (fragment != null) {
-            if (checkDoubleClickItem(fragment)) {
-                showFragment(checkFragment(listHolidayFragment))
+            if (isExist(fragment)) {
+                showFragment(checkFragment(mainFragment))
                 removeFragment(fragment)
             } else {
-                hideFragment(checkFragment(listHolidayFragment))
+                this.fragment = fragment
+                hideFragment(checkFragment(mainFragment))
                 replaceFragment(R.id.menu_fragments_container, fragment)
             }
+        }else if(item.itemId == R.id.item_view) {
+            removeFragment(this.fragment)
+            showFragment(checkFragment(mainFragment))
         }
+
         return super.onOptionsItemSelected(item)
     }
 
+    private fun changeMainFragment(item: MenuItem){
+        if(item.itemId != R.id.item_view) return
+        mainFragment = if(mainFragment is ListViewContract.ViewListPager){
+            appViewFragment as Fragment
+        }else listHolidayFragment as Fragment
+
+        replaceFragment(R.id.activityCalendar, mainFragment)
+    }
+
     override fun showHolidayList() {
-        val fragment = checkFragment(listHolidayFragment)
+        val fragment = checkFragment(mainFragment)
         addFragment(R.id.activityCalendar, fragment)
     }
 
@@ -140,24 +166,25 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
             supportFragmentManager
                     .beginTransaction()
                     .replace(resId, fragment)
+                    .addToBackStack(null)
                     .commit()
         }
     }
 
-    private fun checkDoubleClickItem(fragment: Fragment): Boolean {
+    private fun isExist(fragment: Fragment): Boolean {
         return supportFragmentManager.fragments.contains(fragment)
     }
 
     override fun onBackPressed() {
         when {
-            checkDoubleClickItem(checkFragment(appSettingsFragment)) -> {
+            isExist(checkFragment(appSettingsFragment)) -> {
                 removeFragment(appSettingsFragment as Fragment)
-                showFragment(checkFragment(listHolidayFragment))
+                showFragment(checkFragment(mainFragment))
             }
 
-            checkDoubleClickItem(checkFragment(appInfoFragment)) -> {
+            isExist(checkFragment(appInfoFragment)) -> {
                 removeFragment(appInfoFragment as Fragment)
-                showFragment(checkFragment(listHolidayFragment))
+                showFragment(checkFragment(mainFragment))
             }
 
             else -> OrtUtils.exitProgram(this)
