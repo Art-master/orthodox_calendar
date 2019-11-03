@@ -1,10 +1,13 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.artmaster.android.orthodoxcalendar.R
 import kotlinx.android.synthetic.main.activity_calendar.*
 import com.artmaster.android.orthodoxcalendar.common.Message
@@ -21,6 +24,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
+import android.widget.ArrayAdapter
 
 class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
 
@@ -59,6 +63,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         mainFragment = listHolidayFragment as Fragment
         presenter.attachView(this)
         presenter.viewIsReady()
+        initBarSpinner()
     }
 
     override fun showActionBar() = supportActionBar!!.show()
@@ -122,6 +127,14 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentInjector
+    }
+
+    private fun initBarSpinner(){
+        val cities = arrayOf("2018", "2019", "2020", "2021", "2022", "2023")
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        toolbarYearSpinner.adapter = adapter
+        toolbarYearSpinner.setSelection(2)
     }
 
     private fun showFragment(fragment: Fragment) {

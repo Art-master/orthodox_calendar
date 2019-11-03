@@ -19,9 +19,10 @@ import kotlin.collections.ArrayList
 class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMonthPresenter {
     private val dispose = CompositeDisposable()
     private var appComponent = App.appComponent
+    private var holidayList = emptyList<HolidayEntity>()
+    private val time = Time2()
 
     override fun viewIsReady() {
-        val time = Time2()
         getHolidays(time)
     }
 
@@ -30,9 +31,13 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                        onSuccess = { data -> viewData(data, time) },
+                        onSuccess = { data -> holidayList = data },
                         onError = { it.printStackTrace() })
         dispose.add(disposable)
+    }
+
+    override fun viewIsCreated() {
+        viewData(holidayList, time)
     }
 
     private fun viewData(data: List<HolidayEntity>, time: Time2) {

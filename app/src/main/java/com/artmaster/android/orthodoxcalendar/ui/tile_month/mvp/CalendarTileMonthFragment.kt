@@ -23,7 +23,7 @@ import org.jetbrains.anko.textColor
 
 internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
 
-    @InjectPresenter(tag = "TileMonthPresenter", type = PresenterType.GLOBAL)
+    @InjectPresenter(tag = "TileMonthPresenter", type = PresenterType.LOCAL)
     lateinit var presenter: TileMonthPresenter
 
     lateinit var tileView: View
@@ -46,6 +46,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.viewIsCreated()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -63,6 +64,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun createDay(dayOfWeek: Int, level: Int, holiday: List<HolidayEntity>, i: Int){
+        if(presenter.isInRestoreState(this)) return
         val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
         val v = getDayLayout()
         styleDayView(v, holiday, dayOfWeek, i)
@@ -71,7 +73,6 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     private fun styleDayView(view: View, holidays: List<HolidayEntity>, dayOfWeek: Int, day: Int){
-        //if(holidays.isEmpty()) return
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
 
         holidays.forEach {
@@ -83,6 +84,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun createDaysOfWeekRows(dayOfWeek: IntRange) {
+        if(presenter.isInRestoreState(this)) return
         for(i in dayOfWeek){
             val row = createDayOfWeekRow()
             view!!.tableMonthTile.addView(row)

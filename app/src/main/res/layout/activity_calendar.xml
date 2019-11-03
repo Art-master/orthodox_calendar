@@ -15,12 +15,13 @@
         android:elevation="3dp"
         android:minHeight="?attr/actionBarSize">
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-            android:id="@+id/toolbarHeaderText"
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/toolbarYearSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            app:customFont="@string/font_basic" />
+            app:customFont="@string/font_basic" >
+
+        </android.support.v7.widget.AppCompatSpinner>
 
     </android.support.v7.widget.Toolbar>
 

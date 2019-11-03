@@ -4,4 +4,5 @@ interface ContractTileMonthPresenter {
     fun viewIsReady()
     fun viewIsPaused()
     fun viewIsResumed()
+    fun viewIsCreated()
 }
