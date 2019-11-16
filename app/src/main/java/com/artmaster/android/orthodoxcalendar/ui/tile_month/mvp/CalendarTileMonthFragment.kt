@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time2
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
+import kotlinx.android.synthetic.main.tile_day_layout.view.*
 import org.jetbrains.anko.textColor
 
 internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
@@ -63,24 +65,36 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         view!!.tableMonthTile.removeAllViews()
     }
 
-    override fun createDay(dayOfWeek: Int, level: Int, holiday: List<HolidayEntity>, i: Int){
+    override fun createDay(dayOfWeek: Int, level: Int, holidays: List<HolidayEntity>, i: Int){
         if(presenter.isInRestoreState(this)) return
         val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
         val v = getDayLayout()
-        styleDayView(v, holiday, dayOfWeek, i)
+
+        styleDayView(v, holidays, dayOfWeek, i)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
         row.addView(v, level)
     }
 
+
+
     private fun styleDayView(view: View, holidays: List<HolidayEntity>, dayOfWeek: Int, day: Int){
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
-
         holidays.forEach {
             if(it.type.contains(HolidayEntity.Type.GREAT.name, true))
+                styleHoliday(it, view)
                 text.textColor = Color.RED}
-
         text.text = day.toString()
         if(dayOfWeek == Time2.Day.SUNDAY.num) text.textColor = Color.RED
+    }
+
+    private fun styleHoliday(holiday: HolidayEntity, view: View){
+        if(holiday.type.contains(HolidayEntity.Type.TWELVE.value)){
+            twelveHoliday(view)
+        }
+    }
+
+    private fun twelveHoliday(v : View){
+        v.container.background = ContextCompat.getDrawable(context!!, R.drawable.tile_twelve_holiday)
     }
 
     override fun createDaysOfWeekRows(dayOfWeek: IntRange) {

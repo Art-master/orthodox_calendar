@@ -26,9 +26,10 @@ class Constants {
         const val RESOURCE_FOR_IMAGE = "drawable"
     }
 
-    enum class Keys constructor(private val value: String) {
+    enum class Keys constructor(val value: String) {
         HOLIDAY_ID("com.artmaster.android.orthodoxcalendar.common.holiday_id"),
         HOLIDAY("com.artmaster.android.orthodoxcalendar.common.holiday"),
+        YEAR("com.artmaster.android.orthodoxcalendar.common.year"),
     }
 }
 

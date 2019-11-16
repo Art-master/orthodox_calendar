@@ -7,11 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.AdapterView
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.*
 import kotlinx.android.synthetic.main.activity_calendar.*
-import com.artmaster.android.orthodoxcalendar.common.Message
-import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
 import com.artmaster.android.orthodoxcalendar.ui.MassageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
@@ -24,7 +23,10 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
-import android.widget.ArrayAdapter
+import com.artmaster.android.orthodoxcalendar.domain.Time2
+import android.widget.AdapterView.OnItemSelectedListener
+import android.view.View
+
 
 class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
 
@@ -66,6 +68,18 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         initBarSpinner()
     }
 
+    private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time2().year)
+
+    private fun getYears(): ArrayList<String> {
+      val size = Constants.HolidayList.PAGE_SIZE.value
+      val initYear = getYear() - size/2
+      val years = ArrayList<String>(size)
+      for (element in initYear..initYear+size){
+          years.add(element.toString())
+      }
+      return years
+    }
+
     override fun showActionBar() = supportActionBar!!.show()
 
     override fun hideActionBar() {
@@ -105,6 +119,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
         mainFragment = if(mainFragment is ListViewContract.ViewListPager){
+            listHolidayFragment.onChangePageListener { toolbarYearSpinner.setSelection(it) }
             appViewFragment as Fragment
         }else listHolidayFragment as Fragment
 
@@ -130,11 +145,13 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     }
 
     private fun initBarSpinner(){
-        val cities = arrayOf("2018", "2019", "2020", "2021", "2022", "2023")
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val years = getYears()
+        val adapter = SpinnerAdapter(this, R.layout.spinner_year_item, years.toTypedArray())
+        adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
         toolbarYearSpinner.adapter = adapter
-        toolbarYearSpinner.setSelection(2)
+        val pos = years.indexOf(getYear().toString())
+        toolbarYearSpinner.setSelection(pos)
+        setOnItemSelected()
     }
 
     private fun showFragment(fragment: Fragment) {
@@ -201,6 +218,20 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
             }
 
             else -> OrtUtils.exitProgram(this)
+        }
+    }
+
+    private fun setOnItemSelected(){
+        toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+                if(mainFragment is ListViewContract.ViewListPager){
+                    (mainFragment as ListViewContract.ViewListPager).setPage(position)
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+            }
+
         }
     }
 }

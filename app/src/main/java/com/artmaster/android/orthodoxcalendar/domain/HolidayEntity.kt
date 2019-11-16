@@ -53,7 +53,9 @@ data class HolidayEntity(
         return monthComparison
     }
 
-    enum class Type(name: String){
-        GREAT("великий")
+    enum class Type(val value: String){
+        GREAT("великий"),
+        TWELVE("двунадесятый"),
+        MAIN("главный")
     }
 }

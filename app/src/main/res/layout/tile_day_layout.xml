@@ -8,11 +8,13 @@
     android:layout_height="wrap_content">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/tile_border"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
@@ -20,7 +22,6 @@
             android:layout_width="24dp"
             android:layout_height="26dp"
             android:gravity="center"
-            android:text="1"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
