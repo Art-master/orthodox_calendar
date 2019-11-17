@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.TypedValue
 import android.content.Intent
 import android.support.v4.app.Fragment
+import com.artmaster.android.orthodoxcalendar.R
 
 /**
  * Various functions for this application
@@ -34,6 +35,21 @@ object OrtUtils {
     fun convertDpToSp(context: Context, dp: Float): Int {
         val sp = (convertDpToPixels(context, dp) / convertSpToPixels(context, dp).toFloat()).toInt()
         return sp
+    }
+
+    /** get day of week by a num day  */
+    @JvmStatic
+    fun getDayOtWeek(context: Context, dayNum : Int): String {
+        return when(dayNum){
+            1 -> context.getString(R.string.monday)
+            2 -> context.getString( R.string.tuesday)
+            3 -> context.getString(R.string.wednesday)
+            4 -> context.getString(R.string.thursday)
+            5 -> context.getString(R.string.friday)
+            6 -> context.getString(R.string.saturday)
+            7 -> context.getString(R.string.sunday)
+            else -> context.getString(R.string.monday)
+        }
     }
 
     /**

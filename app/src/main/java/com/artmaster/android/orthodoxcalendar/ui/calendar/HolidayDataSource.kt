@@ -6,12 +6,15 @@ import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
+import com.artmaster.android.orthodoxcalendar.domain.Time2
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
-class HolidayDataSource(val context: Context) : PositionalDataSource<HolidayEntity>(), ListViewContract.DataSource<HolidayEntity> {
+class HolidayDataSource(val context: Context, val year: Int = Time2().year)
+    : PositionalDataSource<HolidayEntity>(), ListViewContract.DataSource<HolidayEntity> {
+
     private var mOldData: List<HolidayEntity> = emptyList()
     private var mNewData: List<HolidayEntity> = emptyList()
 
@@ -36,7 +39,7 @@ class HolidayDataSource(val context: Context) : PositionalDataSource<HolidayEnti
     private fun getData(start: Int, size: Int): List<HolidayEntity> {
         mOldData = mNewData
         val db = HolidayDatabase.getAppDataBase(context)!!
-        mNewData = DataProvider(db).getDataSequence(start, size, 2018)
+        mNewData = DataProvider(db).getDataSequence(start, size, year)
         return mNewData
     }
 

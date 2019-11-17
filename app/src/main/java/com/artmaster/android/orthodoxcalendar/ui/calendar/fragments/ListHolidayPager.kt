@@ -1,7 +1,5 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.fragments
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,12 +13,16 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.holiday_list_pager.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
-
+import com.artmaster.android.orthodoxcalendar.domain.Time2
 
 
 class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
 
     private lateinit var adapter : FragmentStatePagerAdapter
+
+    private var changedCallback : ((Int) -> Unit)? = null
+
+    private val years = getYears()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +42,21 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
     private fun setPageAdapter() {
         if(holidayListPager.adapter != null) return
         holidayListPager.adapter =  adapter
+        setChangePageListener()
     }
 
     override fun setPage(numPage: Int) {
         if(holidayListPager == null) return
         holidayListPager.currentItem = numPage
+    }
+    private fun getYears(): ArrayList<Int> {
+        val size = Constants.HolidayList.PAGE_SIZE.value
+        val initYear = Time2().year - size/2
+        val years = ArrayList<Int>(size)
+        for (element in initYear..initYear+size){
+            years.add(element)
+        }
+        return years
     }
 
     private fun getAdapter(): FragmentStatePagerAdapter {
@@ -52,6 +64,10 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
 
             override fun getItem(p0: Int): Fragment {
                 val fragment = HolidayListFragment()
+                val bundle = Bundle().apply {
+                    putInt(Constants.Keys.YEAR.value, years[p0])
+                }
+                fragment.arguments = bundle
                 return fragment
             }
 
@@ -63,12 +79,16 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
 
     }
 
-    override fun <T> onChangePageListener(body: (num : Int) -> T) {
+    override fun onChangePageListener(body: (Int) -> Unit) {
+        changedCallback = body
+    }
+
+    private fun setChangePageListener() {
         holidayListPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                body(position)
+               changedCallback?.let { it(position) }
             }
         })
     }

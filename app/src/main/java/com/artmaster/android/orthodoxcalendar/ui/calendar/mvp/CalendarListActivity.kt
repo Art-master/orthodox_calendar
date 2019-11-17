@@ -1,10 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
@@ -63,6 +61,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         setContentView(R.layout.activity_calendar)
         setSupportActionBar(toolbar)
         mainFragment = listHolidayFragment as Fragment
+        listHolidayFragment.onChangePageListener { toolbarYearSpinner.setSelection(it) }
         presenter.attachView(this)
         presenter.viewIsReady()
         initBarSpinner()
@@ -119,7 +118,6 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
         mainFragment = if(mainFragment is ListViewContract.ViewListPager){
-            listHolidayFragment.onChangePageListener { toolbarYearSpinner.setSelection(it) }
             appViewFragment as Fragment
         }else listHolidayFragment as Fragment
 
