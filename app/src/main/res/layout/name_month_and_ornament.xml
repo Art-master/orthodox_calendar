@@ -34,7 +34,7 @@
             android:id="@+id/dayOfWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{OrtUtils.getDayOtWeek(context, holiday.day)}'
+            android:text='@{OrtUtils.getDayOtWeek(context, holiday)}'
             android:textAlignment="center"
             android:paddingEnd="20dp"
             android:paddingStart="0dp"

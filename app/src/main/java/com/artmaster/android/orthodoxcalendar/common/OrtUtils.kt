@@ -5,6 +5,8 @@ import android.util.TypedValue
 import android.content.Intent
 import android.support.v4.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Time2
 
 /**
  * Various functions for this application
@@ -37,10 +39,12 @@ object OrtUtils {
         return sp
     }
 
-    /** get day of week by a num day  */
+    /** get day of week by a holiday obj  */
     @JvmStatic
-    fun getDayOtWeek(context: Context, dayNum : Int): String {
-        return when(dayNum){
+    fun getDayOtWeek(context: Context, holiday : HolidayEntity): String {
+        val time = Time2()
+        time.calendar.set(holiday.year, holiday.month -1, holiday.day)
+        return when(time.dayOfWeek){
             1 -> context.getString(R.string.monday)
             2 -> context.getString( R.string.tuesday)
             3 -> context.getString(R.string.wednesday)

@@ -41,10 +41,7 @@ class Time2 {
     var calendar: Calendar = init()
 
      fun init(): Calendar {
-            val date = Date()
             calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-         val loc = Locale.getDefault()
-            //calendar.time = date
          return calendar
         }
 
