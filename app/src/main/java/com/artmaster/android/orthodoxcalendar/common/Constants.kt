@@ -12,7 +12,7 @@ class Constants {
     }
 
     enum class HolidayList constructor(val value: Int) {
-        PAGE_SIZE(25)
+        PAGE_SIZE(15)
     }
 
     companion object {
@@ -30,6 +30,8 @@ class Constants {
         HOLIDAY_ID("com.artmaster.android.orthodoxcalendar.common.holiday_id"),
         HOLIDAY("com.artmaster.android.orthodoxcalendar.common.holiday"),
         YEAR("com.artmaster.android.orthodoxcalendar.common.year"),
+        MONTH("com.artmaster.android.orthodoxcalendar.common.month"),
+        DAY("com.artmaster.android.orthodoxcalendar.common.day"),
     }
 }
 

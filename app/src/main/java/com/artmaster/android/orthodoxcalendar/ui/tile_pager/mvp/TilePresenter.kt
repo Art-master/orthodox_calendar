@@ -20,6 +20,7 @@ class TilePresenter : MvpPresenter<ContractTileView>(), ContractTilePresenter {
 
     override fun viewIsCreated() {
         viewState.setPageAdapter()
+        viewState.initSpinner()
     }
 
     override fun viewIsPaused() {}

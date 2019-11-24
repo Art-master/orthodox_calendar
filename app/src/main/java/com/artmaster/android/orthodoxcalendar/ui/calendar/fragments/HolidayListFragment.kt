@@ -12,12 +12,15 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.calendar.*
 import kotlinx.android.synthetic.main.calendar_list_fragment.view.*
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time2
 
 
 class HolidayListFragment : Fragment(), ListViewContract.ViewList {
 
     lateinit var recyclerAdapter: ListViewContract.Adapter
+
+    private lateinit var dataSource : HolidayDataSource
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.calendar_list_fragment, container, false)
@@ -36,7 +39,7 @@ class HolidayListFragment : Fragment(), ListViewContract.ViewList {
 
     private fun getAdapter() : ListViewContract.Adapter{
         val config = PageConfig
-        val dataSource = HolidayDataSource(context!!, getYear())
+        dataSource = HolidayDataSource(context!!, getYear())
         val list = PagedList(dataSource, config)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
         val adapter = HolidaysAdapter(context!!, diffCallback)
@@ -47,5 +50,8 @@ class HolidayListFragment : Fragment(), ListViewContract.ViewList {
     private fun getYear(): Int{
         val bundle = this.arguments
         return bundle?.getInt(Constants.Keys.YEAR.value, Time2().year) ?: Time2().year
+    }
+    public fun getCurrentElement(pos : Int): HolidayEntity{
+        return dataSource.getNewData()[pos]
     }
 }

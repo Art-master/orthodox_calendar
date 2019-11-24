@@ -7,5 +7,6 @@ interface ContractTileMonthView : MvpView {
     fun createDay(dayOfWeek: Int, level: Int, holidays: List<HolidayEntity>, i: Int)
     fun createDayOfWeekName(dayOfWeek: Int)
     fun createDaysOfWeekRows(dayOfWeek : IntRange)
+    fun initCalendar()
     fun clearView()
 }

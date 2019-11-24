@@ -1,6 +1,5 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -88,7 +87,11 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-               changedCallback?.let { it(position) }
+               changedCallback?.let {
+                   it(position)
+                   val fr = getAdapter().getItem(position)
+                   //val holiday = (fr as HolidayListFragment).getCurrentElement(position)
+               }
             }
         })
     }

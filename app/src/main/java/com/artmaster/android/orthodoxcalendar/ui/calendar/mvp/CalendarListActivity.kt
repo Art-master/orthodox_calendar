@@ -122,6 +122,14 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         }else listHolidayFragment as Fragment
 
         replaceFragment(R.id.activityCalendar, mainFragment)
+        setArguments(mainFragment)
+    }
+    private fun setArguments(fragment: Fragment){
+        fragment.arguments = Bundle().apply {
+            putInt(Constants.Keys.YEAR.value, getYear())
+            putInt(Constants.Keys.MONTH.value, 2)// change
+            putInt(Constants.Keys.DAY.value, 13)// change
+        }
     }
 
     override fun showHolidayList() {

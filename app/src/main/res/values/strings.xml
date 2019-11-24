@@ -41,16 +41,40 @@
     <string name="notif_holiday_later"> отмечают праздник </string>
     <string name="text_view_about_app_email">ggn.master@gmail.com</string>
 
-    <!--days of week names-->
-    <string name="monday">ПН.</string>
-    <string name="tuesday">ВТ.</string>
-    <string name="wednesday">СР.</string>
-    <string name="thursday">ЧТ.</string>
-    <string name="friday">ПТ.</string>
-    <string name="saturday">СБ.</string>
-    <string name="sunday">ВС.</string>
+    <string-array name="daysNamesAbb">
+        <item>ПН.</item>
+        <item>ВТ.</item>
+        <item>СР.</item>
+        <item>ЧТ.</item>
+        <item>ПТ.</item>
+        <item>СБ.</item>
+        <item>ВС.</item>
+    </string-array>
 
+    <string-array name="daysNamesFull">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
 
+    <string-array name="months">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
 
     <string-array name="loading_strings_array">
         <item>\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</item>

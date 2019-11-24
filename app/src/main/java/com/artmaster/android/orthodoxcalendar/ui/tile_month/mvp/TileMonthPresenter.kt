@@ -22,12 +22,13 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     private var holidayList = emptyList<HolidayEntity>()
     private val time = Time2()
 
-    override fun viewIsReady() {
-        getHolidays(time)
+    override fun viewIsReady(year: Int, month: Int) {
+        getHolidays(year, month)
+        time.calendar.set(year, month, 1)
     }
 
-    private fun getHolidays(time: Time2){
-        val disposable = Single.fromCallable {appComponent.getRepository().getMonthData(time.month, time.year)}
+    private fun getHolidays(year: Int, month: Int){
+        val disposable = Single.fromCallable {appComponent.getRepository().getMonthData(month, year)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -49,6 +50,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
             val e = time.calendar.get(Calendar.WEEK_OF_MONTH)
             viewState.createDay(dayOfWeek, e, sortByDay(i, data), i)
         }
+        viewState.initCalendar()
     }
 
     private fun sortByDay(day: Int, data: List<HolidayEntity>): ArrayList<HolidayEntity> {

@@ -44,16 +44,8 @@ object OrtUtils {
     fun getDayOtWeek(context: Context, holiday : HolidayEntity): String {
         val time = Time2()
         time.calendar.set(holiday.year, holiday.month -1, holiday.day)
-        return when(time.dayOfWeek){
-            1 -> context.getString(R.string.monday)
-            2 -> context.getString( R.string.tuesday)
-            3 -> context.getString(R.string.wednesday)
-            4 -> context.getString(R.string.thursday)
-            5 -> context.getString(R.string.friday)
-            6 -> context.getString(R.string.saturday)
-            7 -> context.getString(R.string.sunday)
-            else -> context.getString(R.string.monday)
-        }
+        val names = context.resources.getStringArray(R.array.daysNamesAbb)
+        return names[time.dayOfWeek - 1]
     }
 
     /**
