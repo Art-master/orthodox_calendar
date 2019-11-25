@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -33,9 +34,12 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     lateinit var tileView: View
     lateinit var tileDayView: View
+    lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        layoutManager = LinearLayoutManager(context)
 
         if(!presenter.isInRestoreState(this)){
             presenter.attachView(this)
@@ -71,7 +75,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         if(presenter.isInRestoreState(this)) return
         val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
         val v = getDayLayout()
-
+        v.setOnClickListener{ initRecyclerView(holidays) }
         styleDayView(v, holidays, dayOfWeek, i)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
         row.addView(v, level)
@@ -97,6 +101,11 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     private fun twelveHoliday(v : View){
         v.container.background = ContextCompat.getDrawable(context!!, R.drawable.tile_twelve_holiday)
+    }
+
+    private fun initRecyclerView(holidays: List<HolidayEntity>){
+        if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
+        recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
     }
 
     override fun createDaysOfWeekRows(dayOfWeek: IntRange) {
