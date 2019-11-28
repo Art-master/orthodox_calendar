@@ -8,4 +8,10 @@
     <color name="colorWhite">#737373</color>
     <color name="colorRed">#ff0000</color>
     <color name="colorBasicFont">#61797474</color>
+    <color name="colorSelectTile">#00BCD4</color>
+    <color name="colorTwelveHoliday">#03DAC6</color>
+    <color name="colorTileBorder">#000000</color>
+    <color name="colorHeadHoliday">#B00020</color>
+    <color name="colorFastDay">#90CAF9</color>
+    <color name="colorUsualDay">#FFFFFF</color>
 </resources>
