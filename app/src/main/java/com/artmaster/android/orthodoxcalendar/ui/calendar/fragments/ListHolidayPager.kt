@@ -12,7 +12,7 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.holiday_list_pager.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 
 
 class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
@@ -50,7 +50,7 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
     }
     private fun getYears(): ArrayList<Int> {
         val size = Constants.HolidayList.PAGE_SIZE.value
-        val initYear = Time2().year - size/2
+        val initYear = Time().year - size/2
         val years = ArrayList<Int>(size)
         for (element in initYear..initYear+size){
             years.add(element)
@@ -63,10 +63,11 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
 
             override fun getItem(p0: Int): Fragment {
                 val fragment = HolidayListFragment()
-                val bundle = Bundle().apply {
-                    putInt(Constants.Keys.YEAR.value, years[p0])
-                }
+
+                val bundle = Bundle()
+                bundle.putInt(Constants.Keys.YEAR.value, years[p0])
                 fragment.arguments = bundle
+
                 return fragment
             }
 

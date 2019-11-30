@@ -94,7 +94,7 @@ class DynamicHoliday(yearEaster: Int, holidayName: String) {
         val value = calculateDateEaster(yearEaster)
         val monthEaster = value.first
         val dayEaster = value.second
-        return Time.calculateDate(yearEaster, monthEaster - 1, //in Android API month begin with 0
+        return Time().calculateDate(yearEaster, monthEaster - 1, //in Android API month begin with 0
                 dayEaster, Calendar.DAY_OF_YEAR, valueForCalculate)
     }
 }

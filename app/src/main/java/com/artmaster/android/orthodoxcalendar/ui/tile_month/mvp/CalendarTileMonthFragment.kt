@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Layout
@@ -20,7 +21,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
@@ -41,6 +42,8 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        retainInstance = true
+
         layoutManager = LinearLayoutManager(context)
 
         if(!presenter.isInRestoreState(this)){
@@ -60,13 +63,41 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         presenter.viewIsCreated()
     }
 
+    override fun onResume() {
+        super.onResume()
+        //setFocus()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+    }
+
     private fun getDayLayout() = layoutInflater.inflate(R.layout.tile_day_layout, null)
+    private fun getYear() = getArgs().getInt(Constants.Keys.YEAR.value, Time().year)
+    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().month -1)
+    private fun getParentMonth() = getArgs().getInt(Constants.Keys.MONTH.value, Time().month -1)
+    private fun getDay() = getArgs().getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
+    private fun setDayArgs(value: Int) = getArgs().putInt(Constants.Keys.DAY.value, value)
+    private fun getArgs() = parentFragment!!.arguments!!
 
-    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time2().year)
-    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time2().month)
-    private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time2().dayOfMonth)
-
-    override fun initCalendar(){
+    override fun setFocus(month: Int){
+        val r = month
+        val g = getParentMonth()
+        if(month != getParentMonth() && isVisible) return
+        val id = getDay()
+        if(id == 0 || tableMonthTile == null) return
+        val daysOfWeek = 0 until tableMonthTile.childCount
+        for(i in daysOfWeek){
+            val row = tableMonthTile.getChildAt(i) as TableRow
+            val view = row.findViewById<ConstraintLayout>(id) ?: continue
+            view.requestFocus()
+            return
+        }
     }
 
     override fun clearView(){
@@ -79,6 +110,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
         val v = getDayLayout()
         v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, holidays) }
+        v.id = i
 
         styleDayView(v, holidays, dayOfWeek, i)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
@@ -91,6 +123,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
             tileBackground = view.container.background
             view.container.background =
                     ContextCompat.getDrawable(view.context!!, R.drawable.tile_selected_item)
+            setDayArgs(view.id)
         } else {
             view.container.background = tileBackground
         }
@@ -105,21 +138,28 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
         text.text = day.toString()
 
-        if(holidays.isEmpty()) return
-        val firstHoliday = holidays[0]
-        styleHoliday(firstHoliday, view)
+        if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
-        if(dayOfWeek == Time2.Day.SUNDAY.num) text.textColor = Color.RED
+        if(holidays.isEmpty()) return
+        styleHoliday(holidays, view)
     }
 
-    private fun styleHoliday(holiday: HolidayEntity, v: View){
+    private fun styleHoliday(holiday: List<HolidayEntity>, v: View){
         val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
-        if(holiday.type.contains(HolidayEntity.Type.GREAT.name, true)){
+
+        if(isThatHoliday(HolidayEntity.Type.TWELVE, holiday)){
+            v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
+        } else if(isThatHoliday(HolidayEntity.Type.GREAT, holiday)){
             text.textColor = Color.RED
-        }
-        if(holiday.type.contains(HolidayEntity.Type.TWELVE.value)){
             v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
         }
+    }
+
+    private fun isThatHoliday(type: HolidayEntity.Type, holidays: List<HolidayEntity>): Boolean {
+        for(holiday in holidays){
+            if(holiday.type.contains(type.value, true)) return true
+        }
+        return false
     }
 
     override fun createDaysOfWeekRows(dayOfWeek: IntRange) {
@@ -132,8 +172,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun createDayOfWeekName(dayOfWeek: Int){
-        val row = view!!.tableMonthTile.getChildAt(dayOfWeek) as TableRow
-
+        view!!.tableMonthTile.getChildAt(dayOfWeek) as TableRow
     }
 
     private fun getDayNames() = resources.getStringArray(R.array.daysNamesAbb)

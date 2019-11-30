@@ -16,7 +16,7 @@ class Constants {
     }
 
     companion object {
-        const val INIT_ASSETS_FILE_NAME = "holidays.json"
+        const val INIT_ASSETS_FILE_NAME = "holidays.json5"
         const val INIT_ASSETS_FILE_DIRECTORY = "files/"
         const val DATABASE_FILE_NAME = "holidays.db"
         const val FONT_ASSETS_DIRECTORY = "fonts/"

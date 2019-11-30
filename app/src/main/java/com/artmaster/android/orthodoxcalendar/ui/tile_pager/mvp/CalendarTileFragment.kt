@@ -14,7 +14,7 @@ import com.arellomobile.mvp.presenter.PresenterType
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import kotlinx.android.synthetic.main.fragment_tile_calendar.view.*
@@ -30,7 +30,6 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //retainInstance = false
         if(!presenter.isInRestoreState(this)){
             presenter.attachView(this)
             presenter.viewIsReady()
@@ -59,9 +58,9 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         setMonthSpinner()
     }
 
-    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time2().year)
-    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time2().month)
-    private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time2().dayOfMonth)
+    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
+    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().month-1)
+    private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
     private fun getMonthsNames() =  resources.getStringArray(R.array.months)
 
     private fun setMonthSpinner(){
@@ -110,6 +109,9 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
                 tileView.monthSpinner.setSelection(position)
+                //val page = fragmentManager!!.findFragmentByTag("android:switcher:" + R.id.pager + ":" + ViewPager.getCurrentItem())
+                val fr = getAdapter().getItem(position)
+                //if(fr is ContractTileMonthView) fr.setFocus()
 
             }
         })

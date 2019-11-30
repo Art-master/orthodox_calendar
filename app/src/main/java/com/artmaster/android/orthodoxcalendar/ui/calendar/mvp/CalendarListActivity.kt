@@ -21,7 +21,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import android.widget.AdapterView.OnItemSelectedListener
 import android.view.View
 
@@ -67,7 +67,9 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         initBarSpinner()
     }
 
-    private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time2().year)
+    private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
+    private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().month -1) //with 1
+    private fun getDay() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().dayOfMonth)
 
     private fun getYears(): ArrayList<String> {
       val size = Constants.HolidayList.PAGE_SIZE.value
@@ -127,8 +129,8 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun setArguments(fragment: Fragment){
         fragment.arguments = Bundle().apply {
             putInt(Constants.Keys.YEAR.value, getYear())
-            putInt(Constants.Keys.MONTH.value, 2)// change
-            putInt(Constants.Keys.DAY.value, 13)// change
+            putInt(Constants.Keys.MONTH.value, getMonth())
+            putInt(Constants.Keys.DAY.value, getDay())
         }
     }
 

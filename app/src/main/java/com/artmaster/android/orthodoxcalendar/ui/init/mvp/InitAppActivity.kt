@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Extra
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.MassageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.fragments.LoadingScreenFragment
@@ -66,7 +65,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     }
 
     private fun getCurrentYear(): Int {
-        val time = Time2()
+        val time = Time()
         return time.year
     }
 

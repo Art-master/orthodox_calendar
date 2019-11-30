@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Wrapper for work with time
  */
-object Time {
+class Time {
 
     val year: Int
         get() = calendar.get(Calendar.YEAR)
@@ -17,7 +17,10 @@ object Time {
         get() = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
     val dayOfWeek: Int
-        get() = calendar.get(Calendar.DAY_OF_WEEK)
+        get() {
+            val day = calendar.get(Calendar.DAY_OF_WEEK)
+            return if(day == 1) 7 else day -1
+        }
 
     val dayOfYear: Int
         get() = calendar.get(Calendar.DAY_OF_YEAR)
@@ -35,13 +38,11 @@ object Time {
     /**
      * init the time object
      */
-    val calendar: Calendar
-        get() {
-            val date = Date()
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-            calendar.timeZone = TimeZone.getDefault()
-            return calendar
+    var calendar: Calendar = init()
+
+     fun init(): Calendar {
+            calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+         return calendar
         }
 
     fun calculateDate(year: Int, month: Int, day: Int, param: Int, dateCalc: Int): Calendar {
@@ -73,6 +74,8 @@ object Time {
 /*    fun getDay(){
         calendar.get(Calendar.)
     }*/
-
+    enum class Day(val num : Int){
+    SUNDAY(7)
+}
 
 }

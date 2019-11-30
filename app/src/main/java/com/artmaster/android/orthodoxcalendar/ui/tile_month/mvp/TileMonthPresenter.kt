@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
-import com.artmaster.android.orthodoxcalendar.domain.Time2
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
 import io.reactivex.Single
@@ -19,8 +19,7 @@ import kotlin.collections.ArrayList
 class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMonthPresenter {
     private val dispose = CompositeDisposable()
     private var appComponent = App.appComponent
-    private var holidayList = emptyList<HolidayEntity>()
-    private val time = Time2()
+    private val time = Time()
 
     override fun viewIsReady(year: Int, month: Int) {
         getHolidays(year, month)
@@ -32,25 +31,26 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                        onSuccess = { data -> holidayList = data },
+                        onSuccess = { data -> viewData(data, time) },
                         onError = { it.printStackTrace() })
         dispose.add(disposable)
     }
 
     override fun viewIsCreated() {
-        viewData(holidayList, time)
+        //viewData(holidayList, time)
     }
 
-    private fun viewData(data: List<HolidayEntity>, time: Time2) {
+    private fun viewData(data: List<HolidayEntity>, time: Time) {
         viewState.createDaysOfWeekRows(1..7)
         val numDays = time.daysInMonth
-        for(i in 1..numDays){
-            time.calendar.set(Calendar.DAY_OF_MONTH, i)
+        for(index in 1..numDays){
+            time.calendar.set(Calendar.DAY_OF_MONTH, index)
             val dayOfWeek = time.dayOfWeek
-            val e = time.calendar.get(Calendar.WEEK_OF_MONTH)
-            viewState.createDay(dayOfWeek, e, sortByDay(i, data), i)
+            val holidays = sortByDay(index, data)
+            val week = time.calendar.get(Calendar.WEEK_OF_MONTH)
+            viewState.createDay(dayOfWeek, week, holidays, index)
         }
-        viewState.initCalendar()
+        viewState.setFocus(time.month -1)
     }
 
     private fun sortByDay(day: Int, data: List<HolidayEntity>): ArrayList<HolidayEntity> {
