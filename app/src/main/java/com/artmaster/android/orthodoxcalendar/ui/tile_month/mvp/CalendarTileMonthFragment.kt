@@ -33,9 +33,9 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     @InjectPresenter(tag = "TileMonthPresenter", type = PresenterType.LOCAL)
     lateinit var presenter: TileMonthPresenter
 
-    lateinit var tileView: View
-    lateinit var tileDayView: View
-    lateinit var layoutManager: LinearLayoutManager
+    private lateinit var tileView: View
+    private lateinit var tileDayView: View
+    private lateinit var layoutManager: LinearLayoutManager
 
     private var tileBackground: Drawable? = null
 
@@ -85,10 +85,10 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private fun setDayArgs(value: Int) = getArgs().putInt(Constants.Keys.DAY.value, value)
     private fun getArgs() = parentFragment!!.arguments!!
 
-    override fun setFocus(month: Int){
-        val r = month
+    override fun setFocus(monthNum: Int){
+        val r = monthNum
         val g = getParentMonth()
-        if(month != getParentMonth() && isVisible) return
+        if(monthNum != getParentMonth() && isVisible) return
         val id = getDay()
         if(id == 0 || tableMonthTile == null) return
         val daysOfWeek = 0 until tableMonthTile.childCount
@@ -147,15 +147,24 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private fun styleHoliday(holiday: List<HolidayEntity>, v: View){
         val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
 
-        if(isThatHoliday(HolidayEntity.Type.TWELVE, holiday)){
+        when {
+            isTypeHoliday(HolidayEntity.Type.TWELVE, holiday) -> {
+                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
             v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
-        } else if(isThatHoliday(HolidayEntity.Type.GREAT, holiday)){
-            text.textColor = Color.RED
-            v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
+            }
+            isTypeHoliday(HolidayEntity.Type.GREAT, holiday) -> {
+                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
+                v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
+            }
+
+            isTypeHoliday(HolidayEntity.Type.MAIN, holiday) -> {
+                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
+                v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_easter)
+            }
         }
     }
 
-    private fun isThatHoliday(type: HolidayEntity.Type, holidays: List<HolidayEntity>): Boolean {
+    private fun isTypeHoliday(type: HolidayEntity.Type, holidays: List<HolidayEntity>): Boolean {
         for(holiday in holidays){
             if(holiday.type.contains(type.value, true)) return true
         }
@@ -182,6 +191,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         val dayNames = getDayNames()
         text.text = dayNames[month -1]
         text.textColor = Color.RED
+        text.textSize = resources.getDimension(R.dimen.size_tile_day_of_week)
         text.typeface = CustomFont.getFont(context!!, getString(R.string.font_basic))
         text.textAlignment = Layout.Alignment.ALIGN_CENTER.ordinal
         text.setPadding(0,0,20,0)

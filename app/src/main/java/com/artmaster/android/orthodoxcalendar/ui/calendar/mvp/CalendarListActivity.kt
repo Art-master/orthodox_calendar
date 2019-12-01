@@ -52,6 +52,8 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     @Inject
     lateinit var appViewFragment: ContractTileView
 
+    private var toolbarMenu: Menu? = null
+
     private lateinit var mainFragment : Fragment
     private var fragment : Fragment = Fragment()
 
@@ -69,7 +71,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
     private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().month -1) //with 1
-    private fun getDay() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().dayOfMonth)
+    private fun getDay() = intent.getIntExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
 
     private fun getYears(): ArrayList<String> {
       val size = Constants.HolidayList.PAGE_SIZE.value
@@ -90,6 +92,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_app, menu)
+        toolbarMenu = menu
         return true
     }
 
@@ -120,8 +123,12 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
         mainFragment = if(mainFragment is ListViewContract.ViewListPager){
+            toolbarMenu?.getItem(0)?.setIcon(R.drawable.list_item)
             appViewFragment as Fragment
-        }else listHolidayFragment as Fragment
+        }else {
+            toolbarMenu?.getItem(0)?.setIcon(R.drawable.item)
+            listHolidayFragment as Fragment
+        }
 
         replaceFragment(R.id.activityCalendar, mainFragment)
         setArguments(mainFragment)
@@ -132,6 +139,10 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
             putInt(Constants.Keys.MONTH.value, getMonth())
             putInt(Constants.Keys.DAY.value, getDay())
         }
+    }
+
+    private fun setArgYear(fragment: Fragment, year: Int){
+        fragment.arguments?.putInt(Constants.Keys.YEAR.value, year)
     }
 
     override fun showHolidayList() {
@@ -166,6 +177,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         if (fragment.isHidden) {
             supportFragmentManager
                     .beginTransaction()
+                    .setCustomAnimations(0,0)
                     .show(fragment)
                     .commit()
         }
@@ -232,8 +244,11 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun setOnItemSelected(){
         toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+                setArgYear(mainFragment, getCurrentYear())
                 if(mainFragment is ListViewContract.ViewListPager){
                     (mainFragment as ListViewContract.ViewListPager).setPage(position)
+                }else {
+                    (mainFragment as ContractTileView).upadteView()
                 }
             }
 
@@ -241,5 +256,11 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
             }
 
         }
+    }
+
+    private fun getCurrentYear(): Int {
+        val years = getYears()
+        val currentYear = years[toolbarYearSpinner.selectedItemPosition]
+        return currentYear.toInt()
     }
 }

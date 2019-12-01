@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_view"
-        android:icon="@drawable/item"
+        android:icon="@drawable/tile_icon"
         app:showAsAction="ifRoom"
         android:title="@string/item_name_settings">
     </item>

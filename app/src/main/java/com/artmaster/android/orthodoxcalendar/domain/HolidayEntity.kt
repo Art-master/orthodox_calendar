@@ -56,6 +56,13 @@ data class HolidayEntity(
     enum class Type(val value: String){
         GREAT("великий"),
         TWELVE("двунадесятый"),
-        MAIN("главный")
+        MAIN("главный"),
+        HEAD("главный переходящий"),
+        TWELVE_MOVABLE("великий двунадесятый переходящий"),
+        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный"),
+        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный"),
+        AVERAGE("средний"),
+        AVERAGE_POLYLEIC("средний полиелейный"),
+        AVERAGE_PEPPY("средний бденный");
     }
 }

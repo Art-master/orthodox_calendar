@@ -57,16 +57,15 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     }
 
     override fun nextScreen() {
-        val intent = Intent(applicationContext, CalendarListActivity::class.java)
-        intent.putExtra(Constants.Keys.YEAR.value, getCurrentYear())
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        startActivity(intent)
+        startActivity(getArgs())
         finish()
     }
 
-    private fun getCurrentYear(): Int {
-        val time = Time()
-        return time.year
+    private fun getArgs() = Intent(applicationContext, CalendarListActivity::class.java).apply {
+        putExtra(Constants.Keys.YEAR.value, Time().year)
+        putExtra(Constants.Keys.MONTH.value, Time().month - 1)
+        putExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
+        addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }
 
     override fun onBackPressed() = OrtUtils.exitProgram(applicationContext)

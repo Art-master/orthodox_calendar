@@ -22,11 +22,11 @@ class DataProvider(private val dataBase: AppDatabase)
 
     private fun getAllData(year: Int): List<HolidayEntity> {
         val holidaysFromDb: List<HolidayEntity> = getDataFromDb()
-        addDynamicData(year, holidaysFromDb)
-        return holidaysFromDb
+        return calculateDynamicData(holidaysFromDb, year)
     }
 
-    private fun addDynamicData(year: Int, holidays:  List<HolidayEntity>){
+    private fun calculateDynamicData(holidays:  List<HolidayEntity>, year: Int, month: Int = -1) : List<HolidayEntity>{
+        val hds: ArrayList<HolidayEntity> = ArrayList()
         for (holiday in holidays) {
             holiday.year = year
             if (holiday.day == 0) {
@@ -34,13 +34,15 @@ class DataProvider(private val dataBase: AppDatabase)
                 holiday.day = dynamic.day
                 holiday.month = dynamic.month
             }
+            if(month < 0 || holiday.month == month + 1) hds.add(holiday) //month in holiday with 1
         }
+        return hds
     }
 
     override fun getMonthData(month: Int, year: Int): List<HolidayEntity> {
         val holidaysFromDb = dataBase.holidaysDb().getByMonth(month)
-        addDynamicData(year, holidaysFromDb)
-        return holidaysFromDb.sorted()
+        val holidays = calculateDynamicData(holidaysFromDb, year, month)
+        return holidays.sorted()
     }
 
     override fun getDayData(day: Int, month: Int, year: Int): List<HolidayEntity> {

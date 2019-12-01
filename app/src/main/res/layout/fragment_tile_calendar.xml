@@ -20,7 +20,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/holidayTilePager"
         android:layout_width="417dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

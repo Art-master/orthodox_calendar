@@ -16,7 +16,7 @@ abstract class HolidayDao {
     @Query("SELECT * FROM holidays")
     abstract fun getAll(): List<HolidayEntity>
 
-    /** month with 0 */
+    /** [monthNum] with 0 */
     @Query("SELECT * FROM holidays WHERE month = :monthNum + 1 OR month = 0")
     abstract fun getByMonth(monthNum: Int): List<HolidayEntity>
 

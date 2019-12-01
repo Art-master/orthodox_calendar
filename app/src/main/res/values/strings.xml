@@ -7,7 +7,7 @@
     <string name="ornament_for_name_date_left">v</string>
     <string name="ornament_for_name_date_right">V</string>
 
-    <!--name item for toolbar -->
+    <!--name tile_icon for toolbar -->
     <string name="item_name_about">о сем творении</string>
     <string name="item_name_settings">настройки</string>
     <string name="item_view_settings">смена вида</string>
@@ -89,7 +89,7 @@
         <item>\"Блаженны чистые сердцем,\n ибо они Бога узрят.\"\n (Лк.21:19)</item>
     </string-array>
 
-    <!--item menu text-->
+    <!--tile_icon menu text-->
     <string name="text_view_about_app" formatted="true">Это приложение было выполнено с целью
         бесплатного использования и для прославления Господа нашего Иисуса Христа.
     Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.

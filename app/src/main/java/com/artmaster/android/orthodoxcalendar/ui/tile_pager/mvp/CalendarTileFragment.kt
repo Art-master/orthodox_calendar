@@ -34,7 +34,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             presenter.attachView(this)
             presenter.viewIsReady()
         }
-        adapter = getAdapter()
+        adapter = buildAdapter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -83,14 +83,15 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         }
     }
 
-    private fun getAdapter(): FragmentStatePagerAdapter {
+    private fun buildAdapter(): FragmentStatePagerAdapter {
         //if(!isAdded) return null
         return object :FragmentStatePagerAdapter(childFragmentManager) {
 
             override fun getItem(p0: Int): Fragment {
                 val fragment = CalendarTileMonthFragment()
-                fragment.arguments = arguments
-                fragment.arguments?.putInt(Constants.Keys.MONTH.value, p0)
+                val args = Bundle()
+                args.putInt(Constants.Keys.MONTH.value, p0)
+                fragment.arguments = args
                 return fragment
             }
 
@@ -109,10 +110,6 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
                 tileView.monthSpinner.setSelection(position)
-                //val page = fragmentManager!!.findFragmentByTag("android:switcher:" + R.id.pager + ":" + ViewPager.getCurrentItem())
-                val fr = getAdapter().getItem(position)
-                //if(fr is ContractTileMonthView) fr.setFocus()
-
             }
         })
     }
@@ -123,5 +120,12 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             putInt(Constants.Keys.MONTH.value, tileView.monthSpinner.selectedItemPosition)
             putInt(Constants.Keys.DAY.value, 13)// change
         }
+    }
+
+    override fun upadteView() {
+        //tileView.holidayTilePager.removeAllViews()
+        val position = tileView.holidayTilePager.currentItem
+        tileView.holidayTilePager.adapter = buildAdapter()
+        tileView.holidayTilePager.currentItem = position
     }
 }
