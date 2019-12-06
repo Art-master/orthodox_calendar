@@ -59,10 +59,21 @@ data class HolidayEntity(
         MAIN("главный"),
         HEAD("главный переходящий"),
         TWELVE_MOVABLE("великий двунадесятый переходящий"),
+        GREAT_TWELVE("великий двунадесятый"),
         TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный"),
         NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный"),
+        GREAT_NOT_TWELVE("великий недвунадесятый"),
         AVERAGE("средний"),
         AVERAGE_POLYLEIC("средний полиелейный"),
         AVERAGE_PEPPY("средний бденный");
+    }
+    enum class DayOfWeek(val num: Int){
+        MONDAY(1),
+        TUESDAY(2),
+        WEDNESDAY(3),
+        THURSDAY(4),
+        FRIDAY(5),
+        SATURDAY(6),
+        SUNDAY(7);
     }
 }

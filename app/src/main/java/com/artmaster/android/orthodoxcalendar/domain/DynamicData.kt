@@ -1,11 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
+import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity.*
 import java.util.Calendar
 
 /**
  * Calculated dynamic holidays
  */
-class DynamicHoliday(yearEaster: Int, holidayName: String) {
+class DynamicData(private val yearEaster: Int = Time().year) {
     companion object {
         const val DATE_NOT_CALCULATED = -1
 
@@ -21,10 +22,8 @@ class DynamicHoliday(yearEaster: Int, holidayName: String) {
     var day = DATE_NOT_CALCULATED
         private set
 
-
-    init {
-        calculateDateDynamicHolidays(yearEaster, holidayName)
-    }
+    var monthEaster = 0
+    var dayEaster = 0
 
     /**
      * Calculates the date of Easter according to the method of Friedrich Gauss
@@ -62,12 +61,15 @@ class DynamicHoliday(yearEaster: Int, holidayName: String) {
                 month = 5
             }
         }
+        monthEaster = month
+        dayEaster = day
+
         return month to day
     }
 
-    private fun calculateDateDynamicHolidays(yearEaster: Int, holidayName: String) {
+    fun fillHoliday(holiday: HolidayEntity) {
         var calendar: Calendar? = null
-        when (holidayName) {
+        when (holiday.title) {
             //The Holy Easter
             THE_EASTER -> calendar = getHolidayDynamicDate(yearEaster, 0)
             //The first sunday before Easter
@@ -91,10 +93,18 @@ class DynamicHoliday(yearEaster: Int, holidayName: String) {
      * @return calculated value as Calendar object
      */
     private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Calendar {
-        val value = calculateDateEaster(yearEaster)
-        val monthEaster = value.first
-        val dayEaster = value.second
+        if(yearEaster != this.yearEaster) calculateDateEaster(yearEaster)
         return Time().calculateDate(yearEaster, monthEaster - 1, //in Android API month begin with 0
                 dayEaster, Calendar.DAY_OF_YEAR, valueForCalculate)
+    }
+
+    fun fillFastingDay(day: Day){
+
+    }
+
+    private fun isFastingDay(day: Day){
+        if(day.dayInWeek == DayOfWeek.WEDNESDAY.num) {
+            day.fasting.type = Fasting.Type.FASTING_DAY
+        }
     }
 }

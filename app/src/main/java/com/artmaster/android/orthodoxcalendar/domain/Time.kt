@@ -64,6 +64,12 @@ class Time {
         return calendar
     }
 
+    fun getDaysOfYear(year: Int): Int{
+        val c = init()
+        c.set(year, 11, 31)
+        return c.get(Calendar.DAY_OF_YEAR)
+    }
+
     fun setGregorianCalendar(): Calendar {
         val date = Date()
         val calendar = GregorianCalendar()
@@ -71,9 +77,7 @@ class Time {
         calendar.timeZone = TimeZone.getDefault()
         return calendar
     }
-/*    fun getDay(){
-        calendar.get(Calendar.)
-    }*/
+
     enum class Day(val num : Int){
     SUNDAY(7)
 }

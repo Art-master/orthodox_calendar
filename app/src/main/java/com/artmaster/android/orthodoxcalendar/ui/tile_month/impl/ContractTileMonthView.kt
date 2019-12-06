@@ -1,10 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.impl
 
 import com.arellomobile.mvp.MvpView
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Day
 
 interface ContractTileMonthView : MvpView {
-    fun createDay(dayOfWeek: Int, level: Int, holidays: List<HolidayEntity>, i: Int)
+    fun createDay(dayOfWeek: Int, level: Int, day: Day)
     fun createDayOfWeekName(dayOfWeek: Int)
     fun createDaysOfWeekRows(dayOfWeek : IntRange)
     fun setFocus(monthNum: Int)

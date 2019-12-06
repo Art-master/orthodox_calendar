@@ -20,6 +20,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
@@ -104,22 +105,22 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         view!!.tableMonthTile.removeAllViews()
     }
 
-    override fun createDay(dayOfWeek: Int, level: Int, holidays: List<HolidayEntity>, i: Int){
+    override fun createDay(dayOfWeek: Int, level: Int, day: Day){
         if(presenter.isInRestoreState(this)) return
         val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
 
         val v = getDayLayout()
-        v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, holidays) }
-        v.id = i
+        v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
+        v.id = day.dayInMonth
 
-        styleDayView(v, holidays, dayOfWeek, i)
+        styleDayView(v, day, dayOfWeek)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
         row.addView(v, level)
     }
 
-    private fun changedFocus(view: View, hasFocus: Boolean, holidays: List<HolidayEntity>){
+    private fun changedFocus(view: View, hasFocus: Boolean, day: Day){
         if(hasFocus){
-            initRecyclerView(holidays)
+            initRecyclerView(day)
             tileBackground = view.container.background
             view.container.background =
                     ContextCompat.getDrawable(view.context!!, R.drawable.tile_selected_item)
@@ -129,39 +130,43 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         }
     }
 
-    private fun initRecyclerView(holidays: List<HolidayEntity>){
+    private fun initRecyclerView(day: Day){
+        val holidays = day.holidays
+        if(holidays.isEmpty()) return
         if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
         recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
     }
 
-    private fun styleDayView(view: View, holidays: List<HolidayEntity>, dayOfWeek: Int, day: Int){
+    private fun styleDayView(view: View, day: Day, dayOfWeek: Int){
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
-        text.text = day.toString()
+        text.text = day.dayInMonth.toString()
 
         if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
-        if(holidays.isEmpty()) return
-        styleHoliday(holidays, view)
+        styleHoliday(day, view)
     }
 
-    private fun styleHoliday(holiday: List<HolidayEntity>, v: View){
+    private fun styleHoliday(day: Day, v: View){
+        val holidays = day.holidays
         val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
-
         when {
-            isTypeHoliday(HolidayEntity.Type.TWELVE, holiday) -> {
-                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
-            v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
+            isTypeHoliday(HolidayEntity.Type.GREAT_TWELVE, holidays) -> {
+                setStyle(v, text, R.drawable.tile_twelve_holiday)
             }
-            isTypeHoliday(HolidayEntity.Type.GREAT, holiday) -> {
-                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
-                v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_twelve_holiday)
+            isTypeHoliday(HolidayEntity.Type.GREAT_NOT_TWELVE, holidays) -> {
+                setStyle(v, text, R.drawable.tile_great_holiday)
             }
-
-            isTypeHoliday(HolidayEntity.Type.MAIN, holiday) -> {
-                text.textColor = ContextCompat.getColor(v.context!!, R.color.colorTextHeadHolidays)
-                v.container.background = ContextCompat.getDrawable(v.context!!, R.drawable.tile_easter)
+            isTypeHoliday(HolidayEntity.Type.MAIN, holidays) -> {
+                setStyle(v, text, R.drawable.tile_easter)
             }
         }
+    }
+
+    private fun setStyle(view: View, text: TextViewWithCustomFont, style: Int,
+                         color: Int = R.color.colorTextHeadHolidays){
+
+        text.textColor = ContextCompat.getColor(view.context!!, color)
+        view.container.background = ContextCompat.getDrawable(view.context!!, style)
     }
 
     private fun isTypeHoliday(type: HolidayEntity.Type, holidays: List<HolidayEntity>): Boolean {
