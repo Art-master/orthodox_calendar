@@ -21,8 +21,8 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     private val time = Time()
 
     override fun viewIsReady(year: Int, month: Int) {
-        getHolidays(year, month)
         time.calendar.set(year, month, 1)
+        getHolidays(year, month)
     }
 
     private fun getHolidays(year: Int, month: Int){
@@ -30,7 +30,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                        onSuccess = { data -> viewData(data, time) },
+                        onSuccess = { viewData(it, time) },
                         onError = { it.printStackTrace() })
         dispose.add(disposable)
     }
@@ -38,13 +38,13 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     override fun viewIsCreated() { }
 
     private fun viewData(days: List<Day>, time: Time) {
-        viewState.createDaysOfWeekRows(1..7)
+        viewState.drawDaysOfWeekRows(1..7)
         val numDays = time.daysInMonth
         for(index in 1..numDays){
             time.calendar.set(Calendar.DAY_OF_MONTH, index)
             val dayOfWeek = time.dayOfWeek
             val week = time.calendar.get(Calendar.WEEK_OF_MONTH)
-            viewState.createDay(dayOfWeek, week, days[index])
+            viewState.drawDay(dayOfWeek, week, days[index - 1])
         }
         viewState.setFocus(time.month -1)
     }

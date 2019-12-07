@@ -8,19 +8,11 @@ import java.util.Calendar
  */
 class DynamicData(private val yearEaster: Int = Time().year) {
     companion object {
-        const val DATE_NOT_CALCULATED = -1
-
         const val THE_EASTER = "Пасха"
         const val THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM = "Вход Господень в Иерусалим"
         const val THE_ASCENSION_OF_THE_LORD = "Вознесение Господне"
         const val THE_HOLY_TRINITY = "День Святой Троицы"
     }
-
-    var month = DATE_NOT_CALCULATED
-        private set
-
-    var day = DATE_NOT_CALCULATED
-        private set
 
     var monthEaster = 0
     var dayEaster = 0
@@ -81,8 +73,8 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         if (calendar == null) return
-        day = calendar.get(Calendar.DAY_OF_MONTH)
-        month = calendar.get(Calendar.MONTH) + 1 //in Android API month begin with 0
+        holiday.day = calendar.get(Calendar.DAY_OF_MONTH)
+        holiday.month = calendar.get(Calendar.MONTH) + 1 //in Android API month begin with 0
         calendar.clear()
     }
 
@@ -93,18 +85,18 @@ class DynamicData(private val yearEaster: Int = Time().year) {
      * @return calculated value as Calendar object
      */
     private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Calendar {
-        if(yearEaster != this.yearEaster) calculateDateEaster(yearEaster)
+        if(monthEaster == 0 || dayEaster == 0) calculateDateEaster(yearEaster)
         return Time().calculateDate(yearEaster, monthEaster - 1, //in Android API month begin with 0
                 dayEaster, Calendar.DAY_OF_YEAR, valueForCalculate)
     }
 
     fun fillFastingDay(day: Day){
-
-    }
-
-    private fun isFastingDay(day: Day){
         if(day.dayInWeek == DayOfWeek.WEDNESDAY.num) {
             day.fasting.type = Fasting.Type.FASTING_DAY
         }
+    }
+
+    private fun isFastingDay(day: Day){
+
     }
 }

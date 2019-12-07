@@ -70,7 +70,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     }
 
     private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().month -1) //with 1
+    private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().month -1) //with 0
     private fun getDay() = intent.getIntExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
 
     private fun getYears(): ArrayList<String> {

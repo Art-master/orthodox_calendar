@@ -105,7 +105,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         view!!.tableMonthTile.removeAllViews()
     }
 
-    override fun createDay(dayOfWeek: Int, level: Int, day: Day){
+    override fun drawDay(dayOfWeek: Int, level: Int, day: Day){
         if(presenter.isInRestoreState(this)) return
         val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
 
@@ -176,7 +176,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         return false
     }
 
-    override fun createDaysOfWeekRows(dayOfWeek: IntRange) {
+    override fun drawDaysOfWeekRows(dayOfWeek: IntRange) {
         if(presenter.isInRestoreState(this)) return
         for(i in dayOfWeek){
             val row = createDayOfWeekRow()
@@ -185,7 +185,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         }
     }
 
-    override fun createDayOfWeekName(dayOfWeek: Int){
+    override fun drawDayOfWeekName(dayOfWeek: Int){
         view!!.tableMonthTile.getChildAt(dayOfWeek) as TableRow
     }
 
