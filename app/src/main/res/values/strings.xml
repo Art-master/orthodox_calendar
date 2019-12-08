@@ -75,6 +75,8 @@
         <item>Ноябрь</item>
         <item>Декабрь</item>
     </string-array>
+    <string name="arrow_left">&lt;</string>
+    <string name="arrow_right">&gt;</string>
 
     <string-array name="loading_strings_array">
         <item>\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</item>

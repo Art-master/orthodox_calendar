@@ -91,12 +91,51 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     fun fillFastingDay(day: Day){
-        if(day.dayInWeek == DayOfWeek.WEDNESDAY.num) {
+        if(isUsuallyFastingDay(day)) {
+            day.fasting.type = Fasting.Type.FASTING_DAY
+        }
+        if(isPeterAndPaulFasting(day)){
+            day.fasting.type = Fasting.Type.FASTING_DAY
+        }
+        if(isAssumptionFasting(day)){
+            day.fasting.type = Fasting.Type.FASTING_DAY
+        }
+        if(isChristmasFasting(day)){
+            day.fasting.type = Fasting.Type.FASTING_DAY
+        }
+        if(isGreatFasting(day)){
             day.fasting.type = Fasting.Type.FASTING_DAY
         }
     }
 
-    private fun isFastingDay(day: Day){
+    private fun isUsuallyFastingDay(day: Day): Boolean {
+        return day.dayInWeek == DayOfWeek.WEDNESDAY.num || day.dayInWeek == DayOfWeek.FRIDAY.num
+    }
 
+    private fun isPeterAndPaulFasting(day: Day): Boolean {
+        return (day.month == Month.JUNE.num && day.dayInMonth >= 24) or
+                (day.month == Month.JULY.num && day.dayInMonth <= 12)
+    }
+
+    private fun isAssumptionFasting(day: Day): Boolean {
+        return day.month == Month.AUGUST.num && (day.dayInMonth in 14..28)
+    }
+
+    private fun isChristmasFasting(day: Day): Boolean{
+        return (day.month == Month.NOVEMBER.num && day.dayInMonth >= 28) or
+                (day.month == Month.DECEMBER.num) or
+                (day.month == Month.JANUARY.num && day.dayInMonth <= 6)
+    }
+
+    private fun isGreatFasting(day: Day): Boolean {
+        val calendar = getHolidayDynamicDate(yearEaster, -48)
+        val month = calendar.get(Calendar.MONTH)
+        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
+        if (day.month > monthEaster - 1) return false
+        if (day.month < month) return false
+        if (day.month == monthEaster -1 && day.dayInMonth < dayEaster) return true
+        if (day.month == month && day.dayInMonth >= dayM) return true
+        if (day.month in (month + 1) until monthEaster - 1) return true
+        return false
     }
 }

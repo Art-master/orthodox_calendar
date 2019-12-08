@@ -7,6 +7,8 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListContract
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Get data from storage and prepare it
@@ -25,7 +27,8 @@ class DataProvider(private val dataBase: AppDatabase)
         val days: ArrayList<Day> = ArrayList(daysCount)
 
         for(i in 1..daysCount){
-            days.add(createDay(year, month, i))
+            time.calendar.set(Calendar.DAY_OF_MONTH, i)
+            days.add(createDay(time))
         }
 
         distributeHoliday(holidaysFromDb, days, month)
@@ -33,8 +36,8 @@ class DataProvider(private val dataBase: AppDatabase)
         return days
     }
 
-    private fun createDay(year: Int, month: Int, day: Int): Day{
-        val dayObj = Day(year, month, day)
+    private fun createDay(time: Time): Day{
+        val dayObj = Day(time.year, time.month - 1, time.dayOfMonth, time.dayOfWeek)
         dynamicData.fillFastingDay(dayObj)
         return dayObj
     }

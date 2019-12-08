@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
@@ -21,6 +21,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
@@ -37,8 +38,6 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private lateinit var tileView: View
     private lateinit var tileDayView: View
     private lateinit var layoutManager: LinearLayoutManager
-
-    private var tileBackground: Drawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,20 +118,18 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     private fun changedFocus(view: View, hasFocus: Boolean, day: Day){
+        val bg= view.container.background
         if(hasFocus){
             initRecyclerView(day)
-            tileBackground = view.container.background
-            view.container.background =
-                    ContextCompat.getDrawable(view.context!!, R.drawable.tile_selected_item)
+            val c =ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
+            bg.setColorFilter(c, PorterDuff.Mode.MULTIPLY)
             setDayArgs(view.id)
-        } else {
-            view.container.background = tileBackground
-        }
+        } else bg.clearColorFilter()
+
     }
 
     private fun initRecyclerView(day: Day){
         val holidays = day.holidays
-        if(holidays.isEmpty()) return
         if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
         recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
     }
@@ -158,6 +155,9 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
             }
             isTypeHoliday(HolidayEntity.Type.MAIN, holidays) -> {
                 setStyle(v, text, R.drawable.tile_easter)
+            }
+            day.fasting.type != Fasting.Type.NONE -> {
+                setStyle(v, text, R.drawable.tile_fasting_day)
             }
         }
     }

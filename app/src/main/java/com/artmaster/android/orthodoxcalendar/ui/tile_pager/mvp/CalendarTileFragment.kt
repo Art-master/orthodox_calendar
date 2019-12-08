@@ -17,6 +17,7 @@ import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
+import kotlinx.android.synthetic.main.fragment_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_tile_calendar.view.*
 
 internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
@@ -27,6 +28,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
     lateinit var tileView: View
 
     private lateinit var adapter : FragmentStatePagerAdapter
+    private val monthSize =12
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +53,6 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
     override fun setPageAdapter() {
         if(tileView.holidayTilePager.adapter != null) return
         tileView.holidayTilePager.adapter =  adapter
-        setCurrentItem()
     }
 
     override fun initSpinner(){
@@ -95,13 +96,8 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
                 return fragment
             }
 
-            override fun getCount(): Int = 12 //month size
+            override fun getCount(): Int = monthSize
         }
-    }
-
-    private fun setCurrentItem() {
-        //val uuid = intent.getSerializableExtra(Constants.Keys.HOLIDAY_ID.name)
-       // holidayTilePager.currentItem = index
     }
 
     private fun setChangePageListener() {
@@ -110,20 +106,26 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
                 tileView.monthSpinner.setSelection(position)
+                setVisibleArrows(position)
             }
         })
     }
 
-    private fun getUpdatedArrgs(): Bundle {
-        return Bundle().apply {
-            putInt(Constants.Keys.YEAR.value, getYear())
-            putInt(Constants.Keys.MONTH.value, tileView.monthSpinner.selectedItemPosition)
-            putInt(Constants.Keys.DAY.value, 13)// change
+    private fun setVisibleArrows(position: Int){
+        val firstPosition = 0
+        val lastPosition = monthSize - 1
+
+        when (position) {
+            lastPosition -> arrowRight.visibility = View.GONE
+            firstPosition -> arrowLeft.visibility = View.GONE
+            else -> {
+                arrowLeft.visibility = View.VISIBLE
+                arrowRight.visibility = View.VISIBLE
+            }
         }
     }
 
     override fun upadteView() {
-        //tileView.holidayTilePager.removeAllViews()
         val position = tileView.holidayTilePager.currentItem
         tileView.holidayTilePager.adapter = buildAdapter()
         tileView.holidayTilePager.currentItem = position
