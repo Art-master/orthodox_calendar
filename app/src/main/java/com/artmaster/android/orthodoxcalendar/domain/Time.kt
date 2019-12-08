@@ -29,6 +29,10 @@ class Time {
     val month: Int
         get() = calendar.get(Calendar.MONTH) + 1
 
+    // First month is 1
+    val monthWith0: Int
+        get() = calendar.get(Calendar.MONTH)
+
     val hour: Int
         get() = calendar.get(Calendar.HOUR_OF_DAY)
 

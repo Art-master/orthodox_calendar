@@ -25,7 +25,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import android.widget.AdapterView.OnItemSelectedListener
 import android.view.View
 
-
 class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
 
     @Inject
@@ -63,14 +62,28 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         setContentView(R.layout.activity_calendar)
         setSupportActionBar(toolbar)
         mainFragment = listHolidayFragment as Fragment
-        listHolidayFragment.onChangePageListener { toolbarYearSpinner.setSelection(it) }
+        listHolidayFragment.onChangePageListener { controlSpinner(it) }
         presenter.attachView(this)
         presenter.viewIsReady()
         initBarSpinner()
     }
 
+    private fun controlSpinner(position: Int){
+        val firstPosition = 0
+        val lastPosition = getYears().size - 1
+        when (position) {
+            lastPosition -> arrowRight.visibility = View.GONE
+            firstPosition -> arrowLeft.visibility = View.GONE
+            else -> {
+                arrowRight.visibility = View.VISIBLE
+                arrowLeft.visibility = View.VISIBLE
+            }
+        }
+        toolbarYearSpinner.setSelection(position)
+    }
+
     private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().month -1) //with 0
+    private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().monthWith0)
     private fun getDay() = intent.getIntExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
 
     private fun getYears(): ArrayList<String> {
@@ -100,6 +113,10 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         val fragment = when (item!!.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)
             R.id.item_settings -> checkFragment(appSettingsFragment)
+            R.id.item_reset_date -> {
+                resetDateState()
+                null
+            }
             else -> null
         }
         changeMainFragment(item)
@@ -123,7 +140,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
         mainFragment = if(mainFragment is ListViewContract.ViewListPager){
-            toolbarMenu?.getItem(0)?.setIcon(R.drawable.list_item)
+            toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_list)
             appViewFragment as Fragment
         }else {
             toolbarMenu?.getItem(0)?.setIcon(R.drawable.item)
@@ -252,9 +269,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
                 }
             }
 
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-            }
-
+            override fun onNothingSelected(parentView: AdapterView<*>) { }
         }
     }
 
@@ -262,5 +277,18 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         val years = getYears()
         val currentYear = years[toolbarYearSpinner.selectedItemPosition]
         return currentYear.toInt()
+    }
+    private fun resetDateState(){
+        val years = getYears()
+        val pos = years.indexOf(getYear().toString())
+        resetArgsValues()
+        toolbarYearSpinner.setSelection(pos)
+    }
+
+    private fun resetArgsValues(){
+        val time = Time()
+        intent.putExtra(Constants.Keys.YEAR.value, time.year)
+        intent.putExtra(Constants.Keys.MONTH.value, time.monthWith0)
+        intent.putExtra(Constants.Keys.DAY.value, time.dayOfMonth)
     }
 }
