@@ -48,6 +48,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         super.onViewCreated(view, savedInstanceState)
         if(!presenter.isInRestoreState(this))presenter.viewIsCreated()
         setChangePageListener()
+        initHelper()
     }
 
     override fun setPageAdapter() {
@@ -129,5 +130,13 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         val position = tileView.holidayTilePager.currentItem
         tileView.holidayTilePager.adapter = buildAdapter()
         tileView.holidayTilePager.currentItem = position
+    }
+
+    private fun initHelper(){
+        tileView.helperButton.setOnClickListener{
+            val fr = CalendarInfoFragment()
+            val transaction = fragmentManager!!.beginTransaction()
+            fr.show(transaction, "helper")
+        }
     }
 }

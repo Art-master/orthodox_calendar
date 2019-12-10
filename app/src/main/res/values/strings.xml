@@ -97,4 +97,22 @@
     Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.
     \n \n Слава Господу нашему Иисусу Христу всегда и ныне и присно и во веки веков. Аминь.
     </string>
+
+    <string name="num_example_1">1</string>
+    <string name="num_example_2">2</string>
+    <string name="num_example_3">3</string>
+    <string name="num_example_4">4</string>
+    <string name="num_example_5">5</string>
+
+    <string name="сonvention">Условные обозначения</string>
+    <string name="great_holidays_name">Великие праздники</string>
+    <string name="great_easter_name">Пасха</string>
+    <string name="great_twelve_name">Двунадесятые праздники</string>
+    <string name="fasting_day">Постный день</string>
+    <string name="fish_allow">Разрешение на рыбу</string>
+    <string name="oil_allow">Разрешение на растительное масло</string>
+    <string name="vine_allow">Разрешение на вино</string>
+    <string name="eggs_allow">Трапеза без мяса</string>
+    <string name="remember_day">Особые дни памяти</string>
+
 </resources>
