@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_gravity="center"
     android:clickable="true"
@@ -13,11 +14,13 @@
         android:id="@+id/container"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@drawable/tile_usual_day"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/tile_usual_day"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/numDay"
@@ -34,5 +37,38 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintStart_toStartOf="@+id/container" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintStart_toEndOf="@+id/imageView1" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView2" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="2dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/container" />
 
 </android.support.constraint.ConstraintLayout>

@@ -15,9 +15,9 @@
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/textViewWithCustomFont"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_width="342dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/сonvention"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="@string/great_easter_name"
             android:textAlignment="center"
@@ -44,13 +44,13 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/tile_easter"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont">
 
             <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
                 android:layout_width="24dp"
@@ -70,8 +70,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout3"
-            android:layout_width="40dp"
-            android:layout_height="4\0dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/tile_twelve_holiday"
@@ -99,33 +99,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/great_twelve_name"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont2" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/textViewWithCustomFont3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/great_holidays_name"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont6" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/tile_great_holiday"
@@ -154,19 +154,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/fasting_day"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout5"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont3" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/tile_fasting_day"
@@ -189,54 +189,94 @@
                 app:layout_constraintVertical_bias="0.0" />
         </android.support.constraint.ConstraintLayout>
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout6"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/tile_no_fasting"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+                android:layout_width="24dp"
+                android:layout_height="26dp"
+                android:gravity="center"
+                android:text="@string/num_example_5"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:customFont="@string/font_basic"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+        </android.support.constraint.ConstraintLayout>
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:id="@+id/textViewWithCustomFont12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="@string/no_fasting_days"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:customFont="@string/font_basic"
+            app:layout_constraintStart_toEndOf="@+id/constraintLayout6"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/textViewWithCustomFont4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/fish_allow"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont5" />
+            app:layout_constraintStart_toEndOf="@+id/imageView1"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/imageView1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/fish_allow"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
             app:srcCompat="@drawable/fish" />
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/textViewWithCustomFont7"
-            android:layout_width="258dp"
+            android:layout_width="231dp"
             android:layout_height="37dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="4dp"
             android:gravity="start"
             android:text="@string/oil_allow"
             android:textAlignment="textStart"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont4" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView1" />
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/oil_allow"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView1"
             app:srcCompat="@drawable/sun" />
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
@@ -244,19 +284,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/vine_allow"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont7" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/vine_allow"
@@ -269,19 +309,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/eggs_allow"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont8" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/eggs_allow"
@@ -294,19 +334,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="@string/remember_day"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic"
-            app:layout_constraintStart_toEndOf="@+id/imageView5"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWithCustomFont9" />
+            app:layout_constraintStart_toEndOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/remember_day"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6"
+            app:srcCompat="@drawable/triangle" />
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:id="@+id/textViewWithCustomFont11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="@string/strict_fasting"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:customFont="@string/font_basic"
+            app:layout_constraintStart_toEndOf="@+id/imageView5"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/remember_day"

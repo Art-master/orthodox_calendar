@@ -18,4 +18,5 @@
     <color name="colorEasterHoliday">#E53935</color>
     <color name="colorFastDay">#90CAF9</color>
     <color name="colorUsualDay">#FFFFFF</color>
+    <color name="colorNoFastingDay">#BEC76F</color>
 </resources>
