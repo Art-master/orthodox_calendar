@@ -10,6 +10,7 @@ interface InitAppContract {
     interface View : AppView {
         fun showLoadingScreen()
         fun showErrorMassage(msgType: Message.ERROR)
+        fun initNotifications()
         fun nextScreen()
     }
 

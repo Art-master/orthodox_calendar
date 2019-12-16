@@ -93,6 +93,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     fun fillFastingDay(day: Day){
         if(isUsuallyFastingDay(day)) {
             day.fasting.type = Fasting.Type.FASTING_DAY
+            day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
         if(isPeterAndPaulFasting(day)){
             day.fasting.type = Fasting.Type.FASTING
@@ -108,6 +109,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
         if(isGreatFasting(day)){
             day.fasting.type = Fasting.Type.FASTING
+            fillDayAsGreatFasting(day)
         }
     }
 
@@ -204,13 +206,17 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         val dayM = calendar.get(Calendar.DAY_OF_MONTH)
         if (day.month > monthEaster - 1) return false
         if (day.month < month) return false
-        if (day.month == monthEaster -1 && day.dayInMonth < dayEaster) return true
+        if (day.month == monthEaster - 1 && day.dayInMonth < dayEaster) return true
         if (day.month == month && day.dayInMonth >= dayM) return true
         if (day.month in (month + 1) until monthEaster - 1) return true
         return false
     }
 
-    private fun fillDayAsGreatFasting(day: Day, startDay : Int, startMonth: Int){
+    private fun fillDayAsGreatFasting(day: Day){
+        val calendar = getHolidayDynamicDate(yearEaster, -48)
+        val startDay = calendar.get(Calendar.MONTH)
+        val startMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
         val list = ArrayList<Fasting.Permission>()
         when(day.dayInWeek){
             DayOfWeek.MONDAY.num, DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num->{
@@ -232,9 +238,9 @@ class DynamicData(private val yearEaster: Int = Time().year) {
             day.fasting.permissions = listOf(Fasting.Permission.NO_EAT)
 
         } else {
-            val calendar = getHolidayDynamicDate(yearEaster, 2)
-            val month = calendar.get(Calendar.MONTH)
-            val dayM = calendar.get(Calendar.DAY_OF_MONTH)
+            val c = getHolidayDynamicDate(yearEaster, 2)
+            val month = c.get(Calendar.MONTH)
+            val dayM = c.get(Calendar.DAY_OF_MONTH)
             if(dayM == day.dayInMonth && month == day.month){
                 day.fasting.permissions = listOf(Fasting.Permission.NO_EAT)
             }

@@ -15,14 +15,16 @@ class Constants {
         const val LOADING_ANIMATION = 1000 //ms
         const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
         const val RESOURCE_FOR_IMAGE = "drawable"
+        const val STANDARD_NOTIFICATION_HOURS = 12
+        const val PROJECT_DIR = "com.artmaster.android.orthodoxcalendar"
     }
 
     enum class Keys constructor(val value: String) {
-        HOLIDAY_ID("com.artmaster.android.orthodoxcalendar.common.holiday_id"),
-        HOLIDAY("com.artmaster.android.orthodoxcalendar.common.holiday"),
-        YEAR("com.artmaster.android.orthodoxcalendar.common.year"),
-        MONTH("com.artmaster.android.orthodoxcalendar.common.month"),
-        DAY("com.artmaster.android.orthodoxcalendar.common.day"),
+        HOLIDAY_ID("$PROJECT_DIR.common.holiday_id"),
+        HOLIDAY("$PROJECT_DIR.common.holiday"),
+        YEAR("$PROJECT_DIR.common.year"),
+        MONTH("$PROJECT_DIR.common.month"),
+        DAY("$PROJECT_DIR.common.day"),
     }
 }
 

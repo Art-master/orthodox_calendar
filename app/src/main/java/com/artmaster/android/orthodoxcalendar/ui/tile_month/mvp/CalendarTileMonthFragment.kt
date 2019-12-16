@@ -28,7 +28,9 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMon
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
 import kotlinx.android.synthetic.main.tile_day_layout.view.*
+import org.jetbrains.anko.image
 import org.jetbrains.anko.textColor
+import java.lang.reflect.Type
 
 internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
 
@@ -141,6 +143,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
         styleHoliday(day, view)
+        styleFastingHoliday(day, view)
     }
 
     private fun styleHoliday(day: Day, v: View){
@@ -158,6 +161,29 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
             }
             day.fasting.type != Fasting.Type.NONE -> {
                 setStyle(v, text, R.drawable.tile_fasting_day)
+            }
+        }
+    }
+
+    private fun styleFastingHoliday(day: Day, v: View){
+        if(day.fasting.type == Fasting.Type.NONE) return
+        for(permission in day.fasting.permissions){
+            when(permission){
+                Fasting.Permission.OIL -> {
+                    v.im1.image = ContextCompat.getDrawable(v.context!!, R.drawable.sun)
+                }
+                Fasting.Permission.FISH -> {
+                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.fish)
+                }
+                Fasting.Permission.VINE -> {
+                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.vine)
+                }
+                Fasting.Permission.STRICT -> {
+                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.triangle)
+                }
+                Fasting.Permission.NO_EAT -> {}
+                Fasting.Permission.CAVIAR -> {}
+                Fasting.Permission.HOT_NO_OIL -> {}
             }
         }
     }

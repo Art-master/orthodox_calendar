@@ -40,7 +40,5 @@ class App : Application(), HasActivityInjector {
 
     }
 
-    private fun getAppComponent() = appComponent
-
     override fun activityInjector() = dispatchingAndroidInjector
 }

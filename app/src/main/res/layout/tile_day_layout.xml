@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_gravity="center"
     android:clickable="true"
@@ -39,7 +38,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/im1"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:contentDescription="@string/oil_allow"
@@ -47,28 +46,28 @@
         app:layout_constraintStart_toStartOf="@+id/container" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/im2"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:contentDescription="@string/oil_allow"
         app:layout_constraintBottom_toBottomOf="@+id/container"
-        app:layout_constraintStart_toEndOf="@+id/imageView1" />
+        app:layout_constraintStart_toEndOf="@+id/im1" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/im3"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:contentDescription="@string/oil_allow"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2" />
+        app:layout_constraintStart_toEndOf="@+id/im2" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/im4"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginEnd="2dp"
         android:contentDescription="@string/oil_allow"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
+        app:layout_constraintBottom_toTopOf="@+id/im3"
         app:layout_constraintEnd_toEndOf="@+id/container" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,6 +10,6 @@ data class Fasting(
     }
 
     enum class Permission{
-        FISH, MEAT, OIL, VINE, ALL, STRICT, NO_EAT, CAVIAR, HOT_NO_OIL
+        FISH, OIL, VINE, STRICT, NO_EAT, CAVIAR, HOT_NO_OIL
     }
 }

@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [ContextModule::class, RepositoryModule::class])
 interface AppComponent {
     fun getContext(): Context
-    //fun getPreferences(): AppPreferences
+    fun getPreferences(): AppPreferences
     fun getRepository(): AppDataProvider
     fun getDatabase(): AppDatabase
 }
