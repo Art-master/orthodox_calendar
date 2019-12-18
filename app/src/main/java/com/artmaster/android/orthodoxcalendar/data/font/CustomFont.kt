@@ -21,7 +21,7 @@ object CustomFont {
 
     private val fontCache = Hashtable<String, SoftReference<Typeface>>()
 
-    fun setCustomFont(textViewOrButton: View, ctx: Context, attrs: AttributeSet, attributeSet: IntArray, fontId: Int) {
+    fun setCustomFont(textViewOrButton: View, ctx: Context, attrs: AttributeSet?, attributeSet: IntArray, fontId: Int) {
         val a = ctx.obtainStyledAttributes(attrs, attributeSet)
         val customFont = a.getString(fontId)
         setCustomFont(textViewOrButton, ctx, customFont)
@@ -45,7 +45,7 @@ object CustomFont {
         return true
     }
 
-    public fun getFont(context: Context, name: String?): Typeface {
+    fun getFont(context: Context, name: String?): Typeface {
         synchronized(fontCache) {
             return if (fontCache[name] != null) {
                 fontCache[name]!!.get()!!

@@ -16,15 +16,19 @@ import com.artmaster.android.orthodoxcalendar.R
 import java.util.ArrayList
 
 /**
- * Класс для выравниваня текста по ширине.
+ * Class for justify text
  * Так же есть возможность установить построчные отступы
  * и указать кол-во символов для отступа
  */
-class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : View(context, attrs, defStyleAttr, defStyleRes) {
+class JustifiedTextView @JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
+    : View(context, attrs, defStyleAttr, defStyleRes) {
+
     private var mTextPaint: Paint
 
     lateinit var mText: String
-    /** массив с информацией о словах. Координаты начала и конца  */
+
+    /** list with info about words (position)  */
     private lateinit var mTextBlocksDrawable: ArrayList<TextBlockDrawable>
 
     lateinit var mTextColor: ColorStateList
@@ -48,8 +52,7 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
     private var mLineBreaker: LineBreaker
 
     init {
-
-        CustomFont.setCustomFont(this, context, attrs!!,
+        CustomFont.setCustomFont(this, context, attrs,
                 R.styleable.customizableView,
                 R.styleable.customizableView_customFont)
 
@@ -78,9 +81,9 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-        val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-        val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
         if (w != widthSize) {
             w = widthSize
@@ -88,7 +91,7 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
         }
 
         h = when {
-            heightMode == View.MeasureSpec.EXACTLY -> heightSize
+            heightMode == MeasureSpec.EXACTLY -> heightSize
             mText.isEmpty() -> fontInterline
             else -> mLinesCount * fontInterline + fontDescent
         }
@@ -243,9 +246,6 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
             mLinesCount++
         }
 
-        /**
-         * Инициализация начальных переменных
-         */
         private fun init() {
             y = 0
             x = 0
@@ -257,17 +257,13 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
             mTextBlocksDrawable.clear()
         }
 
-        /**
-         *
-         * @param pos - позиция символа в строке
-         */
         private fun initNewWord(pos: Int) {
             textBlockDrawable = TextBlockDrawable(x, y + fontLineHeight, pos)
         }
 
         /**
-         * Граница слова. Завершаем слово
-         * @param pos - позиция символа в строке
+         * Boundary of world
+         * @param pos - position of symbol in text
          */
         private fun finishWord(pos: Int) {
             textBlockDrawable.end = pos
@@ -344,10 +340,6 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    /**
-     * Установка цвета текста
-     * @param colors - цвет
-     */
     fun setTextColor(colors: ColorStateList) {
         mTextColor = colors
 
@@ -358,10 +350,7 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    /**
-     * Установка начального размера текста
-     * @param size - размер текста
-     */
+    /** set start text size */
     private fun setRawTextSize(size: Int) {
         if (size.toFloat() != mTextPaint.textSize) {
             mTextSize = size
@@ -378,15 +367,11 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    /**
-     * Установка текста
-     * @param text - текст
-     */
     fun setText(text: CharSequence) {
         mText = text.toString()
         mTextBlocksDrawable = ArrayList()
 
-        //получаем длинны символов
+        //get chars length
         widths = FloatArray(mText.length)
         mTextPaint.getTextWidths(mText, widths)
 
@@ -396,43 +381,26 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
         invalidate()
     }
 
-    /**
-     * Установка размера текста
-     * @param unit - единицы измерения
-     * @param size - размер текста
-     */
     fun setTextSize(unit: Int, size: Float) {
         val c = context
         val r: Resources
 
-        if (c == null)
-            r = Resources.getSystem()
-        else
-            r = c.resources
+        r = if (c == null) Resources.getSystem() else c.resources
 
         setRawTextSize(TypedValue.applyDimension(
                 unit, size, r.displayMetrics).toInt())
         invalidate()
     }
 
-    /**
-     * класс, хранящий информацию о словах в тексте
-     */
+    /** safe info about words in text */
     private class TextBlockDrawable internal constructor(
-            /** х координата */
             internal var x: Int,
-            /** у координата */
             internal var y: Int,
-            /** позиция символа начала слова (в основном тексте) */
-            internal var start: Int) {
+            internal var start: Int,
+            internal var end: Int = 0
+            )
 
-        /** позиция символа конца слова (в основном тексте) */
-        internal var end: Int = 0
-    }
-
-    /**
-     * set custom font
-     */
+    /** set custom font */
     fun setTypeface(tf: Typeface) {
         if (mTextPaint.typeface !== tf) {
             mTextPaint.typeface = tf
@@ -442,9 +410,9 @@ class JustifiedTextView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     /**
-     * установка начальных отступов
-     * @param lineCount число строк, в которых будет данный отступ
-     * @param symPadding число символов, на которое будет данный отступ
+     * set start padding
+     * @param lineCount num lines with the padding
+     * @param symPadding num symbols for padding
      */
     fun setLeadingMargin(lineCount: Int, symPadding: Int) {
         mNumLeadingLines = lineCount

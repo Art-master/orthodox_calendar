@@ -13,10 +13,15 @@ import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_holiday.*
 import kotlinx.android.synthetic.main.fragment_holiday.view.*
 import javax.inject.Inject
-
+import android.util.TypedValue
+import android.graphics.Color
+import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
+import com.artmaster.android.orthodoxcalendar.common.OrtUtils
+import android.text.SpannableString
+import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
+import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
 
 class HolidayFragment : Fragment(), HolidayReviewContract.View {
 
@@ -59,8 +64,46 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     }
 
     override fun showDescription(initialLater: String, description: String) {
-        holidayView.initial_later_text_view.text = initialLater
-        holidayView.description_text_view.text = description
+        if (description.isEmpty()) return
+
+        buildInitialLater(initialLater)
+        val desc = prepareDescription(description)
+        holidayView.relative_layout.addView(desc)
+    }
+
+    private fun prepareDescription(description: String): JustifiedTextView {
+        return JustifiedTextView(context!!).apply {
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimensionPixelSize(R.dimen.size_text_basic).toFloat())
+            setTypeface(CustomFont.getFont(context!!, getString(R.string.font_basic)))
+            setLeadingMargin(3, 8)
+            val strWithoutSpaces = deleteSpaces(description)
+            setText(getTextByPadding(strWithoutSpaces))
+            setTextColor(holidayView.holiday_name_in_page.textColors)
+        }
+    }
+
+    private fun deleteSpaces(string: String): String {
+        val deleteSpaces = Regex.fromLiteral("[\\s&&[^\t?\n]]+")
+       return string.replace(deleteSpaces, " ")
+    }
+
+    private fun buildInitialLater(later: String) {
+         holidayView.initial_later_text_view.apply {
+            val textName =  resources.getString(R.string.font_for_bukvica)
+            val size = resources.getDimensionPixelSize(R.dimen.size_text_bukvica).toFloat()
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+            setTextColor(Color.RED)
+            typeface = CustomFont.getFont(context!!, textName)
+            scaleX = 2F
+            text = later
+        }
+    }
+
+    private fun getTextByPadding(string: String): SpannableString {
+        val finalStr = SpannableString(string)
+        val size = OrtUtils.convertDpToPixels(context!!, 25f)
+        finalStr.setSpan(CustomLeadingMarginSpan2(3, size),0, finalStr.length, 0)
+        return finalStr
     }
 
     override fun showNewStyleDate(date: String) {
@@ -85,6 +128,6 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
                 .into(holidayView.image_holiday)
     }
 
-    override fun showErrorMassage(msgType: Message.ERROR) {
+    override fun showErrorMessage(msgType: Message.ERROR) {
     }
 }

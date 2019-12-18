@@ -40,8 +40,8 @@ class NotificationsService : Service() {
         val timeNotification = 1
 
         val days = repository.getMonthDays(time.month, time.year)
-        val calcTime = calculateTime(timeNotification)
-        checkDataBySetting(days[calcTime.get(Calendar.DAY_OF_MONTH) - 1])
+        //val calcTime = calculateTime(timeNotification)
+        checkDataBySetting(days[time.dayOfMonth - 1])
     }
 
     private fun checkDataBySetting(day: Day){
