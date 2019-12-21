@@ -117,4 +117,12 @@
     <string name="strict_fasting">Строгий пост</string>
     <string name="no_fasting_days">Сплошная седьмица</string>
 
+    <!--Settings-->
+    <string name="settings_name">Настройки</string>
+    <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>
+    <string name="settings_average_notifications">Уведомлять о средних праздниках</string>
+    <string name="settings_notifications_sound">Уведомления со звуком</string>
+    <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
+    <string name="settings_notifications_time">Уведомлять заранее за</string>
+
 </resources>

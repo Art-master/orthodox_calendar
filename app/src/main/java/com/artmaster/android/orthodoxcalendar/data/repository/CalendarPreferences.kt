@@ -13,8 +13,8 @@ import javax.inject.Inject
 class CalendarPreferences @Inject constructor(context: Context) : AppPreferences {
     private var preferences: SharedPreferences = context.getSharedPreferences(SETTINGS_FILE_NAME, 0)
 
-    override fun get(settName: Settings.Name): String? {
-        return preferences.getString(settName.name, Settings.EMPTY)
+    override fun get(settName: Settings.Name): String {
+        return preferences.getString(settName.name, Settings.EMPTY) ?: Settings.EMPTY
     }
 
     override fun set(settings: Settings.Name, value: String) {

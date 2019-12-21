@@ -40,14 +40,14 @@ object AlarmBuilder {
 
     private fun isNotificationDisable(): Boolean{
         val isEnableToday = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TODAY)
-        val isEnableBefore = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_BEFORE)
+        val isEnableBefore = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TIME)
         return isEnableToday == Settings.FALSE || isEnableBefore == Settings.FALSE
     }
 
     private fun getHoursBySettings(): Int{
         val settings = prefs.get(Settings.Name.TIME_OF_NOTIFICATION)
         if (settings == Settings.EMPTY) return Constants.STANDARD_NOTIFICATION_HOURS
-        return settings?.toInt() ?: Constants.STANDARD_NOTIFICATION_HOURS
+        return settings.toInt() //?: Constants.STANDARD_NOTIFICATION_HOURS
     }
 
     /**
