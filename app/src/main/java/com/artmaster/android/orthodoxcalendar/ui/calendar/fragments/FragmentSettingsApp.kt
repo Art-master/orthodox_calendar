@@ -8,44 +8,38 @@ import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
-import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.components.CheckBoxPrepared
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
-import javax.inject.Inject
-import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.components.ElementUiPrepared
-import kotlinx.android.synthetic.main.fragment_settings.*
-
+import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.components.SpinnerPrepared
+import kotlinx.android.synthetic.main.fragment_settings.view.*
 
 /**
  * Showed settings of the Holiday app
  */
 class FragmentSettingsApp : Fragment(), AppSettingView {
 
-    var preparedElements: ArrayList<ElementUiPrepared> = ArrayList()
-
-    val prefs = App.appComponent.getPreferences()
+    private val prefs = App.appComponent.getPreferences()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prepareViews()
+        prepareViews(view)
     }
 
-    private fun prepareViews(){
-        val notify = CheckBoxPrepared(settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY)
-        val notifyTime = CheckBoxPrepared(settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TIME)
+    private fun prepareViews(v : View){
+        CheckBoxPrepared(v.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
+        CheckBoxPrepared(v.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxPrepared(v.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
+        CheckBoxPrepared(v.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
+        val settingsNotifyTime = CheckBoxPrepared(v.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare()
+        settingsNotifyTime.callback = {v.time_spinner.isEnabled = it.not()}
+
+        SpinnerPrepared(v.time_spinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
     }
-    fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        //addPreferencesFromResource(R.xml.app_settings)
+
+    private fun getDaysNumbers() =  resources.getStringArray(R.array.spinner_days_numbers)
     }
-
-    @Inject
-    lateinit var settings: AppPreferences
-
-
-}

@@ -14,7 +14,7 @@ class CalendarPreferences @Inject constructor(context: Context) : AppPreferences
     private var preferences: SharedPreferences = context.getSharedPreferences(SETTINGS_FILE_NAME, 0)
 
     override fun get(settName: Settings.Name): String {
-        return preferences.getString(settName.name, Settings.EMPTY) ?: Settings.EMPTY
+        return preferences.getString(settName.name, settName.defValue) ?: settName.defValue
     }
 
     override fun set(settings: Settings.Name, value: String) {

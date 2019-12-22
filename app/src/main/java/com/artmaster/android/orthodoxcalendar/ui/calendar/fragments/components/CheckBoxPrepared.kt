@@ -6,14 +6,14 @@ import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class CheckBoxPrepared(obj: View,
+class CheckBoxPrepared(private val checkBox: CheckBox,
                        preferences: AppPreferences,
-                       setting: Settings.Name,
-                       private val defValue: Boolean = true)
-    : ElementUiPrepared(obj, preferences, setting) {
+                       setting: Settings.Name)
+    : ElementUiPrepared(checkBox, preferences, setting) {
 
-    private val checkBox = obj as CheckBox
-    val callback: (isChecked: Boolean) -> Unit = {}
+    init {
+        prepareUiElement(checkBox, preferences)
+    }
 
     override fun prepareUiElement(objectUi: View, preferences: AppPreferences) {
         val value = preferences.get(setting)
@@ -25,16 +25,12 @@ class CheckBoxPrepared(obj: View,
     }
 
     override fun putInitState(objectUi: View, preferences: AppPreferences) {
-        checkBox.isChecked = defValue
+        checkBox.isChecked = preferences.get(setting).toBoolean()
         saveSetting()
     }
 
     override fun saveSetting() {
         val data = checkBox.isChecked
         preferences.set(setting, data.toString())
-    }
-
-    private fun onClick(){
-        saveSetting()
     }
 }

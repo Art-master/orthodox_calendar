@@ -9,12 +9,15 @@ internal constructor(private val obj: View,
                      internal val preferences: AppPreferences,
                      internal val setting: Settings.Name) {
 
-    fun prepare() {
+    var callback: (isChecked: Boolean) -> Unit = {}
+
+    fun prepare(): ElementUiPrepared {
         if (containsSetting()) {
             prepareUiElement(obj, preferences)
         } else {
             putInitState(obj, preferences)
         }
+        return this
     }
 
     private fun containsSetting() = preferences.get(setting) != Settings.EMPTY
