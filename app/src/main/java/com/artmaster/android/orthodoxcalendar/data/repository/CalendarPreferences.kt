@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.SETTINGS_FILE_NAME
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
+import java.lang.NumberFormatException
 import javax.inject.Inject
 
 /**

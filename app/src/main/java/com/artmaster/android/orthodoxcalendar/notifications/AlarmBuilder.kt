@@ -30,12 +30,21 @@ object AlarmBuilder {
             set(Calendar.HOUR_OF_DAY, getHoursBySettings())
         }
 
+        //calendar = fakeTime() //test
+
         alarmMgr.setInexactRepeating(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 AlarmManager.INTERVAL_DAY,
                 alarmIntent
         )
+    }
+
+    private fun fakeTime(): Calendar {
+        return Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.SECOND, get(Calendar.SECOND) + 10)
+        }
     }
 
     private fun isNotificationDisable(): Boolean{
@@ -45,9 +54,7 @@ object AlarmBuilder {
     }
 
     private fun getHoursBySettings(): Int{
-        val settings = prefs.get(Settings.Name.TIME_OF_NOTIFICATION)
-        if (settings == Settings.EMPTY) return Constants.STANDARD_NOTIFICATION_HOURS
-        return settings.toInt() //?: Constants.STANDARD_NOTIFICATION_HOURS
+        return prefs.get(Settings.Name.HOURS_OF_NOTIFICATION).toInt()
     }
 
     /**
