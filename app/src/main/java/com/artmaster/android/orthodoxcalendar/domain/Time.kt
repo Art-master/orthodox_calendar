@@ -49,6 +49,10 @@ class Time {
          return calendar
         }
 
+    fun calculateDate(time: Time, param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int): Calendar {
+        return calculateDate(time.year, time.month, time.dayOfMonth, 0, param, dateCalc)
+    }
+
     fun calculateDate(year: Int = this.year, month: Int = this.month, day: Int = this.dayOfMonth,
                       param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int): Calendar {
         return calculateDate(year, month, day, 0, param, dateCalc)
@@ -85,7 +89,10 @@ class Time {
     }
 
     enum class Day(val num : Int){
-    SUNDAY(7)
-}
+        SUNDAY(7)
+    }
 
+    enum class Month(val num : Int){
+        DECEMBER(11)
+    }
 }

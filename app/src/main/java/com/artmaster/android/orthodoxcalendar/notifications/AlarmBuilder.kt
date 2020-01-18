@@ -8,7 +8,6 @@ import java.util.*
 import android.content.pm.PackageManager
 import android.content.ComponentName
 import com.artmaster.android.orthodoxcalendar.App
-import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Settings
 
 object AlarmBuilder {
@@ -20,12 +19,12 @@ object AlarmBuilder {
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+        val alarmIntent = Intent(context, AlarmReceiver::class.java).let {
+            intent -> PendingIntent.getBroadcast(context, 0, intent, 0)
         }
 
         // Set the alarm to start at approximately by setting time
-        val calendar: Calendar = Calendar.getInstance().apply {
+        var calendar: Calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, getHoursBySettings())
         }
@@ -43,7 +42,7 @@ object AlarmBuilder {
     private fun fakeTime(): Calendar {
         return Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.SECOND, get(Calendar.SECOND) + 10)
+            set(Calendar.SECOND, get(Calendar.SECOND) + 5)
         }
     }
 

@@ -160,4 +160,10 @@
         <item>30</item>
     </string-array>
 
+    <!--Notifications-->
+    <string name="notifications_today_name">Сегодня праздник</string>
+    <string name="notifications_tomorrow_name">Завтра праздник</string>
+    <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
+    <string name="notifications_holiday">Праздник</string>
+
 </resources>

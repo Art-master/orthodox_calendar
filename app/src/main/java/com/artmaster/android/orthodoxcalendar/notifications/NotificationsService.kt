@@ -3,9 +3,7 @@ package com.artmaster.android.orthodoxcalendar.notifications
 import android.app.Service
 import android.content.Intent
 import com.artmaster.android.orthodoxcalendar.App
-import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
-import com.artmaster.android.orthodoxcalendar.common.Settings
+import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
@@ -15,13 +13,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class NotificationsService : Service() {
 
     private val prefs = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
+
     private val allowSound = prefs.get(SOUND_OF_NOTIFICATION).toBoolean()
     private val allowVibration = prefs.get(VIBRATION_OF_NOTIFICATION).toBoolean()
     private val allowAverageHolidays = prefs.get(AVERAGE_HOLIDAYS_NOTIFY_ALLOW).toBoolean()
@@ -46,45 +44,45 @@ class NotificationsService : Service() {
     }
 
     private fun execute(){
-        val time = Time()
-        time.calendar.set(Calendar.DAY_OF_MONTH, 26)
-
-
+        var time = getTime()
 
         val days = repository.getMonthDays(time.monthWith0, time.year)
 
         if(allowTimeNotification){
-            val timeNotification = prefs.get(TIME_OF_NOTIFICATION)
-
+            notificationsByTime(time, days)
         }
 
         if(allowTodayNotification){
+            time = getTime()
             val holidays = days[time.dayOfMonth - 1].holidays
-            notificationsToday(holidays)
+            prepareNotificationsHolidays(holidays, time)
         }
-        //val calcTime = calculateTime(timeNotification)
-        //checkDataBySetting(days[time.dayOfMonth - 1])
     }
 
-    private fun notificationsToday(holidays : ArrayList<HolidayEntity>){
+    private fun getTime(): Time{
+        return Time()
+    }
+
+    private fun prepareNotificationsHolidays(holidays : ArrayList<HolidayEntity>, time: Time){
         for (holiday in holidays){
-            buildNotification(holiday.title, getDescription(holiday), holiday.id.toInt())
+            if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
+            val description = getDescription(holiday, time, getTimeNotification())
+            buildNotification(description, holiday.title, holiday.id.toInt())
         }
     }
 
-    private fun getDescription(holiday: HolidayEntity): String {
-        return "сегодня праздник ${holiday.title}"
+    private fun isAverageHoliday(holiday: HolidayEntity): Boolean {
+        return holiday.type.contains(HolidayEntity.Type.AVERAGE.value)
     }
 
-    private fun checkDataBySetting(day: Day){
-        for(holiday in day.holidays){
-            buildNotification(holiday.title, "описание", holiday.id.toInt())
+    private fun getDescription(holiday: HolidayEntity, time: Time, numDays: Int): String {
+        return when {
+            holiday.day == time.dayOfMonth && holiday.month == time.month ->
+                getString(R.string.notifications_today_name)
+            numDays == 1 -> getString(R.string.notifications_tomorrow_name)
+            numDays > 1 -> getString(R.string.notifications_after_days_name, numDays)
+            else -> getString(R.string.notifications_holiday)
         }
-    }
-
-    private fun calculateTime(timeSetting: Int): Calendar {
-        val time = Time()
-        return time.calculateDate(time.year, time.month, time.dayOfMonth, Calendar.DAY_OF_YEAR, timeSetting)
     }
 
     private fun buildNotification(name: String, msg: String, id : Int){
@@ -94,5 +92,52 @@ class NotificationsService : Service() {
                 .setVibration(allowVibration)
                 .setMsgText(msg)
                 .build()
+    }
+
+    private fun notificationsByTime(time: Time, days: List<Day>){
+        val timeNotification = getTimeNotification()
+        val numNotifyDay = time.dayOfMonth + timeNotification - 1
+
+        if(time.dayOfMonth + timeNotification > time.daysInMonth){
+            val daysTwoMonths = days as ArrayList
+            daysTwoMonths.addAll(getDaysOfNextMonth())
+
+            prepareNotificationsHolidays(daysTwoMonths[numNotifyDay].holidays, time)
+            checkRestDaysNotify(timeNotification, time, daysTwoMonths, numNotifyDay)
+        } else {
+            prepareNotificationsHolidays(days[numNotifyDay].holidays, time)
+            checkRestDaysNotify(timeNotification, time, days, numNotifyDay)
+        }
+    }
+
+    private fun checkRestDaysNotify(timeNotification: Int, time: Time, days: List<Day>, numNotifyDay: Int){
+        if(timeNotification > 1){
+            val restDays = days.subList(time.dayOfMonth - 1, numNotifyDay)
+            notifyRestDays(restDays, time)
+        }
+    }
+
+    private fun notifyRestDays(days: List<Day>, time: Time){
+        for (i in days.size - 1 downTo 1) {
+            if(i == 0) continue
+            for (holiday in days[i].holidays){
+                if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
+                val description = getDescription(holiday, time, i)
+                buildNotification(description, holiday.title, holiday.id.toInt())
+            }
+        }
+    }
+
+    private fun getTimeNotification() = prefs.get(TIME_OF_NOTIFICATION).toInt()
+
+    private fun getDaysOfNextMonth(): List<Day>{
+        val time = getTime()
+        if(time.month == Time.Month.DECEMBER.num) {
+            time.calendar.set(Calendar.MONTH, 0)
+            time.calendar.set(Calendar.YEAR,  time.year + 1)
+        } else {
+            time.calendar.set(Calendar.MONTH, time.month + 1)
+        }
+        return repository.getMonthDays(time.month, time.year)
     }
 }
