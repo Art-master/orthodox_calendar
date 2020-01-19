@@ -141,6 +141,7 @@
     <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:layout_weight="10"
         android:text="@string/settings_days"
         android:textColor="@color/colorBlack"
@@ -178,8 +179,9 @@
     <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
         android:layout_weight="10"
-        android:text="@string/settings_days"
+        android:text="@string/settings_hours"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/size_text_settings"
         app:customFont="@string/font_basic"

@@ -14,15 +14,14 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.components.S
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 
 /**
- * Showed settings of the Holiday app
+ * Show settings of the Holiday app
  */
 class FragmentSettingsApp : Fragment(), AppSettingView {
 
     private val prefs = App.appComponent.getPreferences()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

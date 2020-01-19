@@ -10,6 +10,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.ui.calendar.HolidaysAdapter
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Context):
@@ -39,9 +40,13 @@ class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Contex
 
         private var bind: ListItemHolidayBinding? = binding
 
-        fun bind(holiday: HolidayEntity?) {
-            bind!!.holiday = holiday
-            bind!!.executePendingBindings()
+        fun bind(holiday: HolidayEntity) {
+            bind?.let {
+                bind!!.holiday = holiday
+                bind!!.executePendingBindings()
+                HolidaysAdapter.getTypiconImageByString(bind!!.holidayTipiconFontIcon, holiday)
+            }
+
         }
     }
 }

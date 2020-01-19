@@ -22,6 +22,11 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import android.text.SpannableString
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
+import android.content.Context
+import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
+
 
 class HolidayFragment : Fragment(), HolidayReviewContract.View {
 
@@ -35,7 +40,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     companion object {
         fun newInstance(holiday: HolidayEntity): HolidayFragment {
             val intent = Intent()
-            intent.putExtra(Constants.Keys.HOLIDAY.name, holiday)
+            intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
@@ -48,7 +53,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        holiday = arguments!!.get(Constants.Keys.HOLIDAY.name) as HolidayEntity
+        holiday = arguments!!.get(Constants.Keys.HOLIDAY.value) as HolidayEntity
         presenter.init(holiday)
     }
 
@@ -130,4 +135,6 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
 
     override fun showErrorMessage(msgType: Message.ERROR) {
     }
+
+
 }

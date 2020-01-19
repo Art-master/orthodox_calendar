@@ -28,6 +28,9 @@ data class HolidayEntity(
         var month: Int = 0,
 
         @Ignore
+        var monthWith0: Int = month - 1,
+
+        @Ignore
         var year: Int = 0,
 
         @SerializedName("type")

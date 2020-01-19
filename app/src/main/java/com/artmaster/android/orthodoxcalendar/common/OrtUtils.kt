@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.content.Intent
 import android.support.v4.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 
@@ -44,7 +45,7 @@ object OrtUtils {
     fun getDayOtWeek(context: Context, holiday : HolidayEntity): String {
         val time = Time()
         time.calendar.set(holiday.year, holiday.month -1, holiday.day)
-        val names = context.resources.getStringArray(R.array.daysNamesAbb)
+        val names = context.resources.getStringArray(R.array.daysNames)
         return names[time.dayOfWeek - 1]
     }
 

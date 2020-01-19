@@ -67,7 +67,7 @@ class NotificationsService : Service() {
         for (holiday in holidays){
             if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
             val description = getDescription(holiday, time, getTimeNotification())
-            buildNotification(description, holiday.title, holiday.id.toInt())
+            buildNotification(description, holiday)
         }
     }
 
@@ -85,12 +85,12 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun buildNotification(name: String, msg: String, id : Int){
-        Notification(applicationContext, id)
-                .setHolidayName(name)
+    private fun buildNotification(description: String, holiday: HolidayEntity){
+        Notification(applicationContext, holiday)
                 .setSound(allowSound)
                 .setVibration(allowVibration)
-                .setMsgText(msg)
+                .setName(description)
+                .setMsgText(holiday.title)
                 .build()
     }
 
@@ -123,7 +123,7 @@ class NotificationsService : Service() {
             for (holiday in days[i].holidays){
                 if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
                 val description = getDescription(holiday, time, i)
-                buildNotification(description, holiday.title, holiday.id.toInt())
+                buildNotification(description, holiday)
             }
         }
     }

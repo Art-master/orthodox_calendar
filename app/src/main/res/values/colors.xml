@@ -19,4 +19,5 @@
     <color name="colorFastDay">#90CAF9</color>
     <color name="colorUsualDay">#FFFFFF</color>
     <color name="colorNoFastingDay">#BEC76F</color>
+    <color name="colorHolidaysListForTileCalendar">#F7EBB6</color>
 </resources>

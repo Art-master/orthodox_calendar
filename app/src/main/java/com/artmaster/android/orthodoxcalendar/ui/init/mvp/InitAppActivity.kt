@@ -68,7 +68,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
 
     private fun getArgs() = Intent(applicationContext, CalendarListActivity::class.java).apply {
         putExtra(Constants.Keys.YEAR.value, Time().year)
-        putExtra(Constants.Keys.MONTH.value, Time().month - 1)
+        putExtra(Constants.Keys.MONTH.value, Time().monthWith0)
         putExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }

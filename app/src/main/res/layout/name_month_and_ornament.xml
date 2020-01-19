@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text='@{OrtUtils.getDayOtWeek(context, holiday)}'
             android:textAlignment="center"
-            android:paddingEnd="20dp"
+            android:paddingEnd="10dp"
             android:paddingStart="0dp"
             android:textSize="@dimen/size_text_basic"
             app:customFont="@string/font_basic" />

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -134,6 +135,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         val holidays = day.holidays
         if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
         recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
+        recyclerViewDayHolidays.visibility = RecyclerView.VISIBLE
     }
 
     private fun styleDayView(view: View, day: Day, dayOfWeek: Int){

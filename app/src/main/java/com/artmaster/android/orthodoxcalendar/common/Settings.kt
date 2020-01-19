@@ -13,7 +13,7 @@ class Settings {
     enum class Name(val value: String, val defValue: String) {
         FIRST_LOAD_APP("first_load_app", FALSE),
         IS_ENABLE_NOTIFICATION_TIME("is_enable_notification_before", TRUE),
-        IS_ENABLE_NOTIFICATION_IN_TIME("is_enable_notification_before", TRUE),
+        IS_ENABLE_NOTIFICATION_IN_TIME("is_enable_notification_before", FALSE),
         IS_ENABLE_NOTIFICATION_TODAY("is_enable_notification_today", TRUE),
         TIME_OF_NOTIFICATION("time_of_notification", "1"),
         HOURS_OF_NOTIFICATION("time_of_notification", "13"),

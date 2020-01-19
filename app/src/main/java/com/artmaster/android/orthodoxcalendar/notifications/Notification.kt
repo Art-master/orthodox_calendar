@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.notifications
 import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
@@ -13,16 +14,17 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
 import android.media.AudioAttributes
 import android.media.RingtoneManager
+import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
-class Notification(private val context: Context, private val id: Int) {
+class Notification(private val context: Context, private val holiday: HolidayEntity) {
     companion object {
         const val CHANNEL_ID = "$PROJECT_DIR.notifications.channel.message"
         const val CHANNEL_NAME = "$PROJECT_DIR.notifications.channel.users.msg"
     }
 
     private var msgText = ""
-    private var holidayName = ""
-    private var imageUrl = ""
+    private var notificationName = ""
     private var soundUri = buildSoundUri()
     private var soundEnable: Boolean = true
     private var vibrationEnable: Boolean = true
@@ -38,8 +40,8 @@ class Notification(private val context: Context, private val id: Int) {
         return this
     }
 
-    fun setHolidayName(name: String): Notification {
-        holidayName = name
+    fun setName(name: String): Notification {
+        notificationName = name
         return this
     }
 
@@ -57,15 +59,23 @@ class Notification(private val context: Context, private val id: Int) {
     fun build() {
         val notification = getBuilder()
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(holidayName)
+                .setContentTitle(notificationName)
                 .setContentText(msgText)
-                .setLights(Color.YELLOW, 3000, 3000)
+                .setAutoCancel(true)
+                .setLights(Color.BLUE, 3000, 3000)
+                .setContentIntent(createIntent())
 
         if(soundEnable) notification.setSound(soundUri)
         if(vibrationEnable) notification.setVibrate(vibration)
 
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(id, notification.build())
+        notificationManager.notify(holiday.id.toInt(), notification.build())
+    }
+
+    private fun createIntent(): PendingIntent{
+        val notificationIntent = HolidayViewPagerActivity.getIntent(context, holiday)
+        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getBuilder(): NotificationCompat.Builder {
@@ -81,10 +91,10 @@ class Notification(private val context: Context, private val id: Int) {
     private fun createChannel(): NotificationChannel {
         return NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
                 .apply {
-                    description = "My channel description"
+                    description = "Orthodox calendar"
                     enableLights(true)
                     setSound(soundUri, buildAudioAttributes())
-                    lightColor = Color.YELLOW
+                    lightColor = Color.BLUE
                     enableVibration(true)
                 }
     }
