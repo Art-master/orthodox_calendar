@@ -22,6 +22,7 @@ class InitAppPresenter(
         Single.fromCallable {
             getData()
             getView().showLoadingScreen()
+            getView().initNotifications()
         }
                 .delay(Constants.LOADING_ANIMATION.toLong().shl(1), TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())

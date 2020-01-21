@@ -7,9 +7,10 @@
     <string name="ornament_for_name_date_left">v</string>
     <string name="ornament_for_name_date_right">V</string>
 
-    <!--name item for toolbar -->
+    <!--name icon_tile for toolbar -->
     <string name="item_name_about">о сем творении</string>
     <string name="item_name_settings">настройки</string>
+    <string name="item_view_settings">смена вида</string>
     <string name="toolbar_header">&lt; %1$d &gt;</string>
     <string name="toolbar_header_arrow_right">    %1$d &gt;</string>
     <string name="toolbar_header_arrow_left">&lt; %1$d     </string>
@@ -40,6 +41,53 @@
     <string name="notif_holiday_later"> отмечают праздник </string>
     <string name="text_view_about_app_email">ggn.master@gmail.com</string>
 
+    <string-array name="daysNamesAbb">
+        <item>ПН.</item>
+        <item>ВТ.</item>
+        <item>СР.</item>
+        <item>ЧТ.</item>
+        <item>ПТ.</item>
+        <item>СБ.</item>
+        <item>ВС.</item>
+    </string-array>
+
+    <string-array name="daysNames">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+
+    <string-array name="daysNamesFull">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
+    <string name="arrow_left">&lt;</string>
+    <string name="arrow_right">&gt;</string>
+
     <string-array name="loading_strings_array">
         <item>\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</item>
         <item>\"Воззови ко Мне - и Я отвечу тебе, \n покажу тебе великое и недоступное, \n чего ты не знаешь.\" \n (Иер.33:3)</item>
@@ -53,10 +101,80 @@
         <item>\"Блаженны чистые сердцем,\n ибо они Бога узрят.\"\n (Лк.21:19)</item>
     </string-array>
 
-    <!--item menu text-->
+    <!--icon_tile menu text-->
     <string name="text_view_about_app" formatted="true">Это приложение было выполнено с целью
         бесплатного использования и для прославления Господа нашего Иисуса Христа.
     Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.
     \n \n Слава Господу нашему Иисусу Христу всегда и ныне и присно и во веки веков. Аминь.
     </string>
+
+    <string name="num_example_1">1</string>
+    <string name="num_example_2">2</string>
+    <string name="num_example_3">3</string>
+    <string name="num_example_4">4</string>
+    <string name="num_example_5">5</string>
+
+    <string name="сonvention">Условные обозначения</string>
+    <string name="great_holidays_name">Великие праздники</string>
+    <string name="great_easter_name">Пасха</string>
+    <string name="great_twelve_name">Двунадесятые праздники</string>
+    <string name="fasting_day">Постный день</string>
+    <string name="fish_allow">Разрешение на рыбу</string>
+    <string name="oil_allow">Разрешение на растительное масло</string>
+    <string name="vine_allow">Разрешение на вино</string>
+    <string name="eggs_allow">Трапеза без мяса</string>
+    <string name="remember_day">Особые дни памяти</string>
+    <string name="strict_fasting">Строгий пост</string>
+    <string name="no_fasting_days">Сплошная седьмица</string>
+
+    <!--Settings-->
+    <string name="settings_name">Настройки</string>
+    <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>
+    <string name="settings_average_notifications">Уведомлять о средних праздниках</string>
+    <string name="settings_notifications_sound">Уведомления со звуком</string>
+    <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
+    <string name="settings_notifications_time">Уведомлять заранее за</string>
+    <string name="settings_notifications_in_time">Время для уведомлений</string>
+    <string name="settings_days">дн.</string>
+    <string name="settings_hours">ч.</string>
+
+    <string-array name="spinner_days_numbers">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
+
+    <!--Notifications-->
+    <string name="notifications_today_name">Сегодня праздник</string>
+    <string name="notifications_tomorrow_name">Завтра праздник</string>
+    <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
+    <string name="notifications_holiday">Праздник</string>
+
 </resources>

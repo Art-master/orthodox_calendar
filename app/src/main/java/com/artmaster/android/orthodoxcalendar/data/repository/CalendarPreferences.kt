@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.SETTINGS_FILE_NAME
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
+import java.lang.NumberFormatException
 import javax.inject.Inject
 
 /**
@@ -13,8 +14,8 @@ import javax.inject.Inject
 class CalendarPreferences @Inject constructor(context: Context) : AppPreferences {
     private var preferences: SharedPreferences = context.getSharedPreferences(SETTINGS_FILE_NAME, 0)
 
-    override fun get(settName: Settings.Name): String? {
-        return preferences.getString(settName.name, Settings.EMPTY)
+    override fun get(settName: Settings.Name): String {
+        return preferences.getString(settName.name, settName.defValue) ?: settName.defValue
     }
 
     override fun set(settings: Settings.Name, value: String) {

@@ -7,7 +7,7 @@ import com.artmaster.android.orthodoxcalendar.impl.mvp.AppView
 
 interface HolidayReviewContract {
     interface View : AppView {
-        fun showErrorMassage(msgType: Message.ERROR)
+        fun showErrorMessage(msgType: Message.ERROR)
         fun showHolidayName(name: String)
         fun showDescription(initialLater: String, description: String)
         fun showNewStyleDate(date: String)

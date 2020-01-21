@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_height="wrap_content" >
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/tile_usual_day"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+            android:id="@+id/numDay"
+            android:layout_width="24dp"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:customFont="@string/font_basic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/im1"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintStart_toStartOf="@+id/container" />
+
+    <ImageView
+        android:id="@+id/im2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintStart_toEndOf="@+id/im1" />
+
+    <ImageView
+        android:id="@+id/im3"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/im2" />
+
+    <ImageView
+        android:id="@+id/im4"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="2dp"
+        android:contentDescription="@string/oil_allow"
+        app:layout_constraintBottom_toTopOf="@+id/im3"
+        app:layout_constraintEnd_toEndOf="@+id/container" />
+
+</android.support.constraint.ConstraintLayout>

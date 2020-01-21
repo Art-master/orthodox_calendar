@@ -21,4 +21,9 @@ interface ListViewContract {
     interface Adapter
 
     interface ViewList
+    interface ViewListPager{
+        fun setPage(numPage : Int)
+        fun setYear(year : String)
+        fun onChangePageListener(body: (Int) -> Unit)
+    }
 }

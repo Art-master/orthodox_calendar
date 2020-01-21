@@ -48,7 +48,7 @@ class HolidayReviewPresenter(private val context: Context,
 
     private fun getOldStyleDate(day: Int, month: Int): String {
         val calendar = GregorianCalendar()
-        calendar.set(Time.year, month - 1, day)
+        calendar.set(Time().year, month - 1, day)
         calendar.gregorianChange = Date(java.lang.Long.MAX_VALUE)
         return "${calendar.get(Calendar.DAY_OF_MONTH)} " +
                 OrtUtils.getMonthName(context,

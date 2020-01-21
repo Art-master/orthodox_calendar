@@ -7,6 +7,9 @@
         <!-- Размер шрифта, который используется на странице с описанием праздника -->
         <dimen name="size_text_basic">20sp</dimen>
 
+        <!-- Размер шрифта, который используется на странице с описанием праздника -->
+        <dimen name="size_text_settings">17sp</dimen>
+
         <!-- Размер шрифта, который используется на странице с описанием праздника для буквиц -->
         <dimen name="size_text_bukvica">50sp</dimen>
 
@@ -19,6 +22,9 @@
         <!-- Размер шрифта в заголовке tolbar'a -->
         <dimen name="size_text_title_toolbar">25sp</dimen>
 
+        <!-- Размер шрифта в заголовке tolbar'a -->
+        <dimen name="size_text_settings_name">25sp</dimen>
+
         <!-- Размер шрифта в заголовках tolbar'a -->
         <dimen name="size_text_title_item">25sp</dimen>
 
@@ -26,4 +32,7 @@
         <dimen name="size_zero">0sp</dimen>
 
         <dimen name="size_email_font">20sp</dimen>
+
+        <!-- Размер шрифта, для наименований дней недели в плитке -->
+        <dimen name="size_tile_day_of_week">6sp</dimen>
 </resources>

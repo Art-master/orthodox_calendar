@@ -28,6 +28,9 @@ data class HolidayEntity(
         var month: Int = 0,
 
         @Ignore
+        var monthWith0: Int = month - 1,
+
+        @Ignore
         var year: Int = 0,
 
         @SerializedName("type")
@@ -42,6 +45,7 @@ data class HolidayEntity(
 
         @Ignore
         var firstInGroup: Boolean = false
+
 ) : Comparable<HolidayEntity>, Parcelable {
 
     override fun compareTo(other: HolidayEntity): Int {
@@ -50,5 +54,44 @@ data class HolidayEntity(
             return day.compareTo(other.day)
         }
         return monthComparison
+    }
+
+    enum class Type(val value: String){
+        GREAT("великий"),
+        TWELVE("двунадесятый"),
+        MAIN("главный"),
+        HEAD("главный переходящий"),
+        TWELVE_MOVABLE("великий двунадесятый переходящий"),
+        GREAT_TWELVE("великий двунадесятый"),
+        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный"),
+        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный"),
+        GREAT_NOT_TWELVE("великий недвунадесятый"),
+        AVERAGE("средний"),
+        AVERAGE_POLYLEIC("средний полиелейный"),
+        AVERAGE_PEPPY("средний бденный");
+    }
+    enum class DayOfWeek(val num: Int){
+        MONDAY(1),
+        TUESDAY(2),
+        WEDNESDAY(3),
+        THURSDAY(4),
+        FRIDAY(5),
+        SATURDAY(6),
+        SUNDAY(7);
+    }
+
+    enum class Month(val num: Int){
+        JANUARY(0),
+        FEBRUARY(1),
+        MARCH(2),
+        APRIL(3),
+        MAY(4),
+        JUNE(5),
+        JULY(6),
+        AUGUST(7),
+        SEPTEMBER(8),
+        OCTOBER(9),
+        NOVEMBER(10),
+        DECEMBER(11);
     }
 }

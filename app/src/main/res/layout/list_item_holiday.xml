@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="@{TextUtils.isEmpty(holiday.title) ? @string/twelve_movable_holiday : @string/twelve_movable_holiday}"
+
                     android:textAlignment="center"
                     android:textSize="@dimen/size_text_typycon"
                     app:customFont="@string/font_tipicon_image" />

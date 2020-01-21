@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="10"
+        android:textColor="@color/colorRed"
+        android:text="@string/ornament_for_headers_left"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintEnd_toStartOf="@+id/textViewWithSettingsName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:id="@+id/textViewWithSettingsName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="10"
+        android:text="@string/settings_name"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_basic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.462"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="10"
+        android:text="@string/ornament_for_headers_right"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintStart_toEndOf="@+id/textViewWithSettingsName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifyAverageHolidays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_average_notifications"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifications" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifySound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications_sound"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifyAverageHolidays" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifyVibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications_vibration"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifySound" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifyTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications_time"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifyVibration" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/time_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyTime"
+        app:layout_constraintStart_toEndOf="@+id/settingsNotifyTime">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="10"
+        android:text="@string/settings_days"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyTime"
+        app:layout_constraintStart_toEndOf="@+id/time_spinner" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsNotifyInTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications_in_time"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifyTime" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/time_in_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
+        app:layout_constraintStart_toEndOf="@+id/settingsNotifyInTime">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="10"
+        android:text="@string/settings_hours"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
+        app:layout_constraintStart_toEndOf="@+id/time_in_spinner" />
+
+</android.support.constraint.ConstraintLayout>
