@@ -34,16 +34,16 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
         CheckBoxPrepared(v.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
         CheckBoxPrepared(v.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
         CheckBoxPrepared(v.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
-        val settingsNotifyTime =
-                CheckBoxPrepared(v.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare()
-        settingsNotifyTime.callback = {v.time_spinner.isEnabled = it.not()}
+        CheckBoxPrepared(v.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
 
-        val settingsNotifyInTime =
-                CheckBoxPrepared(v.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare()
-        settingsNotifyInTime.callback = {v.time_in_spinner.isEnabled = it.not()}
-
-
+        CheckBoxPrepared(v.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
+                    callback = {v.time_spinner.isEnabled = it.not()}
+                }
         SpinnerPrepared(v.time_spinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
+
+        CheckBoxPrepared(v.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
+                    callback = {v.time_in_spinner.isEnabled = it.not()}
+                }
         SpinnerPrepared(v.time_in_spinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
     }
 

@@ -40,13 +40,13 @@ class InitAppPresenter(
         if (isAppFirstLoad()) {
             data = model.getDataFromFile()
             model.fillDatabase(data)
-            appPreferences.set(FIRST_LOAD_APP, "FALSE")
+            appPreferences.set(FIRST_LOAD_APP, Settings.TRUE)
         }
         return data
     }
 
     private fun isAppFirstLoad(): Boolean {
         val preference = appPreferences.get(FIRST_LOAD_APP)
-        return preference.equals(Settings.EMPTY)
+        return preference == Settings.FALSE
     }
 }

@@ -5,5 +5,5 @@ import com.arellomobile.mvp.MvpView
 interface ContractTileView : MvpView {
     fun setPageAdapter()
     fun initSpinner()
-    fun upadteView()
+    fun updateView()
 }

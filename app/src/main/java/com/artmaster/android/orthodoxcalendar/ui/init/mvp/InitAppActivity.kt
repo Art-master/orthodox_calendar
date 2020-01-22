@@ -9,7 +9,7 @@ import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
-import com.artmaster.android.orthodoxcalendar.ui.MassageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.fragments.LoadingScreenFragment
 import dagger.android.AndroidInjection
@@ -52,7 +52,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString(msgType.name, msgType.toString())
 
-        val dialog = MassageBuilderFragment()
+        val dialog = MessageBuilderFragment()
         dialog.arguments = bundle
         dialog.show(supportFragmentManager, "dialogError")
     }

@@ -13,7 +13,7 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 /**
  * Building system message for user
  */
-class MassageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener {
+class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val arg = arguments

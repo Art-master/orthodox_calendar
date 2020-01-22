@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
@@ -21,7 +19,6 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
-import dagger.android.AndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 import dagger.android.DispatchingAndroidInjector

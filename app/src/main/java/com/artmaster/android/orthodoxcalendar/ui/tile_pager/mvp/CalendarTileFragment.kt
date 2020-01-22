@@ -28,7 +28,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
     lateinit var tileView: View
 
     private lateinit var adapter : FragmentStatePagerAdapter
-    private val monthSize =12
+    private val monthSize = 12
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +46,15 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(!presenter.isInRestoreState(this))presenter.viewIsCreated()
+        presenter.viewIsCreated()
         setChangePageListener()
         initHelper()
     }
 
     override fun setPageAdapter() {
-        if(tileView.holidayTilePager.adapter != null) return
+        if(tileView.holidayTilePager.adapter != null) {
+            return
+        }
         tileView.holidayTilePager.adapter =  adapter
     }
 
@@ -61,7 +63,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
     }
 
     private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().month-1)
+    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().monthWith0)
     private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
     private fun getMonthsNames() =  resources.getStringArray(R.array.months)
 
@@ -86,7 +88,6 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
     }
 
     private fun buildAdapter(): FragmentStatePagerAdapter {
-        //if(!isAdded) return null
         return object :FragmentStatePagerAdapter(childFragmentManager) {
 
             override fun getItem(p0: Int): Fragment {
@@ -126,7 +127,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         }
     }
 
-    override fun upadteView() {
+    override fun updateView() {
         val position = tileView.holidayTilePager.currentItem
         tileView.holidayTilePager.adapter = buildAdapter()
         tileView.holidayTilePager.currentItem = position

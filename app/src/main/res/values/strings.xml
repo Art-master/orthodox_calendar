@@ -135,6 +135,7 @@
     <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
     <string name="settings_notifications_time">Уведомлять заранее за</string>
     <string name="settings_notifications_in_time">Время для уведомлений</string>
+    <string name="settings_first_load_view">Первым загружать плиточный календарь</string>
     <string name="settings_days">дн.</string>
     <string name="settings_hours">ч.</string>
 

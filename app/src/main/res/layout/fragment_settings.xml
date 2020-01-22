@@ -188,4 +188,20 @@
         app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
         app:layout_constraintStart_toEndOf="@+id/time_in_spinner" />
 
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsFirstLoadTileView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_first_load_view"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifyInTime" />
+
 </android.support.constraint.ConstraintLayout>

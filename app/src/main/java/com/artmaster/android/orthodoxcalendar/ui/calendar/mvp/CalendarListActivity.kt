@@ -10,7 +10,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.*
 import kotlinx.android.synthetic.main.activity_calendar.*
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
-import com.artmaster.android.orthodoxcalendar.ui.MassageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
@@ -24,6 +24,7 @@ import javax.inject.Inject
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import android.widget.AdapterView.OnItemSelectedListener
 import android.view.View
+import com.artmaster.android.orthodoxcalendar.App
 
 class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
 
@@ -43,13 +44,17 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     lateinit var listHolidayFragment: ListViewContract.ViewListPager
 
     @Inject
+    lateinit var tileCalendarFragment: ContractTileView
+
+    @Inject
     lateinit var appInfoFragment: AppInfoView
 
     @Inject
     lateinit var appSettingsFragment: AppSettingView
 
-    @Inject
-    lateinit var appViewFragment: ContractTileView
+    private val preferences = App.appComponent.getPreferences()
+
+    private val isFirstLoadTileCalendar = preferences.get(Settings.Name.FIRST_LOADING_TILE_CALENDAR).toBoolean()
 
     private var toolbarMenu: Menu? = null
 
@@ -61,11 +66,20 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
         setSupportActionBar(toolbar)
-        mainFragment = listHolidayFragment as Fragment
+        initTypeOfCalendar()
         listHolidayFragment.onChangePageListener { controlSpinner(it) }
         presenter.attachView(this)
         presenter.viewIsReady()
         initBarSpinner()
+    }
+
+    private fun initTypeOfCalendar(){
+        mainFragment = if(isFirstLoadTileCalendar){
+            tileCalendarFragment as Fragment
+        } else {
+            listHolidayFragment as Fragment
+        }
+        setArguments(mainFragment)
     }
 
     private fun controlSpinner(position: Int){
@@ -106,6 +120,8 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_app, menu)
         toolbarMenu = menu
+
+        changeIconTypeCalendar()
         return true
     }
 
@@ -140,16 +156,25 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
         mainFragment = if(mainFragment is ListViewContract.ViewListPager){
-            toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_list)
-            appViewFragment as Fragment
+            tileCalendarFragment as Fragment
         }else {
-            toolbarMenu?.getItem(0)?.setIcon(R.drawable.item)
             listHolidayFragment as Fragment
         }
+
+        changeIconTypeCalendar()
 
         replaceFragment(R.id.activityCalendar, mainFragment)
         setArguments(mainFragment)
     }
+
+    private fun changeIconTypeCalendar(){
+        if(mainFragment is ListViewContract.ViewListPager){
+            toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_tile)
+        }else {
+            toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_list)
+        }
+    }
+
     private fun setArguments(fragment: Fragment){
         fragment.arguments = Bundle().apply {
             putInt(Constants.Keys.YEAR.value, getYear())
@@ -171,7 +196,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         val bundle = Bundle()
         bundle.putString(msgType.name, msgType.toString())
 
-        val dialogError = MassageBuilderFragment()
+        val dialogError = MessageBuilderFragment()
         dialogError.arguments = bundle
         dialogError.show(supportFragmentManager, "dialogError")
     }
@@ -265,7 +290,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
                 if(mainFragment is ListViewContract.ViewListPager){
                     (mainFragment as ListViewContract.ViewListPager).setPage(position)
                 }else {
-                    (mainFragment as ContractTileView).upadteView()
+                    (mainFragment as ContractTileView).updateView()
                 }
             }
 

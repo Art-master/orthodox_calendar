@@ -19,7 +19,8 @@ class Settings {
         HOURS_OF_NOTIFICATION("time_of_notification", "13"),
         SOUND_OF_NOTIFICATION("sound_of_notification", TRUE),
         VIBRATION_OF_NOTIFICATION("vibration_of_notification", TRUE),
-        AVERAGE_HOLIDAYS_NOTIFY_ALLOW("average_holidays_notification", TRUE)
+        AVERAGE_HOLIDAYS_NOTIFY_ALLOW("average_holidays_notification", TRUE),
+        FIRST_LOADING_TILE_CALENDAR("first_load_tile_calendar", FALSE)
     }
 }
 
