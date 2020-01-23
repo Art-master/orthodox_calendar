@@ -15,12 +15,13 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import kotlinx.android.synthetic.main.fragment_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_tile_calendar.view.*
 
-internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
+internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, CalendarUpdateContract {
 
     @InjectPresenter(tag = "TilePresenter", type = PresenterType.GLOBAL)
     lateinit var presenter: TilePresenter
@@ -127,17 +128,24 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         }
     }
 
-    override fun updateView() {
-        val position = tileView.holidayTilePager.currentItem
-        tileView.holidayTilePager.adapter = buildAdapter()
-        tileView.holidayTilePager.currentItem = position
-    }
-
     private fun initHelper(){
         tileView.helperButton.setOnClickListener{
             val fr = CalendarInfoFragment()
             val transaction = fragmentManager!!.beginTransaction()
             fr.show(transaction, "helper")
         }
+    }
+
+    override fun updateYear() {
+        tileView.holidayTilePager.adapter
+    }
+
+    override fun updateMonth() {
+        val position = getMonth()
+        tileView.holidayTilePager.currentItem = position
+    }
+
+    override fun updateDay() {
+
     }
 }

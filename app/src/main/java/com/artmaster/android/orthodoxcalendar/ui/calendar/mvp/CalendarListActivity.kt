@@ -5,13 +5,17 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.*
-import kotlinx.android.synthetic.main.activity_calendar.*
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
-import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
+import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
+import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
@@ -20,11 +24,8 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_calendar.*
 import javax.inject.Inject
-import com.artmaster.android.orthodoxcalendar.domain.Time
-import android.widget.AdapterView.OnItemSelectedListener
-import android.view.View
-import com.artmaster.android.orthodoxcalendar.App
 
 class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
 
@@ -287,11 +288,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
                 setArgYear(mainFragment, getCurrentYear())
-                if(mainFragment is ListViewContract.ViewListPager){
-                    (mainFragment as ListViewContract.ViewListPager).setPage(position)
-                }else {
-                    (mainFragment as ContractTileView).updateView()
-                }
+                (mainFragment as CalendarUpdateContract).updateYear()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) { }
@@ -304,10 +301,17 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         return currentYear.toInt()
     }
     private fun resetDateState(){
-        val years = getYears()
-        val pos = years.indexOf(getYear().toString())
+        val fr = mainFragment as CalendarUpdateContract
+        val time = Time()
+
         resetArgsValues()
-        toolbarYearSpinner.setSelection(pos)
+        if (time.year == getYear()) {
+            val years = getYears()
+            val pos = years.indexOf(getYear().toString())
+            toolbarYearSpinner.setSelection(pos)
+            fr.updateYear()
+        }
+        if (time.monthWith0 == getMonth()) fr.updateMonth()
     }
 
     private fun resetArgsValues(){

@@ -3,19 +3,20 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar.fragments
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.holiday_list_pager.*
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import com.artmaster.android.orthodoxcalendar.domain.Time
 
 
-class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
+class ListHolidayPager : Fragment(), ListViewContract.ViewListPager, CalendarUpdateContract {
 
     private lateinit var adapter : FragmentStatePagerAdapter
 
@@ -44,10 +45,6 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
         setChangePageListener()
     }
 
-    override fun setPage(numPage: Int) {
-        if(holidayListPager == null) return
-        holidayListPager.currentItem = numPage
-    }
     private fun getYears(): ArrayList<Int> {
         val size = Constants.HolidayList.PAGE_SIZE.value
         val initYear = Time().year - size/2
@@ -75,10 +72,6 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
         }
     }
 
-    override fun setYear(year: String) {
-
-    }
-
     override fun onChangePageListener(body: (Int) -> Unit) {
         changedCallback = body
     }
@@ -95,5 +88,23 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager {
                }
             }
         })
+    }
+
+    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
+
+    override fun updateYear() {
+        if (holidayListPager == null) return
+        val years = getYears()
+        val pos = years.indexOf(getYear())
+
+        holidayListPager.currentItem = pos
+    }
+
+    override fun updateMonth() {
+
+    }
+
+    override fun updateDay() {
+
     }
 }
