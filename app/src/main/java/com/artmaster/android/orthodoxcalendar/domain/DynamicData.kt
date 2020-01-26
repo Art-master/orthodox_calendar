@@ -2,20 +2,16 @@ package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity.*
 import java.util.Calendar
+import kotlin.collections.ArrayList
+import kotlin.collections.listOf
 
 /**
  * Calculated dynamic holidays
  */
 class DynamicData(private val yearEaster: Int = Time().year) {
-    companion object {
-        const val THE_EASTER = "Пасха"
-        const val THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM = "Вход Господень в Иерусалим"
-        const val THE_ASCENSION_OF_THE_LORD = "Вознесение Господне"
-        const val THE_HOLY_TRINITY = "День Святой Троицы"
-    }
 
-    var monthEaster = 0
-    var dayEaster = 0
+    private var monthEaster = -1
+    private var dayEaster = -1
 
     /**
      * Calculates the date of Easter according to the method of Friedrich Gauss
@@ -53,29 +49,33 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 month = 5
             }
         }
-        monthEaster = month
-        dayEaster = day
+        monthEaster = month - 1 //month with 0
+        dayEaster = day //day with 1
 
         return month to day
     }
 
     fun fillHoliday(holiday: HolidayEntity) {
-        var calendar: Calendar? = null
-        when (holiday.title) {
-            //The Holy Easter
-            THE_EASTER -> calendar = getHolidayDynamicDate(yearEaster, 0)
-            //The first sunday before Easter
-            THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM -> calendar = getHolidayDynamicDate(yearEaster, -7)
-            //40 day after Easter
-            THE_ASCENSION_OF_THE_LORD -> calendar = getHolidayDynamicDate(yearEaster, 39)
-            //50 day after Easter
-            THE_HOLY_TRINITY -> calendar = getHolidayDynamicDate(yearEaster, 49)
-        }
+        val time = when (holiday.dynamicType) {
+            MovableDay.THE_EASTER.dynamicType ->
+                getHolidayDynamicDate(yearEaster, MovableDay.THE_EASTER.dayFromEaster)
 
-        if (calendar == null) return
-        holiday.day = calendar.get(Calendar.DAY_OF_MONTH)
-        holiday.month = calendar.get(Calendar.MONTH) + 1 //in Android API month begin with 0
-        calendar.clear()
+            MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dynamicType ->
+                getHolidayDynamicDate(yearEaster, MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dayFromEaster)
+
+            MovableDay.THE_ASCENSION_OF_THE_LORD.dynamicType ->
+                getHolidayDynamicDate(yearEaster, MovableDay.THE_ASCENSION_OF_THE_LORD.dayFromEaster)
+
+            MovableDay.THE_HOLY_TRINITY.dynamicType ->
+                getHolidayDynamicDate(yearEaster, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
+
+            else -> null
+
+        } ?: return
+
+        holiday.day = time.dayOfMonth
+        holiday.month = time.month
+        holiday.monthWith0 = time.monthWith0
     }
 
     /**
@@ -84,10 +84,12 @@ class DynamicData(private val yearEaster: Int = Time().year) {
      * @param valueForCalculate days to add or subtract from the date of Easter
      * @return calculated value as Calendar object
      */
-    private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Calendar {
-        if(monthEaster == 0 || dayEaster == 0) calculateDateEaster(yearEaster)
-        return Time().calculateDate(yearEaster, monthEaster - 1, //in Android API month begin with 0
+
+    private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Time {
+        if (monthEaster == -1 || dayEaster == -1) calculateDateEaster(yearEaster)
+        val cal = Time().calculateDate(yearEaster, monthEaster,
                 dayEaster, Calendar.DAY_OF_YEAR, valueForCalculate)
+        return Time(cal)
     }
 
     fun fillFastingDay(day: Day){
@@ -119,11 +121,11 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
     private fun isPeterAndPaulFasting(day: Day): Boolean {
         val calendar = getHolidayDynamicDate(yearEaster, 49)
-        val month = calendar.get(Calendar.MONTH)
-        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.monthWith0
+        val dayM = calendar.dayOfMonth
 
-        return (day.month == month && day.dayInMonth >= dayM) or
-                (day.month == Month.JULY.num && day.dayInMonth <= 12)
+        return (day.month == month && day.dayOfMonth >= dayM) or
+                (day.month == Month.JULY.num && day.dayOfMonth <= 12)
     }
 
     private fun fillDayAsPeterFasting(day: Day){
@@ -137,18 +139,18 @@ class DynamicData(private val yearEaster: Int = Time().year) {
             DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num -> list.add(Fasting.Permission.STRICT)
         }
         day.fasting.permissions = list
-        if(day.dayInMonth == 12){
+        if (day.dayOfMonth == 12) {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
     }
 
     private fun isAssumptionFasting(day: Day): Boolean {
-        return day.month == Month.AUGUST.num && (day.dayInMonth in 14..28)
+        return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..28)
     }
 
     private fun fillDayAsAssumptionFasting(day: Day){
         val list = ArrayList<Fasting.Permission>()
-        when (day.dayInMonth) {
+        when (day.dayOfMonth) {
             14, 16, 21, 23, 26 -> list.add(Fasting.Permission.STRICT)
             15, 20, 22, 27 -> list.add(Fasting.Permission.HOT_NO_OIL)
             17, 18, 24, 25 -> list.add(Fasting.Permission.OIL)
@@ -158,16 +160,16 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isChristmasFasting(day: Day): Boolean{
-        return (day.month == Month.NOVEMBER.num && day.dayInMonth >= 28) or
+        return (day.month == Month.NOVEMBER.num && day.dayOfMonth >= 28) or
                 (day.month == Month.DECEMBER.num) or
-                (day.month == Month.JANUARY.num && day.dayInMonth <= 6)
+                (day.month == Month.JANUARY.num && day.dayOfMonth <= 6)
     }
 
     private fun fillDayAsChristmasFasting(day: Day){
         val list = ArrayList<Fasting.Permission>()
         when {
             day.month == Month.NOVEMBER.num -> {
-                when (day.dayInMonth) {
+                when (day.dayOfMonth) {
                     28, 30 -> {
                         list.add(Fasting.Permission.FISH)
                         list.add(Fasting.Permission.OIL)
@@ -176,7 +178,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 }
             }
             day.month == Month.DECEMBER.num -> {
-                when (day.dayInMonth) {
+                when (day.dayOfMonth) {
                     1, 3, 4, 5, 7, 8, 10, 12, 14, 15, 17, 19, 21, 22, 28, 29 -> {
                         list.add(Fasting.Permission.FISH)
                         list.add(Fasting.Permission.OIL)
@@ -190,7 +192,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 }
             }
             day.month == Month.JANUARY.num -> {
-                when (day.dayInMonth) {
+                when (day.dayOfMonth) {
                     1, 3, 6 -> list.add(Fasting.Permission.STRICT)
                     2 -> list.add(Fasting.Permission.HOT_NO_OIL)
                     4, 5 -> list.add(Fasting.Permission.OIL)
@@ -202,20 +204,20 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
     private fun isGreatFasting(day: Day): Boolean {
         val calendar = getHolidayDynamicDate(yearEaster, -48)
-        val month = calendar.get(Calendar.MONTH)
-        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
-        if (day.month > monthEaster - 1) return false
+        val month = calendar.monthWith0
+        val dayM = calendar.dayOfMonth
+        if (day.month > monthEaster) return false
         if (day.month < month) return false
-        if (day.month == monthEaster - 1 && day.dayInMonth < dayEaster) return true
-        if (day.month == month && day.dayInMonth >= dayM) return true
-        if (day.month in (month + 1) until monthEaster - 1) return true
+        if (day.month == monthEaster && day.dayOfMonth < dayEaster) return true
+        if (day.month == month && day.dayOfMonth >= dayM) return true
+        if (day.month in (month + 1) until monthEaster) return true
         return false
     }
 
     private fun fillDayAsGreatFasting(day: Day){
         val calendar = getHolidayDynamicDate(yearEaster, -48)
-        val startDay = calendar.get(Calendar.MONTH)
-        val startMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        val startDay = calendar.monthWith0
+        val startMonth = calendar.dayOfMonth
 
         val list = ArrayList<Fasting.Permission>()
         when(day.dayInWeek){
@@ -234,18 +236,18 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 list.add(Fasting.Permission.OIL)
         }
         day.fasting.permissions = list
-        if(day.dayInMonth == startDay && day.month == startMonth){
+        if (day.dayOfMonth == startDay && day.month == startMonth) {
             day.fasting.permissions = listOf(Fasting.Permission.NO_EAT)
 
         } else {
             val c = getHolidayDynamicDate(yearEaster, 2)
-            val month = c.get(Calendar.MONTH)
-            val dayM = c.get(Calendar.DAY_OF_MONTH)
-            if(dayM == day.dayInMonth && month == day.month){
+            val month = c.monthWith0
+            val dayM = c.dayOfMonth
+            if (dayM == day.dayOfMonth && month == day.month) {
                 day.fasting.permissions = listOf(Fasting.Permission.NO_EAT)
             }
         }
-        if(day.dayInMonth == 7 && day.month == Month.APRIL.num){
+        if (day.dayOfMonth == 7 && day.month == Month.APRIL.num) {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
         if(isHolidayEntry(day)){
@@ -260,23 +262,59 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isHolidayEntry(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, -7)
-        val month = calendar.get(Calendar.MONTH)
-        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
-        return day.dayInMonth == dayM && day.month == month
+        getHolidayDynamicDate(yearEaster, -7).apply {
+            return day.dayOfMonth == dayOfMonth && day.month == monthWith0
+        }
     }
 
     private fun isLazarSaturday(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, -8)
-        val month = calendar.get(Calendar.MONTH)
-        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
-        return day.dayInMonth == dayM && day.month == month
+        getHolidayDynamicDate(yearEaster, -8).apply {
+            return day.dayOfMonth == dayOfMonth && day.month == monthWith0
+        }
     }
 
     private fun isLastDayBeforeEaster(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, -6)
-        val month = calendar.get(Calendar.MONTH)
-        val dayM = calendar.get(Calendar.DAY_OF_MONTH)
-        return day.dayInMonth >= dayM && (day.month == month || day.month == monthEaster)
+        getHolidayDynamicDate(yearEaster, -6).apply {
+            return day.dayOfMonth >= dayOfMonth && (day.month == monthWith0 || day.month == monthEaster)
+        }
+    }
+
+    fun fillOtherData(day: Day) {
+        setMemorialType(day)
+    }
+
+    private fun setMemorialType(day: Day) {
+        getHolidayDynamicDate(yearEaster, -57).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.MEATLESS_SATURDAY
+                return
+            }
+        }
+        getHolidayDynamicDate(yearEaster, -36).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_2
+                return
+            }
+        }
+        getHolidayDynamicDate(yearEaster, -29).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_3
+                return
+            }
+        }
+
+        getHolidayDynamicDate(yearEaster, -22).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
+                return
+            }
+        }
+
+        getHolidayDynamicDate(yearEaster, 48).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
+                return
+            }
+        }
     }
 }

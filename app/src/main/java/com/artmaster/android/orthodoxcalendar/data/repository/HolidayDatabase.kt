@@ -9,11 +9,13 @@ import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
 @Database(entities = [HolidayEntity::class], version = 1)
-abstract class HolidayDatabase : RoomDatabase(), AppDatabase {
-    abstract override fun holidaysDb(): HolidayDao
+abstract class HolidayDatabase : RoomDatabase() {
+    abstract fun holidaysDb(): HolidayDao
 
-    companion object {
-        fun getAppDataBase(context: Context): AppDatabase? {
+    companion object : AppDatabase {
+        var instance: RoomDatabase? = null
+
+        override fun get(context: Context): HolidayDatabase {
             synchronized(HolidayDatabase::class) {
                 return Room.databaseBuilder(
                         context.applicationContext,
@@ -21,6 +23,14 @@ abstract class HolidayDatabase : RoomDatabase(), AppDatabase {
                         DATABASE_FILE_NAME)
                         .build()
             }
+        }
+
+        override fun close() {
+            if (instance?.isOpen == true) {
+                instance?.close()
+            }
+
+            instance = null
         }
     }
 }

@@ -36,6 +36,9 @@ data class HolidayEntity(
         @SerializedName("type")
         var type: String = "",
 
+        @SerializedName("dynamic_type")
+        var dynamicType: Int = 0,
+
         @SerializedName("description")
         var description: String = "",
 
@@ -93,5 +96,19 @@ data class HolidayEntity(
         OCTOBER(9),
         NOVEMBER(10),
         DECEMBER(11);
+    }
+
+    enum class MovableDay(val dayFromEaster: Int, val dynamicType: Int) {
+        //The Holy Easter
+        THE_EASTER(0, 1),
+
+        //The first sunday before Easter
+        THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM(-7, 2),
+
+        //40 day after Easter
+        THE_ASCENSION_OF_THE_LORD(39, 3),
+
+        //50 day after Easter
+        THE_HOLY_TRINITY(49, 4),
     }
 }

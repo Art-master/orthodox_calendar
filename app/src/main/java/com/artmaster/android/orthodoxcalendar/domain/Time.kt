@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Wrapper for work with time
  */
-class Time {
+class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())) {
 
     val year: Int
         get() = calendar.get(Calendar.YEAR)
@@ -39,16 +39,6 @@ class Time {
     val minutes: Int
         get() = calendar.get(Calendar.MINUTE)
 
-    /**
-     * init the time object
-     */
-    var calendar: Calendar = init()
-
-     fun init(): Calendar {
-            calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-         return calendar
-        }
-
     fun calculateDate(time: Time, param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int): Calendar {
         return calculateDate(time.year, time.month, time.dayOfMonth, 0, param, dateCalc)
     }
@@ -75,7 +65,7 @@ class Time {
     }
 
     fun getDaysOfYear(year: Int): Int{
-        val c = init()
+        val c = Calendar.getInstance()
         c.set(year, 11, 31)
         return c.get(Calendar.DAY_OF_YEAR)
     }

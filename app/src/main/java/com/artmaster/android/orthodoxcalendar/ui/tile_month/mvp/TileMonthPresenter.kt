@@ -2,7 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
@@ -17,7 +17,6 @@ import java.util.*
 @InjectViewState
 class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMonthPresenter {
     private val dispose = CompositeDisposable()
-    private var appComponent = App.appComponent
     private val time = Time()
 
     override fun viewIsReady(year: Int, month: Int) {
@@ -26,7 +25,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     }
 
     private fun getHolidays(year: Int, month: Int){
-        val disposable = Single.fromCallable {appComponent.getRepository().getMonthDays(month, year)}
+        val disposable = Single.fromCallable { DataProvider().getMonthDays(month, year) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -38,6 +37,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     override fun viewIsCreated() { }
 
     private fun viewData(days: List<Day>, time: Time) {
+        viewState.clearView()
         viewState.drawDaysOfWeekRows(1..7)
         val numDays = time.daysInMonth
         for(index in 1..numDays){

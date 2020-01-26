@@ -12,6 +12,7 @@ interface CalendarListContract {
         fun hideActionBar()
         fun showHolidayList()
         fun showErrorMessage(msgType: Message.ERROR)
+        fun setInitPosition(index: Int)
     }
 
     interface Presenter : AppPresenter<View>

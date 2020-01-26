@@ -1,9 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.di
 
-
-import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
-import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
+import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import dagger.Module
 import dagger.Provides
 
@@ -11,7 +9,7 @@ import dagger.Provides
 class HolidayViewPagerActivityModule {
     @HolidayViewPagerActivityScope
     @Provides
-    fun provideData(database: AppDatabase): AppDataProvider {
-        return DataProvider(database)
+    fun provideData(): AppDataProvider {
+        return DataProvider()
     }
 }

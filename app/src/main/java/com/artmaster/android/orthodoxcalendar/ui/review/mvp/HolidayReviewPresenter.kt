@@ -1,7 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PLACEHOLDER_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.RESOURCE_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
@@ -11,7 +10,6 @@ import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import java.util.*
-import java.util.Collections.replaceAll
 
 
 class HolidayReviewPresenter(private val context: Context,
@@ -28,7 +26,7 @@ class HolidayReviewPresenter(private val context: Context,
 
     override fun viewIsReady() {
         if (holidayEntity == null) throw NoSuchElementException()
-        val date = getDate(holidayEntity!!.day, holidayEntity!!.month)
+        val date = getDate(holidayEntity!!.day, holidayEntity!!.monthWith0)
         val desc = getDescription(holidayEntity!!.description)
 
         getView().showHolidayName(holidayEntity!!.title)
@@ -41,18 +39,17 @@ class HolidayReviewPresenter(private val context: Context,
     private fun getDate(day: Int, month: Int): Pair<String, String> {
         if (day.or(month) == 0) return Pair("", "")
 
-        val newDate = "$day ${OrtUtils.getMonthName(context, month).toLowerCase()}"
+        val newDate = "$day ${OrtUtils.getMonthNameAcc(context, month).toLowerCase()}"
         val oldDate = getOldStyleDate(day, month)
         return newDate to oldDate
     }
 
     private fun getOldStyleDate(day: Int, month: Int): String {
         val calendar = GregorianCalendar()
-        calendar.set(Time().year, month - 1, day)
+        calendar.set(Time().year, month, day)
         calendar.gregorianChange = Date(java.lang.Long.MAX_VALUE)
         return "${calendar.get(Calendar.DAY_OF_MONTH)} " +
-                OrtUtils.getMonthName(context,
-                        (calendar.get(Calendar.MONTH)) + 1).toLowerCase()
+                OrtUtils.getMonthNameAcc(context, (calendar.get(Calendar.MONTH))).toLowerCase()
     }
 
     private fun getImageId(image: String): Int {

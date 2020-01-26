@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
 import kotlinx.android.synthetic.main.tile_day_layout.view.*
 import org.jetbrains.anko.image
 import org.jetbrains.anko.textColor
-import java.lang.reflect.Type
 
 internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
 
@@ -104,7 +103,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun clearView(){
-        view!!.tableMonthTile.removeAllViews()
+        view?.tableMonthTile?.removeAllViews()
     }
 
     override fun drawDay(dayOfWeek: Int, level: Int, day: Day){
@@ -113,7 +112,7 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
         val v = getDayLayout()
         v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
-        v.id = day.dayInMonth
+        v.id = day.dayOfMonth
 
         styleDayView(v, day, dayOfWeek)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
@@ -140,12 +139,13 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     private fun styleDayView(view: View, day: Day, dayOfWeek: Int){
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
-        text.text = day.dayInMonth.toString()
+        text.text = day.dayOfMonth.toString()
 
         if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
         styleHoliday(day, view)
         styleFastingHoliday(day, view)
+        styleMemoryTypeHoliday(day, view)
     }
 
     private fun styleHoliday(day: Day, v: View){
@@ -188,6 +188,13 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
                 Fasting.Permission.HOT_NO_OIL -> {}
             }
         }
+    }
+
+    private fun styleMemoryTypeHoliday(day: Day, v: View) {
+        if (day.memorialType == Day.MemorialType.NONE) return
+        val img = ContextCompat.getDrawable(v.context!!, R.drawable.cross)
+        if (v.im3.image == null) v.im3.image = img
+        else v.im4.image = img
     }
 
     private fun setStyle(view: View, text: TextViewWithCustomFont, style: Int,

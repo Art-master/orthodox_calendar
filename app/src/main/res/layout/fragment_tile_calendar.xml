@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/monthSpinner"
         app:layout_constraintStart_toEndOf="@+id/monthSpinner" />
 
-    <android.support.v4.view.ViewPager
+    <com.artmaster.android.orthodoxcalendar.ui.CustomViewPager
         android:id="@+id/holidayTilePager"
         android:layout_width="417dp"
         android:layout_height="0dp"

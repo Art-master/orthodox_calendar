@@ -181,6 +181,8 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
             putInt(Constants.Keys.YEAR.value, getYear())
             putInt(Constants.Keys.MONTH.value, getMonth())
             putInt(Constants.Keys.DAY.value, getDay())
+            putInt(Constants.Keys.INIT_LIST_POSITION.value,
+                    intent.getIntExtra(Constants.Keys.INIT_LIST_POSITION.value, 0))
         }
     }
 
@@ -300,6 +302,7 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         val currentYear = years[toolbarYearSpinner.selectedItemPosition]
         return currentYear.toInt()
     }
+
     private fun resetDateState(){
         val fr = mainFragment as CalendarUpdateContract
         val time = Time()
@@ -319,5 +322,9 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         intent.putExtra(Constants.Keys.YEAR.value, time.year)
         intent.putExtra(Constants.Keys.MONTH.value, time.monthWith0)
         intent.putExtra(Constants.Keys.DAY.value, time.dayOfMonth)
+    }
+
+    override fun setInitPosition(index: Int) {
+        intent.putExtra(Constants.Keys.INIT_LIST_POSITION.value, index)
     }
 }

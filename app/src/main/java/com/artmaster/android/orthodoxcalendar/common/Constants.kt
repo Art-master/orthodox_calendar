@@ -15,7 +15,8 @@ class Constants {
         const val LOADING_ANIMATION = 1000 //ms
         const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
         const val RESOURCE_FOR_IMAGE = "drawable"
-        const val STANDARD_NOTIFICATION_HOURS = 12
+        const val VIEW_PAGER_SPEED = 800 //ms
+        const val MONTH_SIZE = 12
         const val PROJECT_DIR = "com.artmaster.android.orthodoxcalendar"
     }
 
@@ -25,6 +26,8 @@ class Constants {
         YEAR("$PROJECT_DIR.common.year"),
         MONTH("$PROJECT_DIR.common.month"),
         DAY("$PROJECT_DIR.common.day"),
+        CURRENT_LIST_POSITION("$PROJECT_DIR.common.list.position"),
+        INIT_LIST_POSITION("$PROJECT_DIR.common.list.position")
     }
 }
 

@@ -2,11 +2,10 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar
 
 import android.arch.paging.PositionalDataSource
 import android.content.Context
-import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
-import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
+import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -38,8 +37,7 @@ class HolidayDataSource(val context: Context, val year: Int = Time().year)
 
     private fun getData(start: Int, size: Int): List<HolidayEntity> {
         mOldData = mNewData
-        val db = HolidayDatabase.getAppDataBase(context)!!
-        mNewData = DataProvider(db).getDataSequence(start, size, year)
+        mNewData = DataProvider().getDataSequence(start, size, year)
         return mNewData
     }
 

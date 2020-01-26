@@ -45,7 +45,7 @@
             android:id="@+id/monthName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{holiday.day+" "+OrtUtils.getMonthName(context, holiday.month)}'
+            android:text='@{holiday.day+" "+OrtUtils.getMonthNameAcc(context, holiday.monthWith0)}'
             android:textAlignment="center"
             android:textSize="@dimen/size_text_basic"
             app:customFont="@string/font_basic" />

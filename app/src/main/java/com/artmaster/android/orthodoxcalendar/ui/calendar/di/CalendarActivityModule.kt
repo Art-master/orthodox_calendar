@@ -1,19 +1,15 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.di
 
 import android.content.Context
-import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
+import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.FragmentAppInfo
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.FragmentSettingsApp
-import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.HolidayListFragment
+import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.ListHolidayPager
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListContract
-import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
-import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.ListHolidayPager
 import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListPresenter
-import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
-import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.mvp.CalendarTileFragment
 import dagger.Module
@@ -23,8 +19,8 @@ import dagger.Provides
 class CalendarActivityModule {
     @CalendarActivityScope
     @Provides
-    fun provideModel(database: AppDatabase): CalendarListContract.Model {
-        return DataProvider(database)
+    fun provideModel(): CalendarListContract.Model {
+        return DataProvider()
     }
 
     @CalendarActivityScope
