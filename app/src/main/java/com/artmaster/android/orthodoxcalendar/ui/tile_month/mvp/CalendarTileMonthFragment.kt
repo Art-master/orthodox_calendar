@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
@@ -143,12 +144,12 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
         if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
-        styleHoliday(day, view)
         styleFastingHoliday(day, view)
         styleMemoryTypeHoliday(day, view)
+        styTypeleHoliday(day, view)
     }
 
-    private fun styleHoliday(day: Day, v: View){
+    private fun styTypeleHoliday(day: Day, v: View) {
         val holidays = day.holidays
         val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
         when {
@@ -161,8 +162,14 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
             isTypeHoliday(HolidayEntity.Type.MAIN, holidays) -> {
                 setStyle(v, text, R.drawable.tile_easter)
             }
-            day.fasting.type != Fasting.Type.NONE -> {
+            day.fasting.type == Fasting.Type.FASTING -> {
                 setStyle(v, text, R.drawable.tile_fasting_day)
+            }
+            day.fasting.type == Fasting.Type.FASTING_DAY -> {
+                setStyle(v, text, R.drawable.tile_fasting_day)
+            }
+            day.fasting.type == Fasting.Type.SOLID_WEEK -> {
+                setStyle(v, text, R.drawable.tile_no_fasting)
             }
         }
     }
@@ -171,23 +178,37 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         if(day.fasting.type == Fasting.Type.NONE) return
         for(permission in day.fasting.permissions){
             when(permission){
-                Fasting.Permission.OIL -> {
-                    v.im1.image = ContextCompat.getDrawable(v.context!!, R.drawable.sun)
-                }
-                Fasting.Permission.FISH -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.fish)
-                }
-                Fasting.Permission.VINE -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.vine)
-                }
-                Fasting.Permission.STRICT -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.triangle)
-                }
+                Fasting.Permission.OIL ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.sun))
+
+                Fasting.Permission.FISH ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.fish))
+
+                Fasting.Permission.VINE ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.vine))
+
+                Fasting.Permission.STRICT ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.triangle))
+
                 Fasting.Permission.NO_EAT -> {}
                 Fasting.Permission.CAVIAR -> {}
                 Fasting.Permission.HOT_NO_OIL -> {}
+                Fasting.Permission.NO_MEAT -> {
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.eggs))
+                }
             }
         }
+    }
+
+    private fun setImg(v: View, drawable: Drawable?) {
+        val imgContainer =
+                when {
+                    v.im3.image == null -> v.im3
+                    v.im2.image == null -> v.im2
+                    v.im1.image == null -> v.im1
+                    else -> return
+                }
+        imgContainer.image = drawable
     }
 
     private fun styleMemoryTypeHoliday(day: Day, v: View) {

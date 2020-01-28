@@ -3,7 +3,6 @@ package com.artmaster.android.orthodoxcalendar.domain
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity.*
 import java.util.Calendar
 import kotlin.collections.ArrayList
-import kotlin.collections.listOf
 
 /**
  * Calculated dynamic holidays
@@ -113,6 +112,10 @@ class DynamicData(private val yearEaster: Int = Time().year) {
             day.fasting.type = Fasting.Type.FASTING
             fillDayAsGreatFasting(day)
         }
+        if (isYole(day) || isBeheadingOfStJohnTheBaptist(day) || isFeastOfTheCross(day)) {
+            day.fasting.type = Fasting.Type.FASTING_DAY
+            day.fasting.permissions = listOf(Fasting.Permission.STRICT)
+        }
     }
 
     private fun isUsuallyFastingDay(day: Day): Boolean {
@@ -120,7 +123,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isPeterAndPaulFasting(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, 49)
+        val calendar = getHolidayDynamicDate(yearEaster, 57)
         val month = calendar.monthWith0
         val dayM = calendar.dayOfMonth
 
@@ -214,6 +217,18 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return false
     }
 
+    private fun isYole(day: Day): Boolean {
+        return day.month == HolidayEntity.Month.JANUARY.num && day.dayOfMonth == 18
+    }
+
+    private fun isBeheadingOfStJohnTheBaptist(day: Day): Boolean {
+        return day.month == HolidayEntity.Month.SEPTEMBER.num && day.dayOfMonth == 11
+    }
+
+    private fun isFeastOfTheCross(day: Day): Boolean {
+        return day.month == HolidayEntity.Month.SEPTEMBER.num && day.dayOfMonth == 27
+    }
+
     private fun fillDayAsGreatFasting(day: Day){
         val calendar = getHolidayDynamicDate(yearEaster, -48)
         val startDay = calendar.monthWith0
@@ -281,6 +296,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
     fun fillOtherData(day: Day) {
         setMemorialType(day)
+        setSolidWeek(day)
     }
 
     private fun setMemorialType(day: Day) {
@@ -316,5 +332,53 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 return
             }
         }
+    }
+
+    private fun setSolidWeek(day: Day) {
+        if (day.month == HolidayEntity.Month.JANUARY.num && day.dayOfMonth in 8..17) {
+            day.fasting.type = Fasting.Type.SOLID_WEEK
+            day.fasting.permissions = emptyList()
+            return
+        }
+
+        var timeStart = getHolidayDynamicDate(yearEaster, -55)
+        getHolidayDynamicDate(yearEaster, -50).apply {
+            if ((day.month == timeStart.monthWith0 || day.month == monthWith0) &&
+                    (day.dayOfMonth >= timeStart.dayOfMonth && day.dayOfMonth <= dayOfMonth)) {
+
+                day.fasting.type = Fasting.Type.SOLID_WEEK
+                day.fasting.permissions = listOf(Fasting.Permission.NO_MEAT)
+                return
+            }
+        }
+
+        getHolidayDynamicDate(yearEaster, 6).apply {
+            if ((day.month == monthEaster || day.month == monthWith0) &&
+                    (day.dayOfMonth in dayEaster..dayOfMonth)) {
+
+                day.fasting.type = Fasting.Type.SOLID_WEEK
+                day.fasting.permissions = emptyList()
+                return
+            }
+        }
+
+        timeStart = getHolidayDynamicDate(yearEaster, 50)
+        getHolidayDynamicDate(yearEaster, 56).apply {
+            if (day.month == monthWith0) {
+                if (day.dayOfMonth in timeStart.dayOfMonth until dayOfMonth) {
+                    day.fasting.type = Fasting.Type.SOLID_WEEK
+                    day.fasting.permissions = emptyList()
+                    return
+                }
+            } else
+                if ((day.month == timeStart.monthWith0 && day.dayOfMonth >= timeStart.dayOfMonth) ||
+                        (day.month == monthWith0 && day.dayOfMonth < dayOfMonth)) {
+
+                    day.fasting.type = Fasting.Type.SOLID_WEEK
+                    day.fasting.permissions = emptyList()
+                    return
+                }
+        }
+
     }
 }

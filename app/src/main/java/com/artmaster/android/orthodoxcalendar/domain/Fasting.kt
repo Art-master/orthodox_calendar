@@ -6,10 +6,10 @@ data class Fasting(
         var permissions: List<Permission> = emptyList()
 ){
     enum class Type{
-        NONE, FASTING, FASTING_DAY
+        NONE, FASTING, FASTING_DAY, SOLID_WEEK
     }
 
     enum class Permission{
-        FISH, OIL, VINE, STRICT, NO_EAT, CAVIAR, HOT_NO_OIL
+        FISH, OIL, VINE, STRICT, NO_EAT, CAVIAR, HOT_NO_OIL, NO_MEAT
     }
 }
