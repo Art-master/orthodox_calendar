@@ -2,12 +2,15 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.MvpView
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.*
@@ -18,6 +21,8 @@ import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.fragments.impl.AppSettingView
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractModel
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractView
 import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import dagger.android.AndroidInjection
@@ -27,16 +32,16 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_calendar.*
 import javax.inject.Inject
 
-class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, CalendarListContract.View {
+class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector, CalendarListContractView, MvpView {
 
     @Inject
     lateinit var database: AppDatabase
 
     @Inject
-    lateinit var model: CalendarListContract.Model
+    lateinit var model: CalendarListContractModel
 
-    @Inject
-    lateinit var presenter: CalendarListContract.Presenter
+    @InjectPresenter(tag = "ListPresenter", type = PresenterType.LOCAL)
+    lateinit var presenter: CalendarListPresenter
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -68,9 +73,14 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
         setContentView(R.layout.activity_calendar)
         setSupportActionBar(toolbar)
         initTypeOfCalendar()
+
         listHolidayFragment.onChangePageListener { controlSpinner(it) }
-        presenter.attachView(this)
-        presenter.viewIsReady()
+
+        if (!presenter.isInRestoreState(this)) {
+            presenter.attachView(this)
+            presenter.viewIsReady()
+        }
+
         initBarSpinner()
     }
 
@@ -289,8 +299,10 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
     private fun setOnItemSelected(){
         toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-                setArgYear(mainFragment, getCurrentYear())
-                (mainFragment as CalendarUpdateContract).updateYear()
+                if (getCurrentYear() != getYears()[position].toInt()) {
+                    setArgYear(mainFragment, getCurrentYear())
+                    (mainFragment as CalendarUpdateContract).updateYear()
+                }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) { }
@@ -326,5 +338,10 @@ class CalendarListActivity : AppCompatActivity(), HasSupportFragmentInjector, Ca
 
     override fun setInitPosition(index: Int) {
         intent.putExtra(Constants.Keys.INIT_LIST_POSITION.value, index)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 }

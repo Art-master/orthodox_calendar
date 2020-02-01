@@ -6,14 +6,14 @@ import com.artmaster.android.orthodoxcalendar.domain.DynamicData
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
-import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListContract
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 /**
  * Get data from storage and prepare it
  */
-class DataProvider : CalendarListContract.Model, AppDataProvider {
+class DataProvider : CalendarListContractModel, AppDataProvider {
 
     @Volatile private var dynamicData = DynamicData()
 

@@ -18,5 +18,5 @@ abstract class AbstractAppPresenter<T : AppView> : AppPresenter<T> {
         return appView != null
     }
 
-    override fun destroy() {}
+    override fun onDestroy() {}
 }

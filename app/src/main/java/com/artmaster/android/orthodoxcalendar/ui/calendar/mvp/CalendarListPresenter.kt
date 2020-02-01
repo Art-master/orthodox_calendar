@@ -1,44 +1,54 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar.mvp
 
-import android.content.Context
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractPresenter
+import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
-class CalendarListPresenter(val context: Context) :
-        AbstractAppPresenter<CalendarListContract.View>(), CalendarListContract.Presenter {
+@InjectViewState
+class CalendarListPresenter : MvpPresenter<CalendarListContractView>(), CalendarListContractPresenter {
 
-    val time = Time()
+    private val time = Time()
+    private val dispose = CompositeDisposable()
 
     override fun viewIsReady() {
-        getView().hideActionBar()
-        getView().showHolidayList()
-        getView().showActionBar()
+        viewState.hideActionBar()
         setListPositionByHolidayList()
     }
 
     private fun setListPositionByHolidayList() {
-        Single.fromCallable { DataProvider().getData(time.year) }
+        val single = Single.fromCallable { DataProvider().getData(time.year) }
                 .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onSuccess = { data -> setListPosition(data) },
                         onError = { it.printStackTrace() })
+        dispose.add(single)
 
     }
 
     private fun setListPosition(data: List<HolidayEntity>) {
+        viewState.showHolidayList()
+        viewState.showActionBar()
         val time = Time()
         for ((index, holiday) in data.withIndex()) {
             if (holiday.month == time.month && holiday.day == time.dayOfMonth) {
-                getView().setInitPosition(index)
+                viewState.setInitPosition(index)
                 return
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dispose.clear()
     }
 }

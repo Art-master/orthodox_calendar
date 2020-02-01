@@ -124,7 +124,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     }
 
     override fun updateYear() {
-        tileView.holidayTilePager.adapter?.notifyDataSetChanged()
+        //tileView.holidayTilePager.adapter?.notifyDataSetChanged()
     }
 
     override fun updateMonth() {

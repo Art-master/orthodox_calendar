@@ -134,4 +134,7 @@
     <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
     <string name="notifications_holiday">Праздник</string>
 
+    <!-- IMG descriptors -->
+    <string name="descriptor_img_load_holidays">Загрузка</string>
+
 </resources>
