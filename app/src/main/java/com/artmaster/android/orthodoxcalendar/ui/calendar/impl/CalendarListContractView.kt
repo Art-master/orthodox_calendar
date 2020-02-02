@@ -8,5 +8,4 @@ interface CalendarListContractView : MvpView {
     fun hideActionBar()
     fun showHolidayList()
     fun showErrorMessage(msgType: Message.ERROR)
-    fun setInitPosition(index: Int)
 }

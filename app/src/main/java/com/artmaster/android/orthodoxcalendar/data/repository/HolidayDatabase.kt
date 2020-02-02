@@ -13,15 +13,16 @@ abstract class HolidayDatabase : RoomDatabase() {
     abstract fun holidaysDb(): HolidayDao
 
     companion object : AppDatabase {
-        var instance: RoomDatabase? = null
+        var instance: HolidayDatabase? = null
 
         override fun get(context: Context): HolidayDatabase {
             synchronized(HolidayDatabase::class) {
-                return Room.databaseBuilder(
+                instance = Room.databaseBuilder(
                         context.applicationContext,
                         HolidayDatabase::class.java,
                         DATABASE_FILE_NAME)
                         .build()
+                return instance!!
             }
         }
 

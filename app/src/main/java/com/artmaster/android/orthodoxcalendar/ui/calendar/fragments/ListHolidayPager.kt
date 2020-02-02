@@ -39,17 +39,27 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager, CalendarUpd
         setPageAdapter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        holidayListPager.currentItem = getPosition()
+    }
+
+    private fun getPosition(): Int {
+        return years.indexOf(getYear())
+    }
+
     private fun setPageAdapter() {
         if(holidayListPager.adapter != null) return
         holidayListPager.adapter =  adapter
+        holidayListPager.currentItem = getPosition()
         setChangePageListener()
     }
 
     private fun getYears(): ArrayList<Int> {
         val size = Constants.HolidayList.PAGE_SIZE.value
-        val initYear = Time().year - size/2
+        val firstYear = Time().year - size / 2
         val years = ArrayList<Int>(size)
-        for (element in initYear..initYear+size){
+        for (element in firstYear until firstYear + size) {
             years.add(element)
         }
         return years
@@ -83,8 +93,6 @@ class ListHolidayPager : Fragment(), ListViewContract.ViewListPager, CalendarUpd
             override fun onPageSelected(position: Int) {
                changedCallback?.let {
                    it(position)
-                   val fr = getAdapter().getItem(position)
-                   //val holiday = (fr as HolidayListFragment).getCurrentElement(position)
                }
             }
         })

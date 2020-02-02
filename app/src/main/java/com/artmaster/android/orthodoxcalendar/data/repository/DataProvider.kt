@@ -66,7 +66,10 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     @Synchronized override fun getDataSequence(start: Int, size: Int, year: Int): List<HolidayEntity> {
-        return setFirstPosition(getAllData(year).sorted())
+        val data = setFirstPosition(getAllData(year).sorted())
+        var endPosition = start + size - 1
+        if (endPosition > data.size - 1) endPosition = data.size
+        return data.subList(start, endPosition)
     }
 
     private fun getAllData(year: Int): List<HolidayEntity> {

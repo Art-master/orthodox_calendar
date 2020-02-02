@@ -64,7 +64,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
 
     private var toolbarMenu: Menu? = null
 
-    private lateinit var mainFragment : Fragment
+    private lateinit var calendarFragment: Fragment
     private var fragment : Fragment = Fragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +74,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         setSupportActionBar(toolbar)
         initTypeOfCalendar()
 
-        listHolidayFragment.onChangePageListener { controlSpinner(it) }
+        listHolidayFragment.onChangePageListener { prepareSpinner(it) }
 
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
@@ -85,15 +85,29 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
     }
 
     private fun initTypeOfCalendar(){
-        mainFragment = if(isFirstLoadTileCalendar){
+        calendarFragment = if (isFirstLoadTileCalendar) {
             tileCalendarFragment as Fragment
         } else {
             listHolidayFragment as Fragment
         }
-        setArguments(mainFragment)
+        setStartArguments(calendarFragment)
     }
 
-    private fun controlSpinner(position: Int){
+    private fun prepareSpinner(position: Int) {
+        toolbarYearSpinner.setSelection(position)
+        controlSpinnerView(position)
+    }
+
+    private fun setStartArguments(fragment: Fragment) {
+        if (fragment.arguments != null) return
+        fragment.arguments = Bundle().apply {
+            putInt(Constants.Keys.YEAR.value, getStartYear())
+            putInt(Constants.Keys.MONTH.value, getMonth())
+            putInt(Constants.Keys.DAY.value, getDay())
+        }
+    }
+
+    private fun controlSpinnerView(position: Int) {
         val firstPosition = 0
         val lastPosition = getYears().size - 1
         when (position) {
@@ -104,18 +118,18 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
                 arrowLeft.visibility = View.VISIBLE
             }
         }
-        toolbarYearSpinner.setSelection(position)
     }
 
-    private fun getYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
+    private fun getStartYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
+    private fun getCurrentYear() = calendarFragment.arguments?.getInt(Constants.Keys.YEAR.value, getStartYear())
     private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().monthWith0)
     private fun getDay() = intent.getIntExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
 
     private fun getYears(): ArrayList<String> {
       val size = Constants.HolidayList.PAGE_SIZE.value
-      val initYear = getYear() - size/2
+        val firstYear = getStartYear() - size / 2
       val years = ArrayList<String>(size)
-      for (element in initYear..initYear+size){
+        for (element in firstYear until firstYear + size) {
           years.add(element.toString())
       }
       return years
@@ -137,7 +151,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val fragment = when (item!!.itemId) {
+        val currentVisibleFragment = when (item!!.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)
             R.id.item_settings -> checkFragment(appSettingsFragment)
             R.id.item_reset_date -> {
@@ -147,61 +161,56 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
             else -> null
         }
         changeMainFragment(item)
-        if (fragment != null) {
-            if (isExist(fragment)) {
-                showFragment(checkFragment(mainFragment))
-                removeFragment(fragment)
+        if (currentVisibleFragment != null) {
+            if (isExist(currentVisibleFragment)) {
+                showFragment(checkFragment(calendarFragment))
+                removeFragment(currentVisibleFragment)
             } else {
-                this.fragment = fragment
-                hideFragment(checkFragment(mainFragment))
-                replaceFragment(R.id.menu_fragments_container, fragment)
+                this.fragment = currentVisibleFragment
+                hideFragment(checkFragment(calendarFragment))
+                replaceFragment(R.id.menu_fragments_container, currentVisibleFragment)
             }
         }else if(item.itemId == R.id.item_view) {
             removeFragment(this.fragment)
-            showFragment(checkFragment(mainFragment))
+            showFragment(checkFragment(calendarFragment))
         }
-
         return super.onOptionsItemSelected(item)
     }
 
     private fun changeMainFragment(item: MenuItem){
         if(item.itemId != R.id.item_view) return
-        mainFragment = if(mainFragment is ListViewContract.ViewListPager){
-            tileCalendarFragment as Fragment
+
+        val fragmentTile = tileCalendarFragment as Fragment
+        val fragmentList = listHolidayFragment as Fragment
+
+        calendarFragment = if (calendarFragment is ListViewContract.ViewListPager) {
+            fragmentTile.arguments = fragmentList.arguments
+            fragmentTile
         }else {
-            listHolidayFragment as Fragment
+            fragmentList.arguments = fragmentTile.arguments
+            fragmentList
         }
 
         changeIconTypeCalendar()
+        replaceFragment(R.id.activityCalendar, calendarFragment)
+    }
 
-        replaceFragment(R.id.activityCalendar, mainFragment)
-        setArguments(mainFragment)
+    private fun updateFragmentData(fragment: CalendarUpdateContract) {
+        fragment.updateYear()
+        fragment.updateMonth()
+        fragment.updateDay()
     }
 
     private fun changeIconTypeCalendar(){
-        if(mainFragment is ListViewContract.ViewListPager){
+        if (calendarFragment is ListViewContract.ViewListPager) {
             toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_tile)
         }else {
             toolbarMenu?.getItem(0)?.setIcon(R.drawable.icon_list)
         }
     }
 
-    private fun setArguments(fragment: Fragment){
-        fragment.arguments = Bundle().apply {
-            putInt(Constants.Keys.YEAR.value, getYear())
-            putInt(Constants.Keys.MONTH.value, getMonth())
-            putInt(Constants.Keys.DAY.value, getDay())
-            putInt(Constants.Keys.INIT_LIST_POSITION.value,
-                    intent.getIntExtra(Constants.Keys.INIT_LIST_POSITION.value, 0))
-        }
-    }
-
-    private fun setArgYear(fragment: Fragment, year: Int){
-        fragment.arguments?.putInt(Constants.Keys.YEAR.value, year)
-    }
-
     override fun showHolidayList() {
-        val fragment = checkFragment(mainFragment)
+        val fragment = checkFragment(calendarFragment)
         addFragment(R.id.activityCalendar, fragment)
     }
 
@@ -223,7 +232,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         val adapter = SpinnerAdapter(this, R.layout.spinner_year_item, years.toTypedArray())
         adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
         toolbarYearSpinner.adapter = adapter
-        val pos = years.indexOf(getYear().toString())
+        val pos = years.indexOf(getStartYear().toString())
         toolbarYearSpinner.setSelection(pos)
         setOnItemSelected()
     }
@@ -284,12 +293,12 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         when {
             isExist(checkFragment(appSettingsFragment)) -> {
                 removeFragment(appSettingsFragment as Fragment)
-                showFragment(checkFragment(mainFragment))
+                showFragment(checkFragment(calendarFragment))
             }
 
             isExist(checkFragment(appInfoFragment)) -> {
                 removeFragment(appInfoFragment as Fragment)
-                showFragment(checkFragment(mainFragment))
+                showFragment(checkFragment(calendarFragment))
             }
 
             else -> OrtUtils.exitProgram(this)
@@ -299,9 +308,12 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
     private fun setOnItemSelected(){
         toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-                if (getCurrentYear() != getYears()[position].toInt()) {
-                    setArgYear(mainFragment, getCurrentYear())
-                    (mainFragment as CalendarUpdateContract).updateYear()
+                if (isTheSameYear(position).not()) {
+                    val year = getSpinnerCurrentYear()
+                    updateArgs(tileCalendarFragment as Fragment, year)
+                    updateArgs(listHolidayFragment as Fragment, year)
+                    controlSpinnerView(position)
+                    (calendarFragment as CalendarUpdateContract).updateYear()
                 }
             }
 
@@ -309,20 +321,36 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         }
     }
 
-    private fun getCurrentYear(): Int {
+    private fun updateArgs(fragment: Fragment, year: Int? = null, month: Int? = null, day: Int? = null) {
+        val y = year ?: calendarFragment.arguments?.getInt(Constants.Keys.YEAR.value)
+        val m = month ?: calendarFragment.arguments?.getInt(Constants.Keys.MONTH.value)
+        val d = day ?: calendarFragment.arguments?.getInt(Constants.Keys.DAY.value)
+
+        fragment.arguments = Bundle().apply {
+            putInt(Constants.Keys.YEAR.value, y!!)
+            putInt(Constants.Keys.MONTH.value, m!!)
+            putInt(Constants.Keys.DAY.value, d!!)
+        }
+    }
+
+    private fun isTheSameYear(spinnerPosition: Int): Boolean {
+        return getCurrentYear() == getYears()[spinnerPosition].toInt()
+    }
+
+    private fun getSpinnerCurrentYear(): Int {
         val years = getYears()
         val currentYear = years[toolbarYearSpinner.selectedItemPosition]
         return currentYear.toInt()
     }
 
     private fun resetDateState(){
-        val fr = mainFragment as CalendarUpdateContract
+        val fr = calendarFragment as CalendarUpdateContract
         val time = Time()
 
         resetArgsValues()
-        if (time.year == getYear()) {
+        if (time.year == getStartYear()) {
             val years = getYears()
-            val pos = years.indexOf(getYear().toString())
+            val pos = years.indexOf(getStartYear().toString())
             toolbarYearSpinner.setSelection(pos)
             fr.updateYear()
         }
@@ -334,10 +362,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         intent.putExtra(Constants.Keys.YEAR.value, time.year)
         intent.putExtra(Constants.Keys.MONTH.value, time.monthWith0)
         intent.putExtra(Constants.Keys.DAY.value, time.dayOfMonth)
-    }
-
-    override fun setInitPosition(index: Int) {
-        intent.putExtra(Constants.Keys.INIT_LIST_POSITION.value, index)
     }
 
     override fun onDestroy() {
