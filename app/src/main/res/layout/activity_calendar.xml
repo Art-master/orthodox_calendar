@@ -31,6 +31,7 @@
             android:id="@+id/toolbarYearSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             app:customFont="@string/font_basic" >
         </android.support.v7.widget.AppCompatSpinner>
 
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/arrow_right"
+            android:drawableStart="@drawable/ic_arrow_drop_down_white"
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic" />

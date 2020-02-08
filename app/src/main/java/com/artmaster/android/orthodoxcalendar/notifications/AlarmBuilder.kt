@@ -2,13 +2,13 @@ package com.artmaster.android.orthodoxcalendar.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import java.util.*
 import android.content.pm.PackageManager
-import android.content.ComponentName
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Settings
+import java.util.*
 
 object AlarmBuilder {
 
@@ -32,7 +32,7 @@ object AlarmBuilder {
         //calendar = fakeTime() //test
 
         alarmMgr.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
+                AlarmManager.RTC,
                 calendar.timeInMillis,
                 AlarmManager.INTERVAL_DAY,
                 alarmIntent

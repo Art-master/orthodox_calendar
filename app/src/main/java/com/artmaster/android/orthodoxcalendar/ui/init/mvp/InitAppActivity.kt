@@ -10,7 +10,7 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
-import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.fragments.LoadingScreenFragment
 import dagger.android.AndroidInjection
 import javax.inject.Inject

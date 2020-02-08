@@ -1,31 +1,27 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.SpannableString
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Message
+import com.artmaster.android.orthodoxcalendar.common.OrtUtils
+import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
+import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
+import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_holiday.view.*
 import javax.inject.Inject
-import android.util.TypedValue
-import android.graphics.Color
-import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
-import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import android.text.SpannableString
-import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
-import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
-import android.content.Context
-import com.artmaster.android.orthodoxcalendar.App
-import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 
 class HolidayFragment : Fragment(), HolidayReviewContract.View {
@@ -83,7 +79,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
             setLeadingMargin(3, 8)
             val strWithoutSpaces = deleteSpaces(description)
             setText(getTextByPadding(strWithoutSpaces))
-            setTextColor(holidayView.holiday_name_in_page.textColors)
+            setTextColor(holidayView.new_date_style_text_view.textColors)
         }
     }
 

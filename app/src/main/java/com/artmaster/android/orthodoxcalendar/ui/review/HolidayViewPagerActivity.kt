@@ -6,22 +6,22 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
+import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
 import dagger.android.AndroidInjection
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.holiday_review_pager.*
-import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.calendar.mvp.CalendarListActivity
-import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
-import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
-import dagger.android.DispatchingAndroidInjector
 
 
 class HolidayViewPagerActivity : AppCompatActivity(), HasSupportFragmentInjector {

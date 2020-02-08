@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
-import com.artmaster.android.orthodoxcalendar.ui.calendar.HolidaysAdapter
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.HolidaysAdapter
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Context):

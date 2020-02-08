@@ -91,6 +91,12 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return Time(cal)
     }
 
+    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int): Time {
+        val cal = Time().calculateDate(yearEaster, month,
+                day, Calendar.DAY_OF_YEAR, valueForCalculate)
+        return Time(cal)
+    }
+
     fun fillFastingDay(day: Day){
         if(isUsuallyFastingDay(day)) {
             day.fasting.type = Fasting.Type.FASTING_DAY
@@ -300,37 +306,76 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun setMemorialType(day: Day) {
+        //The saturday of Meatless
         getHolidayDynamicDate(yearEaster, -57).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.MEATLESS_SATURDAY
-                return
+                return@apply
             }
         }
+
+        //The saturday of Great Fasting 2
         getHolidayDynamicDate(yearEaster, -36).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_2
-                return
+                return@apply
             }
         }
+
+        //The saturday of Great Fasting 3
         getHolidayDynamicDate(yearEaster, -29).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_3
-                return
+                return@apply
             }
         }
 
+        //The saturday of Great Fasting 4
         getHolidayDynamicDate(yearEaster, -22).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
-                return
+                return@apply
             }
         }
 
+        //Radunytsya
+        getHolidayDynamicDate(yearEaster, 9).apply {
+            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
+                day.memorialType = Day.MemorialType.RADUNYTSYA
+                return@apply
+            }
+        }
+
+        //Trinity saturday
         getHolidayDynamicDate(yearEaster, 48).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
-                return
+                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_TRINITY
+                return@apply
             }
+        }
+
+        //The saturday near the Assumption Fasting
+        if (day.month == Month.AUGUST.num && day.dayInWeek == DayOfWeek.SATURDAY.num &&
+                day.dayOfMonth in 7 until 14) {
+
+            day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_ASSUMPTION
+            return
+        }
+
+        //The saturday of st. Dmitry
+        getHolidayDynamicDate(Month.NOVEMBER.num, 8, -7).apply {
+            if (day.month == Month.NOVEMBER.num && day.dayOfMonth < 8 && day.dayInWeek == DayOfWeek.SATURDAY.num) {
+                day.memorialType = Day.MemorialType.SATURDAY_OF_DMITRY
+                return@apply
+            }
+        }
+
+        //The saturday near the Christmas Fasting
+        if (day.month == Month.NOVEMBER.num && day.dayInWeek == DayOfWeek.SATURDAY.num &&
+                day.dayOfMonth in 21 until 28) {
+
+            day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_CHRISTMAS
+            return
         }
     }
 
@@ -348,7 +393,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
                 day.fasting.type = Fasting.Type.SOLID_WEEK
                 day.fasting.permissions = listOf(Fasting.Permission.NO_MEAT)
-                return
+                return@apply
             }
         }
 
@@ -358,7 +403,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
                 day.fasting.type = Fasting.Type.SOLID_WEEK
                 day.fasting.permissions = emptyList()
-                return
+                return@apply
             }
         }
 
@@ -368,7 +413,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 if (day.dayOfMonth in timeStart.dayOfMonth until dayOfMonth) {
                     day.fasting.type = Fasting.Type.SOLID_WEEK
                     day.fasting.permissions = emptyList()
-                    return
+                    return@apply
                 }
             } else
                 if ((day.month == timeStart.monthWith0 && day.dayOfMonth >= timeStart.dayOfMonth) ||
@@ -376,7 +421,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
                     day.fasting.type = Fasting.Type.SOLID_WEEK
                     day.fasting.permissions = emptyList()
-                    return
+                    return@apply
                 }
         }
 

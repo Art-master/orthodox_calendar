@@ -6,7 +6,7 @@ import com.artmaster.android.orthodoxcalendar.domain.DynamicData
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
-import com.artmaster.android.orthodoxcalendar.ui.calendar.impl.CalendarListContractModel
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -130,4 +130,13 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         }
         return holidays
     }
+
+    @Synchronized
+    override fun getHolidaysByTime(time: Time): List<HolidayEntity> {
+        val db = database.get(context)
+        val holidays = db.holidaysDb().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
+        db.close()
+        return calculateDynamicData(holidays, time.year)
+    }
+
 }

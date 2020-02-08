@@ -7,6 +7,12 @@ import java.util.*
  */
 class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())) {
 
+    constructor(year: Int, month: Int, day: Int) : this() {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+    }
+
     val year: Int
         get() = calendar.get(Calendar.YEAR)
 
