@@ -42,7 +42,7 @@ object AlarmBuilder {
     private fun fakeTime(): Calendar {
         return Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.SECOND, get(Calendar.SECOND) + 5)
+            set(Calendar.SECOND, get(Calendar.SECOND) + 3)
         }
     }
 

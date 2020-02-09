@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.tile_pager.mvp
+package com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment
 
 import android.app.Dialog
 import android.os.Bundle

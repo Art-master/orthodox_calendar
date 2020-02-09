@@ -12,7 +12,7 @@ class Constants {
         const val DATABASE_FILE_NAME = "holidays.db"
         const val FONT_ASSETS_DIRECTORY = "fonts/"
         const val SETTINGS_FILE_NAME = "calendar_settings"
-        const val LOADING_ANIMATION = 1000 //ms
+        const val LOADING_ANIMATION = 3000 //ms
         const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
         const val RESOURCE_FOR_IMAGE = "drawable"
         const val VIEW_PAGER_SPEED = 800 //ms

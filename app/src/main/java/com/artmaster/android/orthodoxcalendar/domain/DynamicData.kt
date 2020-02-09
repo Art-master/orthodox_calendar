@@ -97,24 +97,24 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return Time(cal)
     }
 
-    fun fillFastingDay(day: Day){
-        if(isUsuallyFastingDay(day)) {
+    fun fillFastingDay(day: Day) {
+        if (isUsuallyFastingDay(day)) {
             day.fasting.type = Fasting.Type.FASTING_DAY
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
-        if(isPeterAndPaulFasting(day)){
+        if (isPeterAndPaulFasting(day)) {
             day.fasting.type = Fasting.Type.FASTING
             fillDayAsPeterFasting(day)
         }
-        if(isAssumptionFasting(day)){
+        if (isAssumptionFasting(day)) {
             day.fasting.type = Fasting.Type.FASTING
             fillDayAsAssumptionFasting(day)
         }
-        if(isChristmasFasting(day)){
+        if (isChristmasFasting(day)) {
             day.fasting.type = Fasting.Type.FASTING
             fillDayAsChristmasFasting(day)
         }
-        if(isGreatFasting(day)){
+        if (isGreatFasting(day)) {
             day.fasting.type = Fasting.Type.FASTING
             fillDayAsGreatFasting(day)
         }
@@ -137,11 +137,11 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 (day.month == Month.JULY.num && day.dayOfMonth <= 12)
     }
 
-    private fun fillDayAsPeterFasting(day: Day){
+    private fun fillDayAsPeterFasting(day: Day) {
         val list = ArrayList<Fasting.Permission>()
-        when(day.dayInWeek){
+        when (day.dayInWeek) {
             DayOfWeek.MONDAY.num -> list.add(Fasting.Permission.HOT_NO_OIL)
-            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num, DayOfWeek.SATURDAY.num, DayOfWeek.SUNDAY.num-> {
+            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num, DayOfWeek.SATURDAY.num, DayOfWeek.SUNDAY.num -> {
                 list.add(Fasting.Permission.OIL)
                 list.add(Fasting.Permission.FISH)
             }
@@ -157,7 +157,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..28)
     }
 
-    private fun fillDayAsAssumptionFasting(day: Day){
+    private fun fillDayAsAssumptionFasting(day: Day) {
         val list = ArrayList<Fasting.Permission>()
         when (day.dayOfMonth) {
             14, 16, 21, 23, 26 -> list.add(Fasting.Permission.STRICT)
@@ -168,13 +168,13 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         day.fasting.permissions = list
     }
 
-    private fun isChristmasFasting(day: Day): Boolean{
+    private fun isChristmasFasting(day: Day): Boolean {
         return (day.month == Month.NOVEMBER.num && day.dayOfMonth >= 28) or
                 (day.month == Month.DECEMBER.num) or
                 (day.month == Month.JANUARY.num && day.dayOfMonth <= 6)
     }
 
-    private fun fillDayAsChristmasFasting(day: Day){
+    private fun fillDayAsChristmasFasting(day: Day) {
         val list = ArrayList<Fasting.Permission>()
         when {
             day.month == Month.NOVEMBER.num -> {
@@ -235,21 +235,21 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return day.month == HolidayEntity.Month.SEPTEMBER.num && day.dayOfMonth == 27
     }
 
-    private fun fillDayAsGreatFasting(day: Day){
+    private fun fillDayAsGreatFasting(day: Day) {
         val calendar = getHolidayDynamicDate(yearEaster, -48)
         val startDay = calendar.monthWith0
         val startMonth = calendar.dayOfMonth
 
         val list = ArrayList<Fasting.Permission>()
-        when(day.dayInWeek){
-            DayOfWeek.MONDAY.num, DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num->{
+        when (day.dayInWeek) {
+            DayOfWeek.MONDAY.num, DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num -> {
                 list.add(Fasting.Permission.STRICT)
             }
-            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num-> {
+            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num -> {
                 list.add(Fasting.Permission.HOT_NO_OIL)
             }
 
-            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num-> {
+            DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num -> {
                 list.add(Fasting.Permission.OIL)
                 list.add(Fasting.Permission.FISH)
             }
@@ -271,13 +271,13 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         if (day.dayOfMonth == 7 && day.month == Month.APRIL.num) {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
-        if(isHolidayEntry(day)){
+        if (isHolidayEntry(day)) {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
-        if(isLazarSaturday(day)){
+        if (isLazarSaturday(day)) {
             day.fasting.permissions = listOf(Fasting.Permission.CAVIAR, Fasting.Permission.OIL)
         }
-        if(isLastDayBeforeEaster(day)){
+        if (isLastDayBeforeEaster(day)) {
             day.fasting.permissions = listOf(Fasting.Permission.STRICT)
         }
     }
@@ -385,45 +385,33 @@ class DynamicData(private val yearEaster: Int = Time().year) {
             day.fasting.permissions = emptyList()
             return
         }
+        if (calculateSolidWeek(day, -69, -63)) return
+        if (calculateSolidWeek(day, -55, -49, listOf(Fasting.Permission.NO_MEAT))) return
+        if (calculateSolidWeek(day, 1, 7)) return
+        if (calculateSolidWeek(day, 50, 56)) return
+    }
 
-        var timeStart = getHolidayDynamicDate(yearEaster, -55)
-        getHolidayDynamicDate(yearEaster, -50).apply {
-            if ((day.month == timeStart.monthWith0 || day.month == monthWith0) &&
-                    (day.dayOfMonth >= timeStart.dayOfMonth && day.dayOfMonth <= dayOfMonth)) {
-
-                day.fasting.type = Fasting.Type.SOLID_WEEK
-                day.fasting.permissions = listOf(Fasting.Permission.NO_MEAT)
-                return@apply
-            }
-        }
-
-        getHolidayDynamicDate(yearEaster, 6).apply {
-            if ((day.month == monthEaster || day.month == monthWith0) &&
-                    (day.dayOfMonth in dayEaster..dayOfMonth)) {
-
-                day.fasting.type = Fasting.Type.SOLID_WEEK
-                day.fasting.permissions = emptyList()
-                return@apply
-            }
-        }
-
-        timeStart = getHolidayDynamicDate(yearEaster, 50)
-        getHolidayDynamicDate(yearEaster, 56).apply {
+    private fun calculateSolidWeek(day: Day, timeFromEasterStart: Int, timeFromEasterEnd: Int,
+                                   permissions: List<Fasting.Permission> = emptyList()): Boolean {
+        var flag = false
+        val timeStart = getHolidayDynamicDate(yearEaster, timeFromEasterStart)
+        getHolidayDynamicDate(yearEaster, timeFromEasterEnd).apply {
             if (day.month == monthWith0) {
                 if (day.dayOfMonth in timeStart.dayOfMonth until dayOfMonth) {
-                    day.fasting.type = Fasting.Type.SOLID_WEEK
-                    day.fasting.permissions = emptyList()
+                    flag = true
                     return@apply
                 }
             } else
                 if ((day.month == timeStart.monthWith0 && day.dayOfMonth >= timeStart.dayOfMonth) ||
                         (day.month == monthWith0 && day.dayOfMonth < dayOfMonth)) {
-
-                    day.fasting.type = Fasting.Type.SOLID_WEEK
-                    day.fasting.permissions = emptyList()
+                    flag = true
                     return@apply
                 }
         }
-
+        if (flag) {
+            day.fasting.type = Fasting.Type.SOLID_WEEK
+            day.fasting.permissions = permissions
+        }
+        return flag
     }
 }

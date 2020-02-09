@@ -352,7 +352,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
             val years = getYears()
             val pos = years.indexOf(getStartYear().toString())
             toolbarYearSpinner.setSelection(pos)
-            fr.updateYear()
+            //year will update in spinner listener
         }
         if (time.monthWith0 == getMonth()) fr.updateMonth()
     }

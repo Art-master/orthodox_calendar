@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -97,6 +95,22 @@
         app:layout_constraintTop_toBottomOf="@+id/settingsNotifyAverageHolidays" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/settingsDefaultSound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/settings_notifications_sound_default"
+        android:textSize="@dimen/size_text_settings"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsNotifySound" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/settingsNotifyVibration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,7 +124,7 @@
         android:textSize="@dimen/size_text_settings"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsNotifySound" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsDefaultSound" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/settingsNotifyTime"
@@ -132,7 +146,8 @@
         android:id="@+id/time_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyTime"
         app:layout_constraintStart_toEndOf="@+id/settingsNotifyTime">
 
@@ -141,8 +156,9 @@
     <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:layout_weight="10"
+        android:background="@null"
+        android:drawableStart="@drawable/ic_arrow_drop_down_white"
         android:text="@string/settings_days"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/size_text_settings"
@@ -170,7 +186,8 @@
         android:id="@+id/time_in_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
         app:layout_constraintStart_toEndOf="@+id/settingsNotifyInTime">
 
@@ -179,8 +196,8 @@
     <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
         android:layout_weight="10"
+        android:drawableStart="@drawable/ic_arrow_drop_down_white"
         android:text="@string/settings_hours"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/size_text_settings"
