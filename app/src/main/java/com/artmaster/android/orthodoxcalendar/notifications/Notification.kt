@@ -57,7 +57,8 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
     }
 
     fun build() {
-        val notification = getBuilder()
+        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notification = getBuilder(notificationManager)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(notificationName)
                 .setContentText(msgText)
@@ -68,7 +69,6 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
         if(soundEnable) notification.setSound(soundUri)
         if (vibrationEnable) notification.setVibrate(vibrationSchema)
 
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(holiday.id.toInt(), notification.build())
     }
 
@@ -78,9 +78,9 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getBuilder(): NotificationCompat.Builder {
+    private fun getBuilder(notificationManager: NotificationManager): NotificationCompat.Builder {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel()
+            notificationManager.createNotificationChannel(createChannel())
             NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)

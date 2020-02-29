@@ -36,12 +36,15 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
         presenter.viewIsReady()
     }
 
-    override fun showLoadingScreen() {
+    override fun showLoadingScreen(timeAnimation: Long) {
         val fm = supportFragmentManager
 
         val fr = LoadingScreenFragment()
+        val bundle = Bundle()
+        bundle.putLong(Constants.Keys.ANIM_TIME.value, timeAnimation)
+        fr.arguments = bundle
         fr.retainInstance = false
-        if (bundle.isEmpty) {
+        if (this.bundle.isEmpty) {
             fm.beginTransaction().add(R.id.activity_init, fr).commit()
         } else {
             fr.onDestroy()

@@ -20,7 +20,7 @@ class CheckBoxPrepared(private val checkBox: CheckBox,
         checkBox.isChecked = value.toBoolean()
         checkBox.onClick {
             saveSetting()
-            callback(checkBox.isChecked)
+            callback(checkBox.isChecked.not())
         }
     }
 

@@ -12,7 +12,8 @@ class Constants {
         const val DATABASE_FILE_NAME = "holidays.db"
         const val FONT_ASSETS_DIRECTORY = "fonts/"
         const val SETTINGS_FILE_NAME = "calendar_settings"
-        const val LOADING_ANIMATION = 3000 //ms
+        const val LOADING_ANIMATION_DURATION = 3000 //ms
+        const val LOADING_ANIMATION_SPEED_UP = LOADING_ANIMATION_DURATION / 2
         const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
         const val RESOURCE_FOR_IMAGE = "drawable"
         const val VIEW_PAGER_SPEED = 800 //ms
@@ -26,6 +27,7 @@ class Constants {
         YEAR("$PROJECT_DIR.common.year"),
         MONTH("$PROJECT_DIR.common.month"),
         DAY("$PROJECT_DIR.common.day"),
+        ANIM_TIME("$PROJECT_DIR.anim.time"),
         CURRENT_LIST_POSITION("$PROJECT_DIR.common.list.position"),
         INIT_LIST_POSITION("$PROJECT_DIR.common.list.position")
     }

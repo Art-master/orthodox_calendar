@@ -45,6 +45,17 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
                     callback = {v.time_in_spinner.isEnabled = it.not()}
                 }
         SpinnerPrepared(v.time_in_spinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
+
+        CheckBoxPrepared(v.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
+
+        CheckBoxPrepared(v.settingsOffAnimation, prefs, OFF_START_ANIMATION).prepare().apply {
+            callback = {
+                v.settingsSpeedUpAnimation.isEnabled = it
+                if (v.settingsSpeedUpAnimation.isChecked) {
+                    v.settingsSpeedUpAnimation.isChecked = false
+                }
+            }
+        }
     }
 
     private fun getHoursNumbers() =  getDaysNumbers().take(24).toTypedArray()

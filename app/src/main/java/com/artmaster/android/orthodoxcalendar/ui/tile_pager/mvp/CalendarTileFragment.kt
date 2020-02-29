@@ -130,7 +130,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
 
     override fun updateMonth() {
         val position = getMonth()
-        tileView.holidayTilePager.currentItem = position
+        tileView.holidayTilePager.setCurrentItem(position, false)
     }
 
     override fun updateDay() {

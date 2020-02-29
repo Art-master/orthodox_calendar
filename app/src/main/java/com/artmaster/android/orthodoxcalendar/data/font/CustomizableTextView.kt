@@ -30,7 +30,7 @@ class CustomizableTextView : AppCompatTextView {
     private var isVisible = false
     private var isTextResetting = false
 
-    private var durationAnim = Constants.LOADING_ANIMATION
+    private var durationAnim = Constants.LOADING_ANIMATION_DURATION.toLong()
 
     private var animator: ValueAnimator? = null
 
@@ -150,9 +150,9 @@ class CustomizableTextView : AppCompatTextView {
         return (255 * Math.min(Math.max(value, 0.0), 1.0)).toInt()
     }
 
-    fun setDurationAnim(durationMs: Int) {
+    fun setDurationAnim(durationMs: Long) {
         this.durationAnim = durationMs
-        animator!!.duration = durationMs.toLong()
+        animator!!.duration = durationMs
     }
 
     /** Reverse animation */

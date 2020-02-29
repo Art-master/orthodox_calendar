@@ -5,12 +5,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.LOADING_ANIMATION
+import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.LOADING_ANIMATION_DURATION
 import com.artmaster.android.orthodoxcalendar.data.font.CustomizableTextView
-
-import java.util.Random
+import java.util.*
 
 /**
  * Class create Fragment and execute animation of text in it.
@@ -19,11 +18,19 @@ class LoadingScreenFragment : Fragment() {
 
     lateinit var loadingScreenText: CustomizableTextView
 
+    var time: Long = LOADING_ANIMATION_DURATION.toLong()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val data = arguments?.getLong(Constants.Keys.ANIM_TIME.value)
+        data?.let { time = it }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_loading_screen, container, false)
         retainInstance = false
         loadingScreenText = view.findViewById(R.id.loadingScreenText)
-        loadingScreenText.setDurationAnim(LOADING_ANIMATION)
+        loadingScreenText.setDurationAnim(time)
         loadingScreenText.setVisible(true)
         loadingScreenText.setText(getResourceText())
         loadingScreenText.reverseAnimation()
