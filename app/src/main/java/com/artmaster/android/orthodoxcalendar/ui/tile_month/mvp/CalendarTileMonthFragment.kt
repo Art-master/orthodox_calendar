@@ -1,7 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
@@ -12,6 +15,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatFragment
@@ -31,7 +36,6 @@ import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
 import kotlinx.android.synthetic.main.tile_day_layout.view.*
 import org.jetbrains.anko.image
 import org.jetbrains.anko.textColor
-import java.lang.reflect.Type
 
 internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
 
@@ -41,6 +45,8 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private lateinit var tileView: View
     private lateinit var tileDayView: View
     private lateinit var layoutManager: LinearLayoutManager
+
+    private var tableRows = ArrayList<TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,27 +63,24 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
         tileView = inflater.inflate(R.layout.fragment_month_tile_calendar, groupContainer, false)
-        tileDayView = inflater.inflate(R.layout.tile_day_layout, null, false)
+        tileDayView = inflater.inflate(R.layout.tile_day_layout, groupContainer, false)
         return tileView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.viewIsCreated()
+        if (isVisible) initAnimation()
     }
 
     override fun onResume() {
         super.onResume()
-        //setFocus()
+        presenter.viewIsCreated()
     }
 
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
+    private fun initAnimation() {
+        val set = AnimatorInflater.loadAnimator(context, R.animator.loading_animator) as AnimatorSet
+        set.setTarget(ringLoading)
+        set.start()
     }
 
     private fun getDayLayout() = layoutInflater.inflate(R.layout.tile_day_layout, null)
@@ -89,8 +92,6 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private fun getArgs() = parentFragment!!.arguments!!
 
     override fun setFocus(monthNum: Int){
-        val r = monthNum
-        val g = getParentMonth()
         if(monthNum != getParentMonth() && isVisible) return
         val id = getDay()
         if(id == 0 || tableMonthTile == null) return
@@ -104,16 +105,24 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun clearView(){
-        view!!.tableMonthTile.removeAllViews()
+        setVisibility()
+        view?.tableMonthTile?.removeAllViews()
     }
 
-    override fun drawDay(dayOfWeek: Int, level: Int, day: Day){
+    private fun setVisibility() {
+        recyclerViewDayHolidays?.visibility = RecyclerView.VISIBLE
+        tableMonthTile?.visibility = TableLayout.VISIBLE
+        ringLoading?.visibility = ImageView.GONE
+        crossLoading?.visibility = ImageView.GONE
+    }
+
+    override fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
         if(presenter.isInRestoreState(this)) return
-        val row = view!!.tableMonthTile.getChildAt(dayOfWeek -1) as TableRow
+        val row = tableRows[dayOfWeek - 1]
 
         val v = getDayLayout()
         v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
-        v.id = day.dayInMonth
+        v.id = day.dayOfMonth
 
         styleDayView(v, day, dayOfWeek)
         if(row.childCount == level -1) row.addView(TextView(context), level-1)
@@ -123,32 +132,31 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     private fun changedFocus(view: View, hasFocus: Boolean, day: Day){
         val bg= view.container.background
         if(hasFocus){
-            initRecyclerView(day)
-            val c =ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
+            initRecyclerView(day.holidays)
+            val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
             bg.setColorFilter(c, PorterDuff.Mode.MULTIPLY)
             setDayArgs(view.id)
         } else bg.clearColorFilter()
 
     }
 
-    private fun initRecyclerView(day: Day){
-        val holidays = day.holidays
+    private fun initRecyclerView(holidays: List<HolidayEntity>) {
         if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
         recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
-        recyclerViewDayHolidays.visibility = RecyclerView.VISIBLE
     }
 
     private fun styleDayView(view: View, day: Day, dayOfWeek: Int){
         val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
-        text.text = day.dayInMonth.toString()
+        text.text = day.dayOfMonth.toString()
 
         if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
 
-        styleHoliday(day, view)
         styleFastingHoliday(day, view)
+        styleMemoryTypeHoliday(day, view)
+        styleTypeHoliday(day, view)
     }
 
-    private fun styleHoliday(day: Day, v: View){
+    private fun styleTypeHoliday(day: Day, v: View) {
         val holidays = day.holidays
         val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
         when {
@@ -161,8 +169,14 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
             isTypeHoliday(HolidayEntity.Type.MAIN, holidays) -> {
                 setStyle(v, text, R.drawable.tile_easter)
             }
-            day.fasting.type != Fasting.Type.NONE -> {
+            day.fasting.type == Fasting.Type.FASTING -> {
                 setStyle(v, text, R.drawable.tile_fasting_day)
+            }
+            day.fasting.type == Fasting.Type.FASTING_DAY -> {
+                setStyle(v, text, R.drawable.tile_fasting_day)
+            }
+            day.fasting.type == Fasting.Type.SOLID_WEEK -> {
+                setStyle(v, text, R.drawable.tile_no_fasting)
             }
         }
     }
@@ -171,23 +185,44 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         if(day.fasting.type == Fasting.Type.NONE) return
         for(permission in day.fasting.permissions){
             when(permission){
-                Fasting.Permission.OIL -> {
-                    v.im1.image = ContextCompat.getDrawable(v.context!!, R.drawable.sun)
-                }
-                Fasting.Permission.FISH -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.fish)
-                }
-                Fasting.Permission.VINE -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.vine)
-                }
-                Fasting.Permission.STRICT -> {
-                    v.im3.image = ContextCompat.getDrawable(v.context!!, R.drawable.triangle)
-                }
+                Fasting.Permission.OIL ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.sun))
+
+                Fasting.Permission.FISH ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.fish))
+
+                Fasting.Permission.VINE ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.vine))
+
+                Fasting.Permission.STRICT ->
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.triangle))
+
                 Fasting.Permission.NO_EAT -> {}
                 Fasting.Permission.CAVIAR -> {}
                 Fasting.Permission.HOT_NO_OIL -> {}
+                Fasting.Permission.NO_MEAT -> {
+                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.eggs))
+                }
             }
         }
+    }
+
+    private fun setImg(v: View, drawable: Drawable?) {
+        val imgContainer =
+                when {
+                    v.im3.image == null -> v.im3
+                    v.im2.image == null -> v.im2
+                    v.im1.image == null -> v.im1
+                    else -> return
+                }
+        imgContainer.image = drawable
+    }
+
+    private fun styleMemoryTypeHoliday(day: Day, v: View) {
+        if (day.memorialType == Day.MemorialType.NONE) return
+        val img = ContextCompat.getDrawable(v.context!!, R.drawable.cross)
+        if (v.im3.image == null) v.im3.image = img
+        else v.im4.image = img
     }
 
     private fun setStyle(view: View, text: TextViewWithCustomFont, style: Int,
@@ -204,31 +239,28 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         return false
     }
 
-    override fun drawDaysOfWeekRows(dayOfWeek: IntRange) {
+    override fun prepareDaysOfWeekRows(dayOfWeek: IntRange) {
         if(presenter.isInRestoreState(this)) return
+        if (tableRows.isEmpty().not()) tableRows.clear()
         for(i in dayOfWeek){
             val row = createDayOfWeekRow()
-            view!!.tableMonthTile.addView(row)
+            tableRows.add(row)
             row.addView(createDayOtWeek(i))
         }
-    }
-
-    override fun drawDayOfWeekName(dayOfWeek: Int){
-        view!!.tableMonthTile.getChildAt(dayOfWeek) as TableRow
     }
 
     private fun getDayNames() = resources.getStringArray(R.array.daysNamesAbb)
 
     private fun createDayOtWeek(month : Int): TextView {
-        val text = TextViewWithCustomFont(context!!)
-        val dayNames = getDayNames()
-        text.text = dayNames[month -1]
-        text.textColor = Color.RED
-        text.textSize = resources.getDimension(R.dimen.size_tile_day_of_week)
-        text.typeface = CustomFont.getFont(context!!, getString(R.string.font_basic))
-        text.textAlignment = Layout.Alignment.ALIGN_CENTER.ordinal
-        text.setPadding(0,0,20,0)
-        return text
+        return TextViewWithCustomFont(context!!).apply {
+            val dayNames = getDayNames()
+            text = dayNames[month - 1]
+            textColor = Color.RED
+            textSize = resources.getDimension(R.dimen.size_tile_day_of_week)
+            typeface = CustomFont.getFont(context!!, getString(R.string.font_basic))
+            textAlignment = Layout.Alignment.ALIGN_CENTER.ordinal
+            setPadding(0, 0, 20, 0)
+        }
     }
 
     private fun createDayOfWeekRow(): TableRow {
@@ -237,5 +269,16 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
                 TableRow.LayoutParams.WRAP_CONTENT)
         row.gravity = Gravity.CENTER_VERTICAL
         return row
+    }
+
+    override fun drawView() {
+        tableRows.forEach { e ->
+            if (e.parent == null) view?.tableMonthTile?.addView(e)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 }

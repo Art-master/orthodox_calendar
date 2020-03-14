@@ -41,50 +41,6 @@
     <string name="notif_holiday_later"> отмечают праздник </string>
     <string name="text_view_about_app_email">ggn.master@gmail.com</string>
 
-    <string-array name="daysNamesAbb">
-        <item>ПН.</item>
-        <item>ВТ.</item>
-        <item>СР.</item>
-        <item>ЧТ.</item>
-        <item>ПТ.</item>
-        <item>СБ.</item>
-        <item>ВС.</item>
-    </string-array>
-
-    <string-array name="daysNames">
-        <item>Понедельник</item>
-        <item>Вторник</item>
-        <item>Среда</item>
-        <item>Четверг</item>
-        <item>Пятница</item>
-        <item>Суббота</item>
-        <item>Воскресенье</item>
-    </string-array>
-
-    <string-array name="daysNamesFull">
-        <item>Понедельник</item>
-        <item>Вторник</item>
-        <item>Среда</item>
-        <item>Четверг</item>
-        <item>Пятница</item>
-        <item>Суббота</item>
-        <item>Воскресенье</item>
-    </string-array>
-
-    <string-array name="months">
-        <item>Январь</item>
-        <item>Февраль</item>
-        <item>Март</item>
-        <item>Апрель</item>
-        <item>Май</item>
-        <item>Июнь</item>
-        <item>Июль</item>
-        <item>Август</item>
-        <item>Сентябрь</item>
-        <item>Октябрь</item>
-        <item>Ноябрь</item>
-        <item>Декабрь</item>
-    </string-array>
     <string name="arrow_left">&lt;</string>
     <string name="arrow_right">&gt;</string>
 
@@ -132,9 +88,13 @@
     <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>
     <string name="settings_average_notifications">Уведомлять о средних праздниках</string>
     <string name="settings_notifications_sound">Уведомления со звуком</string>
+    <string name="settings_notifications_sound_default">Стандартный звук в уведомлениях</string>
     <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
     <string name="settings_notifications_time">Уведомлять заранее за</string>
     <string name="settings_notifications_in_time">Время для уведомлений</string>
+    <string name="settings_first_load_view">Первым загружать плиточный календарь</string>
+    <string name="settings_speed_up_start_anim">Ускорить стартовую анимацию</string>
+    <string name="settings_off_start_anim">Отключить стартовую анимацию</string>
     <string name="settings_days">дн.</string>
     <string name="settings_hours">ч.</string>
 
@@ -176,5 +136,8 @@
     <string name="notifications_tomorrow_name">Завтра праздник</string>
     <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
     <string name="notifications_holiday">Праздник</string>
+
+    <!-- IMG descriptors -->
+    <string name="descriptor_img_load_holidays">Загрузка</string>
 
 </resources>

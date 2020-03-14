@@ -1,16 +1,14 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.content.Context
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
-import com.artmaster.android.orthodoxcalendar.ui.calendar.HolidaysAdapter
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.HolidaysAdapter
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Context):
@@ -25,13 +23,12 @@ class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Contex
     }
 
     override fun onBindViewHolder(viewHolder: HolidayViewHolder, index: Int) {
-        val itemId = holidays[index].uuid
+        val item = holidays[index]
         viewHolder.itemView.setOnClickListener {
-            val intent = Intent(context, HolidayViewPagerActivity::class.java)
-            intent.putExtra(Constants.Keys.HOLIDAY_ID.name, itemId)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            val intent = HolidayViewPagerActivity.getIntent(context, item)
             context.startActivity(intent)
         }
+
         viewHolder.bind(holidays[index])
     }
 

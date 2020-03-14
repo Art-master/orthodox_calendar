@@ -20,6 +20,9 @@ abstract class HolidayDao {
     @Query("SELECT * FROM holidays WHERE month = :monthNum + 1 OR month = 0")
     abstract fun getByMonth(monthNum: Int): List<HolidayEntity>
 
+    @Query("SELECT * FROM holidays WHERE (month = :month + 1 OR month = 0) AND day = :day")
+    abstract fun getHolidaysByDayAndMonth(month: Int, day: Int): List<HolidayEntity>
+
     @Query("SELECT * FROM holidays WHERE id = :id")
     abstract fun getForId(id: Long): HolidayEntity
 

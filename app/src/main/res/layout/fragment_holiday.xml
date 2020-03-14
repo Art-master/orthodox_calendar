@@ -25,6 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/ornament_for_headers_left"
+                android:textColor="@color/colorHeader"
+                android:textSize="@dimen/size_text_holiday_name"
                 android:textAlignment="textEnd"
                 app:customFont="@string/font_ornament" />
 
@@ -34,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="10"
+                android:textColor="@color/colorHeader"
                 android:maxWidth="@dimen/activity_horizontal_margin"
                 app:customFont="@string/font_basic"
                 android:textSize="@dimen/size_text_holiday_name"
@@ -43,6 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/colorHeader"
+                android:textSize="@dimen/size_text_holiday_name"
                 android:text="@string/ornament_for_headers_right"
                 android:textAlignment="textStart"
                 app:customFont="@string/font_ornament" />

@@ -1,8 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_pager.mvp
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,22 +12,24 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
+import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
+import com.artmaster.android.orthodoxcalendar.ui.CustomViewPager
+import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import kotlinx.android.synthetic.main.fragment_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_tile_calendar.view.*
 
-internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
+internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, CalendarUpdateContract {
 
     @InjectPresenter(tag = "TilePresenter", type = PresenterType.GLOBAL)
     lateinit var presenter: TilePresenter
 
     lateinit var tileView: View
 
-    private lateinit var adapter : FragmentStatePagerAdapter
-    private val monthSize =12
+    private lateinit var adapter: PagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
             presenter.attachView(this)
             presenter.viewIsReady()
         }
-        adapter = buildAdapter()
+        adapter = getAdapter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,26 +47,17 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(!presenter.isInRestoreState(this))presenter.viewIsCreated()
+        presenter.viewIsCreated()
         setChangePageListener()
         initHelper()
     }
 
     override fun setPageAdapter() {
-        if(tileView.holidayTilePager.adapter != null) return
-        tileView.holidayTilePager.adapter =  adapter
+        tileView.holidayTilePager.adapter = getAdapter()
+        tileView.holidayTilePager.currentItem = getMonth()
     }
 
     override fun initSpinner(){
-        setMonthSpinner()
-    }
-
-    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().month-1)
-    private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
-    private fun getMonthsNames() =  resources.getStringArray(R.array.months)
-
-    private fun setMonthSpinner(){
         val mNames = getMonthsNames()
         val adapter = SpinnerAdapter(context!!, R.layout.spinner_year_item, mNames)
         adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
@@ -75,30 +67,28 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         setOnItemSpinnerSelected()
     }
 
+    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
+    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().monthWith0)
+    private fun getDay() = arguments!!.getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
+    private fun getMonthsNames() = resources.getStringArray(R.array.months_names_gen)
+
+
     private fun setOnItemSpinnerSelected(){
         tileView.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-                tileView.holidayTilePager.currentItem = position
+                tileView.holidayTilePager.apply {
+                    if (currentItem != position) {
+                        currentItem = position
+                    }
+                }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
         }
     }
 
-    private fun buildAdapter(): FragmentStatePagerAdapter {
-        //if(!isAdded) return null
-        return object :FragmentStatePagerAdapter(childFragmentManager) {
-
-            override fun getItem(p0: Int): Fragment {
-                val fragment = CalendarTileMonthFragment()
-                val args = Bundle()
-                args.putInt(Constants.Keys.MONTH.value, p0)
-                fragment.arguments = args
-                return fragment
-            }
-
-            override fun getCount(): Int = monthSize
-        }
+    private fun getAdapter(): PagerAdapter {
+        return CustomViewPager.CustomPagerAdapter(childFragmentManager)
     }
 
     private fun setChangePageListener() {
@@ -114,7 +104,7 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
 
     private fun setVisibleArrows(position: Int){
         val firstPosition = 0
-        val lastPosition = monthSize - 1
+        val lastPosition = MONTH_SIZE - 1
 
         when (position) {
             lastPosition -> arrowRight.visibility = View.GONE
@@ -126,17 +116,24 @@ internal class CalendarTileFragment: MvpAppCompatFragment(), ContractTileView {
         }
     }
 
-    override fun upadteView() {
-        val position = tileView.holidayTilePager.currentItem
-        tileView.holidayTilePager.adapter = buildAdapter()
-        tileView.holidayTilePager.currentItem = position
-    }
-
     private fun initHelper(){
         tileView.helperButton.setOnClickListener{
             val fr = CalendarInfoFragment()
             val transaction = fragmentManager!!.beginTransaction()
             fr.show(transaction, "helper")
         }
+    }
+
+    override fun updateYear() {
+        tileView.holidayTilePager.adapter?.notifyDataSetChanged()
+    }
+
+    override fun updateMonth() {
+        val position = getMonth()
+        tileView.holidayTilePager.setCurrentItem(position, false)
+    }
+
+    override fun updateDay() {
+
     }
 }

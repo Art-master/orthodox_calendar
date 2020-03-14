@@ -4,9 +4,9 @@ import com.arellomobile.mvp.MvpView
 import com.artmaster.android.orthodoxcalendar.domain.Day
 
 interface ContractTileMonthView : MvpView {
-    fun drawDay(dayOfWeek: Int, level: Int, day: Day)
-    fun drawDayOfWeekName(dayOfWeek: Int)
-    fun drawDaysOfWeekRows(dayOfWeek : IntRange)
+    fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day)
+    fun prepareDaysOfWeekRows(dayOfWeek: IntRange)
     fun setFocus(monthNum: Int)
+    fun drawView()
     fun clearView()
 }

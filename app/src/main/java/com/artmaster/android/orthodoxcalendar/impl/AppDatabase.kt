@@ -1,7 +1,11 @@
 package com.artmaster.android.orthodoxcalendar.impl
 
-import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDao
+import android.content.Context
+import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase
 
 interface AppDatabase {
-    fun holidaysDb(): HolidayDao
+    fun get(context: Context): HolidayDatabase
+    fun close()
+
+    companion object
 }

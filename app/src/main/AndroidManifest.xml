@@ -34,20 +34,25 @@
                     android:pathPrefix="/jobs" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.init.mvp.InitAppActivity" />
-        <activity android:name=".ui.calendar.mvp.CalendarListActivity" />
-        <activity android:name=".ui.review.HolidayViewPagerActivity" />
+        <activity
+            android:name=".ui.init.mvp.InitAppActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.calendar_list.mvp.CalendarListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.review.HolidayViewPagerActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".notifications.NotificationsService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true">
+            android:exported="false">
         </service>
 
         <receiver
             android:name=".notifications.AppWakeUpReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />

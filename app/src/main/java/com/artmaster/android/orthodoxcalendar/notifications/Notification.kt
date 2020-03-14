@@ -4,16 +4,19 @@ import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
+import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
-import android.media.AudioAttributes
-import android.media.RingtoneManager
+import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
@@ -23,17 +26,15 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
         const val CHANNEL_NAME = "$PROJECT_DIR.notifications.channel.users.msg"
     }
 
+    private val prefs = App.appComponent.getPreferences()
+
     private var msgText = ""
     private var notificationName = ""
     private var soundUri = buildSoundUri()
+    private val isStandardSound = prefs.get(Settings.Name.STANDARD_SOUND).toBoolean()
     private var soundEnable: Boolean = true
     private var vibrationEnable: Boolean = true
-    private var vibration = longArrayOf(100, 300, 100, 300)
-
-    private fun buildSoundUri(): Uri {
-        //var uri = Uri.parse("${ContentResolver.SCHEME_ANDROID_RESOURCE}://${context.packageName}/${R.raw.sino}")
-        return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-    }
+    private var vibrationSchema = longArrayOf(100, 300, 100, 300)
 
     fun setMsgText(text: String): Notification {
         msgText = text
@@ -45,8 +46,7 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
         return this
     }
 
-    fun setSound(isEnable: Boolean = true, uri: Uri = Uri.EMPTY): Notification {
-        soundUri = uri
+    fun setSound(isEnable: Boolean = true): Notification {
         soundEnable = isEnable
         return this
     }
@@ -57,7 +57,8 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
     }
 
     fun build() {
-        val notification = getBuilder()
+        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notification = getBuilder(notificationManager)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(notificationName)
                 .setContentText(msgText)
@@ -66,9 +67,8 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
                 .setContentIntent(createIntent())
 
         if(soundEnable) notification.setSound(soundUri)
-        if(vibrationEnable) notification.setVibrate(vibration)
+        if (vibrationEnable) notification.setVibrate(vibrationSchema)
 
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(holiday.id.toInt(), notification.build())
     }
 
@@ -78,9 +78,9 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getBuilder(): NotificationCompat.Builder {
+    private fun getBuilder(notificationManager: NotificationManager): NotificationCompat.Builder {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel()
+            notificationManager.createNotificationChannel(createChannel())
             NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)
@@ -96,6 +96,7 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
                     setSound(soundUri, buildAudioAttributes())
                     lightColor = Color.BLUE
                     enableVibration(true)
+                    soundEnable = true
                 }
     }
 
@@ -104,5 +105,13 @@ class Notification(private val context: Context, private val holiday: HolidayEnt
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                 .build()
+    }
+
+    private fun buildSoundUri(): Uri {
+        return if (isStandardSound) {
+            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        } else {
+            Uri.parse("${ContentResolver.SCHEME_ANDROID_RESOURCE}://${context.packageName}/${R.raw.bell}")
+        }
     }
 }

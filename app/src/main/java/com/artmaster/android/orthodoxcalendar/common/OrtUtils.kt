@@ -1,11 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.common
 
 import android.content.Context
-import android.util.TypedValue
 import android.content.Intent
 import android.support.v4.app.Fragment
+import android.util.TypedValue
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time
 
@@ -57,13 +56,22 @@ object OrtUtils {
     @JvmStatic
     fun getMonthName(context: Context, monthNum: Int): String {
         if (monthNum > 0 || monthNum < 13) {
-            val stringName = "month$monthNum"
+            val arr = context.resources.getStringArray(R.array.months_names_gen)
+            return arr[monthNum]
+        }
+        return "NONE"
+    }
 
-            val identifier = context
-                    .resources
-                    .getIdentifier(stringName, "string", context.packageName)
-
-            return context.resources.getString(identifier)
+    /**
+     * Get name of the month from android string resources.
+     * Annotation @JvmStatic for data binding.
+     * @return month name or "NONE" if resources not found
+     */
+    @JvmStatic
+    fun getMonthNameAcc(context: Context, monthNum: Int): String {
+        if (monthNum > 0 || monthNum < 13) {
+            val arr = context.resources.getStringArray(R.array.months_names_acc)
+            return arr[monthNum]
         }
         return "NONE"
     }

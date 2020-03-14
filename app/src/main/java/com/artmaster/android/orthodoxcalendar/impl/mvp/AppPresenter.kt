@@ -5,5 +5,5 @@ interface AppPresenter<T : AppView> {
     fun viewIsReady()
     fun isViewAttached(): Boolean
     fun detachView()
-    fun destroy()
+    fun onDestroy()
 }

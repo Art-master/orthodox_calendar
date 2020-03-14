@@ -4,9 +4,9 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
-import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
+import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -18,13 +18,16 @@ class InitAppPresenter(
         private val model: InitAppContract.Model) :
         AbstractAppPresenter<InitAppContract.View>(), InitAppContract.Presenter {
 
+    private val isOffAnimation = appPreferences.get(OFF_START_ANIMATION)
+
     override fun viewIsReady() {
+        val timeAnim = getLoadingAnimTime()
+        if (isShowStartAnimation()) getView().showLoadingScreen(timeAnim)
         Single.fromCallable {
             getData()
-            getView().showLoadingScreen()
             getView().initNotifications()
         }
-                .delay(Constants.LOADING_ANIMATION.toLong().shl(1), TimeUnit.MILLISECONDS)
+                .delay(timeAnim.shl(1), TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -35,18 +38,32 @@ class InitAppPresenter(
                         })
     }
 
+    private fun isShowStartAnimation(): Boolean {
+        return isOffAnimation == Settings.FALSE
+    }
+
+    private fun getLoadingAnimTime(): Long {
+        if (isShowStartAnimation().not()) return 0
+        var time = Constants.LOADING_ANIMATION_DURATION.toLong()
+        val isSpeedUpSettingsEnabled = appPreferences.get(SPEED_UP_START_ANIMATION)
+        if (isSpeedUpSettingsEnabled == Settings.TRUE) {
+            time = Constants.LOADING_ANIMATION_SPEED_UP.toLong()
+        }
+        return time
+    }
+
     private fun getData(): List<HolidayEntity> {
         var data: List<HolidayEntity> = emptyList()
         if (isAppFirstLoad()) {
             data = model.getDataFromFile()
             model.fillDatabase(data)
-            appPreferences.set(FIRST_LOAD_APP, "FALSE")
+            appPreferences.set(FIRST_LOAD_APP, Settings.TRUE)
         }
         return data
     }
 
     private fun isAppFirstLoad(): Boolean {
         val preference = appPreferences.get(FIRST_LOAD_APP)
-        return preference.equals(Settings.EMPTY)
+        return preference == Settings.FALSE
     }
 }

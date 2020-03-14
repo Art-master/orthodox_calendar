@@ -13,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.util.*
-import kotlin.collections.ArrayList
 
 class NotificationsService : Service() {
 
@@ -27,7 +26,9 @@ class NotificationsService : Service() {
     private val allowTimeNotification = prefs.get(IS_ENABLE_NOTIFICATION_TIME).toBoolean()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(allowTodayNotification or allowTimeNotification) startThread()
+        if (intent != null) {
+            if (allowTodayNotification or allowTimeNotification) startThread()
+        }
 
         return super.onStartCommand(intent, flags, startId)
     }
