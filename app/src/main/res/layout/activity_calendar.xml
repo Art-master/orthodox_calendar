@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityCalendar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,13 +26,12 @@
             android:text="@string/arrow_left"
             app:customFont="@string/font_basic" />
 
-        <android.support.v7.widget.AppCompatSpinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/toolbarYearSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            app:customFont="@string/font_basic" >
-        </android.support.v7.widget.AppCompatSpinner>
+            app:customFont="@string/font_basic"></androidx.appcompat.widget.AppCompatSpinner>
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/arrowRight"
@@ -45,10 +43,10 @@
             android:textAlignment="center"
             android:textSize="20sp"
             app:customFont="@string/font_basic" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/menu_fragments_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-</android.support.v7.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

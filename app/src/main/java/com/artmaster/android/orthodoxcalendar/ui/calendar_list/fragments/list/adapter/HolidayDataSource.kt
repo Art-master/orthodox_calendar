@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter
 
-import android.arch.paging.PositionalDataSource
 import android.content.Context
+import androidx.paging.PositionalDataSource
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time

@@ -1,8 +1,8 @@
 package com.artmaster.android.orthodoxcalendar
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.artmaster.android.orthodoxcalendar.data.HolidaysFake
 import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDao
 import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase
@@ -22,10 +22,10 @@ class HolidayDatabaseTests {
     @Before
     fun createDatabase() {
         database = Room.inMemoryDatabaseBuilder(
-                InstrumentationRegistry.getContext(),
+                ApplicationProvider.getApplicationContext(),
                 HolidayDatabase::class.java).build()
 
-        dao = database.holidaysDb()
+        dao = (database as HolidayDatabase).holidaysDb()
     }
 
     @Test

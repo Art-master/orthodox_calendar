@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.impl
 
-import com.arellomobile.mvp.MvpView
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import moxy.MvpView
 
 interface ContractTileMonthView : MvpView {
     fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day)

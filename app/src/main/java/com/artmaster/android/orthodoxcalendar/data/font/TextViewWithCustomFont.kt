@@ -2,7 +2,7 @@ package com.artmaster.android.orthodoxcalendar.data.font
 
 import android.content.Context
 import android.util.AttributeSet
-import android.support.v7.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatTextView
 
 import com.artmaster.android.orthodoxcalendar.R
 

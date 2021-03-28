@@ -1,9 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter
 
-import android.arch.paging.DataSource
-import android.arch.paging.PagedList
 import android.os.Handler
 import android.os.Looper
+import androidx.paging.DataSource
+import androidx.paging.PagedList
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import java.util.concurrent.Executors

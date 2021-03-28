@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl
 
-import android.arch.paging.PagedList as pgdList
-import android.arch.paging.PagedList.Config as cfg
+import androidx.paging.PagedList as pgdList
+import androidx.paging.PagedList.Config as cfg
 
 interface ListViewDiffContract {
     interface Config {

@@ -1,6 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter
 
-import android.arch.paging.PagedList
+import androidx.paging.PagedList
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 

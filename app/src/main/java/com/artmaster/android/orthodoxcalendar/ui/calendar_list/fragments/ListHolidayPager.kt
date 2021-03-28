@@ -1,29 +1,31 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.artmaster.android.orthodoxcalendar.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBinding
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.HolidayListFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.holiday_list_pager.*
 
 
 class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, CalendarUpdateContract {
 
-    private lateinit var adapter : FragmentStatePagerAdapter
+    private lateinit var adapter: FragmentStatePagerAdapter
 
-    private var changedCallback : ((Int) -> Unit)? = null
+    private var changedCallback: ((Int) -> Unit)? = null
 
     private val years = getYears()
+
+    private var _binding: HolidayListPagerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         AndroidSupportInjection.inject(this)
-        return inflater.inflate(R.layout.holiday_list_pager, container, false)
+        _binding = HolidayListPagerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +45,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
     override fun onResume() {
         super.onResume()
-        holidayListPager.currentItem = getPosition()
+        binding.holidayListPager.currentItem = getPosition()
     }
 
     private fun getPosition(): Int {
@@ -50,9 +53,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     }
 
     private fun setPageAdapter() {
-        if(holidayListPager.adapter != null) return
-        holidayListPager.adapter =  adapter
-        holidayListPager.currentItem = getPosition()
+        if (binding.holidayListPager.adapter != null) return
+        binding.holidayListPager.adapter = adapter
+        binding.holidayListPager.currentItem = getPosition()
         setChangePageListener()
     }
 
@@ -67,7 +70,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     }
 
     private fun getAdapter(): FragmentStatePagerAdapter {
-        return object :FragmentStatePagerAdapter(childFragmentManager) {
+        return object : FragmentStatePagerAdapter(childFragmentManager) {
 
             override fun getItem(p0: Int): Fragment {
                 val fragment = HolidayListFragment()
@@ -88,25 +91,24 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     }
 
     private fun setChangePageListener() {
-        holidayListPager.addOnPageChangeListener(object : OnPageChangeListener {
+        binding.holidayListPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-               changedCallback?.let {
-                   it(position)
-               }
+                changedCallback?.let {
+                    it(position)
+                }
             }
         })
     }
 
-    private fun getYear() = arguments!!.getInt(Constants.Keys.YEAR.value, Time().year)
+    private fun getYear() = requireArguments().getInt(Constants.Keys.YEAR.value, Time().year)
 
     override fun updateYear() {
-        if (holidayListPager == null) return
         val years = getYears()
         val pos = years.indexOf(getYear())
 
-        holidayListPager.currentItem = pos
+        binding.holidayListPager.currentItem = pos
     }
 
     override fun updateMonth() {

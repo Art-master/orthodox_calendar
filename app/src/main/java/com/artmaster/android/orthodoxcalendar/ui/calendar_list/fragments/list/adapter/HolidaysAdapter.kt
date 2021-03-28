@@ -1,20 +1,18 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter
 
-import android.arch.paging.PagedListAdapter
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.support.v4.content.ContextCompat
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
-import org.jetbrains.anko.textColor
 
 
 class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.CallBack<HolidayEntity>)
@@ -51,7 +49,7 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
     companion object {
         fun getTypiconImageByString(textView: TextViewWithCustomFont, holiday : HolidayEntity) {
             val context = textView.context
-            textView.textColor = ContextCompat.getColor(context, R.color.colorRed)
+            //textView.textColor = ContextCompat.getColor(context, R.color.colorRed)
 
             when {
                 holiday.type.contains(HolidayEntity.Type.GREAT.value, true) ->

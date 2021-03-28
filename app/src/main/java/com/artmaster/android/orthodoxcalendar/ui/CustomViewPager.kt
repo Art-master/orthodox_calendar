@@ -2,13 +2,13 @@ package com.artmaster.android.orthodoxcalendar.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.Scroller
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.VIEW_PAGER_SPEED

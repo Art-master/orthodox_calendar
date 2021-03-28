@@ -2,8 +2,8 @@ package com.artmaster.android.orthodoxcalendar.common
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.Fragment
 import android.util.TypedValue
+import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
 import com.artmaster.android.orthodoxcalendar.domain.Time

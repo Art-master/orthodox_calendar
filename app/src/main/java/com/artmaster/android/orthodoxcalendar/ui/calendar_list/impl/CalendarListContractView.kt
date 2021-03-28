@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl
 
-import com.arellomobile.mvp.MvpView
 import com.artmaster.android.orthodoxcalendar.common.Message
+import moxy.MvpView
 
 interface CalendarListContractView : MvpView {
     fun showActionBar()

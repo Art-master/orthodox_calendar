@@ -6,10 +6,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,9 +15,10 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
@@ -34,6 +31,9 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMon
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.*
 import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
 import kotlinx.android.synthetic.main.tile_day_layout.view.*
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.PresenterType
 import org.jetbrains.anko.image
 import org.jetbrains.anko.textColor
 
