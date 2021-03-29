@@ -4,7 +4,7 @@ import android.content.Context
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PLACEHOLDER_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.RESOURCE_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
@@ -18,19 +18,19 @@ class HolidayReviewPresenter(private val context: Context,
         HolidayReviewContract.Presenter {
 
 
-    private var holidayEntity: HolidayEntity? = null
+    private var holiday: Holiday? = null
 
-    override fun init(holiday: HolidayEntity) {
-        holidayEntity = holiday
+    override fun init(holiday: Holiday) {
+        this.holiday = holiday
     }
 
     override fun viewIsReady() {
-        if (holidayEntity == null) throw NoSuchElementException()
-        val date = getDate(holidayEntity!!.day, holidayEntity!!.monthWith0)
-        val desc = getDescription(holidayEntity!!.description)
+        if (holiday == null) throw NoSuchElementException()
+        val date = getDate(holiday!!.day, holiday!!.monthWith0)
+        val desc = getDescription(holiday!!.description)
 
-        getView().showHolidayName(holidayEntity!!.title)
-        getView().showImageHoliday(getImageId(holidayEntity!!.imageLink), getImageId(""))
+        getView().showHolidayName(holiday!!.title)
+        getView().showImageHoliday(getImageId(holiday!!.imageLink), getImageId(""))
         getView().showNewStyleDate(date.first)
         getView().showOldStyleDate(date.second)
         getView().showDescription(desc.first, desc.second)

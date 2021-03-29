@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 
-class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.CallBack<HolidayEntity>)
-    : PagedListAdapter<HolidayEntity, HolidaysAdapter.HolidayViewHolder>(itemCallback as DiffUtil.ItemCallback<HolidayEntity>),
+class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.CallBack<Holiday>)
+    : PagedListAdapter<Holiday, HolidaysAdapter.HolidayViewHolder>(itemCallback as DiffUtil.ItemCallback<Holiday>),
         ListViewDiffContract.Adapter {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, index: Int): HolidayViewHolder {
@@ -39,7 +39,7 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
 
         private var bind: ListItemHolidayBinding? = binding
 
-        fun bind(holiday: HolidayEntity) {
+        fun bind(holiday: Holiday) {
             bind!!.holiday = holiday
             bind!!.executePendingBindings()
             getTypiconImageByString(bind!!.holidayTipiconFontIcon, holiday)
@@ -47,18 +47,18 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
     }
 
     companion object {
-        fun getTypiconImageByString(textView: TextViewWithCustomFont, holiday : HolidayEntity) {
+        fun getTypiconImageByString(textView: TextViewWithCustomFont, holiday: Holiday) {
             val context = textView.context
             //textView.textColor = ContextCompat.getColor(context, R.color.colorRed)
 
             when {
-                holiday.type.contains(HolidayEntity.Type.GREAT.value, true) ->
+                holiday.type.contains(Holiday.Type.GREAT.value, true) ->
                     textView.text = context.resources.getString(R.string.head_holiday)
 
-                holiday.type.contains(HolidayEntity.Type.AVERAGE_POLYLEIC.value, true) ->
+                holiday.type.contains(Holiday.Type.AVERAGE_POLYLEIC.value, true) ->
                     textView.text = context.resources.getString(R.string.average_polyleic_holiday)
 
-                holiday.type.contains(HolidayEntity.Type.AVERAGE_PEPPY.value, true) ->
+                holiday.type.contains(Holiday.Type.AVERAGE_PEPPY.value, true) ->
                     textView.text = context.resources.getString(R.string.average_peppy_holiday)
 
                 else -> textView.text = ""

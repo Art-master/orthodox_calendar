@@ -6,12 +6,12 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
 @Entity(tableName = "holidays")
-data class HolidayEntity(
+data class Holiday(
 
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
@@ -49,9 +49,9 @@ data class HolidayEntity(
         @Ignore
         var firstInGroup: Boolean = false
 
-) : Comparable<HolidayEntity>, Parcelable {
+) : Comparable<Holiday>, Parcelable {
 
-    override fun compareTo(other: HolidayEntity): Int {
+    override fun compareTo(other: Holiday): Int {
         val monthComparison = month.compareTo(other.month)
         if (monthComparison == 0) {
             return day.compareTo(other.day)
@@ -59,7 +59,7 @@ data class HolidayEntity(
         return monthComparison
     }
 
-    enum class Type(val value: String){
+    enum class Type(val value: String) {
         GREAT("великий"),
         TWELVE("двунадесятый"),
         MAIN("главный"),
@@ -73,7 +73,8 @@ data class HolidayEntity(
         AVERAGE_POLYLEIC("средний полиелейный"),
         AVERAGE_PEPPY("средний бденный");
     }
-    enum class DayOfWeek(val num: Int){
+
+    enum class DayOfWeek(val num: Int) {
         MONDAY(1),
         TUESDAY(2),
         WEDNESDAY(3),
@@ -83,7 +84,7 @@ data class HolidayEntity(
         SUNDAY(7);
     }
 
-    enum class Month(val num: Int){
+    enum class Month(val num: Int) {
         JANUARY(0),
         FEBRUARY(1),
         MARCH(2),

@@ -7,11 +7,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.HolidaysAdapter
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
-class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Context):
+class HolidayDayAdapter(val holidays: List<Holiday>, val context: Context) :
         RecyclerView.Adapter<HolidayDayAdapter.HolidayViewHolder>() {
 
     override fun getItemCount() = holidays.size
@@ -37,7 +37,7 @@ class HolidayDayAdapter(val holidays : List<HolidayEntity>, val context : Contex
 
         private var bind: ListItemHolidayBinding? = binding
 
-        fun bind(holiday: HolidayEntity) {
+        fun bind(holiday: Holiday) {
             bind?.let {
                 bind!!.holiday = holiday
                 bind!!.executePendingBindings()

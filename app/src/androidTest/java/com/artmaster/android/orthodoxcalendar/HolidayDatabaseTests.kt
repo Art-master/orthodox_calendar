@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.artmaster.android.orthodoxcalendar.data.HolidaysFake
 import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDao
 import com.artmaster.android.orthodoxcalendar.data.repository.HolidayDatabase
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import org.junit.Assert
 import org.junit.Before
@@ -25,12 +25,12 @@ class HolidayDatabaseTests {
                 ApplicationProvider.getApplicationContext(),
                 HolidayDatabase::class.java).build()
 
-        dao = (database as HolidayDatabase).holidaysDb()
+        dao = (database as HolidayDatabase).holidayDao()
     }
 
     @Test
     fun insertAllEntities() {
-        val holidays: List<HolidayEntity> = HolidaysFake().get(10)
+        val holidays: List<Holiday> = HolidaysFake().get(10)
         dao.insertAllHolidays(holidays)
 
         val dbHolidays = dao.getAll()

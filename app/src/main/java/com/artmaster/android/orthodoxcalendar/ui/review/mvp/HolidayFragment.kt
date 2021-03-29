@@ -17,7 +17,7 @@ import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
 import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentHolidayBinding
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
@@ -28,13 +28,13 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     @Inject
     lateinit var presenter: HolidayReviewContract.Presenter
 
-    lateinit var holiday: HolidayEntity
+    lateinit var holiday: Holiday
 
     private var _binding: FragmentHolidayBinding? = null
     private val binding get() = _binding!!
 
     companion object {
-        fun newInstance(holiday: HolidayEntity): HolidayFragment {
+        fun newInstance(holiday: Holiday): HolidayFragment {
             val intent = Intent()
             intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -49,7 +49,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        holiday = requireArguments().get(Constants.Keys.HOLIDAY.value) as HolidayEntity
+        holiday = requireArguments().get(Constants.Keys.HOLIDAY.value) as Holiday
         presenter.init(holiday)
     }
 

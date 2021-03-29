@@ -6,7 +6,7 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -64,19 +64,19 @@ class NotificationsService : Service() {
         return Time()
     }
 
-    private fun prepareNotificationsHolidays(holidays : ArrayList<HolidayEntity>, time: Time){
-        for (holiday in holidays){
-            if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
+    private fun prepareNotificationsHolidays(holidays: ArrayList<Holiday>, time: Time) {
+        for (holiday in holidays) {
+            if (!allowAverageHolidays && isAverageHoliday(holiday)) continue
             val description = getDescription(holiday, time, getTimeNotification())
             buildNotification(description, holiday)
         }
     }
 
-    private fun isAverageHoliday(holiday: HolidayEntity): Boolean {
-        return holiday.type.contains(HolidayEntity.Type.AVERAGE.value)
+    private fun isAverageHoliday(holiday: Holiday): Boolean {
+        return holiday.type.contains(Holiday.Type.AVERAGE.value)
     }
 
-    private fun getDescription(holiday: HolidayEntity, time: Time, numDays: Int): String {
+    private fun getDescription(holiday: Holiday, time: Time, numDays: Int): String {
         return when {
             holiday.day == time.dayOfMonth && holiday.month == time.month ->
                 getString(R.string.notifications_today_name)
@@ -86,7 +86,7 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun buildNotification(description: String, holiday: HolidayEntity){
+    private fun buildNotification(description: String, holiday: Holiday) {
         Notification(applicationContext, holiday)
                 .setSound(allowSound)
                 .setVibration(allowVibration)

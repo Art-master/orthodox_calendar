@@ -5,12 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.DATABASE_FILE_NAME
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
-@Database(entities = [HolidayEntity::class], version = 1)
+@Database(entities = [Holiday::class], version = 1)
 abstract class HolidayDatabase : RoomDatabase(), AppDatabase {
-    abstract fun holidaysDb(): HolidayDao
+    abstract fun holidayDao(): HolidayDao
 
     companion object : AppDatabase {
         var instance: HolidayDatabase? = null

@@ -3,7 +3,7 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.DynamicData
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
@@ -29,7 +29,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         val daysCount = time.daysInMonth
 
         val db = database.get(context)
-        val holidaysFromDb = db.holidaysDb().getByMonth(month)
+        val holidaysFromDb = db.holidayDao().getByMonth(month)
         val days: ArrayList<Day> = ArrayList(daysCount)
 
         for(i in 1..daysCount){
@@ -50,8 +50,8 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return dayObj
     }
 
-    private fun distributeHoliday(holidays: List<HolidayEntity>, days: ArrayList<Day>, month: Int){
-        for(holiday in holidays){
+    private fun distributeHoliday(holidays: List<Holiday>, days: ArrayList<Day>, month: Int) {
+        for (holiday in holidays) {
             dynamicData.fillHoliday(holiday)
             val dayNum = holiday.day
             holiday.monthWith0 = holiday.month - 1
@@ -61,24 +61,25 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         }
     }
 
-    override fun getData(year: Int): List<HolidayEntity> {
+    override fun getData(year: Int): List<Holiday> {
         return getAllData(year).sorted()
     }
 
-    @Synchronized override fun getDataSequence(start: Int, size: Int, year: Int): List<HolidayEntity> {
+    @Synchronized
+    override fun getDataSequence(start: Int, size: Int, year: Int): List<Holiday> {
         val data = setFirstPosition(getAllData(year).sorted())
         var endPosition = start + size - 1
         if (endPosition > data.size - 1) endPosition = data.size
         return data.subList(start, endPosition)
     }
 
-    private fun getAllData(year: Int): List<HolidayEntity> {
-        val holidaysFromDb: List<HolidayEntity> = getDataFromDb()
+    private fun getAllData(year: Int): List<Holiday> {
+        val holidaysFromDb: List<Holiday> = getDataFromDb()
         return calculateDynamicData(holidaysFromDb, year)
     }
 
-    private fun calculateDynamicData(holidays:  List<HolidayEntity>, year: Int, month: Int = -1) : List<HolidayEntity>{
-        val hds: ArrayList<HolidayEntity> = ArrayList()
+    private fun calculateDynamicData(holidays: List<Holiday>, year: Int, month: Int = -1): List<Holiday> {
+        val hds: ArrayList<Holiday> = ArrayList()
         for (holiday in holidays) {
             holiday.year = year
             if (holiday.day == 0) {
@@ -91,31 +92,33 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return hds
     }
 
-    @Synchronized override fun getMonthData(month: Int, year: Int): List<HolidayEntity> {
+    @Synchronized
+    override fun getMonthData(month: Int, year: Int): List<Holiday> {
         val db = database.get(context)
-        val holidaysFromDb = db.holidaysDb().getByMonth(month)
+        val holidaysFromDb = db.holidayDao().getByMonth(month)
         db.close()
         val holidays = calculateDynamicData(holidaysFromDb, year, month)
         return holidays.sorted()
     }
 
-    @Synchronized override fun getDayData(day: Int, month: Int, year: Int): List<HolidayEntity> {
+    @Synchronized
+    override fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
         val holidaysInMonth = getMonthData(month, year)
-        val holidaysInDay: ArrayList<HolidayEntity> = ArrayList()
+        val holidaysInDay: ArrayList<Holiday> = ArrayList()
         for (holiday in holidaysInMonth) {
-            if(holiday.day == day) holidaysInDay.add(holiday)
+            if (holiday.day == day) holidaysInDay.add(holiday)
         }
         return holidaysInDay
     }
 
-    private fun getDataFromDb(): List<HolidayEntity> {
+    private fun getDataFromDb(): List<Holiday> {
         val db = database.get(context)
-        val holidays = db.holidaysDb().getAll()
+        val holidays = db.holidayDao().getAll()
         db.close()
         return holidays
     }
 
-    private fun setFirstPosition(holidays: List<HolidayEntity>): List<HolidayEntity> {
+    private fun setFirstPosition(holidays: List<Holiday>): List<Holiday> {
         var day = 0
         var month = 0
         for (holiday in holidays) {
@@ -132,9 +135,9 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     @Synchronized
-    override fun getHolidaysByTime(time: Time): List<HolidayEntity> {
+    override fun getHolidaysByTime(time: Time): List<Holiday> {
         val db = database.get(context)
-        val holidays = db.holidaysDb().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
+        val holidays = db.holidayDao().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
         db.close()
         return calculateDynamicData(holidays, time.year)
     }

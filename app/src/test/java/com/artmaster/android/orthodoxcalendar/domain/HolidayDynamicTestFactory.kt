@@ -31,5 +31,5 @@ abstract class HolidayDynamicTestFactory {
         checkHoliday(2021, DynamicData.THE_HOLY_TRINITY, 20, 6)*/
     }
 
-    abstract fun checkHoliday(holiday: HolidayEntity, expectedDay: Int, expectedMonth: Int)
+    abstract fun checkHoliday(holiday: Holiday, expectedDay: Int, expectedMonth: Int)
 }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.CalendarListFragmentBinding
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
@@ -63,7 +63,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         return bundle?.getInt(Constants.Keys.YEAR.value, Time().year) ?: Time().year
     }
 
-    override fun prepareAdapter(position: Int, holiday: HolidayEntity) {
+    override fun prepareAdapter(position: Int, holiday: Holiday) {
         recyclerAdapter = getAdapter(position)
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
     }

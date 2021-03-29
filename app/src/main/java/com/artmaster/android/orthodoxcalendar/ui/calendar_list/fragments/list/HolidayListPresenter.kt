@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list
 
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListPresenterContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
@@ -37,16 +37,16 @@ class HolidayListPresenter : MvpPresenter<ListViewContract>(), ListPresenterCont
         dispose.add(disposable)
     }
 
-    private fun calculatePosition(holidays: List<HolidayEntity>): Pair<Int, HolidayEntity> {
+    private fun calculatePosition(holidays: List<Holiday>): Pair<Int, Holiday> {
         for ((index, holiday) in holidays.withIndex()) {
             if (holiday.monthWith0 >= time.monthWith0 && holiday.day >= time.dayOfMonth) {
                 return index to holiday
             }
         }
-        return 0 to HolidayEntity()
+        return 0 to Holiday()
     }
 
-    private fun viewData(pos: Pair<Int, HolidayEntity>) {
+    private fun viewData(pos: Pair<Int, Holiday>) {
         viewState.prepareAdapter(pos.first, pos.second)
     }
 
