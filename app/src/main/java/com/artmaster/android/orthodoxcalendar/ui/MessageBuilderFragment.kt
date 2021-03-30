@@ -24,12 +24,12 @@ class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener
         return builder.create()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        OrtUtils.exitProgram(this.context!!)
+        OrtUtils.exitProgram(this.requireContext())
     }
 
-    override fun onClick(dialog: DialogInterface?, which: Int) {
+    override fun onClick(dialog: DialogInterface, which: Int) {
         onCancel(dialog)
     }
 
@@ -43,7 +43,7 @@ class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener
     }
 
     private fun buildMessage(msgText: Pair<String, String>): AlertDialog.Builder {
-        val builder = AlertDialog.Builder(this.activity!!)
+        val builder = AlertDialog.Builder(this.requireActivity())
         builder.setTitle(msgText.first)
                 .setMessage(msgText.second)
                 .setIcon(R.mipmap.alert_error)

@@ -9,7 +9,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
 @Database(entities = [Holiday::class], version = 1)
-abstract class HolidayDatabase : RoomDatabase(), AppDatabase {
+abstract class HolidayDatabase : RoomDatabase() {
     abstract fun holidayDao(): HolidayDao
 
     companion object : AppDatabase {

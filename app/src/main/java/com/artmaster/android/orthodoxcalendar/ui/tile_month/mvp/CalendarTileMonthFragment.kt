@@ -3,7 +3,6 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Layout
@@ -39,7 +38,6 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     lateinit var presenter: TileMonthPresenter
 
     private lateinit var tileView: View
-    private lateinit var tileDayView: View
     private lateinit var layoutManager: LinearLayoutManager
 
     private var tableRows = ArrayList<TableRow>()
@@ -63,7 +61,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         tileView = inflater.inflate(R.layout.fragment_month_tile_calendar, groupContainer, false)
 
         _binding = TileDayLayoutBinding.inflate(inflater, groupContainer, false)
@@ -138,8 +136,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         val bg = binding.container.background
         if (hasFocus) {
             initRecyclerView(day.holidays)
-            val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
-            bg.setColorFilter(c, PorterDuff.Mode.MULTIPLY)
+            //val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
+            //val filter = BlendModeColorFilter(c, BlendMode.COLOR) TODO filters
             setDayArgs(view.id)
         } else bg.clearColorFilter()
 
@@ -218,21 +216,21 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     private fun setImg(v: TileDayLayoutBinding, drawable: Drawable?) {
-/*        val imgContainer =
+        val imgContainer =
                 when {
-                    v.im3.image == null -> v.im3
-                    v.im2.image == null -> v.im2
-                    v.im1.image == null -> v.im1
+                    v.im3.imageMatrix == null -> v.im3
+                    v.im2.imageMatrix == null -> v.im2
+                    v.im1.imageMatrix == null -> v.im1
                     else -> return
                 }
-        imgContainer.image = drawable*/
+        imgContainer.setImageDrawable(drawable)
     }
 
     private fun styleMemoryTypeHoliday(day: Day, v: TileDayLayoutBinding) {
-/*        if (day.memorialType == Day.MemorialType.NONE) return
+        if (day.memorialType == Day.MemorialType.NONE) return
         val img = ContextCompat.getDrawable(requireContext(), R.drawable.cross)
-        if (v.im3.image == null) v.im3.image = img
-        else v.im4.image = img*/
+        if (v.im3.imageMatrix == null) v.im3.setImageDrawable(img)
+        else v.im4.setImageDrawable(img)
     }
 
     private fun setStyle(view: TileDayLayoutBinding, text: TextViewWithCustomFont, style: Int,

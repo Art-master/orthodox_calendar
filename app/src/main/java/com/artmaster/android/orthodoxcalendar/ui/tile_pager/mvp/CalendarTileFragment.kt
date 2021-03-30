@@ -39,7 +39,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         adapter = getAdapter()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTileCalendarBinding.inflate(inflater, groupContainer, false)
         return binding.root
     }
@@ -118,7 +118,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     private fun initHelper(){
         binding.helperButton.setOnClickListener {
             val fr = CalendarInfoFragment()
-            val transaction = requireFragmentManager().beginTransaction()
+            val transaction = parentFragmentManager.beginTransaction()
             fr.show(transaction, "helper")
         }
     }
