@@ -25,13 +25,13 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileVie
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.HasAndroidInjector
 import moxy.MvpAppCompatActivity
 import moxy.MvpView
 import moxy.presenter.InjectPresenter
 import javax.inject.Inject
 
-class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector, CalendarListContractView, MvpView {
+class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, CalendarListContractView, MvpView {
 
     @Inject
     lateinit var database: AppDatabase
@@ -43,7 +43,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
     lateinit var presenter: CalendarListPresenter
 
     @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var fragmentInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var listHolidayFragment: ListViewDiffContract.ViewListPager
@@ -68,6 +68,10 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
 
     private var _binding: ActivityCalendarBinding? = null
     private val binding get() = _binding!!
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return fragmentInjector
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -225,10 +229,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasSupportFragmentInjector,
         val dialogError = MessageBuilderFragment()
         dialogError.arguments = bundle
         dialogError.show(supportFragmentManager, "dialogError")
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentInjector
     }
 
     private fun initBarSpinner() {

@@ -6,6 +6,7 @@ buildscript {
     ext.gradle_version = '4.1.2'
     ext.moxy_version = '2.2.1'
     ext.room_version = '2.2.6'
+    ext.dagger_version = '2.33'
 
     repositories {
         google()

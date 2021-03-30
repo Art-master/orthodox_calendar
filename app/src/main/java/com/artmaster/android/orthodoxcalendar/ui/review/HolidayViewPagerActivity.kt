@@ -14,8 +14,9 @@ import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.HasAndroidInjector
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -23,12 +24,14 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class HolidayViewPagerActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
 
     @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var fragmentInjector: DispatchingAndroidInjector<Any>
 
-    override fun supportFragmentInjector() = fragmentInjector
+    override fun androidInjector(): AndroidInjector<Any> {
+        return fragmentInjector
+    }
 
     @Inject
     lateinit var dataProvider: AppDataProvider
