@@ -16,6 +16,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
@@ -37,13 +38,9 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     @InjectPresenter(tag = "TileMonthPresenter")
     lateinit var presenter: TileMonthPresenter
 
-    private lateinit var tileView: View
     private lateinit var layoutManager: LinearLayoutManager
 
     private var tableRows = ArrayList<TableRow>()
-
-    private var _binding: TileDayLayoutBinding? = null
-    private val binding get() = _binding!!
 
     private var _monthBinding: FragmentMonthTileCalendarBinding? = null
     private val monthBinding get() = _monthBinding!!
@@ -51,23 +48,20 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        retainInstance = true
-
         layoutManager = LinearLayoutManager(context)
 
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
-            presenter.viewIsReady(getYear(), getMonth())
+
+            lifecycleScope.launchWhenStarted {
+                presenter.viewIsReady(getYear(), getMonth())
+            }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
-        tileView = inflater.inflate(R.layout.fragment_month_tile_calendar, groupContainer, false)
-
-        _binding = TileDayLayoutBinding.inflate(inflater, groupContainer, false)
         _monthBinding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
-
-        return binding.root
+        return monthBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,6 +102,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun clearView() {
+        if (_monthBinding == null) return //FIXME early access
         setVisibility()
         monthBinding.tableMonthTile.removeAllViews()
     }
@@ -133,13 +128,13 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     private fun changedFocus(view: View, hasFocus: Boolean, day: Day) {
-        val bg = binding.container.background
+        val bg = view.background
         if (hasFocus) {
             initRecyclerView(day.holidays)
-            //val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
+            val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
             //val filter = BlendModeColorFilter(c, BlendMode.COLOR) TODO filters
             setDayArgs(view.id)
-        } else bg.clearColorFilter()
+        } //else bg.clearColorFilter()
 
     }
 
