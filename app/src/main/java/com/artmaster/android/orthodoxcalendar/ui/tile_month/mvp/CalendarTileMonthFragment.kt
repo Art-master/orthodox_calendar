@@ -213,9 +213,9 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     private fun setImg(v: TileDayLayoutBinding, drawable: Drawable?) {
         val imgContainer =
                 when {
-                    v.im3.imageMatrix == null -> v.im3
-                    v.im2.imageMatrix == null -> v.im2
-                    v.im1.imageMatrix == null -> v.im1
+                    v.im3.drawable == null -> v.im3
+                    v.im2.drawable == null -> v.im2
+                    v.im1.drawable == null -> v.im1
                     else -> return
                 }
         imgContainer.setImageDrawable(drawable)
@@ -224,7 +224,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     private fun styleMemoryTypeHoliday(day: Day, v: TileDayLayoutBinding) {
         if (day.memorialType == Day.MemorialType.NONE) return
         val img = ContextCompat.getDrawable(requireContext(), R.drawable.cross)
-        if (v.im3.imageMatrix == null) v.im3.setImageDrawable(img)
+        if (v.im3.drawable == null) v.im3.setImageDrawable(img)
         else v.im4.setImageDrawable(img)
     }
 
