@@ -64,7 +64,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isVisible) initAnimation()
+        initAnimation()
         monthBinding.root.setOnDragListener(onDragListener)
         monthBinding.root.setOnClickListener(onClick)
     }

@@ -3,13 +3,11 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.Scroller
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -33,10 +31,6 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
     private var _binding: HolidayListPagerBinding? = null
     private val binding get() = _binding!!
-
-    init {
-        setMyScroller()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,20 +119,6 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         //binding.holidayListPager.setCurrentItem(pos, 3000)
     }
 
-    /**
-     * Reduces drag sensitivity of [ViewPager2] widget
-     */
-/*    fun ViewPager2.reduceDragSensitivity() {
-        val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
-        recyclerViewField.isAccessible = true
-        val recyclerView = recyclerViewField.get(this) as RecyclerView
-
-        val touchSlopField = RecyclerView::class.java.getDeclaredField("mTouchSlop")
-        touchSlopField.isAccessible = true
-        val touchSlop = touchSlopField.get(recyclerView) as Int
-        touchSlopField.set(recyclerView, touchSlop*8)       // "8" was obtained experimentally
-    }*/
-
     fun ViewPager2.setCurrentItem(
             item: Int,
             duration: Long,
@@ -172,26 +152,6 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         animator.interpolator = interpolator
         animator.duration = duration
         animator.start()
-    }
-
-
-    private fun setMyScroller() {
-        try {
-            val viewpager = ViewPager2::class.java
-            val scroller = viewpager.getDeclaredField("mScroller")
-            scroller.isAccessible = true
-            scroller.set(this, MyScroller(requireContext()))
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
-
-    inner class MyScroller(context: Context) : Scroller(context, DecelerateInterpolator()) {
-
-        override fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int, duration: Int) {
-            super.startScroll(startX, startY, dx, dy, Constants.VIEW_PAGER_SPEED)
-        }
     }
 
     override fun updateMonth() {

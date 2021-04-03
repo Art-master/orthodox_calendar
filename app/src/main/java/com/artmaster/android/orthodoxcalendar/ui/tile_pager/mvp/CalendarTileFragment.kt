@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.artmaster.android.orthodoxcalendar.R
@@ -14,7 +15,7 @@ import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
-import com.artmaster.android.orthodoxcalendar.ui.CustomViewPager
+import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import moxy.MvpAppCompatFragment
@@ -36,7 +37,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             presenter.attachView(this)
             presenter.viewIsReady()
         }
-        adapter = getAdapter()
+        adapter = getAdapter(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -52,7 +53,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     }
 
     override fun setPageAdapter() {
-        binding.holidayTilePager.adapter = getAdapter()
+        binding.holidayTilePager.adapter = getAdapter(this)
         binding.holidayTilePager.currentItem = getMonth()
     }
 
@@ -86,8 +87,19 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         }
     }
 
-    private fun getAdapter(): FragmentStateAdapter {
-        return CustomViewPager.CustomPagerAdapter(this)
+    private fun getAdapter(fa: Fragment): FragmentStateAdapter {
+
+        return object : FragmentStateAdapter(fa) {
+            override fun getItemCount() = MONTH_SIZE
+
+            override fun createFragment(position: Int): Fragment {
+                val fragment = CalendarTileMonthFragment()
+                val args = Bundle()
+                args.putInt(Constants.Keys.MONTH.value, position)
+                fragment.arguments = args
+                return fragment
+            }
+        }
     }
 
     private fun setChangePageListener() {

@@ -16,7 +16,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
 
     private val time = Time()
 
-    private var flag = false
+    private var isViewCreated = false
 
     override suspend fun viewIsReady(year: Int, month: Int) {
         time.calendar.set(year, month, 1)
@@ -34,12 +34,10 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     }
 
     override fun viewIsCreated() {
-        flag = true
+        isViewCreated = true
     }
 
     private fun prepareView(days: List<Day>, time: Time) {
-        while (!flag);
-
         viewState.prepareDaysOfWeekRows(1..7)
         val numDays = time.daysInMonth
         for (index in 1..numDays) {
