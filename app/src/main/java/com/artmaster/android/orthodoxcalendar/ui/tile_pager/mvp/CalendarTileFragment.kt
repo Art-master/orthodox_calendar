@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
@@ -25,7 +25,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     @InjectPresenter(tag = "TilePresenter")
     lateinit var presenter: TilePresenter
 
-    private lateinit var adapter: PagerAdapter
+    private lateinit var adapter: FragmentStateAdapter
 
     private var _binding: FragmentTileCalendarBinding? = null
     private val binding get() = _binding!!
@@ -86,14 +86,12 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         }
     }
 
-    private fun getAdapter(): PagerAdapter {
-        return CustomViewPager.CustomPagerAdapter(childFragmentManager)
+    private fun getAdapter(): FragmentStateAdapter {
+        return CustomViewPager.CustomPagerAdapter(this)
     }
 
     private fun setChangePageListener() {
-        binding.holidayTilePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        binding.holidayTilePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 binding.monthSpinner.setSelection(position)
                 setVisibleArrows(position)
@@ -101,7 +99,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         })
     }
 
-    private fun setVisibleArrows(position: Int){
+    private fun setVisibleArrows(position: Int) {
         val firstPosition = 0
         val lastPosition = MONTH_SIZE - 1
 
@@ -115,7 +113,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         }
     }
 
-    private fun initHelper(){
+    private fun initHelper() {
         binding.helperButton.setOnClickListener {
             val fr = CalendarInfoFragment()
             val transaction = parentFragmentManager.beginTransaction()

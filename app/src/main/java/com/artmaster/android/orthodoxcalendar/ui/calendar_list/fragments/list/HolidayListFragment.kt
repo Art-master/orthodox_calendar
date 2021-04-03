@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.common.Constants
@@ -33,6 +34,11 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
 
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
+
+            lifecycleScope.launchWhenCreated {
+                val time = Time(getYear(), getMonth(), getDay())
+                presenter.viewIsReady(time)
+            }
         }
     }
 
@@ -44,10 +50,6 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        if (!presenter.isInRestoreState(this)) {
-            val time = Time(getYear(), getMonth(), getDay())
-            presenter.viewIsReady(time)
-        }
     }
 
     private fun getDay(): Int {
@@ -64,6 +66,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
     }
 
     override fun prepareAdapter(position: Int, holiday: Holiday) {
+        if (_binding == null) return
         recyclerAdapter = getAdapter(position)
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
     }

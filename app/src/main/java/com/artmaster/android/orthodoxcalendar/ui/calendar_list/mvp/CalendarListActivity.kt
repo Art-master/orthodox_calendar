@@ -64,6 +64,9 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private var toolbarMenu: Menu? = null
 
     private lateinit var calendarFragment: Fragment
+
+    private enum class Tags { CALENDAR_LIST, CALENDAR_TILE, MENU }
+
     private var fragment: Fragment = Fragment()
 
     private var _binding: ActivityCalendarBinding? = null
@@ -80,7 +83,10 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         _binding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        initTypeOfCalendar()
+
+        if (savedInstanceState == null) {
+            initTypeOfCalendarFragment()
+        }
 
         listHolidayFragment.onChangePageListener { prepareSpinner(it) }
 
@@ -92,7 +98,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         initBarSpinner()
     }
 
-    private fun initTypeOfCalendar() {
+    private fun initTypeOfCalendarFragment() {
         calendarFragment = if (isFirstLoadTileCalendar) {
             tileCalendarFragment as Fragment
         } else {
@@ -218,8 +224,12 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     override fun showHolidayList() {
+        if (::calendarFragment.isInitialized.not()) {
+            val r = supportFragmentManager.findFragmentByTag(Tags.CALENDAR_LIST.name)!!
+            calendarFragment = supportFragmentManager.findFragmentByTag(Tags.CALENDAR_LIST.name)!!
+        }
         val fragment = checkFragment(calendarFragment)
-        addFragment(R.id.activityCalendar, fragment)
+        addFragment(R.id.activityCalendar, fragment, Tags.CALENDAR_LIST.name)
     }
 
     override fun showErrorMessage(msgType: Message.ERROR) {
@@ -269,17 +279,17 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         }
     }
 
-    private fun addFragment(resId: Int, fragment: Fragment) {
+    private fun addFragment(resId: Int, fragment: Fragment, tag: String?) {
         if (!fragment.isAdded) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(resId, fragment)
+                    .add(resId, fragment, tag)
                     .commit()
         }
     }
 
-    private fun replaceFragment(resId: Int, fragment: Fragment) {
-        addFragment(resId, fragment)
+    private fun replaceFragment(resId: Int, fragment: Fragment, tag: String? = null) {
+        addFragment(resId, fragment, tag)
         if (!fragment.isHidden) {
             supportFragmentManager
                     .beginTransaction()
@@ -311,7 +321,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private fun setOnItemSelected() {
         binding.toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 if (isTheSameYear(position).not()) {
                     val year = getSpinnerCurrentYear()
                     updateArgs(tileCalendarFragment as Fragment, year)
@@ -371,5 +381,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+        fragment.onDestroy()
     }
 }

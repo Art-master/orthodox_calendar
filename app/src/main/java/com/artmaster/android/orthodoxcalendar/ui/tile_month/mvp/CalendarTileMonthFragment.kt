@@ -2,14 +2,12 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
+import android.content.ClipDescription
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Layout
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -67,6 +65,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isVisible) initAnimation()
+        monthBinding.root.setOnDragListener(onDragListener)
+        monthBinding.root.setOnClickListener(onClick)
     }
 
     override fun onResume() {
@@ -135,7 +135,6 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
             //val filter = BlendModeColorFilter(c, BlendMode.COLOR) TODO filters
             setDayArgs(view.id)
         } //else bg.clearColorFilter()
-
     }
 
     private fun initRecyclerView(holidays: List<Holiday>) {
@@ -283,5 +282,35 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    private val onDragListener = View.OnDragListener { v, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                // Determines if this View can accept the dragged data
+                if (event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                    // As an example of what your application might do,
+                    // applies a blue color tint to the View to indicate that it can accept
+                    // data.
+                    (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                    // Invalidate the view to force a redraw in the new tint
+                    v?.invalidate()
+
+                    // returns true to indicate that the View can accept the dragged data.
+                    true
+                } else {
+                    // Returns false. During the current drag and drop operation, this View will
+                    // not receive events again until ACTION_DRAG_ENDED is sent.
+                    false
+                }
+            }
+        }
+        true
+    }
+
+    private val onClick = View.OnClickListener {
+        val r = 0
+        val rw = 0
     }
 }

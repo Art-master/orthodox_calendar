@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.Scroller
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.VIEW_PAGER_SPEED
@@ -22,7 +22,7 @@ class CustomViewPager(context: Context, attrs: AttributeSet) : ViewPager(context
 
     private fun setMyScroller() {
         try {
-            val viewpager = ViewPager::class.java
+            val viewpager = ViewPager2::class.java
             val scroller = viewpager.getDeclaredField("mScroller")
             scroller.isAccessible = true
             scroller.set(this, MyScroller(context))
@@ -39,11 +39,13 @@ class CustomViewPager(context: Context, attrs: AttributeSet) : ViewPager(context
         }
     }
 
-    class CustomPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    class CustomPagerAdapter(fa: Fragment) : FragmentStateAdapter(fa) {
 
         private var fragments: ArrayList<Fragment> = ArrayList()
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItemCount() = MONTH_SIZE
+
+        override fun createFragment(position: Int): Fragment {
             return if (position <= fragments.size - 1) {
                 this.fragments[position]
             } else {
@@ -53,12 +55,6 @@ class CustomViewPager(context: Context, attrs: AttributeSet) : ViewPager(context
                 fragment.arguments = args
                 fragment
             }
-        }
-
-        override fun getCount(): Int = MONTH_SIZE
-
-        override fun getItemPosition(`object`: Any): Int {
-            return POSITION_NONE
         }
     }
 }

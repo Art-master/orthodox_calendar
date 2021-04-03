@@ -7,6 +7,7 @@ buildscript {
     ext.moxy_version = '2.2.1'
     ext.room_version = '2.2.6'
     ext.dagger_version = '2.33'
+    ext.leakcanary_version = '2.7'
 
     repositories {
         google()

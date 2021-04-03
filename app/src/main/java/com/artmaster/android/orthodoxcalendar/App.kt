@@ -5,7 +5,6 @@ import com.artmaster.android.orthodoxcalendar.data.di.AppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.DaggerAndroidAppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.DaggerAppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.modules.ContextModule
-import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -20,11 +19,6 @@ class App : Application(), HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)
 
         DaggerAndroidAppComponent
                 .builder()
