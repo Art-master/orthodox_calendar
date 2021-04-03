@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            app:customFont="@string/font_basic"></androidx.appcompat.widget.AppCompatSpinner>
+            app:customFont="@string/font_basic" />
 
         <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
             android:id="@+id/arrowRight"

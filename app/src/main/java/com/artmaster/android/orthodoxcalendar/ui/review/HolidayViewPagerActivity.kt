@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayReviewPagerBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -17,10 +18,8 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -58,27 +57,31 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
 
         currentHoliday = getCurrentHoliday()
 
-        Single.fromCallable { dataProvider.getData(currentHoliday.year) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onSuccess = { data -> setPageAdapter(data) },
-                        onError = { it.printStackTrace() })
+        loadHolidays()
+    }
 
+    fun loadHolidays() {
+        lifecycleScope.launchWhenCreated {
+            val holidays = ArrayList<Holiday>()
+            withContext(Dispatchers.IO) {
+                holidays.addAll(dataProvider.getData(currentHoliday.year))
+            }
+            setPageAdapter(holidays)
+        }
     }
 
     private fun getCurrentHoliday() = intent.getParcelableExtra<Holiday>(Constants.Keys.HOLIDAY.value)
 
     private fun setPageAdapter(data: List<Holiday>) {
-        binding.holidayPager.adapter = object : FragmentStatePagerAdapter(supportFragmentManager) {
+        binding.holidayPager.adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount() = data.size
 
-            override fun getItem(p0: Int): Fragment {
-                val holiday = data[p0]
+            override fun createFragment(position: Int): Fragment {
+                val holiday = data[position]
                 return HolidayFragment.newInstance(holiday)
             }
-
-            override fun getCount(): Int = data.size
         }
+
         setCurrentItem(data)
     }
 
@@ -91,7 +94,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     override fun onBackPressed() {
-        if(isTaskRoot){
+        if (isTaskRoot) {
             startActivity(getArgs())
         } else {
             super.onBackPressed()
