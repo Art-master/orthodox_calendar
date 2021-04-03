@@ -105,7 +105,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun clearView() {
-        if (_monthBinding == null) return //FIXME early access
+        if (_monthBinding == null) return //if state restored and _monthBinding == null
         setVisibility()
         monthBinding.tableMonthTile.removeAllViews()
     }

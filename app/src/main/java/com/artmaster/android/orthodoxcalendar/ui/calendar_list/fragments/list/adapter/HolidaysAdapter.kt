@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.a
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -49,19 +50,27 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
     companion object {
         fun getTypiconImageByString(textView: TextViewWithCustomFont, holiday: Holiday) {
             val context = textView.context
-            //textView.textColor = ContextCompat.getColor(context, R.color.colorRed)
 
             when {
-                holiday.type.contains(Holiday.Type.GREAT.value, true) ->
+                holiday.type.contains(Holiday.Type.GREAT.value, true) -> {
                     textView.text = context.resources.getString(R.string.head_holiday)
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
+                }
 
-                holiday.type.contains(Holiday.Type.AVERAGE_POLYLEIC.value, true) ->
+                holiday.type.contains(Holiday.Type.AVERAGE_POLYLEIC.value, true) -> {
                     textView.text = context.resources.getString(R.string.average_polyleic_holiday)
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
+                }
 
-                holiday.type.contains(Holiday.Type.AVERAGE_PEPPY.value, true) ->
+                holiday.type.contains(Holiday.Type.AVERAGE_PEPPY.value, true) -> {
                     textView.text = context.resources.getString(R.string.average_peppy_holiday)
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
+                }
 
-                else -> textView.text = ""
+                else -> {
+                    textView.text = ""
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorBlack))
+                }
             }
         }
     }
