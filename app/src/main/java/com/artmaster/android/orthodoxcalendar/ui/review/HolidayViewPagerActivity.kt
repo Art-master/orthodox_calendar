@@ -60,7 +60,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
         loadHolidays()
     }
 
-    fun loadHolidays() {
+    private fun loadHolidays() {
         lifecycleScope.launchWhenCreated {
             val holidays = ArrayList<Holiday>()
             withContext(Dispatchers.IO) {

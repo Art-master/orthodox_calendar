@@ -28,8 +28,11 @@ import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
+import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
+import java.util.*
+import kotlin.collections.ArrayList
 
 internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileMonthView {
 
@@ -51,7 +54,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
 
-            lifecycleScope.launchWhenStarted {
+            lifecycleScope.launch {
                 presenter.viewIsReady(getYear(), getMonth())
             }
         }
@@ -114,8 +117,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         monthBinding.crossLoading.visibility = ImageView.GONE
     }
 
-    override fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
-        if (presenter.isInRestoreState(this)) return
+    private fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
         val row = tableRows[dayOfWeek - 1]
 
         val v = getDayLayout()
@@ -125,6 +127,17 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         styleDayView(v, day, dayOfWeek)
         if (row.childCount == level - 1) row.addView(TextView(context), level - 1)
         row.addView(v.root, level)
+    }
+
+    override fun prepareMonthsDays(days: List<Day>, time: Time) {
+        val currentTime = Time(time.calendar)
+        val numDays = currentTime.daysInMonth
+        for (index in 1..numDays) {
+            currentTime.calendar.set(Calendar.DAY_OF_MONTH, index)
+            val dayOfWeek = currentTime.dayOfWeek
+            val week = currentTime.calendar.get(Calendar.WEEK_OF_MONTH)
+            prepareDayOfMonth(dayOfWeek, week, days[index - 1])
+        }
     }
 
     private fun changedFocus(view: View, hasFocus: Boolean, day: Day) {
@@ -242,7 +255,6 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun prepareDaysOfWeekRows(dayOfWeek: IntRange) {
-        if (presenter.isInRestoreState(this)) return
         if (tableRows.isEmpty().not()) tableRows.clear()
         for (i in dayOfWeek) {
             val row = createDayOfWeekRow()
@@ -274,6 +286,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun drawView() {
+        if (_monthBinding == null) return //if state restored and _monthBinding == null
         tableRows.forEach { e ->
             if (e.parent == null) monthBinding.tableMonthTile.addView(e)
         }

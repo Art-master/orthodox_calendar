@@ -39,13 +39,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
 
     private fun prepareView(days: List<Day>, time: Time) {
         viewState.prepareDaysOfWeekRows(1..7)
-        val numDays = time.daysInMonth
-        for (index in 1..numDays) {
-            time.calendar.set(Calendar.DAY_OF_MONTH, index)
-            val dayOfWeek = time.dayOfWeek
-            val week = time.calendar.get(Calendar.WEEK_OF_MONTH)
-            viewState.prepareDayOfMonth(dayOfWeek, week, days[index - 1])
-        }
+        viewState.prepareMonthsDays(days, time)
     }
 
     private fun viewData(time: Time) {

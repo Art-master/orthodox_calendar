@@ -34,7 +34,6 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = getAdapter(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -63,7 +62,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     }
 
     private fun setPageAdapter() {
-        if (binding.holidayListPager.adapter != null) return
+        adapter = getAdapter(this)
         binding.holidayListPager.adapter = adapter
         binding.holidayListPager.currentItem = getPosition()
         setChangePageListener()

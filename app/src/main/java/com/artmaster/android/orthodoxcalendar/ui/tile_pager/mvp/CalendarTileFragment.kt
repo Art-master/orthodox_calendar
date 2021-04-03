@@ -26,8 +26,6 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     @InjectPresenter(tag = "TilePresenter")
     lateinit var presenter: TilePresenter
 
-    private lateinit var adapter: FragmentStateAdapter
-
     private var _binding: FragmentTileCalendarBinding? = null
     private val binding get() = _binding!!
 
@@ -37,7 +35,6 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             presenter.attachView(this)
             presenter.viewIsReady()
         }
-        adapter = getAdapter(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -75,7 +72,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
 
     private fun setOnItemSpinnerSelected() {
         binding.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 binding.holidayTilePager.apply {
                     if (currentItem != position) {
                         currentItem = position

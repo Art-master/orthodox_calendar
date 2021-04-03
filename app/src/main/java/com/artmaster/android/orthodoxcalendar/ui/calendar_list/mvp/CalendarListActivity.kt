@@ -225,7 +225,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     override fun showHolidayList() {
         if (::calendarFragment.isInitialized.not()) {
-            val r = supportFragmentManager.findFragmentByTag(Tags.CALENDAR_LIST.name)!!
             calendarFragment = supportFragmentManager.findFragmentByTag(Tags.CALENDAR_LIST.name)!!
         }
         val fragment = checkFragment(calendarFragment)
