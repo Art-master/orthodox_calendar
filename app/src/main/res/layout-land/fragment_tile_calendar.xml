@@ -8,6 +8,7 @@
         android:id="@+id/arrowLeft"
         android:layout_width="24dp"
         android:layout_height="26dp"
+        android:layout_marginStart="32dp"
         android:layout_marginBottom="4dp"
         android:gravity="center"
         android:text="@string/arrow_left"
@@ -15,26 +16,25 @@
         android:textSize="20sp"
         app:customFont="@string/font_basic"
         app:layout_constraintBottom_toBottomOf="@+id/monthSpinner"
-        app:layout_constraintEnd_toStartOf="@+id/monthSpinner" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/monthSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="95dp"
-        android:spinnerMode="dropdown"
         android:background="@null"
+        android:spinnerMode="dropdown"
         app:customFont="@string/font_basic"
         app:layout_constraintBottom_toTopOf="@+id/holidayTilePager"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/arrowLeft" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
         android:id="@+id/textViewWithCustomFont13"
-        android:layout_width="24dp"
+        android:layout_width="wrap_content"
         android:layout_height="26dp"
         android:drawableStart="@drawable/ic_arrow_drop_down_white"
         android:gravity="center"
-        android:text="@string/arrow_right"
+        android:text=""
         android:textAlignment="center"
         android:textSize="20sp"
         app:customFont="@string/font_basic"
@@ -45,6 +45,7 @@
         android:id="@+id/arrowRight"
         android:layout_width="24dp"
         android:layout_height="26dp"
+        android:layout_marginStart="4dp"
         android:layout_marginBottom="4dp"
         android:gravity="center"
         android:text="@string/arrow_right"
@@ -67,9 +68,10 @@
         android:id="@+id/helperButton"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/icon_help"
         android:text=""
         app:layout_constraintBottom_toTopOf="@+id/holidayTilePager"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/arrowRight" />
 </androidx.constraintlayout.widget.ConstraintLayout>
