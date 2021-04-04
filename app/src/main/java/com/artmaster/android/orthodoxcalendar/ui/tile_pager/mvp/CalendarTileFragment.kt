@@ -45,16 +45,20 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.viewIsCreated()
-        setChangePageListener()
-        initHelper()
+        if (savedInstanceState != null) {
+            setChangePageListener()
+            initHelper()
+        }
     }
 
     override fun setPageAdapter() {
+        if (_binding == null) return
         binding.holidayTilePager.adapter = getAdapter(this)
         binding.holidayTilePager.currentItem = getMonth()
     }
 
     override fun initSpinner() {
+        if (_binding == null) return
         val mNames = getMonthsNames()
         val adapter = SpinnerAdapter(requireContext(), R.layout.spinner_year_item, mNames)
         adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)

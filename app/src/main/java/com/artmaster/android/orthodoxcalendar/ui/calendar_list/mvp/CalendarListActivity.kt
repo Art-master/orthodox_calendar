@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -65,7 +66,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private lateinit var calendarFragment: Fragment
 
-    private enum class Tags { CALENDAR_LIST, CALENDAR_TILE, MENU }
+    private enum class Tags { CALENDAR }
 
     private var fragment: Fragment = Fragment()
 
@@ -90,12 +91,28 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
         listHolidayFragment.onChangePageListener { prepareSpinner(it) }
 
-        if (!presenter.isInRestoreState(this)) {
+        if (!presenter.isInRestoreState(this) && savedInstanceState == null) {
             presenter.attachView(this)
             presenter.viewIsReady()
         }
 
         initBarSpinner()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        outState.run {
+            val bundle = calendarFragment.arguments ?: return
+            setCurrentState(bundle, this)
+        }
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState.run {
+            if (calendarFragment.arguments == null) calendarFragment.arguments = Bundle()
+            setCurrentState(this, calendarFragment.requireArguments())
+        }
     }
 
     private fun initTypeOfCalendarFragment() {
@@ -118,6 +135,14 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             putInt(Constants.Keys.YEAR.value, getStartYear())
             putInt(Constants.Keys.MONTH.value, getMonth())
             putInt(Constants.Keys.DAY.value, getDay())
+        }
+    }
+
+    private fun setCurrentState(arguments: Bundle, state: Bundle) {
+        state.apply {
+            putInt(Constants.Keys.YEAR.value, arguments.getInt(Constants.Keys.YEAR.value))
+            putInt(Constants.Keys.MONTH.value, arguments.getInt(Constants.Keys.MONTH.value))
+            putInt(Constants.Keys.DAY.value, arguments.getInt(Constants.Keys.DAY.value))
         }
     }
 
@@ -225,10 +250,12 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     override fun showHolidayList() {
         if (::calendarFragment.isInitialized.not()) {
-            calendarFragment = supportFragmentManager.findFragmentByTag(Tags.CALENDAR_LIST.name)!!
+            calendarFragment = supportFragmentManager.findFragmentByTag(Tags.CALENDAR.name)!!
         }
         val fragment = checkFragment(calendarFragment)
-        addFragment(R.id.activityCalendar, fragment, Tags.CALENDAR_LIST.name)
+        if (fragment.isAdded.not()) {
+            addFragment(R.id.activityCalendar, fragment, Tags.CALENDAR.name)
+        }
     }
 
     override fun showErrorMessage(msgType: Message.ERROR) {
