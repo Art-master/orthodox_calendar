@@ -43,12 +43,12 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
         fun bind(holiday: Holiday) {
             bind!!.holiday = holiday
             bind!!.executePendingBindings()
-            getTypiconImageByString(bind!!.holidayTipiconFontIcon, holiday)
+            getTypyconImageByString(bind!!.holidayTipiconFontIcon, holiday)
         }
     }
 
     companion object {
-        fun getTypiconImageByString(textView: TextViewWithCustomFont, holiday: Holiday) {
+        fun getTypyconImageByString(textView: TextViewWithCustomFont, holiday: Holiday) {
             val context = textView.context
 
             when {

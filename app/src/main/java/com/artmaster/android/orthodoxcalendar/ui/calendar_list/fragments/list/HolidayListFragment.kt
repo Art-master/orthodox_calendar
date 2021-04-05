@@ -35,6 +35,9 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
 
+            val e1 = getYear()
+            val e2 = getMonth()
+            val e3 = getDay()
             lifecycleScope.launchWhenCreated {
                 val time = Time(getYear(), getMonth(), getDay())
                 presenter.viewIsReady(time)

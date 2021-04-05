@@ -1,35 +1,33 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.*
 import org.junit.Test
 
 abstract class HolidayDynamicTestFactory {
 
     @Test
     fun checkDynamicDate() {
-/*        checkHoliday(2010, DynamicData.THE_EASTER, 4, 4)
-        checkHoliday(2018, DynamicData.THE_EASTER, 8, 4)
-        checkHoliday(2030, DynamicData.THE_EASTER, 28, 4)
-        checkHoliday(2043, DynamicData.THE_EASTER, 3, 5)
-        checkHoliday(2049, DynamicData.THE_EASTER, 25, 4)
+        checkDynamicHoliday(2010, THE_EASTER, Holiday(month = 4, day = 4))
+        checkDynamicHoliday(2018, THE_EASTER, Holiday(month = 4, day = 8))
+        checkDynamicHoliday(2030, THE_EASTER, Holiday(month = 4, day = 28))
+        checkDynamicHoliday(2043, THE_EASTER, Holiday(month = 5, day = 3))
+        checkDynamicHoliday(2049, THE_EASTER, Holiday(month = 4, day = 25))
 
-        checkHoliday(2009,
-                DynamicData.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, 12, 4)
-        checkHoliday(2015,
-                DynamicData.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, 5, 4)
-        checkHoliday(2019,
-                DynamicData.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, 21, 4)
 
-        checkHoliday(2007,
-                DynamicData.THE_ASCENSION_OF_THE_LORD, 17, 5)
-        checkHoliday(2018,
-                DynamicData.THE_ASCENSION_OF_THE_LORD, 17, 5)
-        checkHoliday(2019,
-                DynamicData.THE_ASCENSION_OF_THE_LORD, 6, 6)
+        checkDynamicHoliday(2009, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 12))
+        checkDynamicHoliday(2015, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 5))
+        checkDynamicHoliday(2019, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 21))
 
-        checkHoliday(2016, DynamicData.THE_HOLY_TRINITY, 19, 6)
-        checkHoliday(2018, DynamicData.THE_HOLY_TRINITY, 27, 5)
-        checkHoliday(2021, DynamicData.THE_HOLY_TRINITY, 20, 6)*/
+
+        checkDynamicHoliday(2007, THE_ASCENSION_OF_THE_LORD, Holiday(month = 5, day = 17))
+        checkDynamicHoliday(2018, THE_ASCENSION_OF_THE_LORD, Holiday(month = 5, day = 17))
+        checkDynamicHoliday(2019, THE_ASCENSION_OF_THE_LORD, Holiday(month = 6, day = 6))
+
+
+        checkDynamicHoliday(2016, THE_HOLY_TRINITY, Holiday(month = 6, day = 19))
+        checkDynamicHoliday(2018, THE_HOLY_TRINITY, Holiday(month = 5, day = 27))
+        checkDynamicHoliday(2021, THE_HOLY_TRINITY, Holiday(month = 6, day = 20))
     }
 
-    abstract fun checkHoliday(holiday: Holiday, expectedDay: Int, expectedMonth: Int)
+    abstract fun checkDynamicHoliday(year: Int, type: Holiday.MovableDay, expectedHoliday: Holiday)
 }

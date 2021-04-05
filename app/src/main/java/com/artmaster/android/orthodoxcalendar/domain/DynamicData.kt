@@ -224,15 +224,15 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isYole(day: Day): Boolean {
-        return day.month == Holiday.Month.JANUARY.num && day.dayOfMonth == 18
+        return day.month == Month.JANUARY.num && day.dayOfMonth == 18
     }
 
     private fun isBeheadingOfStJohnTheBaptist(day: Day): Boolean {
-        return day.month == Holiday.Month.SEPTEMBER.num && day.dayOfMonth == 11
+        return day.month == Month.SEPTEMBER.num && day.dayOfMonth == 11
     }
 
     private fun isFeastOfTheCross(day: Day): Boolean {
-        return day.month == Holiday.Month.SEPTEMBER.num && day.dayOfMonth == 27
+        return day.month == Month.SEPTEMBER.num && day.dayOfMonth == 27
     }
 
     private fun fillDayAsGreatFasting(day: Day) {
@@ -380,7 +380,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun setSolidWeek(day: Day) {
-        if (day.month == Holiday.Month.JANUARY.num && day.dayOfMonth in 8..17) {
+        if (day.month == Month.JANUARY.num && day.dayOfMonth in 8..17) {
             day.fasting.type = Fasting.Type.SOLID_WEEK
             day.fasting.permissions = emptyList()
             return

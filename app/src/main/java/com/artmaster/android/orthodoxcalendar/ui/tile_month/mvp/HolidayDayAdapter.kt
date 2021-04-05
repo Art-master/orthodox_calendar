@@ -41,7 +41,7 @@ class HolidayDayAdapter(val holidays: List<Holiday>, val context: Context) :
             bind?.let {
                 bind!!.holiday = holiday
                 bind!!.executePendingBindings()
-                HolidaysAdapter.getTypiconImageByString(bind!!.holidayTipiconFontIcon, holiday)
+                HolidaysAdapter.getTypyconImageByString(bind!!.holidayTipiconFontIcon, holiday)
             }
 
         }
