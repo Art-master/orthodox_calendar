@@ -154,7 +154,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isAssumptionFasting(day: Day): Boolean {
-        return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..28)
+        return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..27)
     }
 
     private fun fillDayAsAssumptionFasting(day: Day) {
