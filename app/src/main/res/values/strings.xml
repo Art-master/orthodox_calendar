@@ -139,5 +139,10 @@
 
     <!-- IMG descriptors -->
     <string name="descriptor_img_load_holidays">Загрузка</string>
+    <string name="fab_content_desc">Фильтр</string>
 
+
+    <string name="filter_head_holidays">Великие праздники</string>
+    <string name="filter_average_holidays">Средние праздники</string>
+    <string name="filter_memory_days">Дни поминовения</string>
 </resources>

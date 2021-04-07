@@ -7,6 +7,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
@@ -97,6 +99,21 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         }
 
         initBarSpinner()
+        initFilters()
+    }
+
+    private fun initFilters() {
+        binding.floatingActionButton.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.END)
+            binding.floatingActionButton.hide()
+        }
+
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                binding.floatingActionButton.show()
+            }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
