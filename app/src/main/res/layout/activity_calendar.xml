@@ -63,31 +63,21 @@
                 android:layout_height="wrap_content" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <!--    <com.google.android.material.navigation.NavigationView
-                android:id="@+id/filters_navigation_panel"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:fitsSystemWindows="true"
-                app:behavior_hideable="true"
-                app:elevation="@dimen/activity_horizontal_margin"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-                app:menu="@menu/filters_navigation_drawer" />-->
-
-
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/filters_navigation_panel"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:background="@android:color/white"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:menu="@menu/filters_navigation_drawer" />
+            android:layout_height="300dp"
+            android:layout_gravity="end|bottom"
+            android:background="@color/window_background"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <include layout="@layout/filter_drawer_layout" />
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/showFiltersButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -95,7 +85,21 @@
         android:contentDescription="@string/fab_content_desc"
         app:backgroundTint="@color/colorHeadHoliday"
         app:fabSize="mini"
-        app:srcCompat="@drawable/ic_baseline_filter_alt_24" />
+        app:srcCompat="@drawable/ic_baseline_filter_alt_24"
+        app:useCompatPadding="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addHoliday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"
+        app:backgroundTint="@color/colorHeadHoliday"
+        app:fabSize="mini"
+        app:layout_anchor="@id/showFiltersButton"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

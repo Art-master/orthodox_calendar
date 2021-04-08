@@ -103,15 +103,23 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     private fun initFilters() {
-        binding.floatingActionButton.setOnClickListener {
+        binding.showFiltersButton.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
-            binding.floatingActionButton.hide()
+            binding.showFiltersButton.hide()
+            binding.addHoliday.hide()
         }
 
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                binding.floatingActionButton.show()
+                binding.showFiltersButton.show()
+                binding.addHoliday.show()
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
+                binding.showFiltersButton.hide()
+                binding.addHoliday.hide()
             }
         })
     }

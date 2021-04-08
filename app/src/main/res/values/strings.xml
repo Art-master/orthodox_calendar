@@ -144,5 +144,7 @@
 
     <string name="filter_head_holidays">Великие праздники</string>
     <string name="filter_average_holidays">Средние праздники</string>
+    <string name="filter_common_memory_days">Дни особого поминовения</string>
     <string name="filter_memory_days">Дни поминовения</string>
+    <string name="filter_name_days">Дни ангела</string>
 </resources>

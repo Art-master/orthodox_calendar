@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterHeadHolidays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_head_holidays"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterAverageHolidays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_average_holidays"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterCommonMemoryDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_common_memory_days"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterAverageHolidays" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterMemoryDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_memory_days"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterCommonMemoryDays" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterNameDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_name_days"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterMemoryDays" />
+</androidx.constraintlayout.widget.ConstraintLayout>
