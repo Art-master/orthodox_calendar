@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -14,7 +15,11 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.*
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOADING_TILE_CALENDAR
+import com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBinding
+import com.artmaster.android.orthodoxcalendar.databinding.FilterDrawerLayoutBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
@@ -22,6 +27,8 @@ import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxDecorator
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractView
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
@@ -60,9 +67,11 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     @Inject
     lateinit var appSettingsFragment: AppSettingView
 
+    private val viewModel: CalendarSharedData by viewModels()
+
     private val preferences = App.appComponent.getPreferences()
 
-    private val isFirstLoadTileCalendar = preferences.get(Settings.Name.FIRST_LOADING_TILE_CALENDAR).toBoolean()
+    private val isFirstLoadTileCalendar = preferences.get(FIRST_LOADING_TILE_CALENDAR).toBoolean()
 
     private var toolbarMenu: Menu? = null
 
@@ -75,6 +84,9 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private var _binding: ActivityCalendarBinding? = null
     private val binding get() = _binding!!
 
+    private var _filtersBinding: FilterDrawerLayoutBinding? = null
+    private val filtersBinding get() = _filtersBinding!!
+
     override fun androidInjector(): AndroidInjector<Any> {
         return fragmentInjector
     }
@@ -84,6 +96,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         super.onCreate(savedInstanceState)
 
         _binding = ActivityCalendarBinding.inflate(layoutInflater)
+        _filtersBinding = FilterDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
@@ -100,6 +113,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
         initBarSpinner()
         initFilters()
+        initFiltersListeners()
     }
 
     private fun initFilters() {
@@ -122,6 +136,23 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                 binding.addHoliday.hide()
             }
         })
+    }
+
+    private fun initFiltersListeners() {
+        initCheckBoxFilter(filtersBinding.filterEaster, Filter.EASTER)
+        initCheckBoxFilter(filtersBinding.filterHeadHolidays, Filter.HEAD_HOLIDAYS)
+        initCheckBoxFilter(filtersBinding.filterAverageHolidays, Filter.AVERAGE_HOLIDAYS)
+        initCheckBoxFilter(filtersBinding.filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
+        initCheckBoxFilter(filtersBinding.filterMemoryDays, Filter.MEMORY_DAYS)
+        initCheckBoxFilter(filtersBinding.filterNameDays, Filter.NAME_DAYS)
+    }
+
+    private fun initCheckBoxFilter(view: CustomCheckedView, filter: Filter) {
+        val p = CheckBoxDecorator(view, preferences, Settings.Name.FILTER_AVERAGE_HOLIDAYS).prepare()
+        p.onClick = {
+            if (it) viewModel.addFilter(filter)
+            else viewModel.removeFilter(filter)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

@@ -4,8 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="@string/ornament_for_headers_left"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintEnd_toStartOf="@+id/textViewWithSettingsName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:id="@+id/textViewWithSettingsName"
+        android:layout_width="107dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="10"
+        android:text="@string/filters_name"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_basic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.462"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:text="@string/ornament_for_headers_right"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/size_text_settings_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintStart_toEndOf="@+id/textViewWithSettingsName"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
-        android:id="@+id/filterHeadHolidays"
+        android:id="@+id/filterEaster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -18,7 +57,23 @@
         android:textSize="@dimen/size_text_basic"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        android:id="@+id/filterHeadHolidays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checkMark="?android:attr/textCheckMark"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/filter_easter"
+        android:textSize="@dimen/size_text_basic"
+        app:customFont="@string/font_basic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/filterAverageHolidays"
@@ -34,14 +89,14 @@
         android:textSize="@dimen/size_text_basic"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
+        app:layout_constraintTop_toBottomOf="@+id/filterEaster" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/filterCommonMemoryDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:checkMark="?android:attr/textCheckMark"
         android:clickable="true"
         android:focusable="true"

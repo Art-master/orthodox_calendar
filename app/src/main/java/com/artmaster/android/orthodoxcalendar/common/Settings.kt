@@ -25,7 +25,10 @@ class Settings {
         FIRST_LOADING_TILE_CALENDAR("$PROJECT_DIR.first_load_tile_calendar", FALSE),
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
-        SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE)
+        SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE),
+
+        //FILTERS
+        FILTER_AVERAGE_HOLIDAYS("$PROJECT_DIR.filter_average_holidays", FALSE),
     }
 }
 

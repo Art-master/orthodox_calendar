@@ -10,7 +10,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentSettingsBinding
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxPrepared
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxDecorator
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.SpinnerPrepared
 
 /**
@@ -34,26 +34,26 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
     }
 
     private fun prepareViews() {
-        CheckBoxPrepared(binding.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
-        CheckBoxPrepared(binding.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
-        CheckBoxPrepared(binding.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
-        CheckBoxPrepared(binding.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
-        CheckBoxPrepared(binding.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
+        CheckBoxDecorator(binding.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
+        CheckBoxDecorator(binding.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxDecorator(binding.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
+        CheckBoxDecorator(binding.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
+        CheckBoxDecorator(binding.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
 
-        CheckBoxPrepared(binding.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
-            callback = { binding.timeSpinner.isEnabled = it.not() }
+        CheckBoxDecorator(binding.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
+            onClick = { binding.timeSpinner.isEnabled = it.not() }
         }
         SpinnerPrepared(binding.timeSpinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
 
-        CheckBoxPrepared(binding.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
-            callback = { binding.timeInSpinner.isEnabled = it.not() }
+        CheckBoxDecorator(binding.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
+            onClick = { binding.timeInSpinner.isEnabled = it.not() }
         }
         SpinnerPrepared(binding.timeInSpinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
 
-        CheckBoxPrepared(binding.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
+        CheckBoxDecorator(binding.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
 
-        CheckBoxPrepared(binding.settingsOffAnimation, prefs, OFF_START_ANIMATION).prepare().apply {
-            callback = {
+        CheckBoxDecorator(binding.settingsOffAnimation, prefs, OFF_START_ANIMATION).prepare().apply {
+            onClick = {
                 binding.settingsSpeedUpAnimation.isEnabled = it
                 if (binding.settingsSpeedUpAnimation.isChecked) {
                     binding.settingsSpeedUpAnimation.isChecked = false

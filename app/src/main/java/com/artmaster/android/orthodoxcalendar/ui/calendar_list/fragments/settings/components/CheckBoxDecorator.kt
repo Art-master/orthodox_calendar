@@ -5,9 +5,9 @@ import android.widget.CheckBox
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 
-class CheckBoxPrepared(private val checkBox: CheckBox,
-                       preferences: AppPreferences,
-                       setting: Settings.Name)
+class CheckBoxDecorator(private val checkBox: CheckBox,
+                        preferences: AppPreferences,
+                        setting: Settings.Name)
     : ElementUiPrepared(checkBox, preferences, setting) {
 
     init {
@@ -19,7 +19,7 @@ class CheckBoxPrepared(private val checkBox: CheckBox,
         checkBox.isChecked = value.toBoolean()
         checkBox.setOnClickListener {
             saveSetting()
-            callback(checkBox.isChecked.not())
+            onClick.invoke(checkBox.isChecked.not())
         }
     }
 
