@@ -33,6 +33,9 @@ data class Holiday(
         @Ignore
         var year: Int = 0,
 
+        @SerializedName("typeId")
+        var typeId: Int = 0,
+
         @SerializedName("type")
         var type: String = "",
 
@@ -42,7 +45,7 @@ data class Holiday(
         @SerializedName("description")
         var description: String = "",
 
-        @SerializedName("image")
+        @SerializedName("imageId")
         @ColumnInfo(name = "image_link")
         var imageLink: String = "",
 
@@ -59,19 +62,14 @@ data class Holiday(
         return monthComparison
     }
 
-    enum class Type(val value: String) {
-        GREAT("великий"),
-        TWELVE("двунадесятый"),
-        MAIN("главный"),
-        HEAD("главный переходящий"),
-        TWELVE_MOVABLE("великий двунадесятый переходящий"),
-        GREAT_TWELVE("великий двунадесятый"),
-        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный"),
-        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный"),
-        GREAT_NOT_TWELVE("великий недвунадесятый"),
-        AVERAGE("средний"),
-        AVERAGE_POLYLEIC("средний полиелейный"),
-        AVERAGE_PEPPY("средний бденный");
+    enum class Type(val value: String, val id: Int) {
+        MAIN("главный", 1),
+        TWELVE_MOVABLE("великий двунадесятый переходящий", 2),
+        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный", 3),
+        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный", 4),
+        GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
+        AVERAGE_POLYLEIC("средний полиелейный", 6),
+        AVERAGE_PEPPY("средний бденный", 7);
     }
 
     enum class DayOfWeek(val num: Int) {
@@ -111,5 +109,37 @@ data class Holiday(
 
         //50 day after Easter
         THE_HOLY_TRINITY(49, 4),
+    }
+
+    companion object {
+        fun getTypeIdsByFilter(filter: Filter): List<Int> {
+            if (filter == Filter.EASTER) {
+                return listOf(Type.MAIN.id)
+            }
+            if (filter == Filter.HEAD_HOLIDAYS) {
+                return listOf(Type.TWELVE_MOVABLE.id, Type.TWELVE_NOT_MOVABLE.id,
+                        Type.GREAT_NOT_TWELVE.id, Type.NOT_TWELVE_NOT_MOVABLE.id)
+            }
+            if (filter == Filter.AVERAGE_HOLIDAYS) {
+                return listOf(Type.AVERAGE_PEPPY.id, Type.AVERAGE_POLYLEIC.id)
+            }
+            //TODO other filters
+            if (filter == Filter.COMMON_MEMORY_DAYS) {
+                return listOf()
+            }
+            if (filter == Filter.MEMORY_DAYS) {
+                return listOf()
+            }
+            if (filter == Filter.NAME_DAYS) {
+                return listOf()
+            }
+            return emptyList()
+        }
+
+        fun fillLocaleData(main: Holiday, locale: Holiday) {
+            main.title = locale.title
+            main.type = locale.type
+            main.description = locale.description
+        }
     }
 }

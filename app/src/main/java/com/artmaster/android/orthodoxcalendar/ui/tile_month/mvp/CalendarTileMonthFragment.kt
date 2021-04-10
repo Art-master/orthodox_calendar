@@ -172,7 +172,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         val holidays = day.holidays
         val text = v.numDay
         when {
-            isTypeHoliday(Holiday.Type.GREAT_TWELVE, holidays) -> {
+            isTypeHoliday(Holiday.Type.TWELVE_MOVABLE, holidays) ||
+                    isTypeHoliday(Holiday.Type.TWELVE_NOT_MOVABLE, holidays) -> {
                 setStyle(v, text, R.drawable.tile_twelve_holiday)
             }
             isTypeHoliday(Holiday.Type.GREAT_NOT_TWELVE, holidays) -> {
@@ -249,7 +250,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private fun isTypeHoliday(type: Holiday.Type, holidays: List<Holiday>): Boolean {
         for (holiday in holidays) {
-            if (holiday.type.contains(type.value, true)) return true
+            if (holiday.typeId == type.id) return true
         }
         return false
     }

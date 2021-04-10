@@ -7,6 +7,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,32 +36,32 @@ class NotificationsService : Service() {
 
     override fun onBind(intent: Intent?) = null
 
-    private fun startThread(){
+    private fun startThread() {
         Single.fromCallable { execute() }
-            .subscribeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-               onSuccess = { },
-               onError = { it.printStackTrace() })
+                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onSuccess = { },
+                        onError = { it.printStackTrace() })
     }
 
-    private fun execute(){
+    private fun execute() {
         var time = getTime()
 
         val days = repository.getMonthDays(time.monthWith0, time.year)
 
-        if(allowTimeNotification){
+        if (allowTimeNotification) {
             notificationsByTime(time, days)
         }
 
-        if(allowTodayNotification){
+        if (allowTodayNotification) {
             time = getTime()
             val holidays = days[time.dayOfMonth - 1].holidays
             prepareNotificationsHolidays(holidays, time)
         }
     }
 
-    private fun getTime(): Time{
+    private fun getTime(): Time {
         return Time()
     }
 
@@ -73,7 +74,7 @@ class NotificationsService : Service() {
     }
 
     private fun isAverageHoliday(holiday: Holiday): Boolean {
-        return holiday.type.contains(Holiday.Type.AVERAGE.value)
+        return holiday.typeId == Type.AVERAGE_POLYLEIC.id || holiday.typeId == Type.AVERAGE_PEPPY.id
     }
 
     private fun getDescription(holiday: Holiday, time: Time, numDays: Int): String {
@@ -95,11 +96,11 @@ class NotificationsService : Service() {
                 .build()
     }
 
-    private fun notificationsByTime(time: Time, days: List<Day>){
+    private fun notificationsByTime(time: Time, days: List<Day>) {
         val timeNotification = getTimeNotification()
         val numNotifyDay = time.dayOfMonth + timeNotification - 1
 
-        if(time.dayOfMonth + timeNotification > time.daysInMonth){
+        if (time.dayOfMonth + timeNotification > time.daysInMonth) {
             val daysTwoMonths = days as ArrayList
             daysTwoMonths.addAll(getDaysOfNextMonth())
 
@@ -111,18 +112,18 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun checkRestDaysNotify(timeNotification: Int, time: Time, days: List<Day>, numNotifyDay: Int){
-        if(timeNotification > 1){
+    private fun checkRestDaysNotify(timeNotification: Int, time: Time, days: List<Day>, numNotifyDay: Int) {
+        if (timeNotification > 1) {
             val restDays = days.subList(time.dayOfMonth - 1, numNotifyDay)
             notifyRestDays(restDays, time)
         }
     }
 
-    private fun notifyRestDays(days: List<Day>, time: Time){
+    private fun notifyRestDays(days: List<Day>, time: Time) {
         for (i in days.size - 1 downTo 1) {
-            if(i == 0) continue
-            for (holiday in days[i].holidays){
-                if(!allowAverageHolidays && isAverageHoliday(holiday)) continue
+            if (i == 0) continue
+            for (holiday in days[i].holidays) {
+                if (!allowAverageHolidays && isAverageHoliday(holiday)) continue
                 val description = getDescription(holiday, time, i)
                 buildNotification(description, holiday)
             }
@@ -131,11 +132,11 @@ class NotificationsService : Service() {
 
     private fun getTimeNotification() = prefs.get(TIME_OF_NOTIFICATION).toInt()
 
-    private fun getDaysOfNextMonth(): List<Day>{
+    private fun getDaysOfNextMonth(): List<Day> {
         val time = getTime()
-        if(time.month == Time.Month.DECEMBER.num) {
+        if (time.month == Time.Month.DECEMBER.num) {
             time.calendar.set(Calendar.MONTH, 0)
-            time.calendar.set(Calendar.YEAR,  time.year + 1)
+            time.calendar.set(Calendar.YEAR, time.year + 1)
         } else {
             time.calendar.set(Calendar.MONTH, time.month + 1)
         }

@@ -52,17 +52,20 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
             val context = textView.context
 
             when {
-                holiday.type.contains(Holiday.Type.GREAT.value, true) -> {
+
+                holiday.typeId == Holiday.Type.TWELVE_MOVABLE.id ||
+                        holiday.typeId == Holiday.Type.TWELVE_NOT_MOVABLE.id ||
+                        holiday.typeId == Holiday.Type.GREAT_NOT_TWELVE.id -> {
                     textView.text = context.resources.getString(R.string.head_holiday)
                     textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
                 }
 
-                holiday.type.contains(Holiday.Type.AVERAGE_POLYLEIC.value, true) -> {
+                holiday.typeId == Holiday.Type.AVERAGE_POLYLEIC.id -> {
                     textView.text = context.resources.getString(R.string.average_polyleic_holiday)
                     textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
                 }
 
-                holiday.type.contains(Holiday.Type.AVERAGE_PEPPY.value, true) -> {
+                holiday.typeId == Holiday.Type.AVERAGE_PEPPY.id -> {
                     textView.text = context.resources.getString(R.string.average_peppy_holiday)
                     textView.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
                 }
