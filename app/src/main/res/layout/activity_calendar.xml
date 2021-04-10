@@ -71,7 +71,10 @@
             android:background="@color/window_background"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <include layout="@layout/filter_drawer_layout" />
+            <include
+                android:id="@+id/filters"
+                layout="@layout/filter_drawer_layout" />
+
         </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>

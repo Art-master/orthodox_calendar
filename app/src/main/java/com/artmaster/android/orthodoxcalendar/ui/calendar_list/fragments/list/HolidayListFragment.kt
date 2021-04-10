@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.CalendarListFragmentBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
@@ -70,13 +71,15 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
 
     override fun prepareAdapter(position: Int, holiday: Holiday) {
         if (_binding == null) return
-        recyclerAdapter = getAdapter(position)
+        recyclerAdapter = buildAdapter(position)
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
     }
 
-    private fun getAdapter(position: Int): ListViewDiffContract.Adapter {
+    private fun buildAdapter(position: Int): ListViewDiffContract.Adapter {
         val config = PageConfig
         dataSource = HolidayDataSource(requireContext(), getYear())
+        val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
+        dataSource.filters = filters ?: ArrayList()
         val list = PagedList(dataSource, config, position)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
         val adapter = HolidaysAdapter(requireContext(), diffCallback)

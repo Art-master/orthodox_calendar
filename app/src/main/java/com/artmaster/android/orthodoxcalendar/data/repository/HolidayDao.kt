@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
 @Dao
@@ -15,6 +16,9 @@ interface HolidayDao {
 
     @Query("SELECT * FROM holidays")
     fun getAll(): List<Holiday>
+
+    @Query("SELECT * FROM holidays WHERE type")
+    fun getByFilters(filters: List<Filter>): List<Holiday>
 
     /** [monthNum] with 0 */
     @Query("SELECT * FROM holidays WHERE month = :monthNum + 1 OR month = 0")

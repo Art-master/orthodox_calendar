@@ -13,12 +13,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.common.*
+import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Message
+import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOADING_TILE_CALENDAR
+import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBinding
-import com.artmaster.android.orthodoxcalendar.databinding.FilterDrawerLayoutBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
@@ -84,9 +86,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private var _binding: ActivityCalendarBinding? = null
     private val binding get() = _binding!!
 
-    private var _filtersBinding: FilterDrawerLayoutBinding? = null
-    private val filtersBinding get() = _filtersBinding!!
-
     override fun androidInjector(): AndroidInjector<Any> {
         return fragmentInjector
     }
@@ -96,7 +95,6 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         super.onCreate(savedInstanceState)
 
         _binding = ActivityCalendarBinding.inflate(layoutInflater)
-        _filtersBinding = FilterDrawerLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
@@ -139,20 +137,23 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     private fun initFiltersListeners() {
-        initCheckBoxFilter(filtersBinding.filterEaster, Filter.EASTER)
-        initCheckBoxFilter(filtersBinding.filterHeadHolidays, Filter.HEAD_HOLIDAYS)
-        initCheckBoxFilter(filtersBinding.filterAverageHolidays, Filter.AVERAGE_HOLIDAYS)
-        initCheckBoxFilter(filtersBinding.filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
-        initCheckBoxFilter(filtersBinding.filterMemoryDays, Filter.MEMORY_DAYS)
-        initCheckBoxFilter(filtersBinding.filterNameDays, Filter.NAME_DAYS)
+        initCheckBoxFilter(binding.filters.filterEaster, Filter.EASTER)
+        initCheckBoxFilter(binding.filters.filterHeadHolidays, Filter.HEAD_HOLIDAYS)
+        initCheckBoxFilter(binding.filters.filterAverageHolidays, Filter.AVERAGE_HOLIDAYS)
+        initCheckBoxFilter(binding.filters.filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
+        initCheckBoxFilter(binding.filters.filterMemoryDays, Filter.MEMORY_DAYS)
+        initCheckBoxFilter(binding.filters.filterNameDays, Filter.NAME_DAYS)
     }
 
     private fun initCheckBoxFilter(view: CustomCheckedView, filter: Filter) {
-        val p = CheckBoxDecorator(view, preferences, Settings.Name.FILTER_AVERAGE_HOLIDAYS).prepare()
-        p.onClick = {
-            if (it) viewModel.addFilter(filter)
-            else viewModel.removeFilter(filter)
-        }
+        CheckBoxDecorator(view, preferences, filter.settingName)
+                .prepare()
+                .apply {
+                    onClick = {
+                        if (it) viewModel.addFilter(filter)
+                        else viewModel.removeFilter(filter)
+                    }
+                }
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {

@@ -28,7 +28,12 @@ class Settings {
         SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE),
 
         //FILTERS
-        FILTER_AVERAGE_HOLIDAYS("$PROJECT_DIR.filter_average_holidays", FALSE),
+        FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", TRUE),
+        FILTER_HEAD_HOLIDAY("$PROJECT_DIR.filter_head_holidays", TRUE),
+        FILTER_AVERAGE_HOLIDAYS("$PROJECT_DIR.filter_average_holidays", TRUE),
+        FILTER_COMMON_MEMORY_DAYS("$PROJECT_DIR.filter_common_memory_days", TRUE),
+        FILTER_MEMORY_DAYS("$PROJECT_DIR.filter_memory_days", FALSE),
+        FILTER_NAME_DAYS("$PROJECT_DIR.filter_name_days", FALSE),
     }
 }
 

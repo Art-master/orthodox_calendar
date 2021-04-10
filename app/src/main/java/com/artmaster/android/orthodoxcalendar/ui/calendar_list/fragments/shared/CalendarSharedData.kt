@@ -10,12 +10,13 @@ class CalendarSharedData : ViewModel() {
     val filters: LiveData<Set<Filter>> get() = _filters
 
     fun addFilter(item: Filter) {
-        val copyData = HashSet(_filters.value)
+        val copyData = HashSet(_filters.value ?: HashSet())
         copyData.add(item)
         _filters.value = copyData
     }
 
     fun removeFilter(item: Filter) {
+        if (_filters.value == null) return
         val copyData = HashSet(_filters.value)
         copyData.remove(item)
         _filters.value = copyData

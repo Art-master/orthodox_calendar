@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
@@ -30,6 +31,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     private var changedCallback: ((Int) -> Unit)? = null
 
     private val years = getYears()
+    private var filters = ArrayList<Filter>()
 
     private var _binding: HolidayListPagerBinding? = null
     private val binding get() = _binding!!
@@ -40,7 +42,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         super.onCreate(savedInstanceState)
 
         viewModel.filters.observe(this, { item ->
-            binding.holidayListPager.invalidate()
+            filters = ArrayList(item.toList())
+            setPageAdapter()
         })
     }
 
@@ -96,6 +99,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
                 val bundle = Bundle()
                 bundle.putInt(Constants.Keys.YEAR.value, years[position])
+                bundle.putParcelableArrayList(Constants.Keys.FILTERS.value, filters)
                 fragment.arguments = bundle
 
                 return fragment

@@ -1,10 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
-import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.DynamicData
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import java.util.*
@@ -15,14 +12,16 @@ import kotlin.collections.ArrayList
  */
 class DataProvider : CalendarListContractModel, AppDataProvider {
 
-    @Volatile private var dynamicData = DynamicData()
+    @Volatile
+    private var dynamicData = DynamicData()
 
     @Volatile
     private var database = App.appComponent.getDatabase()
 
     private val context = App.appComponent.getContext()
 
-    @Synchronized override fun getMonthDays(month: Int, year: Int): List<Day> {
+    @Synchronized
+    override fun getMonthDays(month: Int, year: Int): List<Day> {
         dynamicData = DynamicData(year)
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0
@@ -32,7 +31,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         val holidaysFromDb = db.holidayDao().getByMonth(month)
         val days: ArrayList<Day> = ArrayList(daysCount)
 
-        for(i in 1..daysCount){
+        for (i in 1..daysCount) {
             time.calendar.set(Calendar.DAY_OF_MONTH, i)
             days.add(createDay(time))
         }
@@ -43,7 +42,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return days
     }
 
-    private fun createDay(time: Time): Day{
+    private fun createDay(time: Time): Day {
         val dayObj = Day(time.year, time.monthWith0, time.dayOfMonth, time.dayOfWeek)
         dynamicData.fillFastingDay(dayObj)
         dynamicData.fillOtherData(dayObj)
@@ -66,14 +65,14 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     @Synchronized
-    override fun getDataSequence(start: Int, size: Int, year: Int): List<Holiday> {
+    override fun getDataSequence(start: Int, size: Int, year: Int, filters: List<Filter>): List<Holiday> {
         val data = setFirstPosition(getAllData(year).sorted())
         var endPosition = start + size - 1
         if (endPosition > data.size - 1) endPosition = data.size
         return data.subList(start, endPosition)
     }
 
-    private fun getAllData(year: Int): List<Holiday> {
+    private fun getAllData(year: Int, filters: List<Filter> = emptyList()): List<Holiday> {
         val holidaysFromDb: List<Holiday> = getDataFromDb()
         return calculateDynamicData(holidaysFromDb, year)
     }
@@ -111,7 +110,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return holidaysInDay
     }
 
-    private fun getDataFromDb(): List<Holiday> {
+    private fun getDataFromDb(filters: List<Filter>): List<Holiday> {
         val db = database.get(context)
         val holidays = db.holidayDao().getAll()
         db.close()
