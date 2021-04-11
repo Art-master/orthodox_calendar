@@ -42,8 +42,10 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         super.onCreate(savedInstanceState)
 
         viewModel.filters.observe(this, { item ->
-            filters = ArrayList(item.toList())
+            filters.clear()
+            filters.addAll(item.toList())
             setPageAdapter()
+            binding.holidayListPager.invalidate()
         })
     }
 

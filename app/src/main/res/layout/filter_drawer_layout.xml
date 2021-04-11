@@ -53,11 +53,11 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:text="@string/filter_head_holidays"
+        android:text="@string/filter_easter"
         android:textSize="@dimen/size_text_basic"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/filterHeadHolidays"
@@ -69,11 +69,11 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:text="@string/filter_easter"
+        android:text="@string/filter_head_holidays"
         android:textSize="@dimen/size_text_basic"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
+        app:layout_constraintTop_toBottomOf="@+id/filterEaster" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/filterAverageHolidays"
@@ -89,7 +89,7 @@
         android:textSize="@dimen/size_text_basic"
         app:customFont="@string/font_basic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterEaster" />
+        app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
 
     <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
         android:id="@+id/filterCommonMemoryDays"

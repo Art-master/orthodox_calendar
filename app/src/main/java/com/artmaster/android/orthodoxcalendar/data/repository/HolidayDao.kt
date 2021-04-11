@@ -16,7 +16,7 @@ interface HolidayDao {
     @Query("SELECT * FROM holidays")
     fun getAll(): List<Holiday>
 
-    @Query("SELECT * FROM holidays WHERE typeId IN (:filters)")
+    @Query("SELECT * FROM holidays WHERE type_id IN (:filters)")
     fun getByFilters(filters: List<Int>): List<Holiday>
 
     /** [monthNum] with 0 */

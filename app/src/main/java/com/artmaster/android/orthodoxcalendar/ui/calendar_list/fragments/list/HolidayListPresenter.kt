@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list
 
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListPresenterContract
@@ -15,15 +16,15 @@ class HolidayListPresenter : MvpPresenter<ListViewContract>(), ListPresenterCont
 
     private var time = Time()
 
-    override suspend fun viewIsReady(time: Time) {
+    override suspend fun viewIsReady(time: Time, filters: List<Filter>) {
         this.time = time
-        val holidays = getHolidays(time.year)
+        val holidays = getHolidays(time.year, filters)
         viewData(holidays)
     }
 
-    private suspend fun getHolidays(year: Int): Pair<Int, Holiday> {
+    private suspend fun getHolidays(year: Int, filters: List<Filter>): Pair<Int, Holiday> {
         return withContext(Dispatchers.IO) {
-            val holidays = DataProvider().getData(year)
+            val holidays = DataProvider().getData(year, filters)
             return@withContext calculatePosition(holidays)
         }
     }

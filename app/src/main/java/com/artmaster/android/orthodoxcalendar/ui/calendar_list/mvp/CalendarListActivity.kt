@@ -137,12 +137,14 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     private fun initFiltersListeners() {
-        initCheckBoxFilter(binding.filters.filterEaster, Filter.EASTER)
-        initCheckBoxFilter(binding.filters.filterHeadHolidays, Filter.HEAD_HOLIDAYS)
-        initCheckBoxFilter(binding.filters.filterAverageHolidays, Filter.AVERAGE_HOLIDAYS)
-        initCheckBoxFilter(binding.filters.filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
-        initCheckBoxFilter(binding.filters.filterMemoryDays, Filter.MEMORY_DAYS)
-        initCheckBoxFilter(binding.filters.filterNameDays, Filter.NAME_DAYS)
+        binding.filters.apply {
+            initCheckBoxFilter(filterEaster, Filter.EASTER)
+            initCheckBoxFilter(filterHeadHolidays, Filter.HEAD_HOLIDAYS)
+            initCheckBoxFilter(filterAverageHolidays, Filter.AVERAGE_HOLIDAYS)
+            initCheckBoxFilter(filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
+            initCheckBoxFilter(filterMemoryDays, Filter.MEMORY_DAYS)
+            initCheckBoxFilter(filterNameDays, Filter.NAME_DAYS)
+        }
     }
 
     private fun initCheckBoxFilter(view: CustomCheckedView, filter: Filter) {
@@ -150,8 +152,8 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                 .prepare()
                 .apply {
                     onClick = {
-                        if (it) viewModel.addFilter(filter)
-                        else viewModel.removeFilter(filter)
+                        if (it) viewModel.removeFilter(filter)
+                        else viewModel.addFilter(filter)
                     }
                 }
     }

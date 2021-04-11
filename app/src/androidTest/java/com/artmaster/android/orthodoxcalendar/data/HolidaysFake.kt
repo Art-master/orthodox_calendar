@@ -22,7 +22,6 @@ class HolidaysFake {
         holiday.month = index.dec()
         holiday.description = "description - $index"
         holiday.imageId = "image - $index"
-        holiday.type = "type - $index"
         holiday.year = index * 100
         return holiday
     }

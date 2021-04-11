@@ -8,7 +8,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.DATABAS
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
-@Database(entities = [Holiday::class], version = 2)
+@Database(entities = [Holiday::class], version = 3)
 abstract class HolidayDatabase : RoomDatabase() {
     abstract fun holidayDao(): HolidayDao
 
