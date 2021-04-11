@@ -3,8 +3,8 @@ package com.artmaster.android.orthodoxcalendar.ui
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.Message.Companion.EMPTY
@@ -24,12 +24,12 @@ class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener
         return builder.create()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        OrtUtils.exitProgram(this.context!!)
+        OrtUtils.exitProgram(this.requireContext())
     }
 
-    override fun onClick(dialog: DialogInterface?, which: Int) {
+    override fun onClick(dialog: DialogInterface, which: Int) {
         onCancel(dialog)
     }
 
@@ -43,7 +43,7 @@ class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener
     }
 
     private fun buildMessage(msgText: Pair<String, String>): AlertDialog.Builder {
-        val builder = AlertDialog.Builder(this.activity!!)
+        val builder = AlertDialog.Builder(this.requireActivity())
         builder.setTitle(msgText.first)
                 .setMessage(msgText.second)
                 .setIcon(R.mipmap.alert_error)

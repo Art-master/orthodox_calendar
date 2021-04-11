@@ -10,7 +10,7 @@
 
         <variable
             name="holiday"
-            type="com.artmaster.android.orthodoxcalendar.domain.HolidayEntity" />
+            type="com.artmaster.android.orthodoxcalendar.domain.Holiday" />
     </data>
 
     <RelativeLayout

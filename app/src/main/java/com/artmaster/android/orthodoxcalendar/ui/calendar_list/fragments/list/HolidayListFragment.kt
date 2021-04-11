@@ -1,52 +1,59 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
-import com.artmaster.android.orthodoxcalendar.R
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.databinding.CalendarListFragmentBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.*
-import kotlinx.android.synthetic.main.calendar_list_fragment.*
-
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
 
 class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
 
     private lateinit var recyclerAdapter: ListViewDiffContract.Adapter
 
-    private lateinit var dataSource : HolidayDataSource
+    private lateinit var dataSource: HolidayDataSource
 
-    @InjectPresenter(tag = "HolidayListPresenter", type = PresenterType.LOCAL)
+    @InjectPresenter(tag = "HolidayListPresenter")
     lateinit var presenter: HolidayListPresenter
+
+    private var _binding: CalendarListFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
+
+            val e1 = getYear()
+            val e2 = getMonth()
+            val e3 = getDay()
+            lifecycleScope.launchWhenCreated {
+                val time = Time(getYear(), getMonth(), getDay())
+                presenter.viewIsReady(time)
+            }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.calendar_list_fragment, container, false)
+        _binding = CalendarListFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView!!.layoutManager = LinearLayoutManager(context)
-        if (!presenter.isInRestoreState(this)) {
-            val time = Time(getYear(), getMonth(), getDay())
-            presenter.viewIsReady(time)
-        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     private fun getDay(): Int {
@@ -62,17 +69,20 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         return bundle?.getInt(Constants.Keys.YEAR.value, Time().year) ?: Time().year
     }
 
-    override fun prepareAdapter(position: Int, holiday: HolidayEntity) {
-        recyclerAdapter = getAdapter(position)
-        recyclerView?.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+    override fun prepareAdapter(position: Int, holiday: Holiday) {
+        if (_binding == null) return
+        recyclerAdapter = buildAdapter(position)
+        binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
     }
 
-    private fun getAdapter(position: Int): ListViewDiffContract.Adapter {
+    private fun buildAdapter(position: Int): ListViewDiffContract.Adapter {
         val config = PageConfig
-        dataSource = HolidayDataSource(context!!, getYear())
+        dataSource = HolidayDataSource(requireContext(), getYear())
+        val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
+        dataSource.filters = filters ?: ArrayList()
         val list = PagedList(dataSource, config, position)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
-        val adapter = HolidaysAdapter(context!!, diffCallback)
+        val adapter = HolidaysAdapter(requireContext(), diffCallback)
         adapter.submitList(list.get())
         return adapter
     }

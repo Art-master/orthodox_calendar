@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.impl
 
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
 interface AppFileParser {
-    fun getData(): List<HolidayEntity>
+    fun getData(): List<Holiday>
 }

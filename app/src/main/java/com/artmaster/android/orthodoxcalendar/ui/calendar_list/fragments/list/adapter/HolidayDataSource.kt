@@ -1,46 +1,47 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter
 
-import android.arch.paging.PositionalDataSource
 import android.content.Context
+import androidx.paging.PositionalDataSource
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HolidayDataSource(val context: Context, val year: Int = Time().year)
-    : PositionalDataSource<HolidayEntity>(), ListViewDiffContract.DataSource<HolidayEntity> {
+    : PositionalDataSource<Holiday>(), ListViewDiffContract.DataSource<Holiday> {
 
-    private var mOldData: List<HolidayEntity> = emptyList()
-    private var mNewData: List<HolidayEntity> = emptyList()
+    private var mOldData: List<Holiday> = emptyList()
+    private var mNewData: List<Holiday> = emptyList()
 
     private val dataProvider = DataProvider()
 
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<HolidayEntity>) {
-        Single.fromCallable { getData(params.startPosition, params.loadSize) }
-                .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onSuccess = { data -> callback.onResult(data) },
-                        onError = { it.printStackTrace() })
+    var filters = ArrayList<Filter>()
+
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Holiday>) {
+        GlobalScope.launch {
+            val holidays = getData(params.startPosition, params.loadSize)
+            callback.onResult(holidays)
+        }
     }
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<HolidayEntity>) {
-        Single.fromCallable { getData(params.requestedStartPosition, params.requestedLoadSize) }
-                .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onSuccess = { data -> callback.onResult(data, params.requestedStartPosition) },
-                        onError = { it.printStackTrace() })
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Holiday>) {
+        GlobalScope.launch {
+            val holidays = getData(params.requestedStartPosition, params.requestedLoadSize)
+            callback.onResult(holidays, params.requestedStartPosition)
+        }
     }
 
-    private fun getData(start: Int, size: Int): List<HolidayEntity> {
-        mOldData = mNewData
-        mNewData = dataProvider.getDataSequence(start, size, year)
-        return mNewData
+    private suspend fun getData(start: Int, size: Int): List<Holiday> {
+        return withContext(Dispatchers.IO) {
+            mOldData = mNewData
+            mNewData = dataProvider.getDataSequence(start, size, year, filters)
+            mNewData
+        }
     }
 
     override fun getOldData() = mOldData

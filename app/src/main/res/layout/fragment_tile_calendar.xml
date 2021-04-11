@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/monthSpinner"
         app:layout_constraintEnd_toStartOf="@+id/monthSpinner" />
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/monthSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,9 +54,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/monthSpinner"
         app:layout_constraintStart_toEndOf="@+id/textViewWithCustomFont13" />
 
-    <com.artmaster.android.orthodoxcalendar.ui.CustomViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/holidayTilePager"
-        android:layout_width="417dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,11 +65,11 @@
 
     <Button
         android:id="@+id/helperButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/icon_help"
         android:text=""
         app:layout_constraintBottom_toTopOf="@+id/holidayTilePager"
         app:layout_constraintEnd_toEndOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

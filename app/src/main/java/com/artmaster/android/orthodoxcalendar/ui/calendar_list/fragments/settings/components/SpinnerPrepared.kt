@@ -1,8 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components
 
-import android.support.v7.widget.AppCompatSpinner
 import android.view.View
 import android.widget.AdapterView
+import androidx.appcompat.widget.AppCompatSpinner
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter

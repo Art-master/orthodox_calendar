@@ -9,7 +9,7 @@ internal constructor(private val obj: View,
                      internal val preferences: AppPreferences,
                      internal val setting: Settings.Name) {
 
-    var callback: (isChecked: Boolean) -> Unit = {}
+    var onClick: (isChecked: Boolean) -> Unit = {}
 
     fun prepare(): ElementUiPrepared {
         if (containsSetting()) {

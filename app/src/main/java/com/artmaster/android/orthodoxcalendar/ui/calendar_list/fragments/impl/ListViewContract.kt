@@ -1,8 +1,11 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl
 
-import com.arellomobile.mvp.MvpView
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 interface ListViewContract : MvpView {
-    fun prepareAdapter(position: Int, holiday: HolidayEntity)
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun prepareAdapter(position: Int, holiday: Holiday)
 }

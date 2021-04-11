@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity.*
-import java.util.Calendar
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -54,7 +54,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         return month to day
     }
 
-    fun fillHoliday(holiday: HolidayEntity) {
+    fun fillHoliday(holiday: Holiday) {
         val time = when (holiday.dynamicType) {
             MovableDay.THE_EASTER.dynamicType ->
                 getHolidayDynamicDate(yearEaster, MovableDay.THE_EASTER.dayFromEaster)
@@ -154,7 +154,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isAssumptionFasting(day: Day): Boolean {
-        return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..28)
+        return day.month == Month.AUGUST.num && (day.dayOfMonth in 14..27)
     }
 
     private fun fillDayAsAssumptionFasting(day: Day) {
@@ -224,15 +224,15 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isYole(day: Day): Boolean {
-        return day.month == HolidayEntity.Month.JANUARY.num && day.dayOfMonth == 18
+        return day.month == Month.JANUARY.num && day.dayOfMonth == 18
     }
 
     private fun isBeheadingOfStJohnTheBaptist(day: Day): Boolean {
-        return day.month == HolidayEntity.Month.SEPTEMBER.num && day.dayOfMonth == 11
+        return day.month == Month.SEPTEMBER.num && day.dayOfMonth == 11
     }
 
     private fun isFeastOfTheCross(day: Day): Boolean {
-        return day.month == HolidayEntity.Month.SEPTEMBER.num && day.dayOfMonth == 27
+        return day.month == Month.SEPTEMBER.num && day.dayOfMonth == 27
     }
 
     private fun fillDayAsGreatFasting(day: Day) {
@@ -380,7 +380,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun setSolidWeek(day: Day) {
-        if (day.month == HolidayEntity.Month.JANUARY.num && day.dayOfMonth in 8..17) {
+        if (day.month == Month.JANUARY.num && day.dayOfMonth in 8..17) {
             day.fasting.type = Fasting.Type.SOLID_WEEK
             day.fasting.permissions = emptyList()
             return

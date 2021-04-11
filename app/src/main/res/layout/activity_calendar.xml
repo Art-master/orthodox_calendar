@@ -1,54 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activityCalendar"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="end">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/activityCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/toolbar_background"
+                android:elevation="3dp"
+                android:minHeight="?attr/actionBarSize">
+
+                <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+                    android:id="@+id/arrowLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="@string/arrow_left"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    app:customFont="@string/font_basic" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/toolbarYearSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    app:customFont="@string/font_basic" />
+
+                <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+                    android:id="@+id/arrowRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_arrow_drop_down_white"
+                    android:gravity="center"
+                    android:text="@string/arrow_right"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    app:customFont="@string/font_basic" />
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/menu_fragments_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/filters_navigation_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:layout_gravity="end|bottom"
+            android:background="@color/window_background"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <include
+                android:id="@+id/filters"
+                layout="@layout/filter_drawer_layout" />
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/showFiltersButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/toolbar_background"
-        android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"
+        app:backgroundTint="@color/colorHeadHoliday"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_baseline_filter_alt_24"
+        app:useCompatPadding="true" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-            android:id="@+id/arrowLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="@string/arrow_left"
-            app:customFont="@string/font_basic" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addHoliday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"
+        app:backgroundTint="@color/colorHeadHoliday"
+        app:fabSize="mini"
+        app:layout_anchor="@id/showFiltersButton"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/toolbarYearSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            app:customFont="@string/font_basic" >
-        </android.support.v7.widget.AppCompatSpinner>
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-            android:id="@+id/arrowRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/arrow_right"
-            android:drawableStart="@drawable/ic_arrow_drop_down_white"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:customFont="@string/font_basic" />
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/menu_fragments_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</android.support.v7.widget.LinearLayoutCompat>

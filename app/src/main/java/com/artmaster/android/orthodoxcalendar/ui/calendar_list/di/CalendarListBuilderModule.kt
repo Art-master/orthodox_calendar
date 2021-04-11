@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.di
 
 import android.content.Context
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.*
 import dagger.Module
@@ -17,28 +17,28 @@ open class CalendarListBuilderModule {
 
     @FragmentScope
     @Provides
-    fun provideDataSource(context: Context): ListViewDiffContract.DataSource<HolidayEntity> {
+    fun provideDataSource(context: Context): ListViewDiffContract.DataSource<Holiday> {
         return HolidayDataSource(context)
     }
 
     @FragmentScope
     @Provides
-    fun providePagedList(dataSource: ListViewDiffContract.DataSource<HolidayEntity>,
-                         config: ListViewDiffContract.Config): ListViewDiffContract.PagedList<HolidayEntity> {
+    fun providePagedList(dataSource: ListViewDiffContract.DataSource<Holiday>,
+                         config: ListViewDiffContract.Config): ListViewDiffContract.PagedList<Holiday> {
         return PagedList(dataSource, config, 0)
     }
 
     @FragmentScope
     @Provides
-    fun provideDiffUtilCallback(dataSource: ListViewDiffContract.DataSource<HolidayEntity>):
-            ListViewDiffContract.CallBack<HolidayEntity> {
+    fun provideDiffUtilCallback(dataSource: ListViewDiffContract.DataSource<Holiday>):
+            ListViewDiffContract.CallBack<Holiday> {
         return HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
     }
 
     @FragmentScope
     @Provides
-    fun provideAdapter(context: Context, diffCallback: ListViewDiffContract.CallBack<HolidayEntity>,
-                       list: ListViewDiffContract.PagedList<HolidayEntity>): ListViewDiffContract.Adapter {
+    fun provideAdapter(context: Context, diffCallback: ListViewDiffContract.CallBack<Holiday>,
+                       list: ListViewDiffContract.PagedList<Holiday>): ListViewDiffContract.Adapter {
         val adapter = HolidaysAdapter(context, diffCallback)
         adapter.submitList(list.get())
         return adapter

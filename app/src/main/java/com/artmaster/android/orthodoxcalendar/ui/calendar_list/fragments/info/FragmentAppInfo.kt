@@ -2,13 +2,12 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.info
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.SpannableString
 import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.data.font.MutableForegroundSpan
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont

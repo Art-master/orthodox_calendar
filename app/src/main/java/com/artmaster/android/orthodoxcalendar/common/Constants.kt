@@ -28,6 +28,7 @@ class Constants {
         MONTH("$PROJECT_DIR.common.month"),
         DAY("$PROJECT_DIR.common.day"),
         ANIM_TIME("$PROJECT_DIR.anim.time"),
+        FILTERS("$PROJECT_DIR.filters"),
         CURRENT_LIST_POSITION("$PROJECT_DIR.common.list.position"),
         INIT_LIST_POSITION("$PROJECT_DIR.common.list.position")
     }

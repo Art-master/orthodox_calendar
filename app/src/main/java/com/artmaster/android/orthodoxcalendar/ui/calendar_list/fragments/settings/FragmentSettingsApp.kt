@@ -1,17 +1,17 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
+import com.artmaster.android.orthodoxcalendar.databinding.FragmentSettingsBinding
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxPrepared
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxDecorator
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.SpinnerPrepared
-import kotlinx.android.synthetic.main.fragment_settings.view.*
 
 /**
  * Show settings of the Holiday app
@@ -20,44 +20,48 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
 
     private val prefs = App.appComponent.getPreferences()
 
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prepareViews(view)
+        prepareViews()
     }
 
-    private fun prepareViews(v : View){
-        CheckBoxPrepared(v.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
-        CheckBoxPrepared(v.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
-        CheckBoxPrepared(v.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
-        CheckBoxPrepared(v.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
-        CheckBoxPrepared(v.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
+    private fun prepareViews() {
+        CheckBoxDecorator(binding.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
+        CheckBoxDecorator(binding.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxDecorator(binding.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
+        CheckBoxDecorator(binding.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
+        CheckBoxDecorator(binding.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
 
-        CheckBoxPrepared(v.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
-                    callback = {v.time_spinner.isEnabled = it.not()}
-                }
-        SpinnerPrepared(v.time_spinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
+        CheckBoxDecorator(binding.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
+            onClick = { binding.timeSpinner.isEnabled = it.not() }
+        }
+        SpinnerPrepared(binding.timeSpinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
 
-        CheckBoxPrepared(v.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
-                    callback = {v.time_in_spinner.isEnabled = it.not()}
-                }
-        SpinnerPrepared(v.time_in_spinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
+        CheckBoxDecorator(binding.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
+            onClick = { binding.timeInSpinner.isEnabled = it.not() }
+        }
+        SpinnerPrepared(binding.timeInSpinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
 
-        CheckBoxPrepared(v.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
+        CheckBoxDecorator(binding.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
 
-        CheckBoxPrepared(v.settingsOffAnimation, prefs, OFF_START_ANIMATION).prepare().apply {
-            callback = {
-                v.settingsSpeedUpAnimation.isEnabled = it
-                if (v.settingsSpeedUpAnimation.isChecked) {
-                    v.settingsSpeedUpAnimation.isChecked = false
+        CheckBoxDecorator(binding.settingsOffAnimation, prefs, OFF_START_ANIMATION).prepare().apply {
+            onClick = {
+                binding.settingsSpeedUpAnimation.isEnabled = it
+                if (binding.settingsSpeedUpAnimation.isChecked) {
+                    binding.settingsSpeedUpAnimation.isChecked = false
                 }
             }
         }
     }
 
-    private fun getHoursNumbers() =  getDaysNumbers().take(24).toTypedArray()
-    private fun getDaysNumbers() =  resources.getStringArray(R.array.spinner_days_numbers)
+    private fun getHoursNumbers() = getDaysNumbers().take(24).toTypedArray()
+    private fun getDaysNumbers() = resources.getStringArray(R.array.spinner_days_numbers)
 }

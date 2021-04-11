@@ -1,20 +1,17 @@
 package com.artmaster.android.orthodoxcalendar
 
-import android.app.Activity
 import android.app.Application
-import com.artmaster.android.orthodoxcalendar.data.di.AndroidAppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.AppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.DaggerAndroidAppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.DaggerAppComponent
 import com.artmaster.android.orthodoxcalendar.data.di.modules.ContextModule
-import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class App : Application(), HasActivityInjector {
+class App : Application(), HasAndroidInjector {
     @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     companion object {
         lateinit var appComponent: AppComponent
@@ -22,11 +19,6 @@ class App : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)
 
         DaggerAndroidAppComponent
                 .builder()
@@ -40,5 +32,5 @@ class App : Application(), HasActivityInjector {
 
     }
 
-    override fun activityInjector() = dispatchingAndroidInjector
+    override fun androidInjector() = dispatchingAndroidInjector
 }

@@ -4,7 +4,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import io.reactivex.Single
@@ -52,8 +52,8 @@ class InitAppPresenter(
         return time
     }
 
-    private fun getData(): List<HolidayEntity> {
-        var data: List<HolidayEntity> = emptyList()
+    private fun getData(): List<Holiday> {
+        var data: List<Holiday> = emptyList()
         if (isAppFirstLoad()) {
             data = model.getDataFromFile()
             model.fillDatabase(data)

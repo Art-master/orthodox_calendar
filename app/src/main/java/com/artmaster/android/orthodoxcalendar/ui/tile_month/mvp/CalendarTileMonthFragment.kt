@@ -2,74 +2,74 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
+import android.content.ClipDescription
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Layout
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+import com.artmaster.android.orthodoxcalendar.databinding.FragmentMonthTileCalendarBinding
+import com.artmaster.android.orthodoxcalendar.databinding.TileDayLayoutBinding
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
-import com.artmaster.android.orthodoxcalendar.domain.HolidayEntity
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
-import kotlinx.android.synthetic.main.fragment_month_tile_calendar.*
-import kotlinx.android.synthetic.main.fragment_month_tile_calendar.view.*
-import kotlinx.android.synthetic.main.tile_day_layout.view.*
-import org.jetbrains.anko.image
-import org.jetbrains.anko.textColor
+import kotlinx.coroutines.launch
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import java.util.*
+import kotlin.collections.ArrayList
 
-internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMonthView {
+internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileMonthView {
 
-    @InjectPresenter(tag = "TileMonthPresenter", type = PresenterType.LOCAL)
+    @InjectPresenter(tag = "TileMonthPresenter")
     lateinit var presenter: TileMonthPresenter
 
-    private lateinit var tileView: View
-    private lateinit var tileDayView: View
     private lateinit var layoutManager: LinearLayoutManager
 
     private var tableRows = ArrayList<TableRow>()
 
+    private var _monthBinding: FragmentMonthTileCalendarBinding? = null
+    private val monthBinding get() = _monthBinding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        retainInstance = true
-
         layoutManager = LinearLayoutManager(context)
 
-        if(!presenter.isInRestoreState(this)){
+        if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
-            presenter.viewIsReady(getYear(), getMonth())
+
+            lifecycleScope.launch {
+                presenter.viewIsReady(getYear(), getMonth())
+            }
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
-        tileView = inflater.inflate(R.layout.fragment_month_tile_calendar, groupContainer, false)
-        tileDayView = inflater.inflate(R.layout.tile_day_layout, groupContainer, false)
-        return tileView
+    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
+        _monthBinding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
+        return monthBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isVisible) initAnimation()
+        initAnimation()
+        monthBinding.root.setOnDragListener(onDragListener)
+        monthBinding.root.setOnClickListener(onClick)
     }
 
     override fun onResume() {
@@ -79,94 +79,107 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     private fun initAnimation() {
         val set = AnimatorInflater.loadAnimator(context, R.animator.loading_animator) as AnimatorSet
-        set.setTarget(ringLoading)
+        set.setTarget(monthBinding.ringLoading)
         set.start()
     }
 
-    private fun getDayLayout() = layoutInflater.inflate(R.layout.tile_day_layout, null)
+    private fun getDayLayout() = TileDayLayoutBinding.inflate(layoutInflater)
     private fun getYear() = getArgs().getInt(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = arguments!!.getInt(Constants.Keys.MONTH.value, Time().month -1)
-    private fun getParentMonth() = getArgs().getInt(Constants.Keys.MONTH.value, Time().month -1)
+    private fun getMonth() = requireArguments().getInt(Constants.Keys.MONTH.value, Time().month - 1)
+    private fun getParentMonth() = getArgs().getInt(Constants.Keys.MONTH.value, Time().month - 1)
     private fun getDay() = getArgs().getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
     private fun setDayArgs(value: Int) = getArgs().putInt(Constants.Keys.DAY.value, value)
-    private fun getArgs() = parentFragment!!.arguments!!
+    private fun getArgs() = requireParentFragment().requireArguments()
 
-    override fun setFocus(monthNum: Int){
-        if(monthNum != getParentMonth() && isVisible) return
+    override fun setFocus(monthNum: Int) {
+        if (monthNum != getParentMonth() && isVisible) return
         val id = getDay()
-        if(id == 0 || tableMonthTile == null) return
-        val daysOfWeek = 0 until tableMonthTile.childCount
-        for(i in daysOfWeek){
-            val row = tableMonthTile.getChildAt(i) as TableRow
+        if (id == 0) return
+        val daysOfWeek = 0 until monthBinding.tableMonthTile.childCount
+        for (i in daysOfWeek) {
+            val row = monthBinding.tableMonthTile.getChildAt(i) as TableRow
             val view = row.findViewById<ConstraintLayout>(id) ?: continue
             view.requestFocus()
             return
         }
     }
 
-    override fun clearView(){
+    override fun clearView() {
+        if (_monthBinding == null) return //if state restored and _monthBinding == null
         setVisibility()
-        view?.tableMonthTile?.removeAllViews()
+        monthBinding.tableMonthTile.removeAllViews()
     }
 
     private fun setVisibility() {
-        recyclerViewDayHolidays?.visibility = RecyclerView.VISIBLE
-        tableMonthTile?.visibility = TableLayout.VISIBLE
-        ringLoading?.visibility = ImageView.GONE
-        crossLoading?.visibility = ImageView.GONE
+        monthBinding.recyclerViewDayHolidays.visibility = RecyclerView.VISIBLE
+        monthBinding.tableMonthTile.visibility = TableLayout.VISIBLE
+        monthBinding.ringLoading.visibility = ImageView.GONE
+        monthBinding.crossLoading.visibility = ImageView.GONE
     }
 
-    override fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
-        if(presenter.isInRestoreState(this)) return
+    private fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
         val row = tableRows[dayOfWeek - 1]
 
         val v = getDayLayout()
-        v.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
-        v.id = day.dayOfMonth
+        v.root.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
+        v.numDay.id = day.dayOfMonth
 
         styleDayView(v, day, dayOfWeek)
-        if(row.childCount == level -1) row.addView(TextView(context), level-1)
-        row.addView(v, level)
+        if (row.childCount == level - 1) row.addView(TextView(context), level - 1)
+        row.addView(v.root, level)
     }
 
-    private fun changedFocus(view: View, hasFocus: Boolean, day: Day){
-        val bg= view.container.background
-        if(hasFocus){
+    override fun prepareMonthsDays(days: List<Day>, time: Time) {
+        val currentTime = Time(time.calendar)
+        val numDays = currentTime.daysInMonth
+        for (index in 1..numDays) {
+            currentTime.calendar.set(Calendar.DAY_OF_MONTH, index)
+            val dayOfWeek = currentTime.dayOfWeek
+            val week = currentTime.calendar.get(Calendar.WEEK_OF_MONTH)
+            prepareDayOfMonth(dayOfWeek, week, days[index - 1])
+        }
+    }
+
+    private fun changedFocus(view: View, hasFocus: Boolean, day: Day) {
+        val bg = view.background
+        if (hasFocus) {
             initRecyclerView(day.holidays)
             val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
-            bg.setColorFilter(c, PorterDuff.Mode.MULTIPLY)
+            //val filter = BlendModeColorFilter(c, BlendMode.COLOR) TODO filters
             setDayArgs(view.id)
-        } else bg.clearColorFilter()
-
+        } //else bg.clearColorFilter()
     }
 
-    private fun initRecyclerView(holidays: List<HolidayEntity>) {
-        if(recyclerViewDayHolidays.layoutManager == null) recyclerViewDayHolidays.layoutManager = layoutManager
-        recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, context!!)
+    private fun initRecyclerView(holidays: List<Holiday>) {
+        if (monthBinding.recyclerViewDayHolidays.layoutManager == null) {
+            monthBinding.recyclerViewDayHolidays.layoutManager = layoutManager
+        }
+        monthBinding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext())
     }
 
-    private fun styleDayView(view: View, day: Day, dayOfWeek: Int){
-        val text = view.findViewById<TextViewWithCustomFont>(R.id.numDay)
+    private fun styleDayView(view: TileDayLayoutBinding, day: Day, dayOfWeek: Int) {
+        val text = view.numDay
         text.text = day.dayOfMonth.toString()
 
-        if(dayOfWeek == Time.Day.SUNDAY.num) text.textColor = Color.RED
+        if (dayOfWeek == Time.Day.SUNDAY.num) text.setTextColor(Color.RED)
 
         styleFastingHoliday(day, view)
         styleMemoryTypeHoliday(day, view)
         styleTypeHoliday(day, view)
     }
 
-    private fun styleTypeHoliday(day: Day, v: View) {
+    private fun styleTypeHoliday(day: Day, v: TileDayLayoutBinding) {
         val holidays = day.holidays
-        val text = v.findViewById<TextViewWithCustomFont>(R.id.numDay)
+        val text = v.numDay
         when {
-            isTypeHoliday(HolidayEntity.Type.GREAT_TWELVE, holidays) -> {
+            isTypeHoliday(Holiday.Type.TWELVE_MOVABLE, holidays) ||
+                    isTypeHoliday(Holiday.Type.TWELVE_NOT_MOVABLE, holidays) -> {
                 setStyle(v, text, R.drawable.tile_twelve_holiday)
             }
-            isTypeHoliday(HolidayEntity.Type.GREAT_NOT_TWELVE, holidays) -> {
+            isTypeHoliday(Holiday.Type.GREAT_NOT_TWELVE, holidays) -> {
                 setStyle(v, text, R.drawable.tile_great_holiday)
             }
-            isTypeHoliday(HolidayEntity.Type.MAIN, holidays) -> {
+            isTypeHoliday(Holiday.Type.MAIN, holidays) -> {
                 setStyle(v, text, R.drawable.tile_easter)
             }
             day.fasting.type == Fasting.Type.FASTING -> {
@@ -181,68 +194,70 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
         }
     }
 
-    private fun styleFastingHoliday(day: Day, v: View){
-        if(day.fasting.type == Fasting.Type.NONE) return
-        for(permission in day.fasting.permissions){
-            when(permission){
+    private fun styleFastingHoliday(day: Day, v: TileDayLayoutBinding) {
+        if (day.fasting.type == Fasting.Type.NONE) return
+        for (permission in day.fasting.permissions) {
+            when (permission) {
                 Fasting.Permission.OIL ->
-                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.sun))
+                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.sun))
 
                 Fasting.Permission.FISH ->
-                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.fish))
+                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.fish))
 
                 Fasting.Permission.VINE ->
-                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.vine))
+                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.vine))
 
                 Fasting.Permission.STRICT ->
-                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.triangle))
+                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.triangle))
 
-                Fasting.Permission.NO_EAT -> {}
-                Fasting.Permission.CAVIAR -> {}
-                Fasting.Permission.HOT_NO_OIL -> {}
+                Fasting.Permission.NO_EAT -> {
+                }
+                Fasting.Permission.CAVIAR -> {
+                }
+                Fasting.Permission.HOT_NO_OIL -> {
+                }
                 Fasting.Permission.NO_MEAT -> {
-                    setImg(v, ContextCompat.getDrawable(v.context!!, R.drawable.eggs))
+                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.eggs))
                 }
             }
         }
     }
 
-    private fun setImg(v: View, drawable: Drawable?) {
+    private fun setImg(v: TileDayLayoutBinding, drawable: Drawable?) {
         val imgContainer =
                 when {
-                    v.im3.image == null -> v.im3
-                    v.im2.image == null -> v.im2
-                    v.im1.image == null -> v.im1
+                    v.im3.drawable == null -> v.im3
+                    v.im2.drawable == null -> v.im2
+                    v.im1.drawable == null -> v.im1
                     else -> return
                 }
-        imgContainer.image = drawable
+        imgContainer.setImageDrawable(drawable)
     }
 
-    private fun styleMemoryTypeHoliday(day: Day, v: View) {
+    private fun styleMemoryTypeHoliday(day: Day, v: TileDayLayoutBinding) {
         if (day.memorialType == Day.MemorialType.NONE) return
-        val img = ContextCompat.getDrawable(v.context!!, R.drawable.cross)
-        if (v.im3.image == null) v.im3.image = img
-        else v.im4.image = img
+        val img = ContextCompat.getDrawable(requireContext(), R.drawable.cross)
+        if (v.im3.drawable == null) v.im3.setImageDrawable(img)
+        else v.im4.setImageDrawable(img)
     }
 
-    private fun setStyle(view: View, text: TextViewWithCustomFont, style: Int,
-                         color: Int = R.color.colorTextHeadHolidays){
+    private fun setStyle(view: TileDayLayoutBinding, text: TextViewWithCustomFont, style: Int,
+                         color: Int = R.color.colorTextHeadHolidays) {
 
-        text.textColor = ContextCompat.getColor(view.context!!, color)
-        view.container.background = ContextCompat.getDrawable(view.context!!, style)
+        text.setTextColor(ContextCompat.getColor(requireContext(), color))
+        view.container.background = ContextCompat.getDrawable(requireContext(), style)
     }
 
-    private fun isTypeHoliday(type: HolidayEntity.Type, holidays: List<HolidayEntity>): Boolean {
-        for(holiday in holidays){
-            if(holiday.type.contains(type.value, true)) return true
+    private fun isTypeHoliday(type: Holiday.Type, holidays: List<Holiday>): Boolean {
+        for (holiday in holidays) {
+            if (holiday.typeId == type.id) return true
         }
         return false
     }
 
     override fun prepareDaysOfWeekRows(dayOfWeek: IntRange) {
-        if(presenter.isInRestoreState(this)) return
         if (tableRows.isEmpty().not()) tableRows.clear()
-        for(i in dayOfWeek){
+        for (i in dayOfWeek) {
             val row = createDayOfWeekRow()
             tableRows.add(row)
             row.addView(createDayOtWeek(i))
@@ -251,13 +266,13 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
 
     private fun getDayNames() = resources.getStringArray(R.array.daysNamesAbb)
 
-    private fun createDayOtWeek(month : Int): TextView {
-        return TextViewWithCustomFont(context!!).apply {
+    private fun createDayOtWeek(month: Int): TextView {
+        return TextViewWithCustomFont(requireContext()).apply {
             val dayNames = getDayNames()
             text = dayNames[month - 1]
-            textColor = Color.RED
+            setTextColor(Color.RED)
             textSize = resources.getDimension(R.dimen.size_tile_day_of_week)
-            typeface = CustomFont.getFont(context!!, getString(R.string.font_basic))
+            typeface = CustomFont.getFont(requireContext(), getString(R.string.font_basic))
             textAlignment = Layout.Alignment.ALIGN_CENTER.ordinal
             setPadding(0, 0, 20, 0)
         }
@@ -272,13 +287,44 @@ internal class CalendarTileMonthFragment: MvpAppCompatFragment(), ContractTileMo
     }
 
     override fun drawView() {
+        if (_monthBinding == null) return //if state restored and _monthBinding == null
         tableRows.forEach { e ->
-            if (e.parent == null) view?.tableMonthTile?.addView(e)
+            if (e.parent == null) monthBinding.tableMonthTile.addView(e)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    private val onDragListener = View.OnDragListener { v, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED -> {
+                // Determines if this View can accept the dragged data
+                if (event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                    // As an example of what your application might do,
+                    // applies a blue color tint to the View to indicate that it can accept
+                    // data.
+                    (v as? ImageView)?.setColorFilter(Color.BLUE)
+
+                    // Invalidate the view to force a redraw in the new tint
+                    v?.invalidate()
+
+                    // returns true to indicate that the View can accept the dragged data.
+                    true
+                } else {
+                    // Returns false. During the current drag and drop operation, this View will
+                    // not receive events again until ACTION_DRAG_ENDED is sent.
+                    false
+                }
+            }
+        }
+        true
+    }
+
+    private val onClick = View.OnClickListener {
+        val r = 0
+        val rw = 0
     }
 }
