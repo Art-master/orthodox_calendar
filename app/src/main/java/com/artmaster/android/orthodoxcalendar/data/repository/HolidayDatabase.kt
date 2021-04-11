@@ -21,7 +21,7 @@ abstract class HolidayDatabase : RoomDatabase() {
                         context.applicationContext,
                         HolidayDatabase::class.java,
                         DATABASE_FILE_NAME)
-                        .addMigrations(Migrations.MIGRATION_1_2)
+                        .fallbackToDestructiveMigration()
                         .build()
                 return instance!!
             }

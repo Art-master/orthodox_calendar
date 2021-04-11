@@ -7,7 +7,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 
 interface AppDataProvider {
     fun getDataSequence(start: Int, size: Int, year: Int, filters: List<Filter>): List<Holiday>
-    fun getData(year: Int): List<Holiday>
+    fun getData(year: Int, filters: List<Filter> = emptyList()): List<Holiday>
     fun getMonthData(month: Int, year: Int): List<Holiday>
     fun getMonthDays(month: Int, year: Int): List<Day>
     fun getDayData(day: Int, month: Int, year: Int): List<Holiday>

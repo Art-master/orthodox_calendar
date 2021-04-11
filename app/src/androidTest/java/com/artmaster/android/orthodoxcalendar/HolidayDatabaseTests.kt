@@ -42,7 +42,7 @@ class HolidayDatabaseTests {
     fun insertOneEntity() {
         val holiday = HolidaysFake().getOne()
         val id = dao.insertHoliday(holiday)
-        val holidayDb = dao.getForId(id)
+        val holidayDb = dao.getFullHolidayById(id)
         Assert.assertEquals(holidayDb.description, holiday.description)
     }
 

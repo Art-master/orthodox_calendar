@@ -30,7 +30,7 @@ class HolidayReviewPresenter(private val context: Context,
         val desc = getDescription(holiday!!.description)
 
         getView().showHolidayName(holiday!!.title)
-        getView().showImageHoliday(getImageId(holiday!!.imageLink), getImageId(""))
+        getView().showImageHoliday(getImageId(holiday!!.imageId), getImageId(""))
         getView().showNewStyleDate(date.first)
         getView().showOldStyleDate(date.second)
         getView().showDescription(desc.first, desc.second)

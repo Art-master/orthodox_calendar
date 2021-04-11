@@ -7,47 +7,49 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 @Parcelize
-@Entity(tableName = "holidays")
+@Entity(tableName = DbSchema.Holiday.TABLE_NAME)
 data class Holiday(
 
         @PrimaryKey(autoGenerate = true)
+        @SerializedName(DbSchema.Holiday.ID)
+        @ColumnInfo(name = DbSchema.Holiday.ID)
         var id: Long = 0,
 
-        var uuid: String = UUID.randomUUID().toString(),
-
-        @SerializedName("title")
+        @SerializedName(DbSchema.Holiday.TITLE)
+        @ColumnInfo(name = DbSchema.Holiday.TITLE)
         var title: String = "",
 
-        @SerializedName("day")
+        @SerializedName(DbSchema.Holiday.DAY)
+        @ColumnInfo(name = DbSchema.Holiday.DAY)
         var day: Int = 0,
 
-        @SerializedName("month")
+        @SerializedName(DbSchema.Holiday.MONTH)
+        @ColumnInfo(name = DbSchema.Holiday.MONTH)
         var month: Int = 0,
+
+        @SerializedName(DbSchema.Holiday.TYPE_ID)
+        @ColumnInfo(name = DbSchema.Holiday.TYPE_ID)
+        var typeId: Int = 0,
+
+        @SerializedName(DbSchema.Holiday.DYNAMIC_TYPE)
+        @ColumnInfo(name = DbSchema.Holiday.DYNAMIC_TYPE)
+        var dynamicType: Int = 0,
+
+        @SerializedName(DbSchema.Holiday.DESCRIPTION)
+        @ColumnInfo(name = DbSchema.Holiday.DESCRIPTION)
+        var description: String = "",
+
+        @SerializedName(DbSchema.Holiday.IMAGE_ID)
+        @ColumnInfo(name = DbSchema.Holiday.IMAGE_ID)
+        var imageId: String = "",
 
         @Ignore
         var monthWith0: Int = month - 1,
 
         @Ignore
         var year: Int = 0,
-
-        @SerializedName("typeId")
-        var typeId: Int = 0,
-
-        @SerializedName("type")
-        var type: String = "",
-
-        @SerializedName("dynamic_type")
-        var dynamicType: Int = 0,
-
-        @SerializedName("description")
-        var description: String = "",
-
-        @SerializedName("imageId")
-        @ColumnInfo(name = "image_link")
-        var imageLink: String = "",
 
         @Ignore
         var firstInGroup: Boolean = false
@@ -138,7 +140,6 @@ data class Holiday(
 
         fun fillLocaleData(main: Holiday, locale: Holiday) {
             main.title = locale.title
-            main.type = locale.type
             main.description = locale.description
         }
     }

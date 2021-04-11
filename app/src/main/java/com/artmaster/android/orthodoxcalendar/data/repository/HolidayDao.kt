@@ -27,7 +27,7 @@ interface HolidayDao {
     fun getHolidaysByDayAndMonth(month: Int, day: Int): List<Holiday>
 
     @Query("SELECT * FROM holidays WHERE id = :id")
-    fun getForId(id: Long): Holiday
+    fun getFullHolidayById(id: Long): Holiday
 
     @Query("SELECT * FROM holidays WHERE id >= :initialId LIMIT :loadSize")
     fun getSequence(initialId: Int, loadSize: Int): List<Holiday>

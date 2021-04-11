@@ -13,7 +13,7 @@ class Settings {
     }
 
     enum class Name(val value: String, val defValue: String) {
-        FIRST_LOAD_APP("$PROJECT_DIR.first_load_app", FALSE),
+        FIRST_LOAD_APP("$PROJECT_DIR.app_first_initialization", FALSE),
         IS_ENABLE_NOTIFICATION_TIME("$PROJECT_DIR.is_enable_notification_before", TRUE),
         IS_ENABLE_NOTIFICATION_IN_TIME("$PROJECT_DIR.is_enable_notification_in_time", FALSE),
         IS_ENABLE_NOTIFICATION_TODAY("$PROJECT_DIR.is_enable_notification_today", TRUE),

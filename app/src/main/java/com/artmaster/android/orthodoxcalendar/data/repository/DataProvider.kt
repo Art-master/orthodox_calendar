@@ -60,19 +60,19 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         }
     }
 
-    override fun getData(year: Int): List<Holiday> {
-        return getAllData(year).sorted()
+    override fun getData(year: Int, filters: List<Filter>): List<Holiday> {
+        return getAllData(year, filters).sorted()
     }
 
     @Synchronized
     override fun getDataSequence(start: Int, size: Int, year: Int, filters: List<Filter>): List<Holiday> {
-        val data = setFirstPosition(getAllData(year).sorted())
+        val data = setFirstPosition(getAllData(year, filters).sorted())
         var endPosition = start + size - 1
         if (endPosition > data.size - 1) endPosition = data.size
         return data.subList(start, endPosition)
     }
 
-    private fun getAllData(year: Int, filters: List<Filter> = emptyList()): List<Holiday> {
+    private fun getAllData(year: Int, filters: List<Filter>): List<Holiday> {
         val holidaysFromDb: List<Holiday> = getDataFromDb(filters)
         return calculateDynamicData(holidaysFromDb, year)
     }
