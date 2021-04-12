@@ -20,4 +20,8 @@ class CalendarPreferences @Inject constructor(context: Context) : AppPreferences
     override fun set(settings: Settings.Name, value: String) {
         preferences.edit().putString(settings.value, value).apply()
     }
+
+    override fun has(settings: Settings.Name): Boolean {
+        return preferences.contains(settings.value)
+    }
 }

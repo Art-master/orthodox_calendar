@@ -21,7 +21,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     private val context = App.appComponent.getContext()
 
     @Synchronized
-    override fun getMonthDays(month: Int, year: Int): List<Day> {
+    override fun getMonthDays(month: Int, year: Int, filters: ArrayList<Filter>): List<Day> {
         dynamicData = DynamicData(year)
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0
@@ -35,8 +35,8 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
             time.calendar.set(Calendar.DAY_OF_MONTH, i)
             days.add(createDay(time))
         }
-
-        distributeHoliday(holidaysFromDb, days, month)
+        val typeIds = getTypeIds(filters)
+        distributeHoliday(holidaysFromDb, days, month, typeIds)
 
         db.close()
         return days
@@ -49,11 +49,15 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return dayObj
     }
 
-    private fun distributeHoliday(holidays: List<Holiday>, days: ArrayList<Day>, month: Int) {
+    private fun distributeHoliday(holidays: List<Holiday>, days: ArrayList<Day>, month: Int,
+                                  typeIds: ArrayList<Int>) {
+
         for (holiday in holidays) {
             dynamicData.fillHoliday(holiday)
             val dayNum = holiday.day
             holiday.monthWith0 = holiday.month - 1
+
+            if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
             if (dayNum > days.size || holiday.monthWith0 != month) continue
             days[dayNum - 1].holidays.add(holiday)
@@ -73,8 +77,11 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     private fun getAllData(year: Int, filters: List<Filter>): List<Holiday> {
-        val holidaysFromDb: List<Holiday> = getDataFromDb(filters)
-        return calculateDynamicData(holidaysFromDb, year)
+        val holidaysFromDb: List<Holiday> = getDataFromDb()
+        val typeIds = getTypeIds(filters)
+        return if (typeIds.isEmpty()) {
+            calculateDynamicData(holidaysFromDb, year).filter { typeIds.contains(it.typeId) }
+        } else calculateDynamicData(holidaysFromDb, year)
     }
 
     private fun calculateDynamicData(holidays: List<Holiday>, year: Int, month: Int = -1): List<Holiday> {
@@ -110,19 +117,17 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return holidaysInDay
     }
 
-    private fun getDataFromDb(filters: List<Filter>): List<Holiday> {
+    private fun getDataFromDb(): List<Holiday> {
         val db = database.get(context)
-
-        val holidays = if (filters.isEmpty())
-            db.holidayDao().getAll()
-        else {
-            val typeIds = ArrayList<Int>()
-            filters.forEach { typeIds.addAll(Holiday.getTypeIdsByFilter(it)) }
-            db.holidayDao().getByFilters(typeIds)
-        }
-
+        val holidays = db.holidayDao().getAll()
         db.close()
         return holidays
+    }
+
+    private fun getTypeIds(filters: List<Filter>): ArrayList<Int> {
+        val typeIds = ArrayList<Int>()
+        filters.forEach { typeIds.addAll(Holiday.getTypeIdsByFilter(it)) }
+        return typeIds
     }
 
     private fun setFirstPosition(holidays: List<Holiday>): List<Holiday> {

@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
@@ -18,16 +19,16 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
 
     private var isViewCreated = false
 
-    override suspend fun viewIsReady(year: Int, month: Int) {
+    override suspend fun viewIsReady(year: Int, month: Int, filters: ArrayList<Filter>) {
         time.calendar.set(year, month, 1)
 
-        getHolidays(year, month)
+        getHolidays(year, month, filters)
         viewData(time)
     }
 
-    private suspend fun getHolidays(year: Int, month: Int): List<Day> {
+    private suspend fun getHolidays(year: Int, month: Int, filters: ArrayList<Filter>): List<Day> {
         return withContext(Dispatchers.IO) {
-            val days = DataProvider().getMonthDays(month, year)
+            val days = DataProvider().getMonthDays(month, year, filters)
             prepareView(days, time)
             return@withContext days
         }

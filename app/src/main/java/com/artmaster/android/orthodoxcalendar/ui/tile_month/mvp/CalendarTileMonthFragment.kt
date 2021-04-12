@@ -23,10 +23,7 @@ import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentMonthTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.databinding.TileDayLayoutBinding
-import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.Fasting
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
 import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
@@ -54,8 +51,10 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
 
+            val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
+
             lifecycleScope.launch {
-                presenter.viewIsReady(getYear(), getMonth())
+                presenter.viewIsReady(getYear(), getMonth(), filters ?: ArrayList())
             }
         }
     }

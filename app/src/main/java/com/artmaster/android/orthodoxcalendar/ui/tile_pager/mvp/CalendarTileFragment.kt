@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.artmaster.android.orthodoxcalendar.R
@@ -13,8 +14,10 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentTileCalendarBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
@@ -29,8 +32,20 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     private var _binding: FragmentTileCalendarBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: CalendarSharedData by activityViewModels()
+
+    private var filters = ArrayList<Filter>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.filters.observe(this, { item ->
+            filters.clear()
+            filters.addAll(item.toList())
+            setPageAdapter()
+            binding.holidayTilePager.invalidate()
+        })
+
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
             presenter.viewIsReady()
@@ -97,6 +112,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
                 val fragment = CalendarTileMonthFragment()
                 val args = Bundle()
                 args.putInt(Constants.Keys.MONTH.value, position)
+                args.putParcelableArrayList(Constants.Keys.FILTERS.value, filters)
                 fragment.arguments = args
                 return fragment
             }
