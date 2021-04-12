@@ -103,6 +103,7 @@
         app:layout_anchor="@id/showFiltersButton"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

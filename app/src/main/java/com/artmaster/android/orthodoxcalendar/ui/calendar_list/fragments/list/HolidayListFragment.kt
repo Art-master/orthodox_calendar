@@ -1,5 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.CalendarListFragmentBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
@@ -15,6 +19,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.*
+import kotlinx.coroutines.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 
@@ -44,9 +49,17 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = CalendarListFragmentBinding.inflate(inflater, container, false)
+        binding.loading.root.visibility = View.VISIBLE
+        initAnimation()
         return binding.root
+    }
+
+    private fun initAnimation() {
+        val set = AnimatorInflater.loadAnimator(context, R.animator.loading_animator) as AnimatorSet
+        set.setTarget(binding.loading.ringLoading)
+        set.start()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,18 +82,28 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
 
     override fun prepareAdapter(position: Int, holiday: Holiday) {
         if (_binding == null) return
-        recyclerAdapter = buildAdapter(position)
-        binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+        val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
+        stopAnimation(position, requireContext(), filters ?: ArrayList())
     }
 
-    private fun buildAdapter(position: Int): ListViewDiffContract.Adapter {
+    private fun stopAnimation(position: Int, context: Context, filters: java.util.ArrayList<Filter>) {
+        GlobalScope.launch {
+            delay(1000)
+            recyclerAdapter = buildAdapter(position, filters, context)
+            withContext(Dispatchers.Main) {
+                binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+                binding.loading.root.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun buildAdapter(position: Int, filters: ArrayList<Filter>, context: Context): ListViewDiffContract.Adapter {
         val config = PageConfig
-        dataSource = HolidayDataSource(requireContext(), getYear())
-        val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
-        dataSource.filters = filters ?: ArrayList()
+        dataSource = HolidayDataSource(context, getYear())
+        dataSource.filters = filters
         val list = PagedList(dataSource, config, position)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
-        val adapter = HolidaysAdapter(requireContext(), diffCallback)
+        val adapter = HolidaysAdapter(context, diffCallback)
         adapter.submitList(list.get())
         return adapter
     }
