@@ -6,8 +6,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import java.util.*
@@ -17,25 +16,27 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
 
     private val time = Time()
 
-    private var isViewCreated = false
+    private var job: Job? = null
 
     override suspend fun viewIsReady(year: Int, month: Int, filters: ArrayList<Filter>) {
         time.calendar.set(year, month, 1)
 
-        getHolidays(year, month, filters)
-        viewData(time)
-    }
-
-    private suspend fun getHolidays(year: Int, month: Int, filters: ArrayList<Filter>): List<Day> {
-        return withContext(Dispatchers.IO) {
-            val days = DataProvider().getMonthDays(month, year, filters)
-            prepareView(days, time)
-            return@withContext days
+        job = GlobalScope.launch(Dispatchers.Unconfined) {
+            withContext(Dispatchers.IO) {
+                val days = DataProvider().getMonthDays(month, year, filters)
+                delay(1000)
+                withContext(Dispatchers.Main) {
+                    prepareView(days, time)
+                    viewData(time)
+                }
+            }
         }
     }
 
     override fun viewIsCreated() {
-        isViewCreated = true
+        GlobalScope.launch(Dispatchers.Main) {
+            job?.join()
+        }
     }
 
     private fun prepareView(days: List<Day>, time: Time) {

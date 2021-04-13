@@ -7,7 +7,7 @@ import moxy.MvpPresenter
 
 
 @InjectViewState
-class CalendarListPresenter : MvpPresenter<CalendarListContractView>(), CalendarListContractPresenter {
+class MainCalendarPresenter : MvpPresenter<CalendarListContractView>(), CalendarListContractPresenter {
 
     override fun viewIsReady() {
         viewState.hideActionBar()

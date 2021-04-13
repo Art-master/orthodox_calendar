@@ -10,7 +10,7 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.fragments.LoadingScreenFragment
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -69,7 +69,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
         finish()
     }
 
-    private fun getArgs() = Intent(applicationContext, CalendarListActivity::class.java).apply {
+    private fun getArgs() = Intent(applicationContext, MainCalendarActivity::class.java).apply {
         putExtra(Constants.Keys.YEAR.value, Time().year)
         putExtra(Constants.Keys.MONTH.value, Time().monthWith0)
         putExtra(Constants.Keys.DAY.value, Time().dayOfMonth)

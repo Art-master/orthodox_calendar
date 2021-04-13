@@ -43,7 +43,7 @@ import moxy.MvpView
 import moxy.presenter.InjectPresenter
 import javax.inject.Inject
 
-class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, CalendarListContractView, MvpView {
+class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, CalendarListContractView, MvpView {
 
     @Inject
     lateinit var database: AppDatabase
@@ -52,7 +52,7 @@ class CalendarListActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     lateinit var model: CalendarListContractModel
 
     @InjectPresenter(tag = "ListPresenter")
-    lateinit var presenter: CalendarListPresenter
+    lateinit var presenter: MainCalendarPresenter
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Any>

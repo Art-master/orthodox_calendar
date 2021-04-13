@@ -198,16 +198,16 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         for (permission in day.fasting.permissions) {
             when (permission) {
                 Fasting.Permission.OIL ->
-                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.sun))
+                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.sun))
 
                 Fasting.Permission.FISH ->
-                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.fish))
+                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.fish))
 
                 Fasting.Permission.VINE ->
-                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.vine))
+                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.vine))
 
                 Fasting.Permission.STRICT ->
-                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.triangle))
+                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.triangle))
 
                 Fasting.Permission.NO_EAT -> {
                 }
@@ -216,7 +216,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
                 Fasting.Permission.HOT_NO_OIL -> {
                 }
                 Fasting.Permission.NO_MEAT -> {
-                    setImg(v, ContextCompat.getDrawable(requireContext(), R.drawable.eggs))
+                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.eggs))
                 }
             }
         }
@@ -243,8 +243,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     private fun setStyle(view: TileDayLayoutBinding, text: TextViewWithCustomFont, style: Int,
                          color: Int = R.color.colorTextHeadHolidays) {
 
-        text.setTextColor(ContextCompat.getColor(requireContext(), color))
-        view.container.background = ContextCompat.getDrawable(requireContext(), style)
+        text.setTextColor(ContextCompat.getColor(view.root.context, color))
+        view.container.background = ContextCompat.getDrawable(view.root.context, style)
     }
 
     private fun isTypeHoliday(type: Holiday.Type, holidays: List<Holiday>): Boolean {

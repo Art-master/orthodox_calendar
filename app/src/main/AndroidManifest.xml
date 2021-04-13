@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.init.mvp.InitAppActivity" />
-        <activity android:name=".ui.calendar_list.mvp.CalendarListActivity" />
+        <activity android:name=".ui.calendar_list.mvp.MainCalendarActivity" />
         <activity android:name=".ui.review.HolidayViewPagerActivity" />
 
         <service
