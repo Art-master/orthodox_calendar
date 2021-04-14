@@ -30,7 +30,7 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.Ap
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxDecorator
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractView
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
@@ -69,7 +69,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     @Inject
     lateinit var appSettingsFragment: AppSettingView
 
-    private val viewModel: CalendarSharedData by viewModels()
+    private val viewModel: CalendarViewModel by viewModels()
 
     private val preferences = App.appComponent.getPreferences()
 
@@ -166,14 +166,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState.run {
-            if (calendarFragment.arguments == null) calendarFragment.arguments = Bundle()
-            setCurrentState(this, calendarFragment.requireArguments())
-        }
-    }
-
     private fun initTypeOfCalendarFragment() {
         calendarFragment = if (isFirstLoadTileCalendar) {
             tileCalendarFragment as Fragment
@@ -190,19 +182,14 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private fun setStartArguments(fragment: Fragment) {
         if (fragment.arguments != null) return
-        fragment.arguments = Bundle().apply {
-            putInt(Constants.Keys.YEAR.value, getStartYear())
-            putInt(Constants.Keys.MONTH.value, getMonth())
-            putInt(Constants.Keys.DAY.value, getDay())
-        }
+        viewModel.setAllTime(getStartYear(), getMonth(), getDay())
     }
 
     private fun setCurrentState(arguments: Bundle, state: Bundle) {
-        state.apply {
-            putInt(Constants.Keys.YEAR.value, arguments.getInt(Constants.Keys.YEAR.value))
-            putInt(Constants.Keys.MONTH.value, arguments.getInt(Constants.Keys.MONTH.value))
-            putInt(Constants.Keys.DAY.value, arguments.getInt(Constants.Keys.DAY.value))
-        }
+        viewModel.setAllTime(
+                arguments.getInt(Constants.Keys.YEAR.value),
+                arguments.getInt(Constants.Keys.MONTH.value),
+                arguments.getInt(Constants.Keys.DAY.value))
     }
 
     private fun controlSpinnerView(position: Int) {
@@ -291,12 +278,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
         changeIconTypeCalendar()
         replaceFragment(R.id.activityCalendar, calendarFragment)
-    }
-
-    private fun updateFragmentData(fragment: CalendarUpdateContract) {
-        fragment.updateYear()
-        fragment.updateMonth()
-        fragment.updateDay()
     }
 
     private fun changeIconTypeCalendar() {
@@ -409,26 +390,13 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 if (isTheSameYear(position).not()) {
                     val year = getSpinnerCurrentYear()
-                    updateArgs(tileCalendarFragment as Fragment, year)
-                    updateArgs(listHolidayFragment as Fragment, year)
+                    viewModel.setYear(year)
                     controlSpinnerView(position)
                     (calendarFragment as CalendarUpdateContract).updateYear()
                 }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
-        }
-    }
-
-    private fun updateArgs(fragment: Fragment, year: Int? = null, month: Int? = null, day: Int? = null) {
-        val y = year ?: calendarFragment.arguments?.getInt(Constants.Keys.YEAR.value)
-        val m = month ?: calendarFragment.arguments?.getInt(Constants.Keys.MONTH.value)
-        val d = day ?: calendarFragment.arguments?.getInt(Constants.Keys.DAY.value)
-
-        fragment.arguments = Bundle().apply {
-            putInt(Constants.Keys.YEAR.value, y!!)
-            putInt(Constants.Keys.MONTH.value, m!!)
-            putInt(Constants.Keys.DAY.value, d!!)
         }
     }
 
@@ -458,9 +426,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private fun resetArgsValues() {
         val time = Time()
-        intent.putExtra(Constants.Keys.YEAR.value, time.year)
-        intent.putExtra(Constants.Keys.MONTH.value, time.monthWith0)
-        intent.putExtra(Constants.Keys.DAY.value, time.dayOfMonth)
+        viewModel.setAllTime(time.year, time.monthWith0, time.dayOfMonth)
     }
 
     override fun onDestroy() {

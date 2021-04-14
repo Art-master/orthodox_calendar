@@ -16,11 +16,12 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.HolidayListFragment
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import dagger.android.support.AndroidSupportInjection
 
 
@@ -32,20 +33,28 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
     private val years = getYears()
     private var filters = ArrayList<Filter>()
+    private var time = SharedTime()
 
     private var _binding: HolidayListPagerBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CalendarSharedData by activityViewModels()
+    private val viewModel: CalendarViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeToDataUpdate()
+    }
 
+    private fun subscribeToDataUpdate() {
         viewModel.filters.observe(this, { item ->
             filters.clear()
             filters.addAll(item.toList())
             setPageAdapter()
             binding.holidayListPager.invalidate()
+        })
+
+        viewModel.time.observe(this, { item ->
+            time = item
         })
     }
 
@@ -71,7 +80,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
     }
 
     private fun getPosition(): Int {
-        return years.indexOf(getYear())
+        return years.indexOf(time.year)
     }
 
     private fun setPageAdapter() {
@@ -122,11 +131,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         })
     }
 
-    private fun getYear() = requireArguments().getInt(Constants.Keys.YEAR.value, Time().year)
-
     override fun updateYear() {
         val years = getYears()
-        val pos = years.indexOf(getYear())
+        val pos = years.indexOf(time.year)
 
         binding.holidayListPager.currentItem = pos
         //binding.holidayListPager.setCurrentItem(pos, 3000)

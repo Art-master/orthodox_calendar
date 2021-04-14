@@ -3,20 +3,20 @@ package com.artmaster.android.orthodoxcalendar.domain
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Calculated dynamic holidays
  */
 class DynamicData(private val yearEaster: Int = Time().year) {
 
-    private var monthEaster = -1
-    private var dayEaster = -1
+    private val yearsMapCache = HashMap<Int, Pair<Int, Int>>()
 
     /**
      * Calculates the date of Easter according to the method of Friedrich Gauss
      *
      * @param year Easter year
-     * @return month and day in one variable
+     * @return month and day as a Pair
      */
     private fun calculateDateEaster(year: Int): Pair<Int, Int> {
         val mod1 = year % 19
@@ -48,25 +48,23 @@ class DynamicData(private val yearEaster: Int = Time().year) {
                 month = 5
             }
         }
-        monthEaster = month - 1 //month with 0
-        dayEaster = day //day with 1
 
-        return month to day
+        return month - 1 to day //month with 0, day with 1
     }
 
     fun fillHoliday(holiday: Holiday) {
         val time = when (holiday.dynamicType) {
             MovableDay.THE_EASTER.dynamicType ->
-                getHolidayDynamicDate(yearEaster, MovableDay.THE_EASTER.dayFromEaster)
+                getHolidayDynamicDate(holiday.year, MovableDay.THE_EASTER.dayFromEaster)
 
             MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dynamicType ->
-                getHolidayDynamicDate(yearEaster, MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dayFromEaster)
+                getHolidayDynamicDate(holiday.year, MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dayFromEaster)
 
             MovableDay.THE_ASCENSION_OF_THE_LORD.dynamicType ->
-                getHolidayDynamicDate(yearEaster, MovableDay.THE_ASCENSION_OF_THE_LORD.dayFromEaster)
+                getHolidayDynamicDate(holiday.year, MovableDay.THE_ASCENSION_OF_THE_LORD.dayFromEaster)
 
             MovableDay.THE_HOLY_TRINITY.dynamicType ->
-                getHolidayDynamicDate(yearEaster, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
+                getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
 
             else -> null
 
@@ -85,10 +83,21 @@ class DynamicData(private val yearEaster: Int = Time().year) {
      */
 
     private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Time {
-        if (monthEaster == -1 || dayEaster == -1) calculateDateEaster(yearEaster)
-        val cal = Time().calculateDate(yearEaster, monthEaster,
-                dayEaster, Calendar.DAY_OF_YEAR, valueForCalculate)
+        val monthAndDay = getEasterMonthAndDay(yearEaster)
+
+        val cal = Time().calculateDate(yearEaster, monthAndDay.first,
+                monthAndDay.second, Calendar.DAY_OF_YEAR, valueForCalculate)
         return Time(cal)
+    }
+
+    private fun getEasterMonthAndDay(year: Int): Pair<Int, Int> {
+        return if (yearsMapCache.containsKey(year)) {
+            yearsMapCache[year] ?: calculateDateEaster(year)
+        } else {
+            val data = calculateDateEaster(year)
+            yearsMapCache[year] = data
+            data
+        }
     }
 
     private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int): Time {
@@ -215,11 +224,12 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         val calendar = getHolidayDynamicDate(yearEaster, -48)
         val month = calendar.monthWith0
         val dayM = calendar.dayOfMonth
-        if (day.month > monthEaster) return false
+        val monthToDay = getEasterMonthAndDay(day.year)
+        if (day.month > monthToDay.first) return false
         if (day.month < month) return false
-        if (day.month == monthEaster && day.dayOfMonth < dayEaster) return true
+        if (day.month == monthToDay.first && day.dayOfMonth < monthToDay.second) return true
         if (day.month == month && day.dayOfMonth >= dayM) return true
-        if (day.month in (month + 1) until monthEaster) return true
+        if (day.month in (month + 1) until monthToDay.first) return true
         return false
     }
 
@@ -296,7 +306,8 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
     private fun isLastDayBeforeEaster(day: Day): Boolean {
         getHolidayDynamicDate(yearEaster, -6).apply {
-            return day.dayOfMonth >= dayOfMonth && (day.month == monthWith0 || day.month == monthEaster)
+            return day.dayOfMonth >= dayOfMonth && (day.month == monthWith0 ||
+                    day.month == getEasterMonthAndDay(day.year).first)
         }
     }
 

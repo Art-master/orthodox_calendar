@@ -75,7 +75,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.firebase:firebase-core:18.0.2"
 
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
@@ -115,8 +115,6 @@ dependencies {
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
-    androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
 
     //Kotlin
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -139,6 +137,7 @@ dependencies {
     //Tests
     androidTestImplementation 'org.mockito:mockito-core:3.8.0'
 
+    implementation 'androidx.annotation:annotation:1.2.0'
     androidTestImplementation 'androidx.annotation:annotation:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

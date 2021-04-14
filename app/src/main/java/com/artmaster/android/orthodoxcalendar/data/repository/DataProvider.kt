@@ -80,8 +80,8 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         val holidaysFromDb: List<Holiday> = getDataFromDb()
         val typeIds = getTypeIds(filters)
         return if (typeIds.isEmpty()) {
-            calculateDynamicData(holidaysFromDb, year).filter { typeIds.contains(it.typeId) }
-        } else calculateDynamicData(holidaysFromDb, year)
+            calculateDynamicData(holidaysFromDb, year)
+        } else calculateDynamicData(holidaysFromDb, year).filter { typeIds.contains(it.typeId) }
     }
 
     private fun calculateDynamicData(holidays: List<Holiday>, year: Int, month: Int = -1): List<Holiday> {
@@ -118,8 +118,12 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     private fun getDataFromDb(): List<Holiday> {
+        if (HolidaysCache.holidays.isEmpty().not()) {
+            return HolidaysCache.holidays
+        }
         val db = database.get(context)
         val holidays = db.holidayDao().getAll()
+        HolidaysCache.holidays = holidays
         db.close()
         return holidays
     }

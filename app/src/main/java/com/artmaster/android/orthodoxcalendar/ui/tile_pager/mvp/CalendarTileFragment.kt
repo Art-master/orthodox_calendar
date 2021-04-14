@@ -15,9 +15,10 @@ import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_S
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
@@ -32,13 +33,22 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     private var _binding: FragmentTileCalendarBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CalendarSharedData by activityViewModels()
+    private val viewModel: CalendarViewModel by activityViewModels()
 
     private var filters = ArrayList<Filter>()
+    private var time = SharedTime()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeToDataUpdate()
 
+        if (!presenter.isInRestoreState(this)) {
+            presenter.attachView(this)
+            presenter.viewIsReady()
+        }
+    }
+
+    private fun subscribeToDataUpdate() {
         viewModel.filters.observe(this, { item ->
             filters.clear()
             filters.addAll(item.toList())
@@ -46,10 +56,9 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             binding.holidayTilePager.invalidate()
         })
 
-        if (!presenter.isInRestoreState(this)) {
-            presenter.attachView(this)
-            presenter.viewIsReady()
-        }
+        viewModel.time.observe(this, { item ->
+            time = item
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -69,7 +78,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     override fun setPageAdapter() {
         if (_binding == null) return
         binding.holidayTilePager.adapter = getAdapter(this)
-        binding.holidayTilePager.currentItem = getMonth()
+        binding.holidayTilePager.currentItem = time.month
     }
 
     override fun initSpinner() {
@@ -78,8 +87,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         val adapter = SpinnerAdapter(requireContext(), R.layout.spinner_year_item, mNames)
         adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
         binding.monthSpinner.adapter = adapter
-        val monthNum = getMonth()
-        binding.monthSpinner.setSelection(monthNum)
+        binding.monthSpinner.setSelection(time.month)
         setOnItemSpinnerSelected()
     }
 
