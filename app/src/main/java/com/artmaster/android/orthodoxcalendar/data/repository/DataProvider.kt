@@ -118,9 +118,8 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
     }
 
     private fun getDataFromDb(): List<Holiday> {
-        if (HolidaysCache.holidays.isEmpty().not()) {
-            return HolidaysCache.holidays
-        }
+        val data = HolidaysCache.holidays
+        if (data.isEmpty().not()) return data
         val db = database.get(context)
         val holidays = db.holidayDao().getAll()
         HolidaysCache.holidays = holidays
