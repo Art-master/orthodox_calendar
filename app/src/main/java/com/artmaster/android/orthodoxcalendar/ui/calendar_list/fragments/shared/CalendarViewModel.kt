@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,8 @@ class CalendarViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             val filters = HashSet<Filter>()
             Filter.values().forEach {
-                val data = preferences.has(it.settingName)
-                if (data) filters.add(it)
+                val data = preferences.get(it.settingName)
+                if (data == Settings.TRUE) filters.add(it)
             }
             withContext(Dispatchers.Main) {
                 if (filters.isNotEmpty()) _filters.value = filters

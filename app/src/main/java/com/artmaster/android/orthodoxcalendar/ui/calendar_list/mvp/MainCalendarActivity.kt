@@ -24,7 +24,6 @@ import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBindin
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
-import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppInfoView
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
@@ -161,7 +160,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         outState.run {
             val bundle = calendarFragment.arguments ?: return
-            setCurrentState(bundle, this)
+            setCurrentState(bundle)
         }
         super.onSaveInstanceState(outState, outPersistentState)
     }
@@ -185,7 +184,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         viewModel.setAllTime(getStartYear(), getMonth(), getDay())
     }
 
-    private fun setCurrentState(arguments: Bundle, state: Bundle) {
+    private fun setCurrentState(arguments: Bundle) {
         viewModel.setAllTime(
                 arguments.getInt(Constants.Keys.YEAR.value),
                 arguments.getInt(Constants.Keys.MONTH.value),
@@ -392,7 +391,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                     val year = getSpinnerCurrentYear()
                     viewModel.setYear(year)
                     controlSpinnerView(position)
-                    (calendarFragment as CalendarUpdateContract).updateYear()
                 }
             }
 
@@ -411,7 +409,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     private fun resetDateState() {
-        val fr = calendarFragment as CalendarUpdateContract
         val time = Time()
 
         resetArgsValues()
@@ -421,7 +418,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             binding.toolbarYearSpinner.setSelection(pos)
             //year will update in spinner listener
         }
-        if (time.monthWith0 == getMonth()) fr.updateMonth()
     }
 
     private fun resetArgsValues() {

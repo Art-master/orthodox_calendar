@@ -8,7 +8,7 @@ import kotlin.collections.HashMap
 /**
  * Calculated dynamic holidays
  */
-class DynamicData(private val yearEaster: Int = Time().year) {
+class DynamicData {
 
     private val yearsMapCache = HashMap<Int, Pair<Int, Int>>()
 
@@ -100,8 +100,8 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
     }
 
-    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int): Time {
-        val cal = Time().calculateDate(yearEaster, month,
+    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int, year: Int): Time {
+        val cal = Time().calculateDate(year, month,
                 day, Calendar.DAY_OF_YEAR, valueForCalculate)
         return Time(cal)
     }
@@ -138,7 +138,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isPeterAndPaulFasting(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, 57)
+        val calendar = getHolidayDynamicDate(day.year, 57)
         val month = calendar.monthWith0
         val dayM = calendar.dayOfMonth
 
@@ -221,7 +221,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isGreatFasting(day: Day): Boolean {
-        val calendar = getHolidayDynamicDate(yearEaster, -48)
+        val calendar = getHolidayDynamicDate(day.year, -48)
         val month = calendar.monthWith0
         val dayM = calendar.dayOfMonth
         val monthToDay = getEasterMonthAndDay(day.year)
@@ -246,7 +246,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun fillDayAsGreatFasting(day: Day) {
-        val calendar = getHolidayDynamicDate(yearEaster, -48)
+        val calendar = getHolidayDynamicDate(day.year, -48)
         val startDay = calendar.monthWith0
         val startMonth = calendar.dayOfMonth
 
@@ -271,7 +271,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
             day.fasting.permissions = listOf(Fasting.Permission.NO_EAT)
 
         } else {
-            val c = getHolidayDynamicDate(yearEaster, 2)
+            val c = getHolidayDynamicDate(day.year, 2)
             val month = c.monthWith0
             val dayM = c.dayOfMonth
             if (dayM == day.dayOfMonth && month == day.month) {
@@ -293,19 +293,19 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     }
 
     private fun isHolidayEntry(day: Day): Boolean {
-        getHolidayDynamicDate(yearEaster, -7).apply {
+        getHolidayDynamicDate(day.year, -7).apply {
             return day.dayOfMonth == dayOfMonth && day.month == monthWith0
         }
     }
 
     private fun isLazarSaturday(day: Day): Boolean {
-        getHolidayDynamicDate(yearEaster, -8).apply {
+        getHolidayDynamicDate(day.year, -8).apply {
             return day.dayOfMonth == dayOfMonth && day.month == monthWith0
         }
     }
 
     private fun isLastDayBeforeEaster(day: Day): Boolean {
-        getHolidayDynamicDate(yearEaster, -6).apply {
+        getHolidayDynamicDate(day.year, -6).apply {
             return day.dayOfMonth >= dayOfMonth && (day.month == monthWith0 ||
                     day.month == getEasterMonthAndDay(day.year).first)
         }
@@ -318,7 +318,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
 
     private fun setMemorialType(day: Day) {
         //The saturday of Meatless
-        getHolidayDynamicDate(yearEaster, -57).apply {
+        getHolidayDynamicDate(day.year, -57).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.MEATLESS_SATURDAY
                 return@apply
@@ -326,7 +326,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //The saturday of Great Fasting 2
-        getHolidayDynamicDate(yearEaster, -36).apply {
+        getHolidayDynamicDate(day.year, -36).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_2
                 return@apply
@@ -334,7 +334,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //The saturday of Great Fasting 3
-        getHolidayDynamicDate(yearEaster, -29).apply {
+        getHolidayDynamicDate(day.year, -29).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_3
                 return@apply
@@ -342,7 +342,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //The saturday of Great Fasting 4
-        getHolidayDynamicDate(yearEaster, -22).apply {
+        getHolidayDynamicDate(day.year, -22).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
                 return@apply
@@ -350,7 +350,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //Radunytsya
-        getHolidayDynamicDate(yearEaster, 9).apply {
+        getHolidayDynamicDate(day.year, 9).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.RADUNYTSYA
                 return@apply
@@ -358,7 +358,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //Trinity saturday
-        getHolidayDynamicDate(yearEaster, 48).apply {
+        getHolidayDynamicDate(day.year, 48).apply {
             if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_TRINITY
                 return@apply
@@ -374,7 +374,7 @@ class DynamicData(private val yearEaster: Int = Time().year) {
         }
 
         //The saturday of st. Dmitry
-        getHolidayDynamicDate(Month.NOVEMBER.num, 8, -7).apply {
+        getHolidayDynamicDate(Month.NOVEMBER.num, 8, -7, day.year).apply {
             if (day.month == Month.NOVEMBER.num && day.dayOfMonth < 8 && day.dayInWeek == DayOfWeek.SATURDAY.num) {
                 day.memorialType = Day.MemorialType.SATURDAY_OF_DMITRY
                 return@apply
@@ -405,8 +405,8 @@ class DynamicData(private val yearEaster: Int = Time().year) {
     private fun calculateSolidWeek(day: Day, timeFromEasterStart: Int, timeFromEasterEnd: Int,
                                    permissions: List<Fasting.Permission> = emptyList()): Boolean {
         var flag = false
-        val timeStart = getHolidayDynamicDate(yearEaster, timeFromEasterStart)
-        getHolidayDynamicDate(yearEaster, timeFromEasterEnd).apply {
+        val timeStart = getHolidayDynamicDate(day.year, timeFromEasterStart)
+        getHolidayDynamicDate(day.year, timeFromEasterEnd).apply {
             if (day.month == monthWith0) {
                 if (day.dayOfMonth in timeStart.dayOfMonth until dayOfMonth) {
                     flag = true

@@ -16,8 +16,6 @@ import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
-import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
@@ -25,7 +23,7 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileVie
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 
-internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, CalendarUpdateContract {
+internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
 
     @InjectPresenter(tag = "TilePresenter")
     lateinit var presenter: TilePresenter
@@ -69,10 +67,8 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.viewIsCreated()
-        if (savedInstanceState != null) {
-            setChangePageListener()
-            initHelper()
-        }
+        setChangePageListener()
+        initHelper()
     }
 
     override fun setPageAdapter() {
@@ -91,9 +87,6 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
         setOnItemSpinnerSelected()
     }
 
-    private fun getYear() = requireArguments().getInt(Constants.Keys.YEAR.value, Time().year)
-    private fun getMonth() = requireArguments().getInt(Constants.Keys.MONTH.value, Time().monthWith0)
-    private fun getDay() = requireArguments().getInt(Constants.Keys.DAY.value, Time().dayOfMonth)
     private fun getMonthsNames() = resources.getStringArray(R.array.months_names_gen)
 
 
@@ -102,6 +95,8 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 binding.holidayTilePager.apply {
                     if (currentItem != position) {
+                        time.month = position
+                        viewModel.setMonth(position)
                         currentItem = position
                     }
                 }
@@ -119,7 +114,8 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             override fun createFragment(position: Int): Fragment {
                 val fragment = CalendarTileMonthFragment()
                 val args = Bundle()
-                args.putInt(Constants.Keys.MONTH.value, position)
+                val data = SharedTime(time.year, position, time.day)
+                args.putParcelable(Constants.Keys.TIME.value, data)
                 args.putParcelableArrayList(Constants.Keys.FILTERS.value, filters)
                 fragment.arguments = args
                 return fragment
@@ -130,6 +126,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
     private fun setChangePageListener() {
         binding.holidayTilePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                viewModel.setMonth(position)
                 binding.monthSpinner.setSelection(position)
                 setVisibleArrows(position)
             }
@@ -156,18 +153,5 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView, 
             val transaction = parentFragmentManager.beginTransaction()
             fr.show(transaction, "helper")
         }
-    }
-
-    override fun updateYear() {
-        binding.holidayTilePager.adapter?.notifyDataSetChanged()
-    }
-
-    override fun updateMonth() {
-        val position = getMonth()
-        binding.holidayTilePager.setCurrentItem(position, false)
-    }
-
-    override fun updateDay() {
-
     }
 }

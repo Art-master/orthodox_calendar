@@ -18,14 +18,13 @@ import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBindin
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.HolidayListFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import dagger.android.support.AndroidSupportInjection
 
 
-class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, CalendarUpdateContract {
+class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
 
     private lateinit var adapter: FragmentStateAdapter
 
@@ -131,7 +130,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         })
     }
 
-    override fun updateYear() {
+    private fun updateYear() {
         val years = getYears()
         val pos = years.indexOf(time.year)
 
@@ -174,11 +173,11 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         animator.start()
     }
 
-    override fun updateMonth() {
+    private fun updateMonth() {
 
     }
 
-    override fun updateDay() {
+    private fun updateDay() {
 
     }
 }

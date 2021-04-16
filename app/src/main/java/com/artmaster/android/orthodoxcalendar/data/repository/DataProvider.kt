@@ -22,7 +22,6 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
 
     @Synchronized
     override fun getMonthDays(month: Int, year: Int, filters: ArrayList<Filter>): List<Day> {
-        dynamicData = DynamicData(year)
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0
         val daysCount = time.daysInMonth
@@ -36,7 +35,7 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
             days.add(createDay(time))
         }
         val typeIds = getTypeIds(filters)
-        distributeHoliday(holidaysFromDb, days, month, typeIds)
+        distributeHoliday(holidaysFromDb, days, month, year, typeIds)
 
         db.close()
         return days
@@ -49,10 +48,11 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         return dayObj
     }
 
-    private fun distributeHoliday(holidays: List<Holiday>, days: ArrayList<Day>, month: Int,
+    private fun distributeHoliday(holidays: List<Holiday>, days: ArrayList<Day>, month: Int, year: Int,
                                   typeIds: ArrayList<Int>) {
 
         for (holiday in holidays) {
+            holiday.year = year
             dynamicData.fillHoliday(holiday)
             val dayNum = holiday.day
             holiday.monthWith0 = holiday.month - 1

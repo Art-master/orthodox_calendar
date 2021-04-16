@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
@@ -14,20 +15,20 @@ import java.util.*
 @InjectViewState
 class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMonthPresenter {
 
-    private val time = Time()
+    private val currentTime = Time()
 
     private var job: Job? = null
 
-    override suspend fun viewIsReady(year: Int, month: Int, filters: ArrayList<Filter>) {
-        time.calendar.set(year, month, 1)
+    override suspend fun viewIsReady(time: SharedTime, filters: ArrayList<Filter>) {
+        currentTime.calendar.set(time.year, time.month, 1)
 
         job = GlobalScope.launch(Dispatchers.Unconfined) {
             withContext(Dispatchers.IO) {
-                val days = DataProvider().getMonthDays(month, year, filters)
+                val days = DataProvider().getMonthDays(time.month, time.year, filters)
                 delay(1000)
                 withContext(Dispatchers.Main) {
-                    prepareView(days, time)
-                    viewData(time)
+                    prepareView(days, currentTime)
+                    viewData(currentTime)
                 }
             }
         }
