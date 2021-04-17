@@ -6,8 +6,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListPresenterContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
 
@@ -16,16 +15,24 @@ class HolidayListPresenter : MvpPresenter<ListViewContract>(), ListPresenterCont
 
     private var time = Time()
 
+    private var job: Job? = null
+
     override suspend fun viewIsReady(time: Time, filters: List<Filter>) {
         this.time = time
-        val holidays = getHolidays(time.year, filters)
-        viewData(holidays)
+        job = prepareDataAndView(time.year, filters)
     }
 
-    private suspend fun getHolidays(year: Int, filters: List<Filter>): Pair<Int, Holiday> {
-        return withContext(Dispatchers.IO) {
-            val holidays = DataProvider().getData(year, filters)
-            return@withContext calculatePosition(holidays)
+    private suspend fun prepareDataAndView(year: Int, filters: List<Filter>): Job {
+        return GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                val holidays = DataProvider().getData(year, filters)
+                val position = calculatePosition(holidays)
+                viewState.prepareAdapter(position.first, position.second)
+                delay(1000)
+                withContext(Dispatchers.Main) {
+                    viewState.showList()
+                }
+            }
         }
     }
 
@@ -38,7 +45,9 @@ class HolidayListPresenter : MvpPresenter<ListViewContract>(), ListPresenterCont
         return 0 to Holiday()
     }
 
-    private fun viewData(pos: Pair<Int, Holiday>) {
-        viewState.prepareAdapter(pos.first, pos.second)
+    override fun viewIsCreated() {
+        GlobalScope.launch(Dispatchers.Main) {
+            job?.join()
+        }
     }
 }

@@ -19,7 +19,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.*
-import kotlinx.coroutines.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 
@@ -65,6 +64,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        presenter.viewIsCreated()
     }
 
     private fun getDay(): Int {
@@ -81,20 +81,20 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
     }
 
     override fun prepareAdapter(position: Int, holiday: Holiday) {
-        if (_binding == null) return
         val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
-        stopAnimation(position, requireContext(), filters ?: ArrayList())
+        recyclerAdapter = buildAdapter(position, filters ?: ArrayList(), requireContext())
     }
 
-    private fun stopAnimation(position: Int, context: Context, filters: java.util.ArrayList<Filter>) {
-        GlobalScope.launch {
-            delay(1000)
-            recyclerAdapter = buildAdapter(position, filters, context)
-            withContext(Dispatchers.Main) {
-                binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
-                binding.loading.root.visibility = View.GONE
-            }
-        }
+    override fun showList() {
+        if (_binding == null) return
+        stopLoadingAnimation()
+        binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+        binding.loading.root.visibility = View.GONE
+    }
+
+    private fun stopLoadingAnimation() {
+        binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+        binding.loading.root.visibility = View.GONE
     }
 
     private fun buildAdapter(position: Int, filters: ArrayList<Filter>, context: Context): ListViewDiffContract.Adapter {

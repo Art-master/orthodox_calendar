@@ -1,17 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments
 
-import android.animation.Animator
-import android.animation.TimeInterpolator
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBinding
@@ -135,48 +130,5 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
                 changedCallback?.invoke(position, time.year)
             }
         })
-    }
-
-    private fun updateYear() {
-        val years = getYears()
-        val pos = years.indexOf(time.year)
-
-        binding.holidayListPager.currentItem = pos
-        //binding.holidayListPager.setCurrentItem(pos, 3000)
-    }
-
-    fun ViewPager2.setCurrentItem(
-            item: Int,
-            duration: Long,
-            interpolator: TimeInterpolator = DecelerateInterpolator(),
-            pagePxWidth: Int = width // Default value taken from getWidth() from ViewPager2 view
-    ) {
-        val pxToDrag: Int = pagePxWidth * (item - currentItem)
-        val animator = ValueAnimator.ofInt(0, pxToDrag)
-        var previousValue = 0
-        animator.addUpdateListener { valueAnimator ->
-            val currentValue = valueAnimator.animatedValue as Int
-            val currentPxToDrag = (currentValue - previousValue).toFloat()
-            fakeDragBy(-currentPxToDrag)
-            previousValue = currentValue
-        }
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
-                beginFakeDrag()
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                endFakeDrag()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {  /*Ignored*/
-            }
-
-            override fun onAnimationRepeat(animation: Animator?) {  /*Ignored*/
-            }
-        })
-        animator.interpolator = interpolator
-        animator.duration = duration
-        animator.start()
     }
 }

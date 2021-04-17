@@ -7,7 +7,6 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
@@ -43,7 +42,6 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
         val bundle = Bundle()
         bundle.putLong(Constants.Keys.ANIM_TIME.value, timeAnimation)
         fr.arguments = bundle
-        fr.retainInstance = false
         if (this.bundle.isEmpty) {
             fm.beginTransaction().add(R.id.activity_init, fr).commit()
         } else {
@@ -70,9 +68,6 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
     }
 
     private fun getArgs() = Intent(applicationContext, MainCalendarActivity::class.java).apply {
-        putExtra(Constants.Keys.YEAR.value, Time().year)
-        putExtra(Constants.Keys.MONTH.value, Time().monthWith0)
-        putExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }
 

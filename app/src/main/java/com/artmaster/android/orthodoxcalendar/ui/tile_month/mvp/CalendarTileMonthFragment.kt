@@ -317,6 +317,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         presenter.onDestroy()
     }
 
+    //TODO resize tile calendar
     private val onDragListener = View.OnDragListener { v, event ->
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED -> {

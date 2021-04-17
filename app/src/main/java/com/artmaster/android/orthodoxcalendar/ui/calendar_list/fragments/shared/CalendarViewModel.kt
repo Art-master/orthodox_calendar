@@ -7,6 +7,7 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ class CalendarViewModel : ViewModel() {
     val time: LiveData<SharedTime> get() = _time
 
     init {
+        initTime()
         GlobalScope.launch {
             initFilters()
         }
@@ -38,6 +40,11 @@ class CalendarViewModel : ViewModel() {
                 if (filters.isNotEmpty()) _filters.value = filters
             }
         }
+    }
+
+    private fun initTime() {
+        val time = Time()
+        setAllTime(time.year, time.monthWith0, time.dayOfMonth)
     }
 
     fun addFilter(item: Filter) {
