@@ -59,6 +59,9 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
         viewModel.time.observe(this, { item ->
             if (SharedTime.isTimeChanged(time, item)) {
                 if (item.year != time.year) setPageAdapter()
+                else if (item.month != time.month) {
+                    binding.holidayTilePager.currentItem = item.month
+                }
                 time = item
             }
         })
@@ -94,13 +97,12 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
 
     private fun getMonthsNames() = resources.getStringArray(R.array.months_names_gen)
 
-
     private fun setOnItemSpinnerSelected() {
         binding.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 binding.holidayTilePager.apply {
                     if (currentItem != position) {
-                        viewModel.setMonth(position)
+                        if (time.month != position) viewModel.setMonth(position)
                         currentItem = position
                     }
                 }
@@ -130,7 +132,7 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
     private fun setChangePageListener() {
         binding.holidayTilePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                viewModel.setMonth(position)
+                if (time.month != position) viewModel.setMonth(position)
                 binding.monthSpinner.setSelection(position)
                 setVisibleArrows(position)
             }
