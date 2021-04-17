@@ -27,10 +27,10 @@ class HolidayListPresenter : MvpPresenter<ListViewContract>(), ListPresenterCont
             withContext(Dispatchers.IO) {
                 val holidays = DataProvider().getData(year, filters)
                 val position = calculatePosition(holidays)
-                viewState.prepareAdapter(position.first, position.second)
+                viewState.prepareAdapter()
                 delay(1000)
                 withContext(Dispatchers.Main) {
-                    viewState.showList()
+                    viewState.showList(position.first)
                 }
             }
         }

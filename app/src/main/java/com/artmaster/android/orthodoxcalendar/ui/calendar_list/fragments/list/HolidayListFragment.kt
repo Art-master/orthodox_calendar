@@ -14,7 +14,6 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.CalendarListFragmentBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
@@ -68,27 +67,27 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
     }
 
     private fun getDay(): Int {
-        return parentFragment?.arguments?.getInt(Constants.Keys.DAY.value) ?: Time().dayOfMonth
+        return arguments?.getInt(Constants.Keys.DAY.value) ?: Time().dayOfMonth
     }
 
     private fun getMonth(): Int {
-        return parentFragment?.arguments?.getInt(Constants.Keys.MONTH.value) ?: Time().monthWith0
+        return arguments?.getInt(Constants.Keys.MONTH.value) ?: Time().monthWith0
     }
 
     private fun getYear(): Int {
-        val bundle = this.arguments
-        return bundle?.getInt(Constants.Keys.YEAR.value, Time().year) ?: Time().year
+        return arguments?.getInt(Constants.Keys.YEAR.value, Time().year) ?: Time().year
     }
 
-    override fun prepareAdapter(position: Int, holiday: Holiday) {
+    override fun prepareAdapter() {
         val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
-        recyclerAdapter = buildAdapter(position, filters ?: ArrayList(), requireContext())
+        recyclerAdapter = buildAdapter(filters ?: ArrayList(), requireContext())
     }
 
-    override fun showList() {
+    override fun showList(position: Int) {
         if (_binding == null) return
         stopLoadingAnimation()
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
+        binding.recyclerView.scrollToPosition(position)
         binding.loading.root.visibility = View.GONE
     }
 
@@ -97,11 +96,11 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         binding.loading.root.visibility = View.GONE
     }
 
-    private fun buildAdapter(position: Int, filters: ArrayList<Filter>, context: Context): ListViewDiffContract.Adapter {
+    private fun buildAdapter(filters: ArrayList<Filter>, context: Context): ListViewDiffContract.Adapter {
         val config = PageConfig
         dataSource = HolidayDataSource(context, getYear())
         dataSource.filters = filters
-        val list = PagedList(dataSource, config, position)
+        val list = PagedList(dataSource, config, 0)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
         val adapter = HolidaysAdapter(context, diffCallback)
         adapter.submitList(list.get())

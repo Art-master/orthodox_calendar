@@ -110,6 +110,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
 
                 val bundle = Bundle()
                 bundle.putInt(Constants.Keys.YEAR.value, years[position])
+                bundle.putInt(Constants.Keys.MONTH.value, time.month)
+                bundle.putInt(Constants.Keys.DAY.value, time.day)
                 bundle.putParcelableArrayList(Constants.Keys.FILTERS.value, filters)
                 fragment.arguments = bundle
 
