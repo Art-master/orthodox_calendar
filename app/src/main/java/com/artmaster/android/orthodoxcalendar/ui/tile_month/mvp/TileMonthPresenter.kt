@@ -28,7 +28,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
                 delay(1000)
                 withContext(Dispatchers.Main) {
                     prepareView(days, currentTime)
-                    viewData(currentTime)
+                    viewData()
                 }
             }
         }
@@ -45,10 +45,10 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
         viewState.prepareMonthsDays(days, time)
     }
 
-    private fun viewData(time: Time) {
+    private fun viewData() {
         viewState.clearView()
         viewState.drawView()
-        //viewState.setFocus(time.month - 1)
+        viewState.setFocus()
     }
 
     override fun viewIsPaused() {

@@ -3,7 +3,10 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.ClipDescription
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Layout
@@ -12,7 +15,6 @@ import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -52,8 +54,6 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        layoutManager = LinearLayoutManager(context)
-
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
 
@@ -68,6 +68,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         _monthBinding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
+        layoutManager = LinearLayoutManager(context)
         return monthBinding.root
     }
 
@@ -85,6 +86,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     override fun onResume() {
         super.onResume()
         presenter.viewIsCreated()
+        setFocus()
     }
 
     private fun initAnimation() {
@@ -95,14 +97,14 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private fun getDayLayout() = TileDayLayoutBinding.inflate(layoutInflater)
 
-    override fun setFocus(monthNum: Int) {
-        //if (monthNum != getParentMonth() && isVisible) return //FIXME ???
+    override fun setFocus() {
+        if (_monthBinding == null) return
         val id = time.day
         if (id == 0) return
         val daysOfWeek = 0 until monthBinding.tableMonthTile.childCount
         for (i in daysOfWeek) {
             val row = monthBinding.tableMonthTile.getChildAt(i) as TableRow
-            val view = row.findViewById<ConstraintLayout>(id) ?: continue
+            val view = row.findViewById<View>(id) ?: continue
             view.requestFocus()
             return
         }
@@ -125,8 +127,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         val row = tableRows[dayOfWeek - 1]
 
         val v = getDayLayout()
-        v.root.setOnFocusChangeListener { view, hasFocus -> changedFocus(view, hasFocus, day) }
-        v.numDay.id = day.dayOfMonth
+        v.root.setOnFocusChangeListener { _, hasFocus -> onChangeFocus(v, hasFocus, day) }
+        v.root.id = day.dayOfMonth
 
         styleDayView(v, day, dayOfWeek)
         if (row.childCount == level - 1) row.addView(TextView(context), level - 1)
@@ -144,14 +146,22 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         }
     }
 
-    private fun changedFocus(view: View, hasFocus: Boolean, day: Day) {
-        val bg = view.background
+    private fun onChangeFocus(view: TileDayLayoutBinding, hasFocus: Boolean, day: Day) {
+        val bg = view.container.background
         if (hasFocus) {
             initRecyclerView(day.holidays)
-            val c = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
-            //val filter = BlendModeColorFilter(c, BlendMode.COLOR) TODO filters
-            viewModel.setDayOfMonth(view.id)
-        } //else bg.clearColorFilter()
+            setDayLayoutColorFilter(bg, view.root)
+            viewModel.setDayOfMonth(view.root.id)
+        } else bg.clearColorFilter()
+    }
+
+    private fun setDayLayoutColorFilter(drawable: Drawable, view: View) {
+        val color = ContextCompat.getColor(view.context!!, R.color.colorSelectTile)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            drawable.colorFilter = BlendModeColorFilter(color, BlendMode.MULTIPLY)
+        } else {
+            drawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+        }
     }
 
     private fun initRecyclerView(holidays: List<Holiday>) {
@@ -170,6 +180,11 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         styleFastingHoliday(day, view)
         styleMemoryTypeHoliday(day, view)
         styleTypeHoliday(day, view)
+        setHolidaysAttributeVisibility(view, day)
+    }
+
+    private fun setHolidaysAttributeVisibility(view: TileDayLayoutBinding, day: Day) {
+        view.dot.visibility = if (day.holidays.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun styleTypeHoliday(day: Day, v: TileDayLayoutBinding) {
