@@ -38,6 +38,8 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+
         subscribeToDataUpdate()
 
         if (!presenter.isInRestoreState(this)) {
@@ -55,7 +57,10 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
         })
 
         viewModel.time.observe(this, { item ->
-            time = item
+            if (SharedTime.isTimeChanged(time, item)) {
+                if (item.year != time.year) setPageAdapter()
+                time = item
+            }
         })
     }
 
@@ -95,7 +100,6 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 binding.holidayTilePager.apply {
                     if (currentItem != position) {
-                        time.month = position
                         viewModel.setMonth(position)
                         currentItem = position
                     }
@@ -138,8 +142,14 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
         val lastPosition = MONTH_SIZE - 1
 
         when (position) {
-            lastPosition -> binding.arrowRight.visibility = View.GONE
-            firstPosition -> binding.arrowLeft.visibility = View.GONE
+            lastPosition -> {
+                binding.arrowRight.visibility = View.GONE
+                binding.arrowLeft.visibility = View.VISIBLE
+            }
+            firstPosition -> {
+                binding.arrowLeft.visibility = View.GONE
+                binding.arrowRight.visibility = View.VISIBLE
+            }
             else -> {
                 binding.arrowLeft.visibility = View.VISIBLE
                 binding.arrowRight.visibility = View.VISIBLE

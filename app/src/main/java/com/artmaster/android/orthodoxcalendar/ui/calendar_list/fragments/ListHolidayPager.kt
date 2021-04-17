@@ -28,7 +28,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
 
     private lateinit var adapter: FragmentStateAdapter
 
-    private var changedCallback: ((Int) -> Unit)? = null
+    private var changedCallback: ((Int, Int) -> Unit)? = null
 
     private val years = getYears()
     private var filters = ArrayList<Filter>()
@@ -42,6 +42,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeToDataUpdate()
+
+        time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
     }
 
     private fun subscribeToDataUpdate() {
@@ -53,7 +55,12 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
         })
 
         viewModel.time.observe(this, { item ->
-            time = item
+            if (SharedTime.isTimeChanged(time, item)) {
+                if (item.year != time.year) {
+                    binding.holidayListPager.currentItem = getPosition(item.year)
+                }
+                time = item
+            }
         })
     }
 
@@ -78,9 +85,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
         }
     }
 
-    private fun getPosition(): Int {
-        return years.indexOf(time.year)
-    }
+    private fun getPosition() = years.indexOf(time.year)
+    private fun getPosition(year: Int) = years.indexOf(year)
 
     private fun setPageAdapter() {
         adapter = getAdapter(this)
@@ -117,7 +123,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
         }
     }
 
-    override fun onChangePageListener(body: (Int) -> Unit) {
+    override fun onChangePageListener(body: (Int, Int) -> Unit) {
         changedCallback = body
     }
 
@@ -125,7 +131,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
         binding.holidayListPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                changedCallback?.invoke(position)
+                time.year = years[position]
+                changedCallback?.invoke(position, time.year)
             }
         })
     }
@@ -171,13 +178,5 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
         animator.interpolator = interpolator
         animator.duration = duration
         animator.start()
-    }
-
-    private fun updateMonth() {
-
-    }
-
-    private fun updateDay() {
-
     }
 }

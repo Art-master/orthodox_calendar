@@ -101,7 +101,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             initTypeOfCalendarFragment()
         }
 
-        listHolidayFragment.onChangePageListener { prepareSpinner(it) }
+        listHolidayFragment.onChangePageListener { position, year -> prepareSpinner(position, year) }
 
         if (!presenter.isInRestoreState(this) && savedInstanceState == null) {
             presenter.attachView(this)
@@ -174,7 +174,8 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         setStartArguments(calendarFragment)
     }
 
-    private fun prepareSpinner(position: Int) {
+    private fun prepareSpinner(position: Int, year: Int) {
+        viewModel.setYear(year)
         binding.toolbarYearSpinner.setSelection(position)
         controlSpinnerView(position)
     }
@@ -182,6 +183,9 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private fun setStartArguments(fragment: Fragment) {
         if (fragment.arguments != null) return
         viewModel.setAllTime(getStartYear(), getMonth(), getDay())
+        fragment.arguments = Bundle().apply {
+            putParcelable(Constants.Keys.TIME.value, viewModel.time.value)
+        }
     }
 
     private fun setCurrentState(arguments: Bundle) {
@@ -193,10 +197,16 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private fun controlSpinnerView(position: Int) {
         val firstPosition = 0
-        val lastPosition = getYears().size - 1
+        val lastPosition = getYears().lastIndex
         when (position) {
-            lastPosition -> binding.arrowRight.visibility = View.GONE
-            firstPosition -> binding.arrowLeft.visibility = View.GONE
+            lastPosition -> {
+                binding.arrowRight.visibility = View.GONE
+                binding.arrowLeft.visibility = View.VISIBLE
+            }
+            firstPosition -> {
+                binding.arrowLeft.visibility = View.GONE
+                binding.arrowRight.visibility = View.VISIBLE
+            }
             else -> {
                 binding.arrowRight.visibility = View.VISIBLE
                 binding.arrowLeft.visibility = View.VISIBLE
@@ -205,7 +215,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     private fun getStartYear() = intent.getIntExtra(Constants.Keys.YEAR.value, Time().year)
-    private fun getCurrentYear() = calendarFragment.arguments?.getInt(Constants.Keys.YEAR.value, getStartYear())
     private fun getMonth() = intent.getIntExtra(Constants.Keys.MONTH.value, Time().monthWith0)
     private fun getDay() = intent.getIntExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
 
@@ -387,19 +396,13 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private fun setOnItemSelected() {
         binding.toolbarYearSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                if (isTheSameYear(position).not()) {
-                    val year = getSpinnerCurrentYear()
-                    viewModel.setYear(year)
-                    controlSpinnerView(position)
-                }
+                val year = getSpinnerCurrentYear()
+                viewModel.setYear(year)
+                controlSpinnerView(position)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
         }
-    }
-
-    private fun isTheSameYear(spinnerPosition: Int): Boolean {
-        return getCurrentYear() == getYears()[spinnerPosition].toInt()
     }
 
     private fun getSpinnerCurrentYear(): Int {
@@ -411,18 +414,12 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private fun resetDateState() {
         val time = Time()
 
-        resetArgsValues()
+        viewModel.setAllTime(time.year, time.monthWith0, time.dayOfMonth)
         if (time.year == getStartYear()) {
             val years = getYears()
             val pos = years.indexOf(getStartYear().toString())
             binding.toolbarYearSpinner.setSelection(pos)
-            //year will update in spinner listener
         }
-    }
-
-    private fun resetArgsValues() {
-        val time = Time()
-        viewModel.setAllTime(time.year, time.monthWith0, time.dayOfMonth)
     }
 
     override fun onDestroy() {
