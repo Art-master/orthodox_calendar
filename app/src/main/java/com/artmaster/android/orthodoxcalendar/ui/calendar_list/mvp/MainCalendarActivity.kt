@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
@@ -33,6 +34,7 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractView
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp.UserHolidayActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -111,6 +113,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         initBarSpinner()
         initFilters()
         initFiltersListeners()
+        prepareNewHolidayButton()
     }
 
     private fun initFilters() {
@@ -133,6 +136,14 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                 binding.addHoliday.hide()
             }
         })
+    }
+
+    private fun prepareNewHolidayButton() {
+        binding.addHoliday.setOnClickListener {
+            val intent = Intent(applicationContext, UserHolidayActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
     }
 
     private fun initFiltersListeners() {

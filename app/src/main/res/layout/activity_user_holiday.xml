@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/userHoliday"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:id="@+id/textViewWithCustomFont14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:text="@string/ornament_for_headers_left"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorHeader"
+        android:textSize="@dimen/size_text_holiday_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintEnd_toStartOf="@+id/holiday_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:id="@+id/holiday_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight="10"
+        android:maxWidth="@dimen/activity_horizontal_margin"
+        android:text="@string/add_holiday"
+        android:textAlignment="center"
+        android:textColor="@color/colorHeader"
+        android:textSize="@dimen/size_text_holiday_name"
+        app:customFont="@string/font_basic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        android:id="@+id/textViewWithCustomFont15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:text="@string/ornament_for_headers_right"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorHeader"
+        android:textSize="@dimen/size_text_holiday_name"
+        app:customFont="@string/font_ornament"
+        app:layout_constraintStart_toEndOf="@+id/holiday_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Описание праздника -->
+    <android.widget.RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></android.widget.RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

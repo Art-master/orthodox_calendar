@@ -39,7 +39,7 @@ class HolidayReviewPresenter(private val context: Context,
     private fun getDate(day: Int, month: Int): Pair<String, String> {
         if (day.or(month) == 0) return Pair("", "")
 
-        val newDate = "$day ${OrtUtils.getMonthNameAcc(context, month).toLowerCase()}"
+        val newDate = "$day ${OrtUtils.getMonthNameAcc(context, month).toLowerCase(Locale.ROOT)}"
         val oldDate = getOldStyleDate(day, month)
         return newDate to oldDate
     }
@@ -47,9 +47,9 @@ class HolidayReviewPresenter(private val context: Context,
     private fun getOldStyleDate(day: Int, month: Int): String {
         val calendar = GregorianCalendar()
         calendar.set(Time().year, month, day)
-        calendar.gregorianChange = Date(java.lang.Long.MAX_VALUE)
+        calendar.gregorianChange = Date(Long.MAX_VALUE)
         return "${calendar.get(Calendar.DAY_OF_MONTH)} " +
-                OrtUtils.getMonthNameAcc(context, (calendar.get(Calendar.MONTH))).toLowerCase()
+                OrtUtils.getMonthNameAcc(context, (calendar.get(Calendar.MONTH))).toLowerCase(Locale.ROOT)
     }
 
     private fun getImageId(image: String): Int {

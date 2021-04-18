@@ -150,4 +150,8 @@
     <string name="filter_common_memory_days">Дни особого поминовения</string>
     <string name="filter_memory_days">Дни поминовения</string>
     <string name="filter_name_days">Дни ангела</string>
+
+    <!-- New holiday -->
+    <string name="add_holiday">Добавить</string>
+
 </resources>
