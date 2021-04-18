@@ -12,7 +12,7 @@
   {
     "id": 1,
     "title": "Рождество Христово",
-    "type_id": 4,
+    "type_id": 3,
     "day": 7,
     "month": 1,
     "image_id": "image1"
@@ -28,7 +28,7 @@
   {
     "id": 3,
     "title": "Крещение Господне",
-    "type_id": 4,
+    "type_id": 3,
     "day": 19,
     "month": 1,
     "image_id": "image8"
@@ -36,7 +36,7 @@
   {
     "id": 4,
     "title": "Сретение Господне",
-    "type_id": 4,
+    "type_id": 3,
     "day": 15,
     "month": 2,
     "image_id": "image37"
@@ -44,7 +44,7 @@
   {
     "id": 5,
     "title": "Благовещение Пресвятой Богородицы",
-    "type_id": 4,
+    "type_id": 3,
     "day": 7,
     "month": 4,
     "image_id": "image39"
@@ -68,7 +68,7 @@
   {
     "id": 8,
     "title": "Преображение Господне",
-    "type_id": 4,
+    "type_id": 3,
     "day": 19,
     "month": 8,
     "image_id": "image45"
@@ -76,7 +76,7 @@
   {
     "id": 9,
     "title": "Успение Пресвятой Богородицы",
-    "type_id": 4,
+    "type_id": 3,
     "day": 28,
     "month": 8,
     "image_id": "image46"
@@ -92,7 +92,7 @@
   {
     "id": 11,
     "title": "Рождество Пресвятой Богородицы",
-    "type_id": 4,
+    "type_id": 3,
     "day": 21,
     "month": 9,
     "image_id": "image48"
@@ -100,7 +100,7 @@
   {
     "id": 12,
     "title": "Воздвижение Креста Господня",
-    "type_id": 4,
+    "type_id": 3,
     "day": 27,
     "month": 9,
     "image_id": "image49"
@@ -116,7 +116,7 @@
   {
     "id": 14,
     "title": "Введение во храм Пресвятой Богородицы",
-    "type_id": 4,
+    "type_id": 3,
     "day": 4,
     "month": 12,
     "image_id": "image51"
@@ -126,7 +126,7 @@
   {
     "id": 15,
     "title": "Вход Господень в Иерусалим",
-    "type_id": 4,
+    "type_id": 3,
     "day": 0,
     "month": 0,
     "dynamic_type": 2,

@@ -5,20 +5,21 @@ import android.content.Intent
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
+import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class NotificationsService : Service() {
 
     private val prefs = App.appComponent.getPreferences()
-    private val repository = App.appComponent.getRepository()
+    private val dataProvider = DataProvider()
 
     private val allowSound = prefs.get(SOUND_OF_NOTIFICATION).toBoolean()
     private val allowVibration = prefs.get(VIBRATION_OF_NOTIFICATION).toBoolean()
@@ -28,44 +29,38 @@ class NotificationsService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
-            if (allowTodayNotification or allowTimeNotification) startThread()
+            if (allowTodayNotification or allowTimeNotification) {
+                if (timeCoincidence()) checkNotifications()
+            }
         }
 
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onBind(intent: Intent?) = null
+    private fun timeCoincidence() = Time().hour == getHoursInSettings()
+    private fun getHoursInSettings() = prefs.get(HOURS_OF_NOTIFICATION).toInt()
 
-    private fun startThread() {
-        Single.fromCallable { execute() }
-                .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onSuccess = { },
-                        onError = { it.printStackTrace() })
-    }
+    override fun onBind(intent: Intent?): Nothing? = null
 
-    private fun execute() {
-        var time = getTime()
+    private fun checkNotifications() {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                val currentTime = Time()
+                val days = dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year)
 
-        val days = repository.getMonthDays(time.monthWith0, time.year)
+                if (allowTimeNotification) {
+                    notificationsByTime(currentTime, days)
+                }
 
-        if (allowTimeNotification) {
-            notificationsByTime(time, days)
-        }
-
-        if (allowTodayNotification) {
-            time = getTime()
-            val holidays = days[time.dayOfMonth - 1].holidays
-            prepareNotificationsHolidays(holidays, time)
+                if (allowTodayNotification) {
+                    val holidays = days[currentTime.dayOfMonth - 1].holidays
+                    prepareNotificationsHolidays(holidays, currentTime)
+                }
+            }
         }
     }
 
-    private fun getTime(): Time {
-        return Time()
-    }
-
-    private fun prepareNotificationsHolidays(holidays: ArrayList<Holiday>, time: Time) {
+    private fun prepareNotificationsHolidays(holidays: List<Holiday>, time: Time) {
         for (holiday in holidays) {
             if (!allowAverageHolidays && isAverageHoliday(holiday)) continue
             val description = getDescription(holiday, time, getTimeNotification())
@@ -97,29 +92,29 @@ class NotificationsService : Service() {
     }
 
     private fun notificationsByTime(time: Time, days: List<Day>) {
-        val timeNotification = getTimeNotification()
-        val numNotifyDay = time.dayOfMonth + timeNotification - 1
+        val userDaysNotification = getTimeNotification()
+        val numNotifyDay = time.dayOfMonth + userDaysNotification - 1
 
-        if (time.dayOfMonth + timeNotification > time.daysInMonth) {
+        if (time.dayOfMonth + userDaysNotification > time.daysInMonth) {
             val daysTwoMonths = days as ArrayList
             daysTwoMonths.addAll(getDaysOfNextMonth())
 
             prepareNotificationsHolidays(daysTwoMonths[numNotifyDay].holidays, time)
-            checkRestDaysNotify(timeNotification, time, daysTwoMonths, numNotifyDay)
+            checkRestDaysNotify(userDaysNotification, time, daysTwoMonths, numNotifyDay)
         } else {
             prepareNotificationsHolidays(days[numNotifyDay].holidays, time)
-            checkRestDaysNotify(timeNotification, time, days, numNotifyDay)
+            checkRestDaysNotify(userDaysNotification, time, days, numNotifyDay)
         }
     }
 
     private fun checkRestDaysNotify(timeNotification: Int, time: Time, days: List<Day>, numNotifyDay: Int) {
         if (timeNotification > 1) {
             val restDays = days.subList(time.dayOfMonth - 1, numNotifyDay)
-            notifyRestDays(restDays, time)
+            notifyAboutRestOfDaysTo(restDays, time)
         }
     }
 
-    private fun notifyRestDays(days: List<Day>, time: Time) {
+    private fun notifyAboutRestOfDaysTo(days: List<Day>, time: Time) {
         for (i in days.size - 1 downTo 1) {
             if (i == 0) continue
             for (holiday in days[i].holidays) {
@@ -133,13 +128,13 @@ class NotificationsService : Service() {
     private fun getTimeNotification() = prefs.get(TIME_OF_NOTIFICATION).toInt()
 
     private fun getDaysOfNextMonth(): List<Day> {
-        val time = getTime()
+        val time = Time()
         if (time.month == Time.Month.DECEMBER.num) {
             time.calendar.set(Calendar.MONTH, 0)
             time.calendar.set(Calendar.YEAR, time.year + 1)
         } else {
             time.calendar.set(Calendar.MONTH, time.month + 1)
         }
-        return repository.getMonthDays(time.month, time.year)
+        return dataProvider.getMonthDays(time.month, time.year)
     }
 }

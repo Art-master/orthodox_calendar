@@ -9,6 +9,7 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentSettingsBinding
+import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppSettingView
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.CheckBoxDecorator
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.components.SpinnerPrepared
@@ -23,7 +24,7 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,14 +42,22 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
         CheckBoxDecorator(binding.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
 
         CheckBoxDecorator(binding.settingsNotifyTime, prefs, IS_ENABLE_NOTIFICATION_TIME).prepare().apply {
-            onClick = { binding.timeSpinner.isEnabled = it.not() }
+            onClick = {
+                binding.timeSpinner.isEnabled = it.not()
+            }
         }
         SpinnerPrepared(binding.timeSpinner, prefs, TIME_OF_NOTIFICATION, getDaysNumbers()).prepare()
 
         CheckBoxDecorator(binding.settingsNotifyInTime, prefs, IS_ENABLE_NOTIFICATION_IN_TIME).prepare().apply {
-            onClick = { binding.timeInSpinner.isEnabled = it.not() }
+            onClick = {
+                binding.timeInSpinner.isEnabled = it.not()
+            }
         }
-        SpinnerPrepared(binding.timeInSpinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare()
+        SpinnerPrepared(binding.timeInSpinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare().apply {
+            onClick = {
+                AlarmBuilder.build(requireContext())
+            }
+        }
 
         CheckBoxDecorator(binding.settingsSpeedUpAnimation, prefs, SPEED_UP_START_ANIMATION).prepare()
 
