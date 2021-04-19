@@ -132,6 +132,12 @@
         <item>30</item>
     </string-array>
 
+    <string-array name="user_holidays_names">
+        <item>День рождения</item>
+        <item>Именины</item>
+        <item>День поминовения</item>
+    </string-array>
+
     <!--Notifications-->
     <string name="notifications_today_name">Сегодня праздник</string>
     <string name="notifications_tomorrow_name">Завтра праздник</string>
@@ -153,5 +159,9 @@
 
     <!-- New holiday -->
     <string name="add_holiday">Добавить</string>
+    <string name="name_holiday">Название</string>
+    <string name="type_holiday">Тип</string>
+    <string name="description_holiday">Описание</string>
+    <string name="save_holiday">Сохранить</string>
 
 </resources>
