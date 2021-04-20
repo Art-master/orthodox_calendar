@@ -12,7 +12,7 @@ class UserHolidayModule {
     @Provides
     @UserHolidayScope
     fun providePresenter(context: Context): ContractUserHolidayPresenter {
-        return UserHolidayPresenter(context)
+        return UserHolidayPresenter()
     }
 
 }

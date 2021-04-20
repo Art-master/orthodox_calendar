@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,6 +25,7 @@ import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
@@ -138,11 +141,25 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         })
     }
 
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            when (result.resultCode) {
+                Constants.Keys.HOLIDAY.hashCode() -> {
+                    viewModel.setAllTime()
+                }
+            }
+        }
+    }
+
     private fun prepareNewHolidayButton() {
         binding.addHoliday.setOnClickListener {
             val intent = Intent(applicationContext, UserHolidayActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
+            val data = Bundle().apply {
+                putParcelable(Constants.Keys.HOLIDAY.value, Holiday())
+            }
+            resultLauncher.launch(intent)
+            startActivity(intent, data)
         }
     }
 
@@ -437,5 +454,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         super.onDestroy()
         presenter.onDestroy()
         fragment.onDestroy()
+        _binding = null
     }
 }

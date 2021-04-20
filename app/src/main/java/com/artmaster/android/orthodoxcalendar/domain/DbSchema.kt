@@ -11,5 +11,6 @@ interface DbSchema {
         const val DYNAMIC_TYPE = "dynamic_type"
         const val DESCRIPTION = "description"
         const val IMAGE_ID = "image_id"
+        const val CREATED_BY_USER = "created_by_user"
     }
 }

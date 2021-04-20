@@ -133,9 +133,10 @@
     </string-array>
 
     <string-array name="user_holidays_names">
-        <item>День рождения</item>
-        <item>Именины</item>
-        <item>День поминовения</item>
+        <!-- @see Holiday.Type ids -->
+        <item id="8">День рождения</item>
+        <item id="9">Именины</item>
+        <item id="10">День поминовения</item>
     </string-array>
 
     <!--Notifications-->
@@ -158,7 +159,7 @@
     <string name="filter_name_days">Дни ангела</string>
 
     <!-- New holiday -->
-    <string name="add_holiday">Добавить</string>
+    <string name="add_holiday">Новый</string>
     <string name="name_holiday">Название</string>
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>

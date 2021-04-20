@@ -45,6 +45,10 @@ data class Holiday(
         @ColumnInfo(name = DbSchema.Holiday.IMAGE_ID)
         var imageId: String = "",
 
+        @SerializedName(DbSchema.Holiday.CREATED_BY_USER)
+        @ColumnInfo(name = DbSchema.Holiday.CREATED_BY_USER)
+        var isCreatedByUser: Boolean = false,
+
         @Ignore
         var monthWith0: Int = month - 1,
 
@@ -71,7 +75,11 @@ data class Holiday(
         NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный", 4),
         GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
         AVERAGE_POLYLEIC("средний полиелейный", 6),
-        AVERAGE_PEPPY("средний бденный", 7);
+        AVERAGE_PEPPY("средний бденный", 7),
+
+        USERS_NAME_DAY("именины", 8),
+        USERS_BIRTHDAY("день рождения", 9),
+        USERS_MEMORY_DAY("средний бденный", 10);
     }
 
     enum class DayOfWeek(val num: Int) {

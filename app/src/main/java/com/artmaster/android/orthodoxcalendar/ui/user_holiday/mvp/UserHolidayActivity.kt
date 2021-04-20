@@ -2,21 +2,25 @@ package com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp
 
 import android.content.Context
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.app.AppCompatActivity
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants.Keys.HOLIDAY
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityUserHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday.components.SpinnerDecorator
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday.impl.ContractUserHolidayView
+import moxy.MvpAppCompatActivity
+import moxy.MvpView
+import moxy.presenter.InjectPresenter
 
-class UserHolidayActivity : AppCompatActivity(), ContractUserHolidayView {
+class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, MvpView {
 
-    //@InjectPresenter(tag = "UserHolidayPresenter")
-    //lateinit var presenter: UserHolidayPresenter
+    @InjectPresenter(tag = "UserHolidayPresenter")
+    lateinit var presenter: UserHolidayPresenter
 
     private var holiday = Holiday()
 
@@ -29,12 +33,13 @@ class UserHolidayActivity : AppCompatActivity(), ContractUserHolidayView {
         _binding = ActivityUserHolidayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prepareSpinners()
-        //holiday = savedInstanceState?.get(Constants.Keys.HOLIDAY.value) as Holiday
+        holiday = savedInstanceState?.get(HOLIDAY.value) as Holiday
 
-        // if (presenter.isViewAttached()) {
-        //    presenter.attachView(this)
-        //     presenter.viewIsReady()
-        // }
+
+        if (!presenter.isInRestoreState(this)) {
+            presenter.attachView(this)
+            presenter.viewIsReady()
+        }
     }
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
@@ -45,10 +50,17 @@ class UserHolidayActivity : AppCompatActivity(), ContractUserHolidayView {
         SpinnerDecorator(binding.holidayTypeSpinner, getEntityTypes())
         binding.holidayTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
-
+                if (selectedItemView != null) holiday.typeId = selectedItemView.id
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
+        }
+
+        binding.saveButton.setOnClickListener {
+            holiday.title = binding.holidayName.text.toString()
+            holiday.description = binding.holidayDescription.text.toString()
+            holiday.isCreatedByUser = true
+            presenter.dataCanBeSave(holiday)
         }
     }
 
@@ -59,8 +71,17 @@ class UserHolidayActivity : AppCompatActivity(), ContractUserHolidayView {
         return resources.getStringArray(R.array.months_names_gen)
     }
 
-
     override fun showData(holiday: Holiday) {
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        outState.putParcelable(HOLIDAY.value, holiday)
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    override fun closeView() {
+        onBackPressed()
+        setResult(HOLIDAY.hashCode())
     }
 }
