@@ -37,10 +37,6 @@ data class Holiday(
         @ColumnInfo(name = DbSchema.Holiday.DYNAMIC_TYPE)
         var dynamicType: Int = 0,
 
-        @SerializedName(DbSchema.Holiday.DESCRIPTION)
-        @ColumnInfo(name = DbSchema.Holiday.DESCRIPTION)
-        var description: String = "",
-
         @SerializedName(DbSchema.Holiday.IMAGE_ID)
         @ColumnInfo(name = DbSchema.Holiday.IMAGE_ID)
         var imageId: String = "",
@@ -48,6 +44,9 @@ data class Holiday(
         @SerializedName(DbSchema.Holiday.CREATED_BY_USER)
         @ColumnInfo(name = DbSchema.Holiday.CREATED_BY_USER)
         var isCreatedByUser: Boolean = false,
+
+        @Ignore
+        var description: String = "",
 
         @Ignore
         var monthWith0: Int = month - 1,

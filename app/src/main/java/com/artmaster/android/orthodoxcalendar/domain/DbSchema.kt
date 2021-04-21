@@ -13,4 +13,8 @@ interface DbSchema {
         const val IMAGE_ID = "image_id"
         const val CREATED_BY_USER = "created_by_user"
     }
+
+    object FullHolidayData {
+        const val TABLE_NAME = "full_holiday_data"
+    }
 }
