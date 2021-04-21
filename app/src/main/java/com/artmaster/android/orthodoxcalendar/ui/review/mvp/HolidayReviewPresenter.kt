@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
 import android.content.Context
+import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PLACEHOLDER_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.RESOURCE_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
@@ -9,6 +10,10 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -16,24 +21,41 @@ class HolidayReviewPresenter(private val context: Context,
                              private val preferences: AppPreferences)
     : AbstractAppPresenter<HolidayReviewContract.View>(),
         HolidayReviewContract.Presenter {
-
+    val repository = App.appComponent.getRepository()
 
     private var holiday: Holiday? = null
 
-    override fun init(holiday: Holiday) {
-        this.holiday = holiday
+    private var isDataNotReadyYet = true
+
+    override fun init(id: Long) {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                holiday = repository.getFullHolidayData(id)
+                withContext(Dispatchers.Main) {
+                    if (isDataNotReadyYet.not()) {
+                        viewIsReady()
+                    }
+                }
+            }
+        }
     }
 
     override fun viewIsReady() {
-        if (holiday == null) throw NoSuchElementException()
-        val date = getDate(holiday!!.day, holiday!!.monthWith0)
-        val desc = getDescription(holiday!!.description)
+        if (holiday == null) {
+            isDataNotReadyYet = false
+            return
+        }
+        holiday?.let {
+            val date = getDate(it.day, it.monthWith0)
+            val desc = getDescription(it.description)
 
-        getView().showHolidayName(holiday!!.title)
-        getView().showImageHoliday(getImageId(holiday!!.imageId), getImageId(""))
-        getView().showNewStyleDate(date.first)
-        getView().showOldStyleDate(date.second)
-        getView().showDescription(desc.first, desc.second)
+            getView().showHolidayName(it.title)
+            getView().showImageHoliday(getImageId(it.imageId), getImageId(""))
+            getView().showNewStyleDate(date.first)
+            getView().showOldStyleDate(date.second)
+            getView().showDescription(desc.first, desc.second)
+        }
+
     }
 
     private fun getDate(day: Int, month: Int): Pair<String, String> {

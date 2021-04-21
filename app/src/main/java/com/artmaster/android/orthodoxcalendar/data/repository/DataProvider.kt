@@ -2,7 +2,9 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.domain.*
-import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
+import com.artmaster.android.orthodoxcalendar.domain.FullHolidayData.Companion.fill
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
+import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -10,7 +12,7 @@ import kotlin.collections.ArrayList
 /**
  * Get data from storage and prepare it
  */
-class DataProvider : CalendarListContractModel, AppDataProvider {
+class DataProvider : CalendarListContractModel, RepositoryConnector {
 
     @Volatile
     private var dynamicData = DynamicData()
@@ -155,6 +157,34 @@ class DataProvider : CalendarListContractModel, AppDataProvider {
         val holidays = db.holidayDao().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
         db.close()
         return calculateDynamicData(holidays, time.year)
+    }
+
+    override fun insert(holiday: Holiday) {
+        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val holidayDao = database.get(context).holidayDao()
+        holidayDao.insertHoliday(holiday)
+
+        val additionalData = FullHolidayData().fill(holiday)
+        fullHolidayDao.insert(additionalData)
+        database.close()
+    }
+
+    override fun insertHolidays(holidays: List<Holiday>) {
+        val holidayDao = database.get(context).holidayDao()
+        holidayDao.deleteTable()
+        holidayDao.insertAllHolidays(holidays)
+
+        val fullDataList = holidays.map { FullHolidayData().fill(it) }
+        val fullHolidayDao = database.get(context).fullHolidayDao()
+        fullHolidayDao.insertAll(fullDataList)
+        database.close()
+    }
+
+    override fun getFullHolidayData(id: Long): Holiday {
+        val holidayDao = database.get(context).holidayDao()
+        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val holiday = holidayDao.getHolidayById(id)
+        return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
 
 }

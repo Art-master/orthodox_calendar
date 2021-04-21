@@ -4,6 +4,7 @@ import android.content.Context
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.INIT_ASSETS_FILE_DIRECTORY
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.INIT_ASSETS_FILE_NAME
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.fillLocaleData
 import com.artmaster.android.orthodoxcalendar.impl.AppFileParser
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -37,7 +38,7 @@ class FileParser(private val ctx: Context) : AppFileParser {
         val commonMap = localeData.associateBy { it.id }
         commonData.forEach {
             val holiday = commonMap[it.id]!!
-            Holiday.fillLocaleData(it, holiday)
+            it.fillLocaleData(holiday)
         }
         return commonData
     }

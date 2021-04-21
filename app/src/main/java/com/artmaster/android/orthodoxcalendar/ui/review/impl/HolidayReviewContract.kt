@@ -1,7 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.impl
 
 import com.artmaster.android.orthodoxcalendar.common.Message
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AppPresenter
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AppView
 
@@ -16,6 +15,6 @@ interface HolidayReviewContract {
     }
 
     interface Presenter : AppPresenter<View> {
-        fun init(holiday: Holiday)
+        fun init(id: Long)
     }
 }

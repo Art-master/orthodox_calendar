@@ -7,42 +7,43 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import com.artmaster.android.orthodoxcalendar.domain.DbSchema.Holiday as Schema
 
 @Parcelize
-@Entity(tableName = DbSchema.Holiday.TABLE_NAME)
+@Entity(tableName = Schema.TABLE_NAME)
 data class Holiday(
 
         @PrimaryKey(autoGenerate = true)
-        @SerializedName(DbSchema.Holiday.ID)
-        @ColumnInfo(name = DbSchema.Holiday.ID)
+        @SerializedName(Schema.ID)
+        @ColumnInfo(name = Schema.ID)
         var id: Long = 0,
 
-        @SerializedName(DbSchema.Holiday.TITLE)
-        @ColumnInfo(name = DbSchema.Holiday.TITLE)
+        @SerializedName(Schema.TITLE)
+        @ColumnInfo(name = Schema.TITLE)
         var title: String = "",
 
-        @SerializedName(DbSchema.Holiday.DAY)
-        @ColumnInfo(name = DbSchema.Holiday.DAY)
+        @SerializedName(Schema.DAY)
+        @ColumnInfo(name = Schema.DAY)
         var day: Int = 0,
 
-        @SerializedName(DbSchema.Holiday.MONTH)
-        @ColumnInfo(name = DbSchema.Holiday.MONTH)
+        @SerializedName(Schema.MONTH)
+        @ColumnInfo(name = Schema.MONTH)
         var month: Int = 0,
 
-        @SerializedName(DbSchema.Holiday.TYPE_ID)
-        @ColumnInfo(name = DbSchema.Holiday.TYPE_ID)
+        @SerializedName(Schema.TYPE_ID)
+        @ColumnInfo(name = Schema.TYPE_ID)
         var typeId: Int = 0,
 
-        @SerializedName(DbSchema.Holiday.DYNAMIC_TYPE)
-        @ColumnInfo(name = DbSchema.Holiday.DYNAMIC_TYPE)
+        @SerializedName(Schema.DYNAMIC_TYPE)
+        @ColumnInfo(name = Schema.DYNAMIC_TYPE)
         var dynamicType: Int = 0,
 
-        @SerializedName(DbSchema.Holiday.IMAGE_ID)
-        @ColumnInfo(name = DbSchema.Holiday.IMAGE_ID)
+        @SerializedName(Schema.IMAGE_ID)
+        @ColumnInfo(name = Schema.IMAGE_ID)
         var imageId: String = "",
 
-        @SerializedName(DbSchema.Holiday.CREATED_BY_USER)
-        @ColumnInfo(name = DbSchema.Holiday.CREATED_BY_USER)
+        @SerializedName(Schema.CREATED_BY_USER)
+        @ColumnInfo(name = Schema.CREATED_BY_USER)
         var isCreatedByUser: Boolean = false,
 
         @Ignore
@@ -145,9 +146,15 @@ data class Holiday(
             return emptyList()
         }
 
-        fun fillLocaleData(main: Holiday, locale: Holiday) {
-            main.title = locale.title
-            main.description = locale.description
+        fun Holiday.fillLocaleData(locale: Holiday) {
+            title = locale.title
+            description = locale.description
+        }
+
+        fun Holiday.mergeFullData(data: FullHolidayData): Holiday {
+            description = data.description
+            monthWith0 = month - 1
+            return this
         }
     }
 }

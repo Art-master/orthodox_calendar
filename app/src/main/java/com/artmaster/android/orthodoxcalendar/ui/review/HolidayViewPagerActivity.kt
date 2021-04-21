@@ -11,7 +11,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayReviewPagerBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
+import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
 import dagger.android.AndroidInjection
@@ -33,7 +33,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     @Inject
-    lateinit var dataProvider: AppDataProvider
+    lateinit var dataProvider: RepositoryConnector
 
     private lateinit var currentHoliday: Holiday
 

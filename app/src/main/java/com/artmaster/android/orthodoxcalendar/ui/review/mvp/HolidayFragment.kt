@@ -36,7 +36,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     companion object {
         fun newInstance(holiday: Holiday): HolidayFragment {
             val intent = Intent()
-            intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+            intent.putExtra(Constants.Keys.HOLIDAY_ID.value, holiday.id)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
@@ -49,8 +49,10 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        holiday = requireArguments().get(Constants.Keys.HOLIDAY.value) as Holiday
-        presenter.init(holiday)
+        if (!presenter.isViewAttached()) {
+            val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+            presenter.init(id)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
