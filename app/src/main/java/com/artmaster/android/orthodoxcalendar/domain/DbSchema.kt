@@ -7,6 +7,7 @@ interface DbSchema {
         const val TITLE = "title"
         const val DAY = "day"
         const val MONTH = "month"
+        const val YEAR = "year"
         const val TYPE_ID = "type_id"
         const val DYNAMIC_TYPE = "dynamic_type"
 

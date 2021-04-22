@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="months_names_acc">
-        <item>Января</item>
-        <item>Февраля</item>
-        <item>Марта</item>
-        <item>Апреля</item>
-        <item>Мая</item>
-        <item>Июня</item>
-        <item>Июля</item>
-        <item>Августа</item>
-        <item>Сентября</item>
-        <item>Октября</item>
-        <item>Ноября</item>
-        <item>Декабря</item>
+        <item id="0">Января</item>
+        <item id="1">Февраля</item>
+        <item id="2">Марта</item>
+        <item id="3">Апреля</item>
+        <item id="4">Мая</item>
+        <item id="5">Июня</item>
+        <item id="6">Июля</item>
+        <item id="7">Августа</item>
+        <item id="8">Сентября</item>
+        <item id="9">Октября</item>
+        <item id="10">Ноября</item>
+        <item id="11">Декабря</item>
     </string-array>
 
     <string-array name="months_names_gen">
-        <item>Январь</item>
-        <item>Февраль</item>
-        <item>Март</item>
-        <item>Апрель</item>
-        <item>Май</item>
-        <item>Июнь</item>
-        <item>Июль</item>
-        <item>Август</item>
-        <item>Сентябрь</item>
-        <item>Октябрь</item>
-        <item>Ноябрь</item>
-        <item>Декабрь</item>
+        <item id="0">Январь</item>
+        <item id="1">Февраль</item>
+        <item id="2">Март</item>
+        <item id="3">Апрель</item>
+        <item id="4">Май</item>
+        <item id="5">Июнь</item>
+        <item id="6">Июль</item>
+        <item id="7">Август</item>
+        <item id="8">Сентябрь</item>
+        <item id="9">Октябрь</item>
+        <item id="10">Ноябрь</item>
+        <item id="11">Декабрь</item>
     </string-array>
 </resources>

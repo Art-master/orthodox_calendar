@@ -159,8 +159,11 @@
     <string name="filter_name_days">Дни ангела</string>
 
     <!-- New holiday -->
-    <string name="add_holiday">Новый</string>
+    <string name="add_holiday">Новое событие</string>
     <string name="name_holiday">Название</string>
+    <string name="month_title">Месяц</string>
+    <string name="day_title">День</string>
+    <string name="year_title">Указать год</string>
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>
     <string name="save_holiday">Сохранить</string>

@@ -14,7 +14,7 @@ import moxy.MvpPresenter
 @InjectViewState
 class UserHolidayPresenter : MvpPresenter<ContractUserHolidayView>(), ContractUserHolidayPresenter {
 
-    val database = App.appComponent.getDatabase()
+    val repository = App.appComponent.getRepository()
     val context = App.appComponent.getContext()
 
     override fun viewIsReady() {
@@ -28,7 +28,7 @@ class UserHolidayPresenter : MvpPresenter<ContractUserHolidayView>(), ContractUs
     override fun dataCanBeSave(holiday: Holiday) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                database.get(context).holidayDao().insertHoliday(holiday)
+                repository.insert(holiday)
                 withContext(Dispatchers.Main) {
                     viewState.closeView()
                 }

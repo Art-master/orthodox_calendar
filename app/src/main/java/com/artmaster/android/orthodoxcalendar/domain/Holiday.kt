@@ -46,14 +46,15 @@ data class Holiday(
         @ColumnInfo(name = Schema.CREATED_BY_USER)
         var isCreatedByUser: Boolean = false,
 
+        @SerializedName(Schema.YEAR)
+        @ColumnInfo(name = Schema.YEAR)
+        var year: Int = 0,
+
         @Ignore
         var description: String = "",
 
         @Ignore
         var monthWith0: Int = month - 1,
-
-        @Ignore
-        var year: Int = 0,
 
         @Ignore
         var firstInGroup: Boolean = false

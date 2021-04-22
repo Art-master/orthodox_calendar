@@ -1,6 +1,5 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -142,11 +141,9 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            when (result.resultCode) {
-                Constants.Keys.HOLIDAY.hashCode() -> {
-                    viewModel.setAllTime()
-                }
+        when (result.resultCode) {
+            Constants.Keys.HOLIDAY.hashCode() -> {
+                viewModel.setAllTime()
             }
         }
     }
@@ -155,11 +152,18 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         binding.addHoliday.setOnClickListener {
             val intent = Intent(applicationContext, UserHolidayActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            val data = Bundle().apply {
-                putParcelable(Constants.Keys.HOLIDAY.value, Holiday())
+
+            val holiday = Holiday().apply {
+                val time = Time()
+                day = time.dayOfMonth
+                month = time.month
+                monthWith0 = time.monthWith0
+                typeId = Holiday.Type.USERS_NAME_DAY.id
+                isCreatedByUser = true
             }
+
+            intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
             resultLauncher.launch(intent)
-            startActivity(intent, data)
         }
     }
 

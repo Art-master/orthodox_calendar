@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.AttributeSet
@@ -32,8 +33,14 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
         _binding = ActivityUserHolidayBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        holiday = if (savedInstanceState == null) {
+            intent?.extras?.getParcelable(HOLIDAY.value) ?: Holiday()
+        } else {
+            savedInstanceState.getParcelable(HOLIDAY.value) ?: Holiday()
+        }
+        binding.holiday = holiday
         prepareSpinners()
-        holiday = savedInstanceState?.get(HOLIDAY.value) as Holiday
+        prepareTimeViews()
 
 
         if (!presenter.isInRestoreState(this)) {
@@ -47,7 +54,9 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     }
 
     private fun prepareSpinners() {
-        SpinnerDecorator(binding.holidayTypeSpinner, getEntityTypes())
+        val types = getHolidayTypes()
+        SpinnerDecorator(binding.holidayTypeSpinner, types)
+        binding.holidayTypeSpinner.setSelection(holiday.typeId - Holiday.Type.USERS_NAME_DAY.ordinal)
         binding.holidayTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                 if (selectedItemView != null) holiday.typeId = selectedItemView.id
@@ -56,15 +65,57 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
             override fun onNothingSelected(parentView: AdapterView<*>) {}
         }
 
+        SpinnerDecorator(binding.holidayMonthSpinner, getMonthNames())
+        binding.holidayMonthSpinner.setSelection(Time().monthWith0)
+        binding.holidayTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
+                if (selectedItemView != null) {
+                    holiday.month = selectedItemView.id + 1
+                    holiday.monthWith0 = selectedItemView.id
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {}
+        }
+
         binding.saveButton.setOnClickListener {
-            holiday.title = binding.holidayName.text.toString()
-            holiday.description = binding.holidayDescription.text.toString()
-            holiday.isCreatedByUser = true
+            updateHolidayData()
             presenter.dataCanBeSave(holiday)
+            setResult(HOLIDAY.hashCode(), buildIntentForResult())
         }
     }
 
-    private fun getEntityTypes() = resources.getStringArray(R.array.user_holidays_names)
+    private fun updateHolidayData() {
+        holiday.apply {
+            title = binding.holidayName.text.toString()
+            description = binding.holidayDescription.text.toString()
+            isCreatedByUser = true
+            day = binding.dayOfMonth.text.toString().toInt()
+            monthWith0 = binding.holidayTypeSpinner.selectedItemPosition
+            month = monthWith0 + 1
+            typeId = Holiday.Type.USERS_NAME_DAY.ordinal + binding.holidayTypeSpinner.selectedItemPosition
+        }
+    }
+
+    private fun prepareTimeViews() {
+        binding.holidayYearCheckedView.setOnCheckedChangeListener { button, flag ->
+            binding.year.visibility = if (flag) View.VISIBLE else View.INVISIBLE
+            if (flag && holiday.year == 0) {
+                holiday.year = Time().year
+                binding.invalidateAll()
+            }
+        }
+    }
+
+    private fun buildIntentForResult(): Intent {
+        val intent = Intent(applicationContext, UserHolidayActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(HOLIDAY.value, holiday)
+        return intent
+    }
+
+    private fun getMonthNames() = resources.getStringArray(R.array.months_names_gen)
+    private fun getHolidayTypes() = resources.getStringArray(R.array.user_holidays_names)
     private fun getMonths() = resources.getStringArray(R.array.months_names_gen)
     private fun getDays(): Array<out String> {
         val time = Time()

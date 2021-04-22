@@ -2,11 +2,10 @@ package com.artmaster.android.orthodoxcalendar.data.font
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.CheckBox
-import android.widget.CheckedTextView
+import androidx.appcompat.widget.AppCompatCheckBox
 import com.artmaster.android.orthodoxcalendar.R
 
-class CustomCheckedView : CheckBox{
+class CustomCheckedView : AppCompatCheckBox {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
