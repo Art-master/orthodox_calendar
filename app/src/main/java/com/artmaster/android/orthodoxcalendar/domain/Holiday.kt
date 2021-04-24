@@ -77,10 +77,11 @@ data class Holiday(
         GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
         AVERAGE_POLYLEIC("средний полиелейный", 6),
         AVERAGE_PEPPY("средний бденный", 7),
+        COMMON_MEMORY_DAY("день памяти", 7),
 
-        USERS_NAME_DAY("именины", 8),
-        USERS_BIRTHDAY("день рождения", 9),
-        USERS_MEMORY_DAY("средний бденный", 10);
+        USERS_NAME_DAY("именины", 9),
+        USERS_BIRTHDAY("день рождения", 10),
+        USERS_MEMORY_DAY("средний бденный", 11);
     }
 
     enum class DayOfWeek(val num: Int) {
@@ -134,16 +135,19 @@ data class Holiday(
             if (filter == Filter.AVERAGE_HOLIDAYS) {
                 return listOf(Type.AVERAGE_PEPPY.id, Type.AVERAGE_POLYLEIC.id)
             }
-            //TODO other filters
             if (filter == Filter.COMMON_MEMORY_DAYS) {
-                return listOf()
+                return listOf(Type.COMMON_MEMORY_DAY.id)
             }
             if (filter == Filter.MEMORY_DAYS) {
-                return listOf()
+                return listOf(Type.USERS_MEMORY_DAY.id)
             }
             if (filter == Filter.NAME_DAYS) {
-                return listOf()
+                return listOf(Type.USERS_NAME_DAY.id)
             }
+            if (filter == Filter.BIRTHDAYS) {
+                return listOf(Type.USERS_BIRTHDAY.id)
+            }
+
             return emptyList()
         }
 
@@ -152,7 +156,7 @@ data class Holiday(
             description = locale.description
         }
 
-        fun Holiday.mergeFullData(data: FullHolidayData): Holiday {
+        fun Holiday.mergeFullData(data: AdditionalHolidayData): Holiday {
             description = data.description
             monthWith0 = month - 1
             return this

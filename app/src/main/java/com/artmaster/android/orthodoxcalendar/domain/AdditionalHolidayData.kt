@@ -18,7 +18,7 @@ import com.artmaster.android.orthodoxcalendar.domain.DbSchema.FullHolidayData as
                 childColumns = [Schema.HOLIDAY_ID],
                 onDelete = CASCADE)])
 
-data class FullHolidayData(
+data class AdditionalHolidayData(
 
         @PrimaryKey(autoGenerate = true)
         @SerializedName(Schema.ID)
@@ -36,7 +36,7 @@ data class FullHolidayData(
         ) : Parcelable {
 
     companion object {
-        fun FullHolidayData.fill(holiday: Holiday): FullHolidayData {
+        fun AdditionalHolidayData.fill(holiday: Holiday): AdditionalHolidayData {
             description = holiday.description
             holidayId = holiday.id
             return this

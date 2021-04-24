@@ -34,6 +34,7 @@ class Settings {
         FILTER_COMMON_MEMORY_DAYS("$PROJECT_DIR.filter_common_memory_days", TRUE),
         FILTER_MEMORY_DAYS("$PROJECT_DIR.filter_memory_days", FALSE),
         FILTER_NAME_DAYS("$PROJECT_DIR.filter_name_days", FALSE),
+        BIRTHDAYS("$PROJECT_DIR.birthdays", FALSE),
     }
 }
 

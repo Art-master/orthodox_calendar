@@ -2,7 +2,7 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.domain.*
-import com.artmaster.android.orthodoxcalendar.domain.FullHolidayData.Companion.fill
+import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData.Companion.fill
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
 import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
@@ -162,10 +162,12 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
     override fun insert(holiday: Holiday) {
         val fullHolidayDao = database.get(context).fullHolidayDao()
         val holidayDao = database.get(context).holidayDao()
-        holidayDao.insertHoliday(holiday)
+        val id = holidayDao.insertHoliday(holiday)
 
-        val additionalData = FullHolidayData().fill(holiday)
+        val additionalData = AdditionalHolidayData().fill(holiday)
+        additionalData.holidayId = id
         fullHolidayDao.insert(additionalData)
+        HolidaysCache.holidays = emptyList()
         database.close()
     }
 
@@ -174,7 +176,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         holidayDao.deleteTable()
         holidayDao.insertAllHolidays(holidays)
 
-        val fullDataList = holidays.map { FullHolidayData().fill(it) }
+        val fullDataList = holidays.map { AdditionalHolidayData().fill(it) }
         val fullHolidayDao = database.get(context).fullHolidayDao()
         fullHolidayDao.insertAll(fullDataList)
         database.close()

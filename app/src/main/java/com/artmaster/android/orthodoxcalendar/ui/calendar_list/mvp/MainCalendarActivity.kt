@@ -140,10 +140,10 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         })
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when (result.resultCode) {
             Constants.Keys.HOLIDAY.hashCode() -> {
-                viewModel.setAllTime()
+                viewModel.update()
             }
         }
     }
@@ -175,6 +175,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             initCheckBoxFilter(filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
             initCheckBoxFilter(filterMemoryDays, Filter.MEMORY_DAYS)
             initCheckBoxFilter(filterNameDays, Filter.NAME_DAYS)
+            initCheckBoxFilter(filterBirthdays, Filter.NAME_DAYS)
         }
     }
 

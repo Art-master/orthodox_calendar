@@ -109,11 +109,11 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         return finalStr
     }
 
-    override fun showNewStyleDate(date: String) {
+    override fun showNewStyleDate(date: String, isCustomHoliday: Boolean) {
         if (date.isEmpty()) return
 
         val str = getString(R.string.new_style_date_string, date)
-        binding.newDateStyleTextView.text = str
+        binding.newDateStyleTextView.text = if (isCustomHoliday) date else str
     }
 
     override fun showOldStyleDate(date: String) {
@@ -124,7 +124,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     }
 
     override fun showImageHoliday(resId: Int, placeholderId: Int) {
-        Picasso.with(context)
+        Picasso.get()
                 .load(resId)
                 .placeholder(placeholderId)
                 .error(placeholderId)

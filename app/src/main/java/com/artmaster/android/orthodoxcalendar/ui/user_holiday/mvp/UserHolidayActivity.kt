@@ -91,7 +91,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
             description = binding.holidayDescription.text.toString()
             isCreatedByUser = true
             day = binding.dayOfMonth.text.toString().toInt()
-            monthWith0 = binding.holidayTypeSpinner.selectedItemPosition
+            monthWith0 = binding.holidayMonthSpinner.selectedItemPosition
             month = monthWith0 + 1
             typeId = Holiday.Type.USERS_NAME_DAY.ordinal + binding.holidayTypeSpinner.selectedItemPosition
         }

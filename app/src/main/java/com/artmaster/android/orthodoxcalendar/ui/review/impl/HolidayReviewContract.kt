@@ -9,7 +9,7 @@ interface HolidayReviewContract {
         fun showErrorMessage(msgType: Message.ERROR)
         fun showHolidayName(name: String)
         fun showDescription(initialLater: String, description: String)
-        fun showNewStyleDate(date: String)
+        fun showNewStyleDate(date: String, isCustomHoliday: Boolean)
         fun showOldStyleDate(date: String)
         fun showImageHoliday(resId: Int, placeholderId: Int)
     }

@@ -53,6 +53,15 @@ class CalendarViewModel : ViewModel() {
         _filters.value = copyData
     }
 
+    fun update() {
+        val copyData = HashSet(_filters.value ?: HashSet())
+        _filters.value = copyData
+
+        val previous = _time.value ?: SharedTime()
+        val obj = SharedTime(previous.year, previous.month, previous.day)
+        _time.value = obj
+    }
+
     fun removeFilter(item: Filter) {
         if (_filters.value == null) return
         val copyData = HashSet(_filters.value)

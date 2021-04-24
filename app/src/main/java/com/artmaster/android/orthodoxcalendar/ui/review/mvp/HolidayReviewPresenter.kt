@@ -51,8 +51,9 @@ class HolidayReviewPresenter(private val context: Context,
 
             getView().showHolidayName(it.title)
             getView().showImageHoliday(getImageId(it.imageId), getImageId(""))
-            getView().showNewStyleDate(date.first)
-            getView().showOldStyleDate(date.second)
+            getView().showNewStyleDate(date.first, it.isCreatedByUser)
+
+            if (it.isCreatedByUser.not()) getView().showOldStyleDate(date.second)
             getView().showDescription(desc.first, desc.second)
         }
 
