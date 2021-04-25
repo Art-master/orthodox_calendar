@@ -1,40 +1,35 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
-import android.content.Context
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PLACEHOLDER_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.RESOURCE_FOR_IMAGE
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
-import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import moxy.InjectViewState
+import moxy.MvpPresenter
 import java.util.*
 
-
-class HolidayReviewPresenter(private val context: Context,
-                             private val preferences: AppPreferences)
-    : AbstractAppPresenter<HolidayReviewContract.View>(),
-        HolidayReviewContract.Presenter {
-    val repository = App.appComponent.getRepository()
+@InjectViewState
+class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), HolidayReviewContract.Presenter {
+    private val repository = App.appComponent.getRepository()
+    private val context = App.appComponent.getContext()
 
     private var holiday: Holiday? = null
 
     private var isDataNotReadyYet = true
 
     override fun init(id: Long) {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO) {
                 holiday = repository.getFullHolidayData(id)
                 withContext(Dispatchers.Main) {
-                    if (isDataNotReadyYet.not()) {
-                        viewIsReady()
-                    }
+                    initUI()
                 }
             }
         }
@@ -44,19 +39,22 @@ class HolidayReviewPresenter(private val context: Context,
         if (holiday == null) {
             isDataNotReadyYet = false
             return
-        }
+        } else initUI()
+    }
+
+    private fun initUI() {
         holiday?.let {
             val date = getDate(it.day, it.monthWith0)
             val desc = getDescription(it.description)
 
-            getView().showHolidayName(it.title)
-            getView().showImageHoliday(getImageId(it.imageId), getImageId(""))
-            getView().showNewStyleDate(date.first, it.isCreatedByUser)
+            viewState.showHolidayName(it.title)
+            viewState.showImageHoliday(getImageId(it.imageId), getImageId(""))
+            viewState.showNewStyleDate(date.first, it.isCreatedByUser)
+            viewState.initEditBtn(it)
 
-            if (it.isCreatedByUser.not()) getView().showOldStyleDate(date.second)
-            getView().showDescription(desc.first, desc.second)
+            if (it.isCreatedByUser.not()) viewState.showOldStyleDate(date.second)
+            viewState.showDescription(desc.first, desc.second)
         }
-
     }
 
     private fun getDate(day: Int, month: Int): Pair<String, String> {
