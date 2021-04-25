@@ -6,49 +6,72 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.common.Message
-import com.artmaster.android.orthodoxcalendar.common.Message.Companion.EMPTY
-import com.artmaster.android.orthodoxcalendar.common.OrtUtils
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
+import com.artmaster.android.orthodoxcalendar.common.msg.Message
+import com.artmaster.android.orthodoxcalendar.common.msg.Warning
 
 /**
  * Building system message for user
  */
 class MessageBuilderFragment : DialogFragment(), DialogInterface.OnClickListener {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val arg = arguments
-        val typeMsg = arg!!.getString(Message.TYPE)
-        val msgText = getTextMessage(typeMsg)
+    var onClickListener: DialogInterface.OnClickListener? = null
 
-        val builder = buildMessage(msgText)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val typeMsg = requireArguments().getString(Message.TYPE)
+
+        val builder = buildMessage(typeMsg!!)
+
         return builder.create()
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        OrtUtils.exitProgram(this.requireContext())
-    }
-
     override fun onClick(dialog: DialogInterface, which: Int) {
-        onCancel(dialog)
-    }
-
-    private fun getTextMessage(typeMsg: String?): Pair<String, String> {
-        when (typeMsg) {
-            Message.ERROR.INIT_DATABASE.toString() -> {
-                return getString(R.string.fatalErrorHeader) to getString(R.string.fatalErrorText)
-            }
+        if (onClickListener == null) {
+            onCancel(dialog)
+        } else {
+            onClickListener!!.onClick(dialog, which)
         }
-        return Pair(EMPTY, EMPTY)
     }
 
-    private fun buildMessage(msgText: Pair<String, String>): AlertDialog.Builder {
-        val builder = AlertDialog.Builder(this.requireActivity())
-        builder.setTitle(msgText.first)
-                .setMessage(msgText.second)
-                .setIcon(R.mipmap.alert_error)
-                .setCancelable(false)
-                .setNegativeButton(R.string.buttonOk, this)
-        return builder
+    private fun getTextMessage(typeMsg: String): String {
+        return when (typeMsg) {
+            Error.INIT_DATABASE.name -> getString(R.string.fatalErrorText)
+            Warning.DELETE_HOLIDAY.name -> getString(R.string.holidayConfirmationMsg)
+            else -> ""
+        }
+    }
+
+    private fun getHeaderMessage(typeMsg: String): String {
+        return when (typeMsg) {
+            Error.INIT_DATABASE.name -> getString(R.string.fatalErrorHeader)
+            Warning.DELETE_HOLIDAY.name -> getString(R.string.holidayConfirmationHeader)
+            else -> ""
+        }
+    }
+
+    private fun getPositiveButtonTextId(typeMsg: String): String {
+        return when (typeMsg) {
+            Warning.DELETE_HOLIDAY.name -> getString(R.string.buttonConfirm)
+            else -> ""
+        }
+    }
+
+    private fun getNegativeButtonTextId(typeMsg: String): String {
+        return when (typeMsg) {
+            Warning.DELETE_HOLIDAY.name -> getString(R.string.buttonReject)
+            else -> ""
+        }
+    }
+
+    private fun buildMessage(typeMsg: String): AlertDialog.Builder {
+        return AlertDialog.Builder(requireActivity()).apply {
+            setTitle(getHeaderMessage(typeMsg))
+            setMessage(getTextMessage(typeMsg))
+            setIcon(R.drawable.ic_baseline_warning_24)
+            setCancelable(true)
+            setPositiveButton(getPositiveButtonTextId(typeMsg), this@MessageBuilderFragment)
+            setNegativeButton(getNegativeButtonTextId(typeMsg), this@MessageBuilderFragment)
+            setOnCancelListener { }
+        }
     }
 }

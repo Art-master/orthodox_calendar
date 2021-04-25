@@ -32,6 +32,9 @@ interface HolidayDao {
     @Query("SELECT * FROM holidays WHERE id >= :initialId LIMIT :loadSize")
     fun getSequence(initialId: Int, loadSize: Int): List<Holiday>
 
+    @Query("DELETE FROM holidays WHERE id = :id")
+    fun delete(id: Long)
+
     @Query("DELETE FROM holidays")
     fun deleteTable()
 }

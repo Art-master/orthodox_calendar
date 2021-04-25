@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
@@ -49,7 +49,7 @@ class InitAppActivity : InitAppContract.View, AppCompatActivity() {
         }
     }
 
-    override fun showErrorMassage(msgType: Message.ERROR) {
+    override fun showErrorMessage(msgType: Error) {
         val bundle = Bundle()
         bundle.putString(msgType.name, msgType.toString())
 

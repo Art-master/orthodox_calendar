@@ -126,7 +126,7 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/deleteHoliday"
+        android:id="@+id/deleteHolidayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -146,7 +146,7 @@
         android:contentDescription="@string/fab_content_desc"
         app:backgroundTint="@color/colorHeadHoliday"
         app:fabSize="mini"
-        app:layout_anchor="@id/deleteHoliday"
+        app:layout_anchor="@id/deleteHolidayButton"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/ic_baseline_edit_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

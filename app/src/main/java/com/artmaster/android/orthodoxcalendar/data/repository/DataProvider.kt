@@ -189,4 +189,12 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
 
+    override fun deleteById(id: Long) {
+        val holidayDao = database.get(context).holidayDao()
+        holidayDao.delete(id)
+        val fullHolidayDao = database.get(context).fullHolidayDao()
+        HolidaysCache.holidays = emptyList()
+        fullHolidayDao.delete(id)
+        database.close()
+    }
 }

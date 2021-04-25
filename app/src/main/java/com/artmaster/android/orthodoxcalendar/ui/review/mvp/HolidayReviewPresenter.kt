@@ -50,7 +50,7 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
             viewState.showHolidayName(it.title)
             viewState.showImageHoliday(getImageId(it.imageId), getImageId(""))
             viewState.showNewStyleDate(date.first, it.isCreatedByUser)
-            viewState.initEditBtn(it)
+            viewState.initButtons(it)
 
             if (it.isCreatedByUser.not()) viewState.showOldStyleDate(date.second)
             viewState.showDescription(desc.first, desc.second)
@@ -92,5 +92,14 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
         val textForDescription = description.replace("[\\s&&[^\t?\n]]+", " ")
         val result = textForDescription.substring(1)
         return textForDescription.first().toString() to result
+    }
+
+    override fun removeHoliday() {
+        if (holiday == null) return
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteById(holiday!!.id)
+            }
+        }
     }
 }

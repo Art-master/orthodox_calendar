@@ -15,4 +15,7 @@ interface FullHolidayDao {
 
     @Query("SELECT * FROM full_holidays_data WHERE holiday_id = :holidayId")
     fun getFullDataByHolidayId(holidayId: Long): AdditionalHolidayData
+
+    @Query("DELETE FROM full_holidays_data WHERE holiday_id = :holidayId")
+    fun delete(holidayId: Long)
 }

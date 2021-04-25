@@ -1,9 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.init.mvp
 
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
@@ -34,7 +34,7 @@ class InitAppPresenter(
                         onSuccess = { getView().nextScreen() },
                         onError = {
                             it.printStackTrace()
-                            getView().showErrorMassage(Message.ERROR.INIT_DATABASE)
+                            getView().showErrorMessage(Error.INIT_DATABASE)
                         })
     }
 

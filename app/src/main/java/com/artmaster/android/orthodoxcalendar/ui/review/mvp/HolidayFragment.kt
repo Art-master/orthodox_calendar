@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -10,13 +11,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
+import com.artmaster.android.orthodoxcalendar.common.msg.Message
+import com.artmaster.android.orthodoxcalendar.common.msg.Warning
 import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
 import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
@@ -27,8 +32,6 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
 
     @InjectPresenter(tag = "HolidayFragmentPresenter")
     lateinit var presenter: HolidayReviewPresenter
-
-    lateinit var holiday: Holiday
 
     private var _binding: FragmentHolidayBinding? = null
     private val binding get() = _binding!!
@@ -66,17 +69,47 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         if (_binding != null) presenter.viewIsReady()
     }
 
-    override fun initEditBtn(holiday: Holiday) {
+    override fun initButtons(holiday: Holiday) {
         _binding?.apply {
             if (holiday.isCreatedByUser.not()) {
                 editHolidayButton.hide()
-                deleteHoliday.hide()
+                deleteHolidayButton.hide()
                 return
             }
             editHolidayButton.setOnClickListener {
+                val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+            }
 
+            deleteHolidayButton.setOnClickListener {
+                showConfirmationMessage(Warning.DELETE_HOLIDAY)
             }
         }
+    }
+
+    private fun showConfirmationMessage(msgType: Warning) {
+        val bundle = Bundle()
+        bundle.putString(Message.TYPE, msgType.name)
+
+        val dialogFragment = MessageBuilderFragment()
+        dialogFragment.arguments = bundle
+        dialogFragment.show(parentFragmentManager, "confirmDelete")
+        dialogFragment.onClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    presenter.removeHoliday()
+                    startActivity(buildIntentForResult())
+                    onDestroy()
+                }
+            }
+        }
+
+    }
+
+    private fun buildIntentForResult(): Intent {
+        val intent = Intent(requireContext(), MainCalendarActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(Constants.Keys.HOLIDAY.value, Constants.Keys.HOLIDAY.hashCode())
+        return intent
     }
 
     override fun showHolidayName(name: String) {
@@ -155,7 +188,7 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
                 .into(binding.imageHoliday)
     }
 
-    override fun showErrorMessage(msgType: Message.ERROR) {
+    override fun showErrorMessage(msgType: Error) {
     }
 
     override fun onDestroyView() {

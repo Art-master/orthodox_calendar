@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOADING_TILE_CALENDAR
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
 import com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
@@ -339,7 +339,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         }
     }
 
-    override fun showErrorMessage(msgType: Message.ERROR) {
+    override fun showErrorMessage(msgType: Error) {
         val bundle = Bundle()
         bundle.putString(msgType.name, msgType.toString())
 
