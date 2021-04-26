@@ -24,6 +24,7 @@ class Constants {
     enum class Keys constructor(val value: String) {
         HOLIDAY_ID("$PROJECT_DIR.common.holiday_id"),
         HOLIDAY("$PROJECT_DIR.common.holiday"),
+        NEED_UPDATE("$PROJECT_DIR.common.holiday.need_update"),
         YEAR("$PROJECT_DIR.common.year"),
         MONTH("$PROJECT_DIR.common.month"),
         DAY("$PROJECT_DIR.common.day"),

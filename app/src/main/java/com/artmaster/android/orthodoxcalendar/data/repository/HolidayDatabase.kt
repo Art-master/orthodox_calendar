@@ -12,7 +12,7 @@ import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 @Database(entities = [Holiday::class, AdditionalHolidayData::class], version = 3)
 abstract class HolidayDatabase : RoomDatabase() {
     abstract fun holidayDao(): HolidayDao
-    abstract fun fullHolidayDao(): FullHolidayDao
+    abstract fun additionalHolidayDataDao(): AdditionalHolidayDataDao
 
     companion object : AppDatabase {
         var instance: HolidayDatabase? = null

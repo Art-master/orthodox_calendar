@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
@@ -23,6 +24,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp.UserHolidayActivity
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
 import moxy.MvpAppCompatFragment
@@ -59,7 +61,7 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHolidayBinding.inflate(inflater, groupContainer, false)
         return binding.root
     }
@@ -67,6 +69,15 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (_binding != null) presenter.viewIsReady()
+    }
+
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        when (result.resultCode) {
+            Constants.Keys.HOLIDAY.hashCode() -> {
+                val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                presenter.init(id)
+            }
+        }
     }
 
     override fun initButtons(holiday: Holiday) {
@@ -77,7 +88,8 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
                 return
             }
             editHolidayButton.setOnClickListener {
-                val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                val intent = buildIntentForEditHolidayActivity(holiday)
+                resultLauncher.launch(intent)
             }
 
             deleteHolidayButton.setOnClickListener {
@@ -97,18 +109,25 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     presenter.removeHoliday()
-                    startActivity(buildIntentForResult())
+                    startActivity(buildIntentForMainActivity())
                     onDestroy()
                 }
             }
         }
-
     }
 
-    private fun buildIntentForResult(): Intent {
+    private fun buildIntentForMainActivity(): Intent {
         val intent = Intent(requireContext(), MainCalendarActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         intent.putExtra(Constants.Keys.HOLIDAY.value, Constants.Keys.HOLIDAY.hashCode())
+        return intent
+    }
+
+    private fun buildIntentForEditHolidayActivity(holiday: Holiday): Intent {
+        val intent = Intent(requireContext(), UserHolidayActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+        intent.putExtra(Constants.Keys.NEED_UPDATE.value, true)
         return intent
     }
 

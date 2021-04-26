@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants.Keys
 import com.artmaster.android.orthodoxcalendar.common.Constants.Keys.HOLIDAY
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityUserHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -80,7 +81,8 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
         binding.saveButton.setOnClickListener {
             updateHolidayData()
-            presenter.dataCanBeSave(holiday)
+            val needUpdate = intent?.extras?.getBoolean(Keys.NEED_UPDATE.value) ?: false
+            presenter.dataCanBeSave(holiday, needUpdate)
             setResult(HOLIDAY.hashCode(), buildIntentForResult())
         }
     }

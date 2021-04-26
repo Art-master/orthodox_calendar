@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
 @Dao
@@ -31,6 +32,9 @@ interface HolidayDao {
 
     @Query("SELECT * FROM holidays WHERE id >= :initialId LIMIT :loadSize")
     fun getSequence(initialId: Int, loadSize: Int): List<Holiday>
+
+    @Update
+    fun update(holiday: Holiday)
 
     @Query("DELETE FROM holidays WHERE id = :id")
     fun delete(id: Long)

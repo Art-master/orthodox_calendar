@@ -25,10 +25,12 @@ class UserHolidayPresenter : MvpPresenter<ContractUserHolidayView>(), ContractUs
 
     }
 
-    override fun dataCanBeSave(holiday: Holiday) {
+    override fun dataCanBeSave(holiday: Holiday, needUpdate: Boolean) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                repository.insert(holiday)
+                if (needUpdate) {
+                    repository.update(holiday)
+                } else repository.insert(holiday)
                 withContext(Dispatchers.Main) {
                     viewState.closeView()
                 }

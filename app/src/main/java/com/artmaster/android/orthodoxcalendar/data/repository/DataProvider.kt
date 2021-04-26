@@ -160,7 +160,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
     }
 
     override fun insert(holiday: Holiday) {
-        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holidayDao = database.get(context).holidayDao()
         val id = holidayDao.insertHoliday(holiday)
 
@@ -177,14 +177,24 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         holidayDao.insertAllHolidays(holidays)
 
         val fullDataList = holidays.map { AdditionalHolidayData().fill(it) }
-        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         fullHolidayDao.insertAll(fullDataList)
+        database.close()
+    }
+
+    override fun update(holiday: Holiday) {
+        val holidayDao = database.get(context).holidayDao()
+        holidayDao.update(holiday)
+        HolidaysCache.holidays = emptyList()
+        val additionalData = AdditionalHolidayData().fill(holiday)
+        val additionalHolidayDataDao = database.get(context).additionalHolidayDataDao()
+        additionalHolidayDataDao.update(additionalData)
         database.close()
     }
 
     override fun getFullHolidayData(id: Long): Holiday {
         val holidayDao = database.get(context).holidayDao()
-        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
@@ -192,7 +202,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
     override fun deleteById(id: Long) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.delete(id)
-        val fullHolidayDao = database.get(context).fullHolidayDao()
+        val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         HolidaysCache.holidays = emptyList()
         fullHolidayDao.delete(id)
         database.close()

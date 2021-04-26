@@ -5,5 +5,5 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 interface ContractUserHolidayPresenter {
     fun viewIsReady()
     fun viewIsCreated()
-    fun dataCanBeSave(holiday: Holiday)
+    fun dataCanBeSave(holiday: Holiday, needUpdate: Boolean)
 }
