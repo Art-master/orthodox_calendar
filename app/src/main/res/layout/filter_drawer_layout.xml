@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toStartOf="@+id/textViewWithSettingsName"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/textViewWithSettingsName"
         android:layout_width="107dp"
         android:layout_height="31dp"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10"
@@ -43,7 +43,7 @@
         app:layout_constraintStart_toEndOf="@+id/textViewWithSettingsName"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterEaster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterHeadHolidays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterEaster" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterAverageHolidays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterCommonMemoryDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterAverageHolidays" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterMemoryDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterCommonMemoryDays" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterNameDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterMemoryDays" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
         android:id="@+id/filterBirthdays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

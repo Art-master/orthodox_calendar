@@ -21,7 +21,7 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils.checkFragment
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOADING_TILE_CALENDAR
 import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
 import com.artmaster.android.orthodoxcalendar.common.msg.Error
-import com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+import com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
 import com.artmaster.android.orthodoxcalendar.databinding.ActivityCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday

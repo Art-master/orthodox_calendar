@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/arrowLeft"
         android:layout_width="24dp"
         android:layout_height="26dp"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@+id/holidayTilePager"
         app:layout_constraintStart_toEndOf="@+id/arrowLeft" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/textViewWithCustomFont13"
         android:layout_width="wrap_content"
         android:layout_height="26dp"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/monthSpinner"
         app:layout_constraintStart_toEndOf="@+id/monthSpinner" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/arrowRight"
         android:layout_width="24dp"
         android:layout_height="26dp"

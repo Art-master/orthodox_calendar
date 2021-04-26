@@ -1,11 +1,13 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatTextView
+
 import com.artmaster.android.orthodoxcalendar.R
 
-class CustomCheckedView : AppCompatCheckBox {
+class TextViewWithCustomFont : AppCompatTextView {
+
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {

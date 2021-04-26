@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
@@ -16,9 +17,9 @@ import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.common.msg.Error
 import com.artmaster.android.orthodoxcalendar.common.msg.Message
 import com.artmaster.android.orthodoxcalendar.common.msg.Warning
-import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
-import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
-import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
+import com.artmaster.android.orthodoxcalendar.data.components.CustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.CustomLeadingMarginSpan2
+import com.artmaster.android.orthodoxcalendar.data.components.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
@@ -29,6 +30,7 @@ import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
+
 
 class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
 
@@ -75,6 +77,12 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         when (result.resultCode) {
             Constants.Keys.HOLIDAY.hashCode() -> {
                 val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        startActivity(buildIntentForMainActivity())
+                    }
+                }
+                requireActivity().onBackPressedDispatcher.addCallback(this, callback)
                 presenter.init(id)
             }
         }

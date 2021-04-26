@@ -136,7 +136,7 @@
         <!-- @see Holiday.Type ids -->
         <item id="8">День рождения</item>
         <item id="9">Именины</item>
-        <item id="10">День поминовения</item>
+        <item id="10">День памяти</item>
     </string-array>
 
     <!--Notifications-->
@@ -155,7 +155,7 @@
     <string name="filter_head_holidays">Великие праздники</string>
     <string name="filter_average_holidays">Средние праздники</string>
     <string name="filter_common_memory_days">Дни особого поминовения</string>
-    <string name="filter_memory_days">Дни поминовения</string>
+    <string name="filter_memory_days">Дни памяти</string>
     <string name="filter_name_days">Именины</string>
     <string name="filter_birthdays">Дни рождения</string>
 

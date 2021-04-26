@@ -9,7 +9,7 @@
     android:background="@color/window_background"
     android:orientation="vertical">
 
-    <com.artmaster.android.orthodoxcalendar.data.font.CustomizableTextView
+    <com.artmaster.android.orthodoxcalendar.data.components.CustomizableTextView
         android:id="@+id/loadingScreenText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:id="@+id/numDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

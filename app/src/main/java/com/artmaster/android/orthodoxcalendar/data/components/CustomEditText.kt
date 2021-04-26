@@ -1,13 +1,11 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatTextView
-
+import androidx.appcompat.widget.AppCompatEditText
 import com.artmaster.android.orthodoxcalendar.R
 
-class TextViewWithCustomFont : AppCompatTextView {
-
+class CustomEditText : AppCompatEditText {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {

@@ -60,7 +60,10 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
         binding.holidayTypeSpinner.setSelection(holiday.typeId - Holiday.Type.USERS_NAME_DAY.ordinal)
         binding.holidayTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
-                if (selectedItemView != null) holiday.typeId = selectedItemView.id
+                if (selectedItemView != null) {
+                    holiday.typeId = getTypeId(position)
+                    setYearFieldVisibility()
+                }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
@@ -68,7 +71,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
         SpinnerDecorator(binding.holidayMonthSpinner, getMonthNames())
         binding.holidayMonthSpinner.setSelection(Time().monthWith0)
-        binding.holidayTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.holidayMonthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                 if (selectedItemView != null) {
                     holiday.month = selectedItemView.id + 1
@@ -83,7 +86,16 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
             updateHolidayData()
             val needUpdate = intent?.extras?.getBoolean(Keys.NEED_UPDATE.value) ?: false
             presenter.dataCanBeSave(holiday, needUpdate)
-            setResult(HOLIDAY.hashCode(), buildIntentForResult())
+        }
+    }
+
+    private fun setYearFieldVisibility() {
+        if (holiday.typeId == Holiday.Type.USERS_NAME_DAY.id) {
+            binding.year.visibility = View.INVISIBLE
+            binding.holidayYearCheckedView.visibility = View.INVISIBLE
+        } else {
+            binding.year.visibility = View.VISIBLE
+            binding.holidayYearCheckedView.visibility = View.VISIBLE
         }
     }
 
@@ -95,9 +107,14 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
             day = binding.dayOfMonth.text.toString().toInt()
             monthWith0 = binding.holidayMonthSpinner.selectedItemPosition
             month = monthWith0 + 1
-            typeId = Holiday.Type.USERS_NAME_DAY.ordinal + binding.holidayTypeSpinner.selectedItemPosition
+            typeId = getTypeId(binding.holidayTypeSpinner.selectedItemPosition)
+
+            year = if (typeId == Holiday.Type.USERS_NAME_DAY.id) 0
+            else binding.year.text.toString().toInt()
         }
     }
+
+    private fun getTypeId(pos: Int) = Holiday.Type.USERS_NAME_DAY.ordinal + pos
 
     private fun prepareTimeViews() {
         binding.holidayYearCheckedView.setOnCheckedChangeListener { button, flag ->
@@ -118,14 +135,14 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
     private fun getMonthNames() = resources.getStringArray(R.array.months_names_gen)
     private fun getHolidayTypes() = resources.getStringArray(R.array.user_holidays_names)
-    private fun getMonths() = resources.getStringArray(R.array.months_names_gen)
-    private fun getDays(): Array<out String> {
-        val time = Time()
-        return resources.getStringArray(R.array.months_names_gen)
-    }
 
     override fun showData(holiday: Holiday) {
 
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        holiday = savedInstanceState.getParcelable<Holiday>(HOLIDAY.value) ?: Holiday()
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -136,5 +153,11 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     override fun closeView() {
         onBackPressed()
         setResult(HOLIDAY.hashCode())
+    }
+
+    override fun dataWasSaved(isUpdate: Boolean) {
+        if (isUpdate) {
+            setResult(HOLIDAY.hashCode(), buildIntentForResult())
+        }
     }
 }

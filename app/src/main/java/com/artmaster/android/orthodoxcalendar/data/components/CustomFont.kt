@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.content.Context
 import android.graphics.Typeface
@@ -8,9 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.FONT_ASSETS_DIRECTORY
-
 import java.lang.ref.SoftReference
-import java.util.Hashtable
+import java.util.*
 
 /**
  * Set custom font on a TextView or Button

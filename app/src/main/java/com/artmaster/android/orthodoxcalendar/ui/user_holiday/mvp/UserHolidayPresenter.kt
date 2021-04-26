@@ -32,6 +32,7 @@ class UserHolidayPresenter : MvpPresenter<ContractUserHolidayView>(), ContractUs
                     repository.update(holiday)
                 } else repository.insert(holiday)
                 withContext(Dispatchers.Main) {
+                    viewState.dataWasSaved(needUpdate)
                     viewState.closeView()
                 }
             }

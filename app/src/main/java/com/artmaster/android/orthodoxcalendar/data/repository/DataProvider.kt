@@ -185,9 +185,13 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
     override fun update(holiday: Holiday) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.update(holiday)
+
         HolidaysCache.holidays = emptyList()
-        val additionalData = AdditionalHolidayData().fill(holiday)
+
         val additionalHolidayDataDao = database.get(context).additionalHolidayDataDao()
+        val data = additionalHolidayDataDao.getFullDataByHolidayId(holiday.id)
+        val additionalData = data.fill(holiday)
+
         additionalHolidayDataDao.update(additionalData)
         database.close()
     }

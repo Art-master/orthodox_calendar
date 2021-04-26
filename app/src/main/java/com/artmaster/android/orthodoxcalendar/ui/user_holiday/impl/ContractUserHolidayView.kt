@@ -12,4 +12,7 @@ interface ContractUserHolidayView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun closeView()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun dataWasSaved(isUpdate: Boolean)
 }

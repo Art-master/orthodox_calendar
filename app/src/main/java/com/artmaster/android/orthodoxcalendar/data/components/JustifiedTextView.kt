@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -10,10 +10,8 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-
 import com.artmaster.android.orthodoxcalendar.R
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Class for justify text

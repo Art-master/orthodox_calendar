@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
-import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.CustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentMonthTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.databinding.TileDayLayoutBinding
 import com.artmaster.android.orthodoxcalendar.domain.*

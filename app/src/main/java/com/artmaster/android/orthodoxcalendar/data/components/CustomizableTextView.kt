@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.animation.Animator
 import android.animation.ValueAnimator

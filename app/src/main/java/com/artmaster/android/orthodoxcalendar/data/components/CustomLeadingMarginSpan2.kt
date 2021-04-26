@@ -1,9 +1,9 @@
-package com.artmaster.android.orthodoxcalendar.data.font
+package com.artmaster.android.orthodoxcalendar.data.components
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.text.style.LeadingMarginSpan
 import android.text.Layout
+import android.text.style.LeadingMarginSpan
 
 class CustomLeadingMarginSpan2(private var margin: Int = 0, private var lines: Int = 0)
     : LeadingMarginSpan.LeadingMarginSpan2 {
