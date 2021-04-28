@@ -63,19 +63,9 @@
                 android:layout_height="wrap_content" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/filters_navigation_panel"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:layout_gravity="end|bottom"
-            android:background="@color/window_background"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-            <include
-                android:id="@+id/filters"
-                layout="@layout/filter_drawer_layout" />
-
-        </com.google.android.material.navigation.NavigationView>
+        <include
+            android:id="@+id/filters"
+            layout="@layout/filter_drawer_layout" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

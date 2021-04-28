@@ -141,11 +141,13 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        holiday = savedInstanceState.getParcelable<Holiday>(HOLIDAY.value) ?: Holiday()
+        holiday = savedInstanceState.getParcelable(HOLIDAY.value) ?: Holiday()
+        binding.invalidateAll()
         super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        updateHolidayData()
         outState.putParcelable(HOLIDAY.value, holiday)
         super.onSaveInstanceState(outState, outPersistentState)
     }

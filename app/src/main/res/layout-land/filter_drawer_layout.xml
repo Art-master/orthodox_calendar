@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/filters_navigation_panel"
     android:layout_width="wrap_content"
-    android:layout_height="400dp"
+    android:layout_height="match_parent"
     android:layout_gravity="end|bottom"
     android:background="@color/window_background"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

@@ -10,9 +10,11 @@ class SpinnerDecorator(private val spinner: Spinner, private val defValues: Arra
         prepare()
     }
 
-    private fun prepare() {
-        val adapter = SpinnerAdapter(spinner.context!!, R.layout.spinner_type_holiday, defValues)
-        adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
+    private fun prepare(layoutSpinnerId: Int = R.layout.spinner_type_holiday,
+                        layoutDropdownId: Int = R.layout.spinner_type_holiday_dropdown) {
+
+        val adapter = SpinnerAdapter(spinner.context!!, layoutSpinnerId, defValues)
+        adapter.setDropDownViewResource(layoutDropdownId)
         spinner.adapter = adapter
     }
 }

@@ -165,6 +165,7 @@
     <string name="month_title">Месяц</string>
     <string name="day_title">День</string>
     <string name="year_title">Указать год</string>
+    <string name="year_title_2">Год</string>
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>
     <string name="save_holiday">Сохранить</string>

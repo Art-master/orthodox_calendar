@@ -3,5 +3,5 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="@dimen/size_text_title_toolbar"
+    android:textSize="@dimen/size_text_holiday_name"
     app:customFont="ornament.ttf" />
