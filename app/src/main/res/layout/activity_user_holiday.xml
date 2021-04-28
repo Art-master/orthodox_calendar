@@ -5,6 +5,7 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
 
         <variable
             name="holiday"
@@ -84,13 +85,13 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             android:autofillHints=""
-            android:background="@color/toolbar_background"
+            android:background="@drawable/edit_text_background"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
             android:text="@{holiday.description}"
-            android:textSize="@dimen/size_text_settings_name"
             android:textColor="@color/text"
+            android:textSize="@dimen/size_text_settings_name"
             app:customFont="@string/font_basic"
             app:layout_constraintBottom_toTopOf="@+id/saveButton"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +107,7 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="10"
             android:maxWidth="@dimen/activity_horizontal_margin"
-            android:text="@string/name_holiday"
+            android:text="@string/name_holiday_title"
             android:textAlignment="textStart"
             android:textColor="@color/colorHeader"
             android:textSize="@dimen/size_text_settings_name"
@@ -122,12 +123,12 @@
             android:layout_marginTop="60dp"
             android:layout_marginEnd="16dp"
             android:autofillHints=""
-            android:background="@color/toolbar_background"
+            android:background="@drawable/edit_text_background"
             android:inputType="text"
             android:maxLength="50"
-            android:text="@{holiday.title}"
-            android:textSize="@dimen/size_text_settings_name"
+            android:text='@{TextUtils.isEmpty(holiday.title) ? @string/new_name_holiday : holiday.title}'
             android:textColor="@color/text"
+            android:textSize="@dimen/size_text_settings_name"
             app:customFont="@string/font_basic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -140,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/toolbar_background"
+            android:background="@drawable/edit_text_background"
             android:entries="@array/user_holidays_names"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/holidayType"
@@ -149,10 +150,10 @@
         </androidx.appcompat.widget.AppCompatSpinner>
 
         <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+            android:id="@+id/arrowDownForHolidayType"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="10"
-            android:background="@color/toolbar_background"
             android:drawableStart="@drawable/ic_arrow_drop_down_white"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/size_text_settings"
@@ -183,12 +184,13 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:autofillHints=""
-            android:background="@color/toolbar_background"
+            android:background="@drawable/edit_text_background"
             android:inputType="number"
             android:maxLength="2"
             android:text="@{String.valueOf(holiday.day)}"
-            android:textSize="@dimen/size_text_settings_name"
+            android:textAlignment="center"
             android:textColor="@color/text"
+            android:textSize="@dimen/size_text_settings_name"
             app:customFont="@string/font_basic"
             app:layout_constraintBottom_toBottomOf="@+id/holidayMonthSpinner"
             app:layout_constraintEnd_toStartOf="@+id/holidayMonthSpinner"
@@ -199,7 +201,6 @@
             android:id="@+id/holidayMonthTitle"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="10"
             android:maxWidth="@dimen/activity_horizontal_margin"
@@ -209,9 +210,7 @@
             android:textSize="@dimen/size_text_settings_name"
             app:customFont="@string/font_basic"
             app:layout_constraintBottom_toTopOf="@+id/holidayMonthSpinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.488"
-            app:layout_constraintStart_toEndOf="@+id/holidayDayHint" />
+            app:layout_constraintStart_toStartOf="@+id/holidayMonthSpinner" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/holidayMonthSpinner"
@@ -220,7 +219,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="52dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/toolbar_background"
+            android:background="@drawable/edit_text_background"
             android:entries="@array/months_names_gen"
             android:textColor="@color/colorHeader"
             app:layout_constraintEnd_toEndOf="parent"
@@ -257,13 +256,14 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:autofillHints=""
-            android:background="@color/toolbar_background"
-            android:visibility="@{holiday.year == 0 ? View.INVISIBLE : View.VISIBLE}"
+            android:background="@drawable/edit_text_background"
             android:inputType="number"
             android:maxLength="4"
             android:text='@{holiday.year == 0 ? "" : String.valueOf(holiday.year)}'
-            android:textSize="@dimen/size_text_settings_name"
+            android:textAlignment="center"
             android:textColor="@color/text"
+            android:textSize="@dimen/size_text_settings_name"
+            android:visibility="@{holiday.year == 0 ? View.INVISIBLE : View.VISIBLE}"
             app:customFont="@string/font_basic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/holidayYearCheckedView"
@@ -274,7 +274,6 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="10"
-            android:background="@color/toolbar_background"
             android:drawableStart="@drawable/ic_arrow_drop_down_white"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/size_text_settings"
@@ -297,12 +296,15 @@
             app:layout_constraintBottom_toBottomOf="@+id/holidayTypeSpinner"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomButton
             android:id="@+id/saveButton"
             android:layout_width="324dp"
             android:layout_height="45dp"
             android:layout_marginBottom="16dp"
             android:text="@string/save_holiday"
+            android:textColor="@color/text"
+            android:textSize="@dimen/size_text_holiday_name"
+            app:customFont="@string/font_basic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

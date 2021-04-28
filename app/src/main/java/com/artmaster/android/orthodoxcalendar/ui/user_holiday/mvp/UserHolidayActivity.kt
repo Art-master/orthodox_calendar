@@ -3,7 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
@@ -18,6 +18,8 @@ import com.artmaster.android.orthodoxcalendar.ui.user_holiday.impl.ContractUserH
 import moxy.MvpAppCompatActivity
 import moxy.MvpView
 import moxy.presenter.InjectPresenter
+import java.util.*
+
 
 class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, MvpView {
 
@@ -25,6 +27,8 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     lateinit var presenter: UserHolidayPresenter
 
     private var holiday = Holiday()
+
+    private val currentTime = Time()
 
     private var _binding: ActivityUserHolidayBinding? = null
     private val binding get() = _binding!!
@@ -70,7 +74,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
         }
 
         SpinnerDecorator(binding.holidayMonthSpinner, getMonthNames())
-        binding.holidayMonthSpinner.setSelection(Time().monthWith0)
+        binding.holidayMonthSpinner.setSelection(currentTime.monthWith0)
         binding.holidayMonthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                 if (selectedItemView != null) {
@@ -102,26 +106,99 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     private fun updateHolidayData() {
         holiday.apply {
             title = binding.holidayName.text.toString()
+            if (title.isEmpty()) title = getString(R.string.new_name_holiday)
             description = binding.holidayDescription.text.toString()
             isCreatedByUser = true
-            day = binding.dayOfMonth.text.toString().toInt()
+
+            binding.dayOfMonth.apply {
+                day = if (text.toString().isNotEmpty()) text.toString().toInt()
+                else currentTime.dayOfMonth
+            }
+
             monthWith0 = binding.holidayMonthSpinner.selectedItemPosition
             month = monthWith0 + 1
             typeId = getTypeId(binding.holidayTypeSpinner.selectedItemPosition)
 
-            year = if (typeId == Holiday.Type.USERS_NAME_DAY.id) 0
-            else binding.year.text.toString().toInt()
+            year = when {
+                typeId == Holiday.Type.USERS_NAME_DAY.id -> 0
+                binding.year.text.toString().isNotEmpty() -> binding.year.text.toString().toInt()
+                else -> currentTime.year
+            }
         }
     }
 
     private fun getTypeId(pos: Int) = Holiday.Type.USERS_NAME_DAY.ordinal + pos
 
+    private fun getYearFilter() = InputFilter { source, start, end, dest, dstart, dend ->
+        val year = currentTime.year
+        for (i in start until end) {
+            if (!Character.isDigit(source[i])) return@InputFilter ""
+        }
+        if (source.length > 2) return@InputFilter source
+        val str = dest.toString() + source
+        if (source.isEmpty() || str.isEmpty()) return@InputFilter source
+        if (str.length > 4) return@InputFilter ""
+
+        val newYear = str.toInt()
+        if (newYear > year || newYear <= 0) return@InputFilter ""
+        null
+    }
+
     private fun prepareTimeViews() {
+        initYearField()
+        initDayOfMonthField()
+    }
+
+    private fun initYearField() {
         binding.holidayYearCheckedView.setOnCheckedChangeListener { button, flag ->
             binding.year.visibility = if (flag) View.VISIBLE else View.INVISIBLE
             if (flag && holiday.year == 0) {
-                holiday.year = Time().year
+                holiday.year = currentTime.year
                 binding.invalidateAll()
+            }
+        }
+
+        binding.year.apply {
+            filters = arrayOf(getYearFilter())
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                if (hasFocus.not()) {
+                    if (text.toString().isEmpty()) setText(currentTime.year.toString())
+                    else {
+                        val time = currentTime
+                        val num = text.toString().toInt()
+                        if (num > time.year) setText(currentTime.year.toString())
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun getDayOfMonthFilter() = InputFilter { source, start, end, dest, dstart, dend ->
+        for (i in start until end) {
+            if (!Character.isDigit(source[i])) return@InputFilter ""
+        }
+        if (source.length > 1) return@InputFilter source
+        val str = dest.toString() + source
+        if (source.isEmpty() || str.isEmpty()) return@InputFilter source
+        if (str.length > 2) return@InputFilter ""
+
+        val newDay = str.toInt()
+        if (newDay > 31 || newDay <= 0) return@InputFilter ""
+        null
+    }
+
+    private fun initDayOfMonthField() {
+        binding.dayOfMonth.apply {
+            filters = arrayOf(getDayOfMonthFilter())
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                if (hasFocus.not()) {
+                    if (text.toString().isEmpty()) setText(currentTime.dayOfMonth.toString())
+                    else {
+                        val num = text.toString().toInt()
+                        if (num > 31) setText(currentTime.dayOfMonth.toString())
+                    }
+                }
             }
         }
     }
@@ -142,14 +219,15 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         holiday = savedInstanceState.getParcelable(HOLIDAY.value) ?: Holiday()
+        binding.holiday = holiday
         binding.invalidateAll()
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         updateHolidayData()
         outState.putParcelable(HOLIDAY.value, holiday)
-        super.onSaveInstanceState(outState, outPersistentState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun closeView() {
@@ -158,8 +236,11 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     }
 
     override fun dataWasSaved(isUpdate: Boolean) {
-        if (isUpdate) {
-            setResult(HOLIDAY.hashCode(), buildIntentForResult())
-        }
+        setResult(HOLIDAY.hashCode(), buildIntentForResult())
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }
