@@ -57,13 +57,17 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
 
-            val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
+            val filters = getFilters()
             time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
 
             lifecycleScope.launch {
                 presenter.viewIsReady(time, filters ?: ArrayList())
             }
         }
+    }
+
+    private fun getFilters(): ArrayList<Filter> {
+        return requireArguments().getParcelableArrayList(Constants.Keys.FILTERS.value)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -168,7 +172,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         if (monthBinding.recyclerViewDayHolidays.layoutManager == null) {
             monthBinding.recyclerViewDayHolidays.layoutManager = layoutManager
         }
-        monthBinding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext())
+        monthBinding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext(), getFilters())
     }
 
     private fun styleDayView(view: TileDayLayoutBinding, day: Day, dayOfWeek: Int) {

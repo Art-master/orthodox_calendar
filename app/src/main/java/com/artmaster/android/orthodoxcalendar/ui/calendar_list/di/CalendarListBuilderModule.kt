@@ -39,7 +39,7 @@ open class CalendarListBuilderModule {
     @Provides
     fun provideAdapter(context: Context, diffCallback: ListViewDiffContract.CallBack<Holiday>,
                        list: ListViewDiffContract.PagedList<Holiday>): ListViewDiffContract.Adapter {
-        val adapter = HolidaysAdapter(context, diffCallback)
+        val adapter = HolidaysAdapter(context, diffCallback, ArrayList())
         adapter.submitList(list.get())
         return adapter
     }

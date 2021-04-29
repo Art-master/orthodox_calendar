@@ -102,7 +102,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         dataSource.filters = filters
         val list = PagedList(dataSource, config, 0)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
-        val adapter = HolidaysAdapter(context, diffCallback)
+        val adapter = HolidaysAdapter(context, diffCallback, filters)
         adapter.submitList(list.get())
         return adapter
     }

@@ -7,11 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.adapter.HolidaysAdapter
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
-class HolidayDayAdapter(val holidays: List<Holiday>, val context: Context) :
+class HolidayDayAdapter(val holidays: List<Holiday>, val context: Context, val filters: ArrayList<Filter>) :
         RecyclerView.Adapter<HolidayDayAdapter.HolidayViewHolder>() {
 
     override fun getItemCount() = holidays.size
@@ -25,7 +26,7 @@ class HolidayDayAdapter(val holidays: List<Holiday>, val context: Context) :
     override fun onBindViewHolder(viewHolder: HolidayViewHolder, index: Int) {
         val item = holidays[index]
         viewHolder.itemView.setOnClickListener {
-            val intent = HolidayViewPagerActivity.getIntent(context, item)
+            val intent = HolidayViewPagerActivity.getIntent(context, item, filters)
             context.startActivity(intent)
         }
 
