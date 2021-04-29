@@ -5,6 +5,6 @@
     <string name="buttonReject">Нет</string>
     <string name="fatalErrorHeader">Системная ошибка</string>
     <string name="fatalErrorText">Ошибка загрузки данных. \n Переустановите приложение и попробуйте снова</string>
-    <string name="holidayConfirmationHeader">Удаление праздника</string>
-    <string name="holidayConfirmationMsg">Удалить текущий праздник?</string>
+    <string name="holidayConfirmationHeader">Удаление события</string>
+    <string name="holidayConfirmationMsg">Удалить текущее событие?</string>
 </resources>
