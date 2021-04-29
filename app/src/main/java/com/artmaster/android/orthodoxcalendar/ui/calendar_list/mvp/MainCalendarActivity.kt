@@ -128,14 +128,12 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                binding.showFiltersButton.show()
-                binding.addHoliday.show()
+                setFloatingPanelVisibility(true)
             }
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
-                binding.showFiltersButton.hide()
-                binding.addHoliday.hide()
+                setFloatingPanelVisibility(false)
             }
         })
     }
@@ -145,6 +143,16 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             Constants.Keys.HOLIDAY.hashCode() -> {
                 viewModel.update()
             }
+        }
+    }
+
+    private fun setFloatingPanelVisibility(isShow: Boolean = true) {
+        if (isShow) {
+            binding.showFiltersButton.show()
+            binding.addHoliday.show()
+        } else {
+            binding.showFiltersButton.hide()
+            binding.addHoliday.hide()
         }
     }
 
@@ -188,6 +196,11 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                         else viewModel.addFilter(filter)
                     }
                 }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.drawerLayout.closeDrawer(GravityCompat.END)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -277,7 +290,9 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val currentVisibleFragment = when (item!!.itemId) {
+        checkFloatingButtonVisibility(item!!)
+
+        val currentVisibleFragment = when (item.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)
             R.id.item_settings -> checkFragment(appSettingsFragment)
             R.id.item_reset_date -> {
@@ -300,7 +315,16 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             removeFragment(this.fragment)
             showFragment(checkFragment(calendarFragment))
         }
+
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkFloatingButtonVisibility(item: MenuItem) {
+        if (item.itemId == R.id.item_view) {
+            setFloatingPanelVisibility(true)
+        } else if (item.itemId != R.id.item_reset_date) {
+            setFloatingPanelVisibility(false)
+        }
     }
 
     private fun changeMainFragment(item: MenuItem) {

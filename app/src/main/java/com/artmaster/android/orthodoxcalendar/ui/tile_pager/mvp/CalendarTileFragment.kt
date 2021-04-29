@@ -38,7 +38,9 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+        if (arguments != null) {
+            time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+        }
 
         subscribeToDataUpdate()
 

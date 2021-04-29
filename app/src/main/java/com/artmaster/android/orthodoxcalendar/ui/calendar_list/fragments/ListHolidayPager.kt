@@ -37,8 +37,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeToDataUpdate()
-
-        time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+        if (arguments != null) {
+            time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+        }
     }
 
     private fun subscribeToDataUpdate() {
