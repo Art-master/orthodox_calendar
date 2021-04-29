@@ -14,45 +14,40 @@ object AlarmBuilder {
 
     private val prefs = App.appComponent.getPreferences()
 
-    fun build(context: Context){
-        if(isNotificationDisable()) return
+    fun build(context: Context) {
+        if (isNotificationDisable()) return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).let {
-            intent -> PendingIntent.getBroadcast(context, 0, intent, 0)
-        }
-
-        // Set the alarm to start at approximately by setting time
-        var calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, getHoursBySettings())
-        }
-
-        //calendar = fakeTime() //test
-
         alarmMgr.setInexactRepeating(
                 AlarmManager.RTC,
-                calendar.timeInMillis,
+                buildCalendarByAppSettings().timeInMillis,
                 AlarmManager.INTERVAL_DAY,
-                alarmIntent
+                createIntent(context)
         )
     }
 
-    private fun fakeTime(): Calendar {
+    // Set the alarm to start at approximately by setting time
+    private fun buildCalendarByAppSettings(): Calendar {
         return Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.SECOND, get(Calendar.SECOND) + 3)
+            set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+            //set(Calendar.SECOND, get(Calendar.SECOND) + 3) DEBUG
         }
     }
 
-    private fun isNotificationDisable(): Boolean{
+    private fun createIntent(context: Context): PendingIntent {
+        return Intent(context, AlarmReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(context, 0, intent, 0)
+        }
+    }
+
+    private fun isNotificationDisable(): Boolean {
         val isEnableToday = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TODAY)
         val isEnableBefore = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TIME)
         return isEnableToday == Settings.FALSE || isEnableBefore == Settings.FALSE
     }
 
-    private fun getHoursBySettings(): Int{
+    private fun getHoursBySettings(): Int {
         return prefs.get(Settings.Name.HOURS_OF_NOTIFICATION).toInt()
     }
 

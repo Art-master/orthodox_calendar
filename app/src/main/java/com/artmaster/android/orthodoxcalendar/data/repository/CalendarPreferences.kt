@@ -14,10 +14,14 @@ class CalendarPreferences @Inject constructor(context: Context) : AppPreferences
     private var preferences: SharedPreferences = context.getSharedPreferences(SETTINGS_FILE_NAME, 0)
 
     override fun get(settName: Settings.Name): String {
-        return preferences.getString(settName.name, settName.defValue) ?: settName.defValue
+        return preferences.getString(settName.value, settName.defValue) ?: settName.defValue
     }
 
     override fun set(settings: Settings.Name, value: String) {
-        preferences.edit().putString(settings.name, value).apply()
+        preferences.edit().putString(settings.value, value).apply()
+    }
+
+    override fun has(settings: Settings.Name): Boolean {
+        return preferences.contains(settings.value)
     }
 }

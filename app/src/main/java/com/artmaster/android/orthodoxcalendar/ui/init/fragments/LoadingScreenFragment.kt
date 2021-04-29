@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.LOADING_ANIMATION_DURATION
-import com.artmaster.android.orthodoxcalendar.data.font.CustomizableTextView
+import com.artmaster.android.orthodoxcalendar.data.components.CustomizableTextView
 import java.util.*
 
 /**

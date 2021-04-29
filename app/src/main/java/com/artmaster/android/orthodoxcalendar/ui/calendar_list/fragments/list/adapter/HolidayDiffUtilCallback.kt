@@ -16,6 +16,6 @@ class HolidayDiffUtilCallback(oldList: List<Holiday>, newList: List<Holiday>)
     }
 
     override fun areContentsTheSame(oldItem: Holiday, newItem: Holiday): Boolean {
-        return oldItem.uuid == newItem.uuid
+        return oldItem.id == newItem.id
     }
 }

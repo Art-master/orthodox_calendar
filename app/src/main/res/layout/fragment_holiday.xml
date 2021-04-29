@@ -1,122 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/myview"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/myview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/window_background"
-        android:orientation="vertical"
-        android:textAlignment="center"
-        android:weightSum="1">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:background="@color/window_background"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:weightSum="1">
 
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/ornament_for_headers_left"
-                android:textColor="@color/colorHeader"
-                android:textSize="@dimen/size_text_holiday_name"
-                android:textAlignment="textEnd"
-                app:customFont="@string/font_ornament" />
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:id="@+id/holiday_name_in_page"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="10"
-                android:textColor="@color/colorHeader"
-                android:maxWidth="@dimen/activity_horizontal_margin"
-                app:customFont="@string/font_basic"
-                android:textSize="@dimen/size_text_holiday_name"
-                android:textAlignment="center" />
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/colorHeader"
-                android:textSize="@dimen/size_text_holiday_name"
-                android:text="@string/ornament_for_headers_right"
-                android:textAlignment="textStart"
-                app:customFont="@string/font_ornament" />
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_holiday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="5dp" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:id="@+id/new_date_style_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingTop="20dp"
-                android:paddingRight="10dp"
-                android:text="@string/new_style_date_string"
-                app:customFont="@string/font_basic"
-                android:textSize="@dimen/size_text_basic"
-                android:textAlignment="center" />
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:id="@+id/old_date_style_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingTop="20dp"
-                android:paddingRight="10dp"
-                app:customFont="@string/font_basic"
-                android:textSize="@dimen/size_text_basic"
-                android:textAlignment="center" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <!-- Описание праздника -->
-        <android.widget.RelativeLayout
-            android:id="@+id/relative_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:id="@+id/initial_later_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
-                app:customFont="@string/font_for_bukvica"
-                android:textSize="@dimen/size_text_bukvica"
-                android:padding="10dp" />
-
-            <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
-                android:id="@+id/description_text_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:customFont="@string/font_basic"
-                android:textSize="@dimen/size_text_basic"
-                android:padding="20dp" />
-        </android.widget.RelativeLayout>
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
-    </LinearLayout>
-</ScrollView>
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/ornament_for_headers_left"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorHeader"
+                    android:textSize="@dimen/size_text_holiday_name"
+                    app:customFont="@string/font_ornament" />
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:id="@+id/holiday_name_in_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="10"
+                    android:maxWidth="@dimen/activity_horizontal_margin"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorHeader"
+                    android:textSize="@dimen/size_text_holiday_name"
+                    app:customFont="@string/font_basic" />
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/ornament_for_headers_right"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorHeader"
+                    android:textSize="@dimen/size_text_holiday_name"
+                    app:customFont="@string/font_ornament" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_holiday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="5dp" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:id="@+id/new_date_style_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/new_style_date_string"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/size_text_basic"
+                    app:customFont="@string/font_basic" />
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:id="@+id/old_date_style_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="10dp"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/size_text_basic"
+                    app:customFont="@string/font_basic" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Описание праздника -->
+            <android.widget.RelativeLayout
+                android:id="@+id/relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:id="@+id/initial_later_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textColor="@color/colorRed"
+                    android:textSize="@dimen/size_text_bukvica"
+                    app:customFont="@string/font_for_bukvica" />
+
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
+                    android:id="@+id/description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="@dimen/size_text_basic"
+                    app:customFont="@string/font_basic" />
+            </android.widget.RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteHolidayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"
+        app:backgroundTint="@color/colorEasterHoliday"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_baseline_delete_24"
+        app:useCompatPadding="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editHolidayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/fab_content_desc"
+        app:backgroundTint="@color/colorHeadHoliday"
+        app:fabSize="mini"
+        app:layout_anchor="@id/deleteHolidayButton"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@drawable/ic_baseline_edit_24" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

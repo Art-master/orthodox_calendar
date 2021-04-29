@@ -27,7 +27,7 @@
                 android:elevation="3dp"
                 android:minHeight="?attr/actionBarSize">
 
-                <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
                     android:id="@+id/arrowLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                     android:background="@null"
                     app:customFont="@string/font_basic" />
 
-                <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+                <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
                     android:id="@+id/arrowRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,19 +63,9 @@
                 android:layout_height="wrap_content" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/filters_navigation_panel"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:layout_gravity="end|bottom"
-            android:background="@color/window_background"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-            <include
-                android:id="@+id/filters"
-                layout="@layout/filter_drawer_layout" />
-
-        </com.google.android.material.navigation.NavigationView>
+        <include
+            android:id="@+id/filters"
+            layout="@layout/filter_drawer_layout" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
@@ -103,6 +93,7 @@
         app:layout_anchor="@id/showFiltersButton"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

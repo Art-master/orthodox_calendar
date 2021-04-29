@@ -9,14 +9,16 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.ListItemHolidayBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 
-class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.CallBack<Holiday>)
+class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.CallBack<Holiday>,
+                      val filters: ArrayList<Filter> = ArrayList())
     : PagedListAdapter<Holiday, HolidaysAdapter.HolidayViewHolder>(itemCallback as DiffUtil.ItemCallback<Holiday>),
         ListViewDiffContract.Adapter {
 
@@ -29,7 +31,7 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
     override fun onBindViewHolder(viewHolder: HolidayViewHolder, index: Int) {
         val item = getItem(index)!!
         viewHolder.itemView.setOnClickListener {
-            val intent = HolidayViewPagerActivity.getIntent(context, item)
+            val intent = HolidayViewPagerActivity.getIntent(context, item, filters)
             context.startActivity(intent)
         }
         viewHolder.bind(getItem(index)!!)
@@ -52,7 +54,6 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
             val context = textView.context
 
             when {
-
                 holiday.typeId == Holiday.Type.TWELVE_MOVABLE.id ||
                         holiday.typeId == Holiday.Type.TWELVE_NOT_MOVABLE.id ||
                         holiday.typeId == Holiday.Type.GREAT_NOT_TWELVE.id -> {

@@ -14,7 +14,7 @@ interface ContractTileMonthView : MvpView {
     fun prepareDaysOfWeekRows(dayOfWeek: IntRange)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setFocus(monthNum: Int)
+    fun setFocus()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun drawView()

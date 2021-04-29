@@ -82,6 +82,7 @@
     <string name="remember_day">Особые дни памяти</string>
     <string name="strict_fasting">Строгий пост</string>
     <string name="no_fasting_days">Сплошная седьмица</string>
+    <string name="have_holidays">Есть праздники</string>
 
     <!--Settings-->
     <string name="settings_name">Настройки</string>
@@ -131,6 +132,13 @@
         <item>30</item>
     </string-array>
 
+    <string-array name="user_holidays_names">
+        <!-- @see Holiday.Type ids -->
+        <item id="8">День рождения</item>
+        <item id="9">Именины</item>
+        <item id="10">День памяти</item>
+    </string-array>
+
     <!--Notifications-->
     <string name="notifications_today_name">Сегодня праздник</string>
     <string name="notifications_tomorrow_name">Завтра праздник</string>
@@ -147,6 +155,20 @@
     <string name="filter_head_holidays">Великие праздники</string>
     <string name="filter_average_holidays">Средние праздники</string>
     <string name="filter_common_memory_days">Дни особого поминовения</string>
-    <string name="filter_memory_days">Дни поминовения</string>
-    <string name="filter_name_days">Дни ангела</string>
+    <string name="filter_memory_days">Дни памяти</string>
+    <string name="filter_name_days">Именины</string>
+    <string name="filter_birthdays">Дни рождения</string>
+
+    <!-- New holiday -->
+    <string name="add_holiday">Новое событие</string>
+    <string name="name_holiday_title">Название</string>
+    <string name="new_name_holiday">Новый</string>
+    <string name="month_title">Месяц</string>
+    <string name="day_title">День</string>
+    <string name="year_title">Указать год</string>
+    <string name="year_title_2">Год</string>
+    <string name="type_holiday">Тип</string>
+    <string name="description_holiday">Описание</string>
+    <string name="save_holiday">Сохранить</string>
+
 </resources>

@@ -5,7 +5,7 @@ import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreference
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.di.CalendarActivityModule
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.di.CalendarActivityScope
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityModule
 import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityScope
 import com.artmaster.android.orthodoxcalendar.ui.init.mvp.InitAppActivity
@@ -33,7 +33,7 @@ interface AppModule {
 
     @CalendarActivityScope
     @ContributesAndroidInjector(modules = [CalendarActivityModule::class])
-    fun calendarListActivityInjector(): CalendarListActivity
+    fun calendarListActivityInjector(): MainCalendarActivity
 
     @HolidayViewPagerActivityScope
     @ContributesAndroidInjector(modules = [HolidayViewPagerActivityModule::class])

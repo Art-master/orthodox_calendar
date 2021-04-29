@@ -11,8 +11,9 @@
     <color name="colorBasicFont">#61797474</color>
     <color name="colorTextHeadHolidays">#FFFFFF</color>
 
+    <color name="text">#757575</color>
     <color name="colorHeader">#ff0000</color>
-    <color name="colorSelectTile">#B3FFFFFF</color>
+    <color name="colorSelectTile">#B3B6B6B6</color>
     <color name="colorTwelveHoliday">#DD6A66</color>
     <color name="colorTileBorder">#000000</color>
     <color name="colorHeadHoliday">#FF6D00</color>

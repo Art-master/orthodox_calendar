@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
 @Dao
@@ -16,7 +17,7 @@ interface HolidayDao {
     @Query("SELECT * FROM holidays")
     fun getAll(): List<Holiday>
 
-    @Query("SELECT * FROM holidays WHERE typeId IN (:filters)")
+    @Query("SELECT * FROM holidays WHERE type_id IN (:filters)")
     fun getByFilters(filters: List<Int>): List<Holiday>
 
     /** [monthNum] with 0 */
@@ -27,10 +28,16 @@ interface HolidayDao {
     fun getHolidaysByDayAndMonth(month: Int, day: Int): List<Holiday>
 
     @Query("SELECT * FROM holidays WHERE id = :id")
-    fun getForId(id: Long): Holiday
+    fun getHolidayById(id: Long): Holiday
 
     @Query("SELECT * FROM holidays WHERE id >= :initialId LIMIT :loadSize")
     fun getSequence(initialId: Int, loadSize: Int): List<Holiday>
+
+    @Update
+    fun update(holiday: Holiday)
+
+    @Query("DELETE FROM holidays WHERE id = :id")
+    fun delete(id: Long)
 
     @Query("DELETE FROM holidays")
     fun deleteTable()

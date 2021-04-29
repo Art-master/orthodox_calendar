@@ -2,11 +2,12 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthPresenter
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import java.util.*
@@ -14,27 +15,29 @@ import java.util.*
 @InjectViewState
 class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMonthPresenter {
 
-    private val time = Time()
+    private val currentTime = Time()
 
-    private var isViewCreated = false
+    private var job: Job? = null
 
-    override suspend fun viewIsReady(year: Int, month: Int) {
-        time.calendar.set(year, month, 1)
+    override suspend fun viewIsReady(time: SharedTime, filters: ArrayList<Filter>) {
+        currentTime.calendar.set(time.year, time.month, 1)
 
-        getHolidays(year, month)
-        viewData(time)
-    }
-
-    private suspend fun getHolidays(year: Int, month: Int): List<Day> {
-        return withContext(Dispatchers.IO) {
-            val days = DataProvider().getMonthDays(month, year)
-            prepareView(days, time)
-            return@withContext days
+        job = GlobalScope.launch(Dispatchers.Unconfined) {
+            withContext(Dispatchers.IO) {
+                val days = DataProvider().getMonthDays(time.month, time.year, filters)
+                delay(1000)
+                withContext(Dispatchers.Main) {
+                    prepareView(days, currentTime)
+                    viewData()
+                }
+            }
         }
     }
 
     override fun viewIsCreated() {
-        isViewCreated = true
+        GlobalScope.launch(Dispatchers.Main) {
+            job?.join()
+        }
     }
 
     private fun prepareView(days: List<Day>, time: Time) {
@@ -42,10 +45,10 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
         viewState.prepareMonthsDays(days, time)
     }
 
-    private fun viewData(time: Time) {
+    private fun viewData() {
         viewState.clearView()
         viewState.drawView()
-        //viewState.setFocus(time.month - 1)
+        viewState.setFocus()
     }
 
     override fun viewIsPaused() {

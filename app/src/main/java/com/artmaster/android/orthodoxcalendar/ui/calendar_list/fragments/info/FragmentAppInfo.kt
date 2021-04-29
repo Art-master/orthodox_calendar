@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.data.font.MutableForegroundSpan
-import com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.MutableForegroundSpan
+import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppInfoView
 
 /**

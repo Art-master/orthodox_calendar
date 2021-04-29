@@ -5,7 +5,6 @@ import java.util.*
 
 class HolidaysFake {
 
-
     fun get(num: Int): List<Holiday> {
         val range = 1..num
         val holidays = ArrayList<Holiday>(range.last)
@@ -18,13 +17,11 @@ class HolidaysFake {
 
     fun getOne(index: Int = 3): Holiday {
         val holiday = Holiday()
-        holiday.uuid = UUID.randomUUID().toString()
         holiday.title = "holiday - $index"
         holiday.day = index.inc()
         holiday.month = index.dec()
         holiday.description = "description - $index"
-        holiday.imageLink = "image - $index"
-        holiday.type = "type - $index"
+        holiday.imageId = "image - $index"
         holiday.year = index * 100
         return holiday
     }

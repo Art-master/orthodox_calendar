@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="buttonOk">Слава Богу</string>
+    <string name="buttonConfirm">Да</string>
+    <string name="buttonReject">Нет</string>
     <string name="fatalErrorHeader">Системная ошибка</string>
     <string name="fatalErrorText">Ошибка загрузки данных. \n Переустановите приложение и попробуйте снова</string>
+    <string name="holidayConfirmationHeader">Удаление события</string>
+    <string name="holidayConfirmationMsg">Удалить текущее событие?</string>
 </resources>

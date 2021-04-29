@@ -1,49 +1,62 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments
 
-import android.animation.Animator
-import android.animation.TimeInterpolator
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayListPagerBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarUpdateContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.ListViewDiffContract
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list.HolidayListFragment
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarSharedData
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import dagger.android.support.AndroidSupportInjection
 
 
-class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, CalendarUpdateContract {
+class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
 
     private lateinit var adapter: FragmentStateAdapter
 
-    private var changedCallback: ((Int) -> Unit)? = null
+    private var changedCallback: ((Int, Int) -> Unit)? = null
 
     private val years = getYears()
     private var filters = ArrayList<Filter>()
+    private var time = SharedTime()
 
     private var _binding: HolidayListPagerBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CalendarSharedData by activityViewModels()
+    private val viewModel: CalendarViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        subscribeToDataUpdate()
+        if (arguments != null) {
+            time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
+        }
+    }
 
+    private fun subscribeToDataUpdate() {
         viewModel.filters.observe(this, { item ->
-            filters = ArrayList(item.toList())
+            filters.clear()
+            filters.addAll(item.toList())
             setPageAdapter()
+            binding.holidayListPager.invalidate()
+        })
+
+        viewModel.time.observe(this, { item ->
+            if (SharedTime.isTimeChanged(time, item)) {
+                if (item.year != time.year) {
+                    binding.holidayListPager.currentItem = getPosition(item.year)
+                }
+                time = item
+            }
         })
     }
 
@@ -68,9 +81,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         }
     }
 
-    private fun getPosition(): Int {
-        return years.indexOf(getYear())
-    }
+    private fun getPosition() = years.indexOf(time.year)
+    private fun getPosition(year: Int) = years.indexOf(year)
 
     private fun setPageAdapter() {
         adapter = getAdapter(this)
@@ -99,6 +111,8 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
 
                 val bundle = Bundle()
                 bundle.putInt(Constants.Keys.YEAR.value, years[position])
+                bundle.putInt(Constants.Keys.MONTH.value, time.month)
+                bundle.putInt(Constants.Keys.DAY.value, time.day)
                 bundle.putParcelableArrayList(Constants.Keys.FILTERS.value, filters)
                 fragment.arguments = bundle
 
@@ -107,7 +121,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         }
     }
 
-    override fun onChangePageListener(body: (Int) -> Unit) {
+    override fun onChangePageListener(body: (Int, Int) -> Unit) {
         changedCallback = body
     }
 
@@ -115,61 +129,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager, Calenda
         binding.holidayListPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                changedCallback?.invoke(position)
+                time.year = years[position]
+                changedCallback?.invoke(position, time.year)
             }
         })
-    }
-
-    private fun getYear() = requireArguments().getInt(Constants.Keys.YEAR.value, Time().year)
-
-    override fun updateYear() {
-        val years = getYears()
-        val pos = years.indexOf(getYear())
-
-        binding.holidayListPager.currentItem = pos
-        //binding.holidayListPager.setCurrentItem(pos, 3000)
-    }
-
-    fun ViewPager2.setCurrentItem(
-            item: Int,
-            duration: Long,
-            interpolator: TimeInterpolator = DecelerateInterpolator(),
-            pagePxWidth: Int = width // Default value taken from getWidth() from ViewPager2 view
-    ) {
-        val pxToDrag: Int = pagePxWidth * (item - currentItem)
-        val animator = ValueAnimator.ofInt(0, pxToDrag)
-        var previousValue = 0
-        animator.addUpdateListener { valueAnimator ->
-            val currentValue = valueAnimator.animatedValue as Int
-            val currentPxToDrag = (currentValue - previousValue).toFloat()
-            fakeDragBy(-currentPxToDrag)
-            previousValue = currentValue
-        }
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
-                beginFakeDrag()
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                endFakeDrag()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {  /*Ignored*/
-            }
-
-            override fun onAnimationRepeat(animation: Animator?) {  /*Ignored*/
-            }
-        })
-        animator.interpolator = interpolator
-        animator.duration = duration
-        animator.start()
-    }
-
-    override fun updateMonth() {
-
-    }
-
-    override fun updateDay() {
-
     }
 }

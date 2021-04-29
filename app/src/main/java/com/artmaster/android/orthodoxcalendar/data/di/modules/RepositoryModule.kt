@@ -3,8 +3,8 @@ package com.artmaster.android.orthodoxcalendar.data.di.modules
 import android.content.Context
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
-import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
+import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -14,7 +14,7 @@ open class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideData(): AppDataProvider {
+    fun provideData(): RepositoryConnector {
         return DataProvider()
     }
 

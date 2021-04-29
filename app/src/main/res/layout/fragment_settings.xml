@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -20,7 +20,7 @@
             app:layout_constraintEnd_toStartOf="@+id/textViewWithSettingsName"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:id="@+id/textViewWithSettingsName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifyAverageHolidays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifications" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifySound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifyAverageHolidays" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsDefaultSound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifySound" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifyVibration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsDefaultSound" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifyTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
 
         </androidx.appcompat.widget.AppCompatSpinner>
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
@@ -170,7 +170,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyTime"
             app:layout_constraintStart_toEndOf="@+id/time_spinner" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifyInTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
 
         </androidx.appcompat.widget.AppCompatSpinner>
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="10"
@@ -209,7 +209,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
             app:layout_constraintStart_toEndOf="@+id/time_in_spinner" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsFirstLoadTileView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -225,7 +225,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifyInTime" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsSpeedUpAnimation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsFirstLoadTileView" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.CustomCheckedView
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsOffAnimation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

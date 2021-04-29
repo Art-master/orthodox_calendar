@@ -22,6 +22,6 @@ interface ListViewDiffContract {
 
     interface ViewList
     interface ViewListPager{
-        fun onChangePageListener(body: (Int) -> Unit)
+        fun onChangePageListener(body: (Int, Int) -> Unit)
     }
 }

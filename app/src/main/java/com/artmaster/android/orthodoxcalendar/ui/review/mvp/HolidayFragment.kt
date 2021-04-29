@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -8,27 +9,33 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Message
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
-import com.artmaster.android.orthodoxcalendar.data.font.CustomFont
-import com.artmaster.android.orthodoxcalendar.data.font.CustomLeadingMarginSpan2
-import com.artmaster.android.orthodoxcalendar.data.font.JustifiedTextView
+import com.artmaster.android.orthodoxcalendar.common.msg.Error
+import com.artmaster.android.orthodoxcalendar.common.msg.Message
+import com.artmaster.android.orthodoxcalendar.common.msg.Warning
+import com.artmaster.android.orthodoxcalendar.data.components.CustomFont
+import com.artmaster.android.orthodoxcalendar.data.components.CustomLeadingMarginSpan2
+import com.artmaster.android.orthodoxcalendar.data.components.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp.UserHolidayActivity
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
-import javax.inject.Inject
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
 
-class HolidayFragment : Fragment(), HolidayReviewContract.View {
 
-    @Inject
-    lateinit var presenter: HolidayReviewContract.Presenter
+class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
 
-    lateinit var holiday: Holiday
+    @InjectPresenter(tag = "HolidayFragmentPresenter")
+    lateinit var presenter: HolidayReviewPresenter
 
     private var _binding: FragmentHolidayBinding? = null
     private val binding get() = _binding!!
@@ -36,7 +43,7 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
     companion object {
         fun newInstance(holiday: Holiday): HolidayFragment {
             val intent = Intent()
-            intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+            intent.putExtra(Constants.Keys.HOLIDAY_ID.value, holiday.id)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
@@ -49,27 +56,103 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        holiday = requireArguments().get(Constants.Keys.HOLIDAY.value) as Holiday
-        presenter.init(holiday)
+        if (!presenter.isInRestoreState(this)) {
+            presenter.attachView(this)
+            val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+            presenter.init(id)
+        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHolidayBinding.inflate(inflater, groupContainer, false)
-        presenter.attachView(this)
-        presenter.viewIsReady()
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (_binding != null) presenter.viewIsReady()
+    }
+
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        when (result.resultCode) {
+            Constants.Keys.HOLIDAY.hashCode() -> {
+                val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        startActivity(buildIntentForMainActivity())
+                    }
+                }
+                requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+                presenter.init(id)
+            }
+        }
+    }
+
+    override fun initButtons(holiday: Holiday) {
+        _binding?.apply {
+            if (holiday.isCreatedByUser.not()) {
+                editHolidayButton.hide()
+                deleteHolidayButton.hide()
+                return
+            }
+            editHolidayButton.setOnClickListener {
+                val intent = buildIntentForEditHolidayActivity(holiday)
+                resultLauncher.launch(intent)
+            }
+
+            deleteHolidayButton.setOnClickListener {
+                showConfirmationMessage(Warning.DELETE_HOLIDAY)
+            }
+        }
+    }
+
+    private fun showConfirmationMessage(msgType: Warning) {
+        val bundle = Bundle()
+        bundle.putString(Message.TYPE, msgType.name)
+
+        val dialogFragment = MessageBuilderFragment()
+        dialogFragment.arguments = bundle
+        dialogFragment.show(parentFragmentManager, "confirmDelete")
+        dialogFragment.onClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    presenter.removeHoliday()
+                    startActivity(buildIntentForMainActivity())
+                    onDestroy()
+                }
+            }
+        }
+    }
+
+    private fun buildIntentForMainActivity(): Intent {
+        val intent = Intent(requireContext(), MainCalendarActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(Constants.Keys.HOLIDAY.value, Constants.Keys.HOLIDAY.hashCode())
+        return intent
+    }
+
+    private fun buildIntentForEditHolidayActivity(holiday: Holiday): Intent {
+        val intent = Intent(requireContext(), UserHolidayActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+        intent.putExtra(Constants.Keys.NEED_UPDATE.value, true)
+        return intent
+    }
+
     override fun showHolidayName(name: String) {
-        binding.holidayNameInPage.text = name
+        _binding?.apply {
+            holidayNameInPage.text = name
+        }
     }
 
     override fun showDescription(initialLater: String, description: String) {
-        if (description.isEmpty()) return
+        if (description.isEmpty() || _binding == null) return
 
-        buildInitialLater(initialLater)
-        val desc = prepareDescription(description)
-        binding.relativeLayout.addView(desc)
+        _binding?.apply {
+            buildInitialLater(initialLater)
+            val desc = prepareDescription(description)
+            relativeLayout.addView(desc)
+        }
     }
 
     private fun prepareDescription(description: String): JustifiedTextView {
@@ -107,34 +190,37 @@ class HolidayFragment : Fragment(), HolidayReviewContract.View {
         return finalStr
     }
 
-    override fun showNewStyleDate(date: String) {
-        if (date.isEmpty()) return
+    override fun showNewStyleDate(date: String, isCustomHoliday: Boolean) {
+        if (date.isEmpty() || _binding == null) return
 
-        val str = getString(R.string.new_style_date_string, date)
-        binding.newDateStyleTextView.text = str
+        _binding?.apply {
+            val str = getString(R.string.new_style_date_string, date)
+            newDateStyleTextView.text = if (isCustomHoliday) date else str
+        }
     }
 
     override fun showOldStyleDate(date: String) {
-        if (date.isEmpty()) return
+        if (date.isEmpty() || _binding == null) return
 
         val str = getString(R.string.old_style_date_string, date)
         binding.oldDateStyleTextView.text = str
     }
 
     override fun showImageHoliday(resId: Int, placeholderId: Int) {
-        Picasso.with(context)
+        if (_binding == null) return
+        Picasso.get()
                 .load(resId)
                 .placeholder(placeholderId)
                 .error(placeholderId)
                 .into(binding.imageHoliday)
     }
 
-    override fun showErrorMessage(msgType: Message.ERROR) {
+    override fun showErrorMessage(msgType: Error) {
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
+        presenter.destroyView(this)
         _binding = null
     }
 }

@@ -8,14 +8,13 @@ import com.artmaster.android.orthodoxcalendar.impl.AppFileParser
 class InitAppModel(private val database: AppDatabase,
                    private val fileParser: AppFileParser) : InitAppContract.Model {
 
+    private val connector = App.appComponent.getRepository()
+
     override fun getDataFromFile(): List<Holiday> {
         return fileParser.getData()
     }
 
     override fun fillDatabase(data: List<Holiday>) {
-        val dbInstance = database.get(App.appComponent.getContext()).holidayDao()
-        dbInstance.deleteTable()
-        dbInstance.insertAllHolidays(data)
-        database.close()
+        connector.insertHolidays(data)
     }
 }

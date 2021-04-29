@@ -16,7 +16,7 @@
         android:paddingTop="10dp"
         android:textAlignment="center">
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -24,7 +24,7 @@
             android:textAlignment="textEnd"
             app:customFont="@string/font_ornament" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:id="@+id/page_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:textSize="@dimen/size_text_title_item"
             app:customFont="@string/font_basic" />
 
-        <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+        <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -44,7 +44,7 @@
             app:customFont="@string/font_ornament" />
     </LinearLayout>
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/page_info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
         android:textSize="@dimen/size_text_title_item"
         app:customFont="@string/font_basic" />
 
-    <com.artmaster.android.orthodoxcalendar.data.font.TextViewWithCustomFont
+    <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
         android:id="@+id/page_info_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

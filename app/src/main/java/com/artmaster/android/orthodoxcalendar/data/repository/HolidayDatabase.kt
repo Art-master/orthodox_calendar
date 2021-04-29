@@ -5,12 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.DATABASE_FILE_NAME
+import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
 
-@Database(entities = [Holiday::class], version = 2)
+@Database(entities = [Holiday::class, AdditionalHolidayData::class], version = 3)
 abstract class HolidayDatabase : RoomDatabase() {
     abstract fun holidayDao(): HolidayDao
+    abstract fun additionalHolidayDataDao(): AdditionalHolidayDataDao
 
     companion object : AppDatabase {
         var instance: HolidayDatabase? = null
@@ -21,7 +23,7 @@ abstract class HolidayDatabase : RoomDatabase() {
                         context.applicationContext,
                         HolidayDatabase::class.java,
                         DATABASE_FILE_NAME)
-                        .addMigrations(Migrations.MIGRATION_1_2)
+                        .fallbackToDestructiveMigration()
                         .build()
                 return instance!!
             }

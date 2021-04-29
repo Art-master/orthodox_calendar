@@ -9,10 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.databinding.HolidayReviewPagerBinding
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.impl.AppDataProvider
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.CalendarListActivity
+import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -33,18 +34,21 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     @Inject
-    lateinit var dataProvider: AppDataProvider
+    lateinit var dataProvider: RepositoryConnector
 
     private lateinit var currentHoliday: Holiday
 
     private var _binding: HolidayReviewPagerBinding? = null
     private val binding get() = _binding!!
 
+    private var filters: ArrayList<Filter> = ArrayList()
+
     companion object {
-        fun getIntent(context: Context, holiday: Holiday): Intent {
+        fun getIntent(context: Context, holiday: Holiday, filters: ArrayList<Filter>): Intent {
             val intent = Intent(context, HolidayViewPagerActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+            intent.putExtra(Constants.Keys.FILTERS.value, filters)
             return intent
         }
     }
@@ -56,15 +60,18 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
         setContentView(binding.root)
 
         currentHoliday = getCurrentHoliday()
+        filters = getFilters()
 
         loadHolidays()
     }
+
+    private fun getFilters() = intent.getParcelableArrayListExtra<Filter>(Constants.Keys.FILTERS.value)!!
 
     private fun loadHolidays() {
         lifecycleScope.launchWhenCreated {
             val holidays = ArrayList<Holiday>()
             withContext(Dispatchers.IO) {
-                holidays.addAll(dataProvider.getData(currentHoliday.year))
+                holidays.addAll(dataProvider.getData(currentHoliday.year, filters))
             }
             setPageAdapter(holidays)
         }
@@ -101,10 +108,8 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
         }
     }
 
-    private fun getArgs() = Intent(applicationContext, CalendarListActivity::class.java).apply {
-        putExtra(Constants.Keys.YEAR.value, Time().year)
-        putExtra(Constants.Keys.MONTH.value, Time().monthWith0)
-        putExtra(Constants.Keys.DAY.value, Time().dayOfMonth)
+    private fun getArgs() = Intent(applicationContext, MainCalendarActivity::class.java).apply {
+        putExtra(Constants.Keys.NEED_UPDATE.value, Time().year)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }
 }

@@ -39,12 +39,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.init.mvp.InitAppActivity" />
-        <activity android:name=".ui.calendar_list.mvp.CalendarListActivity" />
+        <activity android:name=".ui.calendar_list.mvp.MainCalendarActivity" />
         <activity android:name=".ui.review.HolidayViewPagerActivity" />
+        <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />
 
         <service
             android:name=".notifications.NotificationsService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <receiver
             android:name=".notifications.AppWakeUpReceiver"
@@ -52,7 +53,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
 
@@ -63,6 +63,6 @@
         <receiver
             android:name=".notifications.AlarmReceiver"
             android:enabled="true"
-            android:process=":remote"></receiver>
+            android:process=":remote" />
     </application>
 </manifest>
