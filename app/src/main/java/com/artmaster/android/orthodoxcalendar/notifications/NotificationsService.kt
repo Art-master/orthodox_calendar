@@ -30,7 +30,10 @@ class NotificationsService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             if (allowTodayNotification or allowTimeNotification) {
-                if (timeCoincidence()) checkNotifications()
+                if (timeCoincidence()) {
+                    checkNotifications()
+                    AlarmBuilder.build(applicationContext)
+                }
             }
         }
 

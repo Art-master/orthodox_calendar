@@ -23,7 +23,7 @@ import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 class Notification(private val context: Context, private val holiday: Holiday) {
     companion object {
         const val CHANNEL_ID = "$PROJECT_DIR.notifications.channel.message"
-        const val CHANNEL_NAME = "$PROJECT_DIR.notifications.channel.users.msg"
+        const val CHANNEL_NAME = "orthodox_calendar"
     }
 
     private val prefs = App.appComponent.getPreferences()
@@ -73,7 +73,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     }
 
     private fun createIntent(): PendingIntent{
-        val notificationIntent = HolidayViewPagerActivity.getIntent(context, holiday)
+        val notificationIntent = HolidayViewPagerActivity.getIntent(context, holiday, ArrayList())
         return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
