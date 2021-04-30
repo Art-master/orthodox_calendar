@@ -62,6 +62,7 @@
             android:gravity="center"
             android:text="@string/settings_notifications"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
@@ -78,9 +79,61 @@
             android:gravity="center"
             android:text="@string/settings_average_notifications"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifications" />
+
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
+            android:id="@+id/settingsNotifyNameDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:checkMark="?android:attr/textCheckMark"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/settings_average_notifications"
+            android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
+            app:customFont="@string/font_basic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settingsNotifyAverageHolidays" />
+
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
+            android:id="@+id/settingsNotifyBirthdays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:checkMark="?android:attr/textCheckMark"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/settings_birthdays_notifications"
+            android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
+            app:customFont="@string/font_basic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settingsNotifyNameDays" />
+
+        <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
+            android:id="@+id/settingsNotifyMemoryDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:checkMark="?android:attr/textCheckMark"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/settings_memory_days_notifications"
+            android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
+            app:customFont="@string/font_basic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settingsNotifyBirthdays" />
 
         <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsNotifySound"
@@ -94,9 +147,10 @@
             android:gravity="center"
             android:text="@string/settings_notifications_sound"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/settingsNotifyAverageHolidays" />
+            app:layout_constraintTop_toBottomOf="@+id/settingsNotifyMemoryDays" />
 
         <com.artmaster.android.orthodoxcalendar.data.components.CustomCheckedView
             android:id="@+id/settingsDefaultSound"
@@ -110,6 +164,7 @@
             android:gravity="center"
             android:text="@string/settings_notifications_sound_default"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifySound" />
@@ -125,6 +180,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/settings_notifications_vibration"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,6 +198,7 @@
             android:gravity="center"
             android:text="@string/settings_notifications_time"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifyVibration" />
@@ -164,7 +221,7 @@
             android:background="@null"
             android:drawableStart="@drawable/ic_arrow_drop_down_white"
             android:text="@string/settings_days"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyTime"
@@ -182,6 +239,7 @@
             android:gravity="center"
             android:text="@string/settings_notifications_in_time"
             android:textSize="@dimen/size_text_settings"
+            android:textColor="@color/text"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settingsNotifyTime" />
@@ -203,7 +261,7 @@
             android:layout_weight="10"
             android:drawableStart="@drawable/ic_arrow_drop_down_white"
             android:text="@string/settings_hours"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintBottom_toBottomOf="@+id/settingsNotifyInTime"
@@ -220,6 +278,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/settings_first_load_view"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
@@ -236,6 +295,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/settings_speed_up_start_anim"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"
@@ -252,6 +312,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="@string/settings_off_start_anim"
+            android:textColor="@color/text"
             android:textSize="@dimen/size_text_settings"
             app:customFont="@string/font_basic"
             app:layout_constraintStart_toStartOf="parent"

@@ -88,6 +88,9 @@
     <string name="settings_name">Настройки</string>
     <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>
     <string name="settings_average_notifications">Уведомлять о средних праздниках</string>
+    <string name="settings_name_days_notifications">Уведомлять о именинах</string>
+    <string name="settings_birthdays_notifications">Уведомлять о днях рождения</string>
+    <string name="settings_memory_days_notifications">Уведомлять о днях памяти</string>
     <string name="settings_notifications_sound">Уведомления со звуком</string>
     <string name="settings_notifications_sound_default">Стандартный звук в уведомлениях</string>
     <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
@@ -141,9 +144,12 @@
 
     <!--Notifications-->
     <string name="notifications_today_name">Сегодня праздник</string>
-    <string name="notifications_tomorrow_name">Завтра праздник</string>
-    <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
-    <string name="notifications_holiday">Праздник</string>
+    <string name="tomorrow">Завтра праздник</string>
+    <string name="after_days">Через %1$d дн. праздник</string>
+    <string name="holiday">Праздник</string>
+    <string name="holiday_title">праздник</string>
+    <string name="birthday_title">день рождения</string>
+    <string name="memory_day_title">день памяти</string>
 
     <!-- IMG descriptors -->
     <string name="descriptor_img_load_holidays">Загрузка</string>
