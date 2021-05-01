@@ -95,7 +95,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
     private fun setCurrentItem(data: List<Holiday>) {
         for ((index, holiday) in data.withIndex()) {
             if (holiday.id == currentHoliday.id) {
-                binding.holidayPager.currentItem = index
+                binding.holidayPager.setCurrentItem(index, false)
             }
         }
     }

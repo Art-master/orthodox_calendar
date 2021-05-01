@@ -74,7 +74,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     override fun onResume() {
         super.onResume()
         binding.holidayListPager.apply {
-            currentItem = getPosition()
+            setCurrentItem(getPosition(), false)
             offscreenPageLimit = 3
             clipToPadding = false
             clipChildren = false
@@ -87,7 +87,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     private fun setPageAdapter() {
         adapter = getAdapter(this)
         binding.holidayListPager.adapter = adapter
-        binding.holidayListPager.currentItem = getPosition()
+        binding.holidayListPager.post {
+            binding.holidayListPager.setCurrentItem(getPosition(), false)
+        }
         setChangePageListener()
     }
 

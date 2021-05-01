@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
@@ -162,7 +164,10 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
             setLeadingMargin(3, 8)
             val strWithoutSpaces = deleteSpaces(description)
             setText(getTextByPadding(strWithoutSpaces))
-            setTextColor(binding.newDateStyleTextView.textColors)
+
+            val colorInt = ContextCompat.getColor(context, R.color.text)
+            val colors = ColorStateList.valueOf(colorInt)
+            setTextColor(colors)
         }
     }
 
