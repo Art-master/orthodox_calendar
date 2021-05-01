@@ -153,6 +153,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
         binding.holidayYearCheckedView.setOnCheckedChangeListener { button, flag ->
             binding.year.visibility = if (flag) View.VISIBLE else View.INVISIBLE
             if (flag && holiday.year == 0) {
+                updateHolidayData()
                 holiday.year = currentTime.year
                 binding.invalidateAll()
             }

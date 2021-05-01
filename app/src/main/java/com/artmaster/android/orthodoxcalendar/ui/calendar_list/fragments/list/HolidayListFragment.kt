@@ -88,6 +88,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         stopLoadingAnimation()
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
         binding.recyclerView.scrollToPosition(position)
+        binding.recyclerView.invalidate()
         binding.loading.root.visibility = View.GONE
     }
 
