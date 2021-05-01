@@ -27,7 +27,6 @@ object AlarmBuilder {
     private fun buildCalendarByAppSettings(): Calendar {
         return Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            val r = getHoursBySettings()
             set(Calendar.HOUR_OF_DAY, getHoursBySettings())
             //set(Calendar.SECOND, get(Calendar.SECOND) + 30)
         }

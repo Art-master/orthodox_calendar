@@ -94,7 +94,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:text="@string/settings_average_notifications"
+            android:text="@string/settings_name_days_notifications"
             android:textSize="@dimen/size_text_settings"
             android:textColor="@color/text"
             app:customFont="@string/font_basic"

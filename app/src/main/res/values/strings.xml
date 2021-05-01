@@ -137,17 +137,17 @@
 
     <string-array name="user_holidays_names">
         <!-- @see Holiday.Type ids -->
-        <item id="8">День рождения</item>
+        <item id="8">День памяти</item>
         <item id="9">Именины</item>
-        <item id="10">День памяти</item>
+        <item id="10">День рождения</item>
     </string-array>
 
     <!--Notifications-->
-    <string name="notifications_today_name">Сегодня праздник</string>
-    <string name="tomorrow">Завтра праздник</string>
-    <string name="after_days">Через %1$d дн. праздник</string>
-    <string name="holiday">Праздник</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="after_days">Через %1$d дн.</string>
     <string name="holiday_title">праздник</string>
+    <string name="name_title">именины</string>
     <string name="birthday_title">день рождения</string>
     <string name="memory_day_title">день памяти</string>
 

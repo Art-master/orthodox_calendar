@@ -69,7 +69,7 @@ object OrtUtils {
      */
     @JvmStatic
     fun getMonthNameAcc(context: Context, monthNum: Int): String {
-        if (monthNum in 1..12) {
+        if (monthNum in 0..12) {
             val arr = context.resources.getStringArray(R.array.months_names_acc)
             return arr[monthNum]
         }

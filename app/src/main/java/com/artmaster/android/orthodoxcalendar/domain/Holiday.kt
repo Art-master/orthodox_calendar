@@ -77,11 +77,11 @@ data class Holiday(
         GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
         AVERAGE_POLYLEIC("средний полиелейный", 6),
         AVERAGE_PEPPY("средний бденный", 7),
-        COMMON_MEMORY_DAY("день памяти", 7),
+        COMMON_MEMORY_DAY("день памяти", 8),
 
-        USERS_NAME_DAY("именины", 9),
-        USERS_BIRTHDAY("день рождения", 10),
-        USERS_MEMORY_DAY("средний бденный", 11);
+        USERS_MEMORY_DAY("средний бденный", 9),
+        USERS_NAME_DAY("именины", 10),
+        USERS_BIRTHDAY("день рождения", 11),
     }
 
     enum class DayOfWeek(val num: Int) {
