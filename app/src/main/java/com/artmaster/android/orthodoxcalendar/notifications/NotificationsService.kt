@@ -32,9 +32,11 @@ class NotificationsService : Service() {
     private var allowTodayNotification = false
     private var allowTimeNotification = false
 
+    private var currentDayOfMonth = 0
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
-            initPermissions()
+            updatePermissions()
             if (allowTodayNotification or allowTimeNotification or allowNameDays or
                     allowBirthdays or allowMemoryDays) {
 
@@ -48,7 +50,7 @@ class NotificationsService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun initPermissions() {
+    private fun updatePermissions() {
         allowSound = prefs.get(SOUND_OF_NOTIFICATION).toBoolean()
         allowVibration = prefs.get(VIBRATION_OF_NOTIFICATION).toBoolean()
 
@@ -61,7 +63,18 @@ class NotificationsService : Service() {
         allowTimeNotification = prefs.get(IS_ENABLE_NOTIFICATION_TIME).toBoolean()
     }
 
-    private fun timeCoincidence() = Time().hour == getHoursInSettings()
+    private fun timeCoincidence(): Boolean {
+        val time = Time()
+        val isAppropriateHour = time.hour == getHoursInSettings()
+        if (isAppropriateHour.not()) return false
+        if (time.dayOfMonth != currentDayOfMonth) {
+            currentDayOfMonth = time.dayOfMonth
+            return true
+        }
+
+        return false
+    }
+
     private fun getHoursInSettings() = prefs.get(HOURS_OF_NOTIFICATION).toInt()
 
     override fun onBind(intent: Intent?): Nothing? = null

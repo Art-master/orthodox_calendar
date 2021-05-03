@@ -8,9 +8,6 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.Li
 class HolidayDiffUtilCallback(oldList: List<Holiday>, newList: List<Holiday>)
     : DiffUtil.ItemCallback<Holiday>(), ListViewDiffContract.CallBack<Holiday> {
 
-    private var old: List<Holiday>? = oldList
-    private var new: List<Holiday>? = newList
-
     override fun areItemsTheSame(oldItem: Holiday, newItem: Holiday): Boolean {
         return oldItem.id == newItem.id
     }

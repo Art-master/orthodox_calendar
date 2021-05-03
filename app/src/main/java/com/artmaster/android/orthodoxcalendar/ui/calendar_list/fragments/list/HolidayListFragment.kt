@@ -2,7 +2,6 @@ package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.list
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,17 +77,15 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         return arguments?.getInt(Constants.Keys.YEAR.value, Time().year) ?: Time().year
     }
 
-    override fun prepareAdapter() {
+    override fun prepareAdapter(position: Int) {
         val filters = requireArguments().getParcelableArrayList<Filter>(Constants.Keys.FILTERS.value)
-        recyclerAdapter = buildAdapter(filters ?: ArrayList(), requireContext())
+        recyclerAdapter = buildAdapter(filters ?: ArrayList(), position)
     }
 
     override fun showList(position: Int) {
         if (_binding == null) return
         stopLoadingAnimation()
         binding.recyclerView.adapter = recyclerAdapter as RecyclerView.Adapter<*>
-        binding.recyclerView.scrollToPosition(position)
-        binding.recyclerView.invalidate()
         binding.loading.root.visibility = View.GONE
     }
 
@@ -97,13 +94,14 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         binding.loading.root.visibility = View.GONE
     }
 
-    private fun buildAdapter(filters: ArrayList<Filter>, context: Context): ListViewDiffContract.Adapter {
+    private fun buildAdapter(filters: ArrayList<Filter>, position: Int): ListViewDiffContract.Adapter {
         val config = PageConfig
-        dataSource = HolidayDataSource(context, getYear())
+        dataSource = HolidayDataSource(requireContext(), getYear())
         dataSource.filters = filters
-        val list = PagedList(dataSource, config, 0)
+        //FIXME why position always below then need on 25
+        val list = PagedList(dataSource, config, position + 25)
         val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
-        val adapter = HolidaysAdapter(context, diffCallback, filters)
+        val adapter = HolidaysAdapter(requireContext(), diffCallback, filters)
         adapter.submitList(list.get())
         return adapter
     }
