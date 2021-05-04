@@ -13,14 +13,14 @@
 
     <color name="text">#757575</color>
     <color name="colorHeader">#ff0000</color>
-    <color name="colorSelectTile">#B3B6B6B6</color>
+    <color name="colorSelectTile">#B3AAAAAA</color>
     <color name="colorTwelveHoliday">#DD6A66</color>
     <color name="colorTileBorder">#000000</color>
     <color name="colorHeadHoliday">#FF6D00</color>
     <color name="colorFilters">#C1FF6D00</color>
     <color name="colorEasterHoliday">#E53935</color>
-    <color name="colorFastDay">#90CAF9</color>
+    <color name="colorFastDay">#BDBDBD</color>
     <color name="colorUsualDay">#FFFFFF</color>
-    <color name="colorNoFastingDay">#BEC76F</color>
+    <color name="colorNoFastingDay">#F4EB9B</color>
     <color name="colorHolidaysListForTileCalendar">#F7EBB6</color>
 </resources>

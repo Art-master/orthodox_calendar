@@ -292,7 +292,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         checkFloatingButtonVisibility(item!!)
 
-        val currentVisibleFragment = when (item.itemId) {
+        val additionalFragment = when (item.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)
             R.id.item_settings -> checkFragment(appSettingsFragment)
             R.id.item_reset_date -> {
@@ -302,14 +302,14 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             else -> null
         }
         changeMainFragment(item)
-        if (currentVisibleFragment != null) {
-            if (isExist(currentVisibleFragment)) {
+        if (additionalFragment != null) {
+            if (isExist(additionalFragment)) {
                 showFragment(checkFragment(calendarFragment))
-                removeFragment(currentVisibleFragment)
+                removeFragment(additionalFragment)
             } else {
-                this.fragment = currentVisibleFragment
+                this.fragment = additionalFragment
                 hideFragment(checkFragment(calendarFragment))
-                replaceFragment(R.id.menu_fragments_container, currentVisibleFragment)
+                replaceFragment(R.id.menu_fragments_container, additionalFragment)
             }
         } else if (item.itemId == R.id.item_view) {
             removeFragment(this.fragment)
@@ -424,7 +424,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         if (!fragment.isHidden) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(resId, fragment)
+                    .replace(resId, fragment, "current")
                     .addToBackStack(null)
                     .commit()
         }

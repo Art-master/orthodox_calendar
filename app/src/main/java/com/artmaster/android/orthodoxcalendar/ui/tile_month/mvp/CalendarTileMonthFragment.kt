@@ -212,7 +212,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
                 setStyle(v, text, R.drawable.tile_fasting_day)
             }
             day.fasting.type == Fasting.Type.SOLID_WEEK -> {
-                setStyle(v, text, R.drawable.tile_no_fasting)
+                setStyle(v, text, R.drawable.tile_no_fasting, R.color.text)
             }
         }
     }
