@@ -62,7 +62,10 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
             if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
             if (dayNum > days.size || holiday.monthWith0 != month) continue
-            days[dayNum - 1].holidays.add(holiday)
+            days[dayNum - 1].apply {
+                this.holidays.add(holiday)
+                dynamicData.fillDayInfoByHoliday(this, holiday)
+            }
         }
     }
 

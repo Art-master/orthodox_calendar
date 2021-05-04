@@ -66,6 +66,39 @@ class DynamicData {
             MovableDay.THE_HOLY_TRINITY.dynamicType ->
                 getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
 
+            MovableDay.MEATLESS_SATURDAY.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.MEATLESS_SATURDAY.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_PARENT_2.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.SATURDAY_OF_PARENT_2.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_PARENT_3.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.SATURDAY_OF_PARENT_3.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_PARENT_4.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.SATURDAY_OF_PARENT_4.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_DMITRY.dynamicType ->
+                calculateLastDayOfWeekTime(Month.NOVEMBER.num, 8, holiday.year, Calendar.SATURDAY)
+
+            MovableDay.RADUNYTSYA.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.RADUNYTSYA.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_PARENT_CHRISTMAS.dynamicType ->
+                calculateLastDayOfWeekTime(Month.NOVEMBER.num, 28, holiday.year, Calendar.SATURDAY)
+
+            MovableDay.SATURDAY_OF_TRINITY.dynamicType ->
+                getHolidayDynamicDate(holiday.year, MovableDay.SATURDAY_OF_TRINITY.dayFromEaster)
+
+            MovableDay.SATURDAY_OF_PARENT_APOSTLE.dynamicType -> {
+                val date = getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
+                getHolidayDynamicDate(date.monthWith0, date.dayOfMonth, 6, holiday.year)
+            }
+
+            MovableDay.SATURDAY_OF_PARENT_ASSUMPTION.dynamicType -> {
+                calculateLastDayOfWeekTime(Month.AUGUST.num, 14, holiday.year, Calendar.SATURDAY)
+            }
+
             else -> null
 
         } ?: return
@@ -73,6 +106,15 @@ class DynamicData {
         holiday.day = time.dayOfMonth
         holiday.month = time.month
         holiday.monthWith0 = time.monthWith0
+    }
+
+    private fun calculateLastDayOfWeekTime(month: Int, day: Int, year: Int, dayOfWeek: Int): Time {
+        var index = -1
+        var calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, index)
+        while (calc.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, --index)
+        }
+        return Time(calc)
     }
 
     /**
@@ -100,9 +142,9 @@ class DynamicData {
         }
     }
 
-    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int, year: Int): Time {
-        val cal = Time().calculateDate(year, month,
-                day, Calendar.DAY_OF_YEAR, valueForCalculate)
+    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int, year: Int,
+                                      type: Int = Calendar.DAY_OF_YEAR): Time {
+        val cal = Time().calculateDate(year, month, day, type, valueForCalculate)
         return Time(cal)
     }
 
@@ -312,81 +354,26 @@ class DynamicData {
     }
 
     fun fillOtherData(day: Day) {
-        setMemorialType(day)
         setSolidWeek(day)
     }
 
-    private fun setMemorialType(day: Day) {
-        //The saturday of Meatless
-        getHolidayDynamicDate(day.year, -57).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.MEATLESS_SATURDAY
-                return@apply
-            }
-        }
+    fun fillDayInfoByHoliday(day: Day, holiday: Holiday) {
+        setMemorialType(day, holiday)
+    }
 
-        //The saturday of Great Fasting 2
-        getHolidayDynamicDate(day.year, -36).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_2
-                return@apply
-            }
-        }
-
-        //The saturday of Great Fasting 3
-        getHolidayDynamicDate(day.year, -29).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_3
-                return@apply
-            }
-        }
-
-        //The saturday of Great Fasting 4
-        getHolidayDynamicDate(day.year, -22).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_4
-                return@apply
-            }
-        }
-
-        //Radunytsya
-        getHolidayDynamicDate(day.year, 9).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.RADUNYTSYA
-                return@apply
-            }
-        }
-
-        //Trinity saturday
-        getHolidayDynamicDate(day.year, 48).apply {
-            if (day.month == monthWith0 && day.dayOfMonth == dayOfMonth) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_TRINITY
-                return@apply
-            }
-        }
-
-        //The saturday near the Assumption Fasting
-        if (day.month == Month.AUGUST.num && day.dayInWeek == DayOfWeek.SATURDAY.num &&
-                day.dayOfMonth in 7 until 14) {
-
-            day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_ASSUMPTION
-            return
-        }
-
-        //The saturday of st. Dmitry
-        getHolidayDynamicDate(Month.NOVEMBER.num, 8, -7, day.year).apply {
-            if (day.month == Month.NOVEMBER.num && day.dayOfMonth < 8 && day.dayInWeek == DayOfWeek.SATURDAY.num) {
-                day.memorialType = Day.MemorialType.SATURDAY_OF_DMITRY
-                return@apply
-            }
-        }
-
-        //The saturday near the Christmas Fasting
-        if (day.month == Month.NOVEMBER.num && day.dayInWeek == DayOfWeek.SATURDAY.num &&
-                day.dayOfMonth in 21 until 28) {
-
-            day.memorialType = Day.MemorialType.SATURDAY_OF_PARENT_CHRISTMAS
-            return
+    private fun setMemorialType(day: Day, holiday: Holiday) {
+        day.isMemorial = when (holiday.dynamicType) {
+            MovableDay.MEATLESS_SATURDAY.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_2.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_3.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_4.dynamicType,
+            MovableDay.SATURDAY_OF_TRINITY.dynamicType,
+            MovableDay.SATURDAY_OF_DMITRY.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_CHRISTMAS.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_ASSUMPTION.dynamicType,
+            MovableDay.SATURDAY_OF_PARENT_APOSTLE.dynamicType,
+            MovableDay.RADUNYTSYA.dynamicType -> true
+            else -> false
         }
     }
 

@@ -231,7 +231,7 @@ abstract class HolidayDynamicTestFactory {
 
     private fun checkFastingType(year: Int, day: Day, expectedType: Type) {
         day.year = year
-        val data = DynamicData(year)
+        val data = DynamicData()
         data.fillFastingDay(day)
         data.fillOtherData(day)
 

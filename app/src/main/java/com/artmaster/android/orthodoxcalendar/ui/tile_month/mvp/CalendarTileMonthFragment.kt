@@ -258,7 +258,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     private fun styleMemoryTypeHoliday(day: Day, v: TileDayLayoutBinding) {
-        if (day.memorialType == Day.MemorialType.NONE) return
+        if (day.isMemorial.not()) return
         val img = ContextCompat.getDrawable(requireContext(), R.drawable.cross)
         if (v.im3.drawable == null) v.im3.setImageDrawable(img)
         else v.im4.setImageDrawable(img)

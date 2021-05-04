@@ -48,12 +48,15 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
             filters.addAll(item.toList())
             setPageAdapter()
             binding.holidayListPager.invalidate()
+            binding.holidayListPager.setCurrentItem(getPosition(time.year), false)
         })
 
         viewModel.time.observe(this, { item ->
             if (SharedTime.isTimeChanged(time, item)) {
-                if (item.year != time.year) {
-                    binding.holidayListPager.currentItem = getPosition(item.year)
+                if (item.year != time.year || item.month != time.month || item.day != time.day) {
+                    setPageAdapter()
+                    binding.holidayListPager.invalidate() //TODO make normal invalidate date
+                    binding.holidayListPager.setCurrentItem(getPosition(item.year), false)
                 }
                 time = item
             }

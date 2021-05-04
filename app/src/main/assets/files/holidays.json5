@@ -1607,5 +1607,96 @@
     "day": 26,
     "month": 12,
     "image_id": "image177"
+  },
+  /** Дни поминовения усопших */
+  {
+    "id": 200,
+    "title": "Мясопустная вселенская родительская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 5,
+    "image_id": ""
+  },
+  {
+    "id": 201,
+    "title": "Родительская 2-я суббота Великого Поста",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 6,
+    "image_id": ""
+  },
+  {
+    "id": 202,
+    "title": "Родительская 3-я суббота Великого Поста",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 7,
+    "image_id": ""
+  },
+  {
+    "id": 203,
+    "title": "Родительская 4-я суббота Великого Поста",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 8,
+    "image_id": ""
+  },
+  {
+    "id": 204,
+    "title": "Троицкая вселенская родительская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 9,
+    "image_id": ""
+  },
+  {
+    "id": 205,
+    "title": "Дмитриевская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 10,
+    "image_id": ""
+  },
+  {
+    "id": 206,
+    "title": "Апостольская родительская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 11,
+    "image_id": ""
+  },
+  {
+    "id": 207,
+    "title": "Успенская родительская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 12,
+    "image_id": ""
+  },
+  {
+    "id": 208,
+    "title": "Рождественская родительская суббота",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 13,
+    "image_id": ""
+  },
+  {
+    "id": 209,
+    "title": "Радоница",
+    "type_id": 8,
+    "day": 0,
+    "month": 0,
+    "dynamic_type": 14,
+    "image_id": ""
   }
 ]

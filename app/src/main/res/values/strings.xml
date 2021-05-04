@@ -28,12 +28,14 @@
     <string name="check_box_allow_image_grayscale">черно-белые изображения</string>
 
     <!--Tipicon image code-->
+    <string name="main_holiday">*</string>
     <string name="head_holiday">^</string>
     <string name="twelve_movable_holiday">^</string>
     <string name="twelve_not_movable_holiday">^</string>
     <string name="average">^</string>
     <string name="average_polyleic_holiday">$</string>
     <string name="average_peppy_holiday">%</string>
+    <string name="memorial_day">‡</string>
 
     <!--notification text-->
     <string name="notif_holiday_today">Сегодня праздник </string>

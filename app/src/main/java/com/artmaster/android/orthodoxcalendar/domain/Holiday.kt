@@ -121,6 +121,18 @@ data class Holiday(
 
         //50 day after Easter
         THE_HOLY_TRINITY(49, 4),
+
+
+        MEATLESS_SATURDAY(-57, 5),
+        SATURDAY_OF_PARENT_2(-36, 6),
+        SATURDAY_OF_PARENT_3(-29, 7),
+        SATURDAY_OF_PARENT_4(-22, 8),
+        SATURDAY_OF_TRINITY(48, 9),
+        SATURDAY_OF_DMITRY(0, 10),
+        SATURDAY_OF_PARENT_APOSTLE(0, 11),
+        SATURDAY_OF_PARENT_ASSUMPTION(0, 12),
+        SATURDAY_OF_PARENT_CHRISTMAS(0, 13),
+        RADUNYTSYA(9, 14),
     }
 
     companion object {
