@@ -32,7 +32,7 @@ open class CalendarListBuilderModule {
     @Provides
     fun provideDiffUtilCallback(dataSource: ListViewDiffContract.DataSource<Holiday>):
             ListViewDiffContract.CallBack<Holiday> {
-        return HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
+        return HolidayDiffUtilCallback()
     }
 
     @FragmentScope

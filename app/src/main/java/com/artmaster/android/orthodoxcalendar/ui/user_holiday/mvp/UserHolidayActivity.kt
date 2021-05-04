@@ -129,7 +129,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
     private fun getTypeId(pos: Int) = Holiday.Type.USERS_NAME_DAY.ordinal + pos
 
-    private fun getYearFilter() = InputFilter { source, start, end, dest, dstart, dend ->
+    private fun getYearFilter() = InputFilter { source, start, end, dest, _, _ ->
         val year = currentTime.year
         for (i in start until end) {
             if (!Character.isDigit(source[i])) return@InputFilter ""
@@ -150,7 +150,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
     }
 
     private fun initYearField() {
-        binding.holidayYearCheckedView.setOnCheckedChangeListener { button, flag ->
+        binding.holidayYearCheckedView.setOnCheckedChangeListener { _, flag ->
             binding.year.visibility = if (flag) View.VISIBLE else View.INVISIBLE
             if (flag && holiday.year == 0) {
                 updateHolidayData()
@@ -175,7 +175,7 @@ class UserHolidayActivity : MvpAppCompatActivity(), ContractUserHolidayView, Mvp
 
     }
 
-    private fun getDayOfMonthFilter() = InputFilter { source, start, end, dest, dstart, dend ->
+    private fun getDayOfMonthFilter() = InputFilter { source, start, end, dest, _, _ ->
         for (i in start until end) {
             if (!Character.isDigit(source[i])) return@InputFilter ""
         }

@@ -100,7 +100,7 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         dataSource.filters = filters
         //FIXME why position always below then need on 25
         val list = PagedList(dataSource, config, position + 25)
-        val diffCallback = HolidayDiffUtilCallback(dataSource.getOldData(), dataSource.getNewData())
+        val diffCallback = HolidayDiffUtilCallback()
         val adapter = HolidaysAdapter(requireContext(), diffCallback, filters)
         adapter.submitList(list.get())
         return adapter

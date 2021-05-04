@@ -3,15 +3,10 @@ package com.artmaster.android.orthodoxcalendar.ui.init.mvp
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
-import com.artmaster.android.orthodoxcalendar.common.msg.Error
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.mvp.AbstractAppPresenter
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
 
 class InitAppPresenter(
         private var appPreferences: AppPreferences,
@@ -23,19 +18,16 @@ class InitAppPresenter(
     override fun viewIsReady() {
         val timeAnim = getLoadingAnimTime()
         if (isShowStartAnimation()) getView().showLoadingScreen(timeAnim)
-        Single.fromCallable {
-            getData()
-            getView().initNotifications()
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                getData()
+                getView().initNotifications()
+                delay(timeAnim * 2)
+                withContext(Dispatchers.Main) {
+                    getView().nextScreen()
+                }
+            }
         }
-                .delay(timeAnim.shl(1), TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onSuccess = { getView().nextScreen() },
-                        onError = {
-                            it.printStackTrace()
-                            getView().showErrorMessage(Error.INIT_DATABASE)
-                        })
     }
 
     private fun isShowStartAnimation(): Boolean {

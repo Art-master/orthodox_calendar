@@ -61,7 +61,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
             time = requireArguments().getParcelable(Constants.Keys.TIME.value) ?: SharedTime()
 
             lifecycleScope.launch {
-                presenter.viewIsReady(time, filters ?: ArrayList())
+                presenter.viewIsReady(time, filters)
             }
         }
     }
