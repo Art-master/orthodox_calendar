@@ -67,6 +67,7 @@
                 android:gravity="center"
                 android:text="@string/filter_easter"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewWithSettingsName" />
@@ -83,6 +84,7 @@
                 android:gravity="center"
                 android:text="@string/filter_head_holidays"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterEaster" />
@@ -99,6 +101,7 @@
                 android:gravity="center"
                 android:text="@string/filter_average_holidays"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterHeadHolidays" />
@@ -115,6 +118,7 @@
                 android:gravity="center"
                 android:text="@string/filter_common_memory_days"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterAverageHolidays" />
@@ -131,6 +135,7 @@
                 android:gravity="center"
                 android:text="@string/filter_memory_days"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterCommonMemoryDays" />
@@ -147,6 +152,7 @@
                 android:gravity="center"
                 android:text="@string/filter_name_days"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterMemoryDays" />
@@ -163,6 +169,7 @@
                 android:gravity="center"
                 android:text="@string/filter_birthdays"
                 android:textSize="@dimen/size_text_basic"
+                android:textColor="@color/text"
                 app:customFont="@string/font_basic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filterNameDays" />

@@ -46,6 +46,7 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         fun newInstance(holiday: Holiday): HolidayFragment {
             val intent = Intent()
             intent.putExtra(Constants.Keys.HOLIDAY_ID.value, holiday.id)
+            intent.putExtra(Constants.Keys.YEAR.value, holiday.year)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
@@ -61,7 +62,8 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
             val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
-            presenter.init(id)
+            val year = requireArguments().getInt(Constants.Keys.YEAR.value)
+            presenter.init(id, year)
         }
     }
 
@@ -79,13 +81,14 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         when (result.resultCode) {
             Constants.Keys.HOLIDAY.hashCode() -> {
                 val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                val year = requireArguments().getInt(Constants.Keys.YEAR.value)
                 val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         startActivity(buildIntentForMainActivity())
                     }
                 }
                 requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-                presenter.init(id)
+                presenter.init(id, year)
             }
         }
     }

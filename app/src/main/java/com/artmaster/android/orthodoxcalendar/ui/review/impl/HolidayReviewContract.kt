@@ -31,7 +31,7 @@ interface HolidayReviewContract {
     }
 
     interface Presenter {
-        fun init(id: Long)
+        fun init(id: Long, year: Int)
         fun viewIsReady()
         fun removeHoliday()
     }

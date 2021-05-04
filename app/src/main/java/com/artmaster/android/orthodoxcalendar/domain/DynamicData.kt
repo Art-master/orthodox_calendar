@@ -52,7 +52,7 @@ class DynamicData {
         return month - 1 to day //month with 0, day with 1
     }
 
-    fun fillHoliday(holiday: Holiday) {
+    fun calcHolidayDateIfDynamic(holiday: Holiday) {
         val time = when (holiday.dynamicType) {
             MovableDay.THE_EASTER.dynamicType ->
                 getHolidayDynamicDate(holiday.year, MovableDay.THE_EASTER.dayFromEaster)

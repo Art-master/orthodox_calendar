@@ -16,6 +16,6 @@ interface RepositoryConnector {
     fun insert(holiday: Holiday)
     fun insertHolidays(holidays: List<Holiday>)
     fun update(holiday: Holiday)
-    fun getFullHolidayData(id: Long): Holiday
+    fun getFullHolidayData(id: Long, year: Int): Holiday
     fun deleteById(id: Long)
 }

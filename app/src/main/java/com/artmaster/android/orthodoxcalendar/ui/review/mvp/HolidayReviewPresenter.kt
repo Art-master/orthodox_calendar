@@ -24,10 +24,10 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
 
     private var isDataNotReadyYet = true
 
-    override fun init(id: Long) {
+    override fun init(id: Long, year: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO) {
-                holiday = repository.getFullHolidayData(id)
+                holiday = repository.getFullHolidayData(id, year)
                 withContext(Dispatchers.Main) {
                     initUI()
                 }

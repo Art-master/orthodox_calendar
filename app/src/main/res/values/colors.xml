@@ -17,6 +17,7 @@
     <color name="colorTwelveHoliday">#DD6A66</color>
     <color name="colorTileBorder">#000000</color>
     <color name="colorHeadHoliday">#FF6D00</color>
+    <color name="colorFilters">#C1FF6D00</color>
     <color name="colorEasterHoliday">#E53935</color>
     <color name="colorFastDay">#90CAF9</color>
     <color name="colorUsualDay">#FFFFFF</color>
