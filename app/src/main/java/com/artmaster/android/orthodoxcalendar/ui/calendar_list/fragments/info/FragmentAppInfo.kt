@@ -14,7 +14,7 @@ import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustom
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.AppInfoView
 
 /**
- * Fragment, what show info app
+ * Fragment, show info app
  */
 class FragmentAppInfo : Fragment(), AppInfoView {
     lateinit var spannableString: SpannableString
@@ -26,8 +26,8 @@ class FragmentAppInfo : Fragment(), AppInfoView {
 
         val text = getText(R.string.text_view_about_app).toString()
         //строки для поиска
-        val string1 = "Христ"
-        val string2 = "Иисус"
+        val string1 = getString(R.string.info_substring_lord_name_1)
+        val string2 = getString(R.string.info_substring_lord_name_2)
 
         spannableString = SpannableString(text)
 

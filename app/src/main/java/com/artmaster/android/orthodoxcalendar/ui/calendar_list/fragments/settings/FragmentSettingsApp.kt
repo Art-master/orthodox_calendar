@@ -77,4 +77,10 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
 
     private fun getHoursNumbers() = getDaysNumbers().take(24).toTypedArray()
     private fun getDaysNumbers() = resources.getStringArray(R.array.spinner_days_numbers)
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+    }
 }

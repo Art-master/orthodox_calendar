@@ -170,4 +170,10 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
             fr.show(transaction, "helper")
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+    }
 }

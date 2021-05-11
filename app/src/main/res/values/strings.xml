@@ -65,6 +65,9 @@
     Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.
     \n \n Слава Господу нашему Иисусу Христу всегда и ныне и присно и во веки веков. Аминь.
     </string>
+    <string name="info_substring_lord_name_1">Христ</string>
+    <string name="info_substring_lord_name_2">Иисус</string>
+
 
     <string name="num_example_1">1</string>
     <string name="num_example_2">2</string>

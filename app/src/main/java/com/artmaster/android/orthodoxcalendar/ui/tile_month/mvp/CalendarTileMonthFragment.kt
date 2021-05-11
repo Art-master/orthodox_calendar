@@ -44,8 +44,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private var tableRows = ArrayList<TableRow>()
 
-    private var _monthBinding: FragmentMonthTileCalendarBinding? = null
-    private val monthBinding get() = _monthBinding!!
+    private var _binding: FragmentMonthTileCalendarBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: CalendarViewModel by viewModels({ requireParentFragment() })
 
@@ -71,16 +71,16 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
-        _monthBinding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
+        _binding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
         layoutManager = LinearLayoutManager(context)
-        return monthBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAnimation()
-        monthBinding.root.setOnDragListener(onDragListener)
-        monthBinding.root.setOnClickListener(onClick)
+        binding.root.setOnDragListener(onDragListener)
+        binding.root.setOnClickListener(onClick)
 
         viewModel.time.observe(viewLifecycleOwner, { item ->
             time = item
@@ -95,19 +95,19 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private fun initAnimation() {
         val set = AnimatorInflater.loadAnimator(context, R.animator.loading_animator) as AnimatorSet
-        set.setTarget(monthBinding.ringLoading)
+        set.setTarget(binding.ringLoading)
         set.start()
     }
 
     private fun getDayLayout() = TileDayLayoutBinding.inflate(layoutInflater)
 
     override fun setFocus() {
-        if (_monthBinding == null) return
+        if (_binding == null) return
         val id = time.day
         if (id == 0) return
-        val daysOfWeek = 0 until monthBinding.tableMonthTile.childCount
+        val daysOfWeek = 0 until binding.tableMonthTile.childCount
         for (i in daysOfWeek) {
-            val row = monthBinding.tableMonthTile.getChildAt(i) as TableRow
+            val row = binding.tableMonthTile.getChildAt(i) as TableRow
             val view = row.findViewById<View>(id) ?: continue
             view.requestFocus()
             return
@@ -115,16 +115,16 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun clearView() {
-        if (_monthBinding == null) return //if state restored and _monthBinding == null
+        if (_binding == null) return //if state restored and _monthBinding == null
         setVisibility()
-        monthBinding.tableMonthTile.removeAllViews()
+        binding.tableMonthTile.removeAllViews()
     }
 
     private fun setVisibility() {
-        monthBinding.recyclerViewDayHolidays.visibility = RecyclerView.VISIBLE
-        monthBinding.tableMonthTile.visibility = TableLayout.VISIBLE
-        monthBinding.ringLoading.visibility = ImageView.GONE
-        monthBinding.crossLoading.visibility = ImageView.GONE
+        binding.recyclerViewDayHolidays.visibility = RecyclerView.VISIBLE
+        binding.tableMonthTile.visibility = TableLayout.VISIBLE
+        binding.ringLoading.visibility = ImageView.GONE
+        binding.crossLoading.visibility = ImageView.GONE
     }
 
     private fun prepareDayOfMonth(dayOfWeek: Int, level: Int, day: Day) {
@@ -169,10 +169,10 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     private fun initRecyclerView(holidays: List<Holiday>) {
-        if (monthBinding.recyclerViewDayHolidays.layoutManager == null) {
-            monthBinding.recyclerViewDayHolidays.layoutManager = layoutManager
+        if (binding.recyclerViewDayHolidays.layoutManager == null) {
+            binding.recyclerViewDayHolidays.layoutManager = layoutManager
         }
-        monthBinding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext(), getFilters())
+        binding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext(), getFilters())
     }
 
     private fun styleDayView(view: TileDayLayoutBinding, day: Day, dayOfWeek: Int) {
@@ -310,9 +310,9 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     override fun drawView() {
-        if (_monthBinding == null) return //if state restored and _monthBinding == null
+        if (_binding == null) return //if state restored and _monthBinding == null
         tableRows.forEach { e ->
-            if (e.parent == null) monthBinding.tableMonthTile.addView(e)
+            if (e.parent == null) binding.tableMonthTile.addView(e)
         }
     }
 
@@ -350,5 +350,11 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     private val onClick = View.OnClickListener {
         val r = 0
         val rw = 0
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 }

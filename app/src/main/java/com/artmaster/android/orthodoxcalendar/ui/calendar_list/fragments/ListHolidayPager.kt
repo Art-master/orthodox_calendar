@@ -139,4 +139,10 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
             }
         })
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+    }
 }

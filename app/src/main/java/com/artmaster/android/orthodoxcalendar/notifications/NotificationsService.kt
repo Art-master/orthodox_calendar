@@ -42,10 +42,10 @@ class NotificationsService : Service() {
 
                 if (timeCoincidence()) {
                     checkNotifications()
-                    AlarmBuilder.build(applicationContext)
                 }
             }
         }
+        AlarmBuilder.build(applicationContext)
 
         return super.onStartCommand(intent, flags, startId)
     }

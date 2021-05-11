@@ -301,7 +301,6 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             }
             else -> null
         }
-        changeMainFragment(item)
         if (additionalFragment != null) {
             if (isExist(additionalFragment)) {
                 showFragment(checkFragment(calendarFragment))
@@ -312,8 +311,12 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                 replaceFragment(R.id.menu_fragments_container, additionalFragment)
             }
         } else if (item.itemId == R.id.item_view) {
-            removeFragment(this.fragment)
-            showFragment(checkFragment(calendarFragment))
+            val fr = supportFragmentManager.findFragmentByTag(Tags.CALENDAR.toString())
+            if (fr is ListViewDiffContract.ViewListPager || fr is ContractTileView) {
+                changeMainFragment(item)
+                removeFragment(this.fragment)
+                showFragment(checkFragment(calendarFragment))
+            } else onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
@@ -424,7 +427,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         if (!fragment.isHidden) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(resId, fragment, "current")
+                    .replace(resId, fragment, tag ?: Tags.CALENDAR.toString())
                     .addToBackStack(null)
                     .commit()
         }
@@ -436,6 +439,10 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     override fun onBackPressed() {
         when {
+            binding.drawerLayout.isDrawerOpen(GravityCompat.END) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.END)
+                return
+            }
             isExist(checkFragment(appSettingsFragment)) -> {
                 removeFragment(appSettingsFragment as Fragment)
                 showFragment(checkFragment(calendarFragment))
