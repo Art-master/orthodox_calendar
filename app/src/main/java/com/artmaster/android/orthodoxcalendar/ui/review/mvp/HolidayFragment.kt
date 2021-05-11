@@ -94,12 +94,14 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
     }
 
     override fun initButtons(holiday: Holiday) {
+        if (holiday.isCreatedByUser.not()) return
         _binding?.apply {
-            if (holiday.isCreatedByUser.not()) {
-                editHolidayButton.hide()
-                deleteHolidayButton.hide()
-                return
-            }
+            editHolidayButton.visibility = View.VISIBLE
+            editHolidayButton.bringToFront()
+
+            deleteHolidayButton.visibility = View.VISIBLE
+            deleteHolidayButton.bringToFront()
+
             editHolidayButton.setOnClickListener {
                 val intent = buildIntentForEditHolidayActivity(holiday)
                 resultLauncher.launch(intent)

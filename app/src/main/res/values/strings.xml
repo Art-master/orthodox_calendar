@@ -36,6 +36,8 @@
     <string name="average_polyleic_holiday">$</string>
     <string name="average_peppy_holiday">%</string>
     <string name="memorial_day">‡</string>
+    <string name="birthday">{</string>
+    <string name="name_day">}</string>
 
     <!--notification text-->
     <string name="notif_holiday_today">Сегодня праздник </string>
@@ -181,5 +183,6 @@
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>
     <string name="save_holiday">Сохранить</string>
+    <string name="age_title">Возраст</string>
 
 </resources>

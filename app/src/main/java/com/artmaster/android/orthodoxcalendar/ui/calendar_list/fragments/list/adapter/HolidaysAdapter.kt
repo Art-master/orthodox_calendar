@@ -81,6 +81,16 @@ class HolidaysAdapter(val context: Context, itemCallback: ListViewDiffContract.C
                     textView.setTextColor(ContextCompat.getColor(context, R.color.colorBlack))
                 }
 
+                holiday.typeId == Holiday.Type.USERS_BIRTHDAY.id -> {
+                    textView.text = context.resources.getString(R.string.birthday)
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorEasterHoliday))
+                }
+
+                holiday.typeId == Holiday.Type.USERS_NAME_DAY.id -> {
+                    textView.text = context.resources.getString(R.string.name_day)
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.colorEasterHoliday))
+                }
+
                 else -> {
                     textView.text = ""
                     textView.setTextColor(ContextCompat.getColor(context, R.color.colorBlack))
