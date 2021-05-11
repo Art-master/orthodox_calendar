@@ -203,7 +203,10 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         val holidayDao = database.get(context).holidayDao()
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
-        holiday.year = year
+
+        //year insert dynamically if holiday is not created by user
+        if (holiday.isCreatedByUser.not()) holiday.year = year
+
         dynamicData.calcHolidayDateIfDynamic(holiday)
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }

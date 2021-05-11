@@ -28,16 +28,17 @@ object AlarmBuilder {
         return Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+
+            //For tests. Every 30 seconds
             //set(Calendar.SECOND, get(Calendar.SECOND) + 30)
         }
     }
 
     private fun launchAlarm(alarmManager: AlarmManager, triggerTime: Long, intent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= 23) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    triggerTime, intent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, intent)
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, intent);
+            alarmManager.setExact(AlarmManager.RTC, triggerTime, intent)
         }
     }
 

@@ -183,6 +183,7 @@
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>
     <string name="save_holiday">Сохранить</string>
-    <string name="age_title">Возраст</string>
+    <string name="age_title">полных лет</string>
+    <string name="year_title_short">г.</string>
 
 </resources>

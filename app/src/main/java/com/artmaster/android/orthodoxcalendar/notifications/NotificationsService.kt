@@ -32,7 +32,7 @@ class NotificationsService : Service() {
     private var allowTodayNotification = false
     private var allowTimeNotification = false
 
-    private var currentDayOfMonth = 0
+    private var currentHour = 0
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
@@ -67,8 +67,8 @@ class NotificationsService : Service() {
         val time = Time()
         val isAppropriateHour = time.hour == getHoursInSettings()
         if (isAppropriateHour.not()) return false
-        if (time.dayOfMonth != currentDayOfMonth) {
-            currentDayOfMonth = time.dayOfMonth
+        if (time.hour != currentHour) {
+            currentHour = time.hour
             return true
         }
 

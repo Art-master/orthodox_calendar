@@ -23,8 +23,6 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
 
     private var holiday: Holiday? = null
 
-    private var isDataNotReadyYet = true
-
     private var currentTime = Time()
 
     override fun init(id: Long, year: Int) {
@@ -39,10 +37,7 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
     }
 
     override fun viewIsReady() {
-        if (holiday == null) {
-            isDataNotReadyYet = false
-            return
-        } else initUI()
+        if (holiday != null) initUI()
     }
 
     private fun initUI() {
@@ -70,7 +65,7 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
 
         if (startStr.isNotEmpty()) {
             startStr = startStr.capitalize(Locale.ROOT)
-            return "$startStr:\n \n ${holiday.title}"
+            return "$startStr \n \n ${holiday.title}"
         }
         return holiday.title
     }
@@ -86,7 +81,7 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
     }
 
     private fun getNewStyleDate(holiday: Holiday, day: Int, month: Int): String {
-        val str = "$day ${OrtUtils.getMonthNameAcc(context, month).toLowerCase(Locale.ROOT)}"
+        var str = "$day ${OrtUtils.getMonthNameAcc(context, month).toLowerCase(Locale.ROOT)}"
         val endStr = when (holiday.typeId) {
             Holiday.Type.USERS_BIRTHDAY.id -> {
                 if (holiday.year < 1) return str
@@ -96,9 +91,10 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
             }
             else -> ""
         }
+        if (holiday.year > 0) str += " ${holiday.year} ${context.getString(R.string.year_title_short)}"
 
         if (endStr.isNotEmpty()) {
-            return "$endStr $str"
+            return "$str \n $endStr"
         }
         return str
     }
