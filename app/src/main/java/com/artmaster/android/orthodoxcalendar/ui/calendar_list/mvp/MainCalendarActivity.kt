@@ -183,7 +183,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             initCheckBoxFilter(filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
             initCheckBoxFilter(filterMemoryDays, Filter.MEMORY_DAYS)
             initCheckBoxFilter(filterNameDays, Filter.NAME_DAYS)
-            initCheckBoxFilter(filterBirthdays, Filter.NAME_DAYS)
+            initCheckBoxFilter(filterBirthdays, Filter.BIRTHDAYS)
         }
     }
 
@@ -487,9 +487,9 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     override fun onDestroy() {
+        _binding = null
         super.onDestroy()
         presenter.onDestroy()
         fragment.onDestroy()
-        _binding = null
     }
 }

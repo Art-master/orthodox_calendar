@@ -29,6 +29,7 @@ class Settings {
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
         SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE),
+        LAST_EXECUTED_NOTIFICATIONS_DAY("$PROJECT_DIR.last_executed_notifications_hour", "0"),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),

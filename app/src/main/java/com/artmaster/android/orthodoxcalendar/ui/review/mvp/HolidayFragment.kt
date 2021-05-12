@@ -229,8 +229,8 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
     }
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
         presenter.destroyView(this)
-        _binding = null
     }
 }

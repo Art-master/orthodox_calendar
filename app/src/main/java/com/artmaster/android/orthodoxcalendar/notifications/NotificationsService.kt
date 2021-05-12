@@ -32,8 +32,6 @@ class NotificationsService : Service() {
     private var allowTodayNotification = false
     private var allowTimeNotification = false
 
-    private var currentHour = 0
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             updatePermissions()
@@ -67,11 +65,6 @@ class NotificationsService : Service() {
         val time = Time()
         val isAppropriateHour = time.hour == getHoursInSettings()
         if (isAppropriateHour.not()) return false
-        if (time.hour != currentHour) {
-            currentHour = time.hour
-            return true
-        }
-
         return false
     }
 

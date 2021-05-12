@@ -238,5 +238,13 @@ abstract class HolidayDynamicTestFactory {
         Assert.assertEquals("Wrong month", day.fasting.type, expectedType)
     }
 
+    @Test
+    fun checkMemorialDays() {
+        checkDynamicHoliday(2019, PERSECUTED, Holiday(month = 2, day = 10))
+        checkDynamicHoliday(2020, PERSECUTED, Holiday(month = 2, day = 9))
+        checkDynamicHoliday(2021, PERSECUTED, Holiday(month = 2, day = 7))
+        checkDynamicHoliday(2022, PERSECUTED, Holiday(month = 2, day = 6))
+    }
+
     abstract fun checkDynamicHoliday(year: Int, type: Holiday.MovableDay, expectedHoliday: Holiday)
 }

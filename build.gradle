@@ -5,7 +5,7 @@ buildscript {
     ext.gradle_version = '4.1.2'
     ext.moxy_version = '2.2.1'
     ext.room_version = '2.3.0'
-    ext.dagger_version = '2.33'
+    ext.dagger_version = '2.35.1'
     ext.leakcanary_version = '2.7'
 
     repositories {

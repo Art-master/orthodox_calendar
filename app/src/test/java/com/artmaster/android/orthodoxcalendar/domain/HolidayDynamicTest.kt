@@ -8,8 +8,7 @@ class HolidayDynamicTest : HolidayDynamicTestFactory() {
         val dynamicHoliday = DynamicData()
         holiday.year = year
         dynamicHoliday.calcHolidayDateIfDynamic(holiday)
-        Assert.assertEquals("Wrong year", holiday.year, expectedHoliday.year)
-        Assert.assertEquals("Wrong day", holiday.day, expectedHoliday.day)
-        Assert.assertEquals("Wrong month", holiday.month, expectedHoliday.month)
+        Assert.assertEquals("Wrong day", expectedHoliday.day, holiday.day)
+        Assert.assertEquals("Wrong month", expectedHoliday.month, holiday.month)
     }
 }

@@ -129,10 +129,11 @@ data class Holiday(
         SATURDAY_OF_PARENT_4(-22, 8),
         SATURDAY_OF_TRINITY(48, 9),
         SATURDAY_OF_DMITRY(0, 10),
-        SATURDAY_OF_PARENT_APOSTLE(0, 11),
-        SATURDAY_OF_PARENT_ASSUMPTION(0, 12),
-        SATURDAY_OF_PARENT_CHRISTMAS(0, 13),
+        SATURDAY_OF_PARENT_APOSTLE(0, 11), // ?
+        SATURDAY_OF_PARENT_ASSUMPTION(0, 12), // ?
+        SATURDAY_OF_PARENT_CHRISTMAS(0, 13), // ?
         RADUNYTSYA(9, 14),
+        PERSECUTED(0, 15)
     }
 
     companion object {

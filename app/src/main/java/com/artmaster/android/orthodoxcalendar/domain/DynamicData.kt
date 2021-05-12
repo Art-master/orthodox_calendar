@@ -99,6 +99,17 @@ class DynamicData {
                 calculateLastDayOfWeekTime(Month.AUGUST.num, 14, holiday.year, Calendar.SATURDAY)
             }
 
+            MovableDay.PERSECUTED.dynamicType -> {
+                val time = Time(holiday.year, Month.FEBRUARY.num, 7)
+                when (time.dayOfWeek) {
+                    DayOfWeek.SUNDAY.num -> time
+                    in 0..2 -> {
+                        calculateLastDayOfWeekTime(Month.FEBRUARY.num, 7, holiday.year, Calendar.SUNDAY)
+                    }
+                    else -> calculateNextDayOfWeekTime(Month.FEBRUARY.num, 7, holiday.year, Calendar.SUNDAY)
+                }
+            }
+
             else -> null
 
         } ?: return
@@ -113,6 +124,15 @@ class DynamicData {
         var calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, index)
         while (calc.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
             calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, --index)
+        }
+        return Time(calc)
+    }
+
+    private fun calculateNextDayOfWeekTime(month: Int, day: Int, year: Int, dayOfWeek: Int): Time {
+        var index = -1
+        var calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, index)
+        while (calc.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            calc = Time().calculateDate(year, month, day, Calendar.DAY_OF_YEAR, ++index)
         }
         return Time(calc)
     }
@@ -372,6 +392,7 @@ class DynamicData {
             MovableDay.SATURDAY_OF_PARENT_CHRISTMAS.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_ASSUMPTION.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_APOSTLE.dynamicType,
+            MovableDay.PERSECUTED.dynamicType,
             MovableDay.RADUNYTSYA.dynamicType -> true
             else -> false
         }

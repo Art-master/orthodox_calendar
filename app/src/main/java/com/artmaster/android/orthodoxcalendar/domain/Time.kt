@@ -13,6 +13,10 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
         calendar.set(Calendar.DAY_OF_MONTH, day)
     }
 
+    constructor(timeInMillis: Long) : this() {
+        calendar.timeInMillis = timeInMillis
+    }
+
     val year: Int
         get() = calendar.get(Calendar.YEAR)
 
@@ -25,7 +29,7 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
     val dayOfWeek: Int
         get() {
             val day = calendar.get(Calendar.DAY_OF_WEEK)
-            return if(day == 1) 7 else day -1
+            return if (day == 1) 7 else day - 1
         }
 
     val dayOfYear: Int
@@ -70,7 +74,7 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
         return calendar
     }
 
-    fun getDaysOfYear(year: Int): Int{
+    fun getDaysOfYear(year: Int): Int {
         val c = Calendar.getInstance()
         c.set(year, 11, 31)
         return c.get(Calendar.DAY_OF_YEAR)
@@ -84,11 +88,11 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
         return calendar
     }
 
-    enum class Day(val num : Int){
+    enum class Day(val num: Int) {
         SUNDAY(7)
     }
 
-    enum class Month(val num : Int){
+    enum class Month(val num: Int) {
         DECEMBER(11)
     }
 }

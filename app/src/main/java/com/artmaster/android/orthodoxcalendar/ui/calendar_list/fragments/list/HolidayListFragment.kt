@@ -106,10 +106,13 @@ class HolidayListFragment : MvpAppCompatFragment(), ListViewContract {
         return adapter
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
-
-        _binding = null
     }
 }

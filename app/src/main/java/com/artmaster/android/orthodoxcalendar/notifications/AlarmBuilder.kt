@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Settings
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.*
 
 
@@ -25,20 +26,26 @@ object AlarmBuilder {
 
     // Set the alarm to start at by setting time
     private fun buildCalendarByAppSettings(): Calendar {
-        return Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+        val time = Time()
+        val lastSavedDay = prefs.get(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY).toInt()
+        return if (time.dayOfYear != lastSavedDay) {
+            prefs.set(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY, time.dayOfYear.toString())
 
-            //For tests. Every 30 seconds
-            //set(Calendar.SECOND, get(Calendar.SECOND) + 30)
-        }
+            Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+            }
+        } else time.calculateDate(time.year, time.month, time.dayOfYear, Calendar.DAY_OF_YEAR, time.dayOfYear + 1)
+                .apply {
+                    set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+                }
     }
 
     private fun launchAlarm(alarmManager: AlarmManager, triggerTime: Long, intent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= 23) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, triggerTime, intent)
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, intent)
         } else {
-            alarmManager.setExact(AlarmManager.RTC, triggerTime, intent)
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, intent)
         }
     }
 
