@@ -55,14 +55,17 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
 
         for (holiday in holidays) {
             holiday.year = year
-            dynamicData.fillHoliday(holiday)
+            dynamicData.calcHolidayDateIfDynamic(holiday)
             val dayNum = holiday.day
             holiday.monthWith0 = holiday.month - 1
 
             if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
             if (dayNum > days.size || holiday.monthWith0 != month) continue
-            days[dayNum - 1].holidays.add(holiday)
+            days[dayNum - 1].apply {
+                this.holidays.add(holiday)
+                dynamicData.fillDayInfoByHoliday(this, holiday)
+            }
         }
     }
 
@@ -91,7 +94,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         for (holiday in holidays) {
             holiday.year = year
             if (holiday.day == 0) {
-                dynamicData.fillHoliday(holiday)
+                dynamicData.calcHolidayDateIfDynamic(holiday)
             }
 
             holiday.monthWith0 = holiday.month - 1
@@ -196,10 +199,15 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         database.close()
     }
 
-    override fun getFullHolidayData(id: Long): Holiday {
+    override fun getFullHolidayData(id: Long, year: Int): Holiday {
         val holidayDao = database.get(context).holidayDao()
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
+
+        //year insert dynamically if holiday is not created by user
+        if (holiday.isCreatedByUser.not()) holiday.year = year
+
+        dynamicData.calcHolidayDateIfDynamic(holiday)
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
 

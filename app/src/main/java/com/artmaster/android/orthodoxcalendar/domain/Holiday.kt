@@ -77,11 +77,11 @@ data class Holiday(
         GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
         AVERAGE_POLYLEIC("средний полиелейный", 6),
         AVERAGE_PEPPY("средний бденный", 7),
-        COMMON_MEMORY_DAY("день памяти", 7),
+        COMMON_MEMORY_DAY("день памяти", 8),
 
-        USERS_NAME_DAY("именины", 9),
-        USERS_BIRTHDAY("день рождения", 10),
-        USERS_MEMORY_DAY("средний бденный", 11);
+        USERS_MEMORY_DAY("средний бденный", 9),
+        USERS_NAME_DAY("именины", 10),
+        USERS_BIRTHDAY("день рождения", 11),
     }
 
     enum class DayOfWeek(val num: Int) {
@@ -121,6 +121,19 @@ data class Holiday(
 
         //50 day after Easter
         THE_HOLY_TRINITY(49, 4),
+
+
+        MEATLESS_SATURDAY(-57, 5),
+        SATURDAY_OF_PARENT_2(-36, 6),
+        SATURDAY_OF_PARENT_3(-29, 7),
+        SATURDAY_OF_PARENT_4(-22, 8),
+        SATURDAY_OF_TRINITY(48, 9),
+        SATURDAY_OF_DMITRY(0, 10),
+        SATURDAY_OF_PARENT_APOSTLE(0, 11), // ?
+        SATURDAY_OF_PARENT_ASSUMPTION(0, 12), // ?
+        SATURDAY_OF_PARENT_CHRISTMAS(0, 13), // ?
+        RADUNYTSYA(9, 14),
+        PERSECUTED(0, 15)
     }
 
     companion object {

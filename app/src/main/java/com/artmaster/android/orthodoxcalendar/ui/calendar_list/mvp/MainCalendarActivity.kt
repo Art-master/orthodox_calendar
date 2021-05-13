@@ -183,7 +183,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             initCheckBoxFilter(filterCommonMemoryDays, Filter.COMMON_MEMORY_DAYS)
             initCheckBoxFilter(filterMemoryDays, Filter.MEMORY_DAYS)
             initCheckBoxFilter(filterNameDays, Filter.NAME_DAYS)
-            initCheckBoxFilter(filterBirthdays, Filter.NAME_DAYS)
+            initCheckBoxFilter(filterBirthdays, Filter.BIRTHDAYS)
         }
     }
 
@@ -292,7 +292,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         checkFloatingButtonVisibility(item!!)
 
-        val currentVisibleFragment = when (item.itemId) {
+        val additionalFragment = when (item.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)
             R.id.item_settings -> checkFragment(appSettingsFragment)
             R.id.item_reset_date -> {
@@ -301,19 +301,22 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             }
             else -> null
         }
-        changeMainFragment(item)
-        if (currentVisibleFragment != null) {
-            if (isExist(currentVisibleFragment)) {
+        if (additionalFragment != null) {
+            if (isExist(additionalFragment)) {
                 showFragment(checkFragment(calendarFragment))
-                removeFragment(currentVisibleFragment)
+                removeFragment(additionalFragment)
             } else {
-                this.fragment = currentVisibleFragment
+                this.fragment = additionalFragment
                 hideFragment(checkFragment(calendarFragment))
-                replaceFragment(R.id.menu_fragments_container, currentVisibleFragment)
+                replaceFragment(R.id.menu_fragments_container, additionalFragment)
             }
         } else if (item.itemId == R.id.item_view) {
-            removeFragment(this.fragment)
-            showFragment(checkFragment(calendarFragment))
+            val fr = supportFragmentManager.findFragmentByTag(Tags.CALENDAR.toString())
+            if (fr is ListViewDiffContract.ViewListPager || fr is ContractTileView) {
+                changeMainFragment(item)
+                removeFragment(this.fragment)
+                showFragment(checkFragment(calendarFragment))
+            } else onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
@@ -424,7 +427,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         if (!fragment.isHidden) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(resId, fragment)
+                    .replace(resId, fragment, tag ?: Tags.CALENDAR.toString())
                     .addToBackStack(null)
                     .commit()
         }
@@ -436,6 +439,10 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     override fun onBackPressed() {
         when {
+            binding.drawerLayout.isDrawerOpen(GravityCompat.END) -> {
+                binding.drawerLayout.closeDrawer(GravityCompat.END)
+                return
+            }
             isExist(checkFragment(appSettingsFragment)) -> {
                 removeFragment(appSettingsFragment as Fragment)
                 showFragment(checkFragment(calendarFragment))
@@ -480,9 +487,9 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     }
 
     override fun onDestroy() {
+        _binding = null
         super.onDestroy()
         presenter.onDestroy()
         fragment.onDestroy()
-        _binding = null
     }
 }

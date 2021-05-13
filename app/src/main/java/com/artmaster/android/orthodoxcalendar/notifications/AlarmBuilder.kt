@@ -6,9 +6,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Settings
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.*
+
 
 object AlarmBuilder {
 
@@ -18,26 +21,37 @@ object AlarmBuilder {
         if (isNotificationDisable()) return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmMgr.setInexactRepeating(
-                AlarmManager.RTC,
-                buildCalendarByAppSettings().timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                createIntent(context)
-        )
+        launchAlarm(alarmMgr, buildCalendarByAppSettings().timeInMillis, createIntent(context))
     }
 
-    // Set the alarm to start at approximately by setting time
+    // Set the alarm to start at by setting time
     private fun buildCalendarByAppSettings(): Calendar {
-        return Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, getHoursBySettings())
-            //set(Calendar.SECOND, get(Calendar.SECOND) + 3) DEBUG
+        val time = Time()
+        val lastSavedDay = prefs.get(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY).toInt()
+        return if (time.dayOfYear != lastSavedDay) {
+            prefs.set(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY, time.dayOfYear.toString())
+
+            Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+            }
+        } else time.calculateDate(time.year, time.month, time.dayOfYear, Calendar.DAY_OF_YEAR, time.dayOfYear + 1)
+                .apply {
+                    set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+                }
+    }
+
+    private fun launchAlarm(alarmManager: AlarmManager, triggerTime: Long, intent: PendingIntent) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, intent)
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, intent)
         }
     }
 
     private fun createIntent(context: Context): PendingIntent {
         return Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         }
     }
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/window_background"
@@ -19,10 +19,14 @@
             android:weightSum="1">
 
             <LinearLayout
+                android:id="@+id/holidayNameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
                     android:layout_width="wrap_content"
@@ -38,7 +42,7 @@
                     android:id="@+id/holiday_name_in_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_weight="10"
                     android:maxWidth="@dimen/activity_horizontal_margin"
                     android:textAlignment="center"
@@ -62,13 +66,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="5dp" />
+                android:layout_marginTop="8dp"
+                android:paddingTop="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/holidayNameLayout" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutCompat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_holiday">
 
                 <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
                     android:id="@+id/new_date_style_text_view"
@@ -78,7 +90,6 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="20dp"
                     android:paddingRight="10dp"
-                    android:text="@string/new_style_date_string"
                     android:textAlignment="center"
                     android:textSize="@dimen/size_text_basic"
                     app:customFont="@string/font_basic" />
@@ -102,7 +113,10 @@
                 android:id="@+id/relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
 
                 <com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
                     android:id="@+id/initial_later_text_view"
@@ -122,7 +136,7 @@
                     app:customFont="@string/font_basic" />
             </android.widget.RelativeLayout>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -131,6 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:visibility="gone"
         android:contentDescription="@string/fab_content_desc"
         app:backgroundTint="@color/colorEasterHoliday"
         app:fabSize="mini"
@@ -144,6 +159,7 @@
         android:layout_gravity="top|end"
         android:layout_margin="16dp"
         android:contentDescription="@string/fab_content_desc"
+        android:visibility="gone"
         app:backgroundTint="@color/colorHeadHoliday"
         app:fabSize="mini"
         app:layout_anchor="@id/deleteHolidayButton"

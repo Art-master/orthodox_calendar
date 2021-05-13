@@ -37,6 +37,10 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
     private fun prepareViews() {
         CheckBoxDecorator(binding.settingsNotifications, prefs, IS_ENABLE_NOTIFICATION_TODAY).prepare()
         CheckBoxDecorator(binding.settingsNotifyAverageHolidays, prefs, AVERAGE_HOLIDAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxDecorator(binding.settingsNotifyNameDays, prefs, NAME_DAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxDecorator(binding.settingsNotifyBirthdays, prefs, BIRTHDAYS_NOTIFY_ALLOW).prepare()
+        CheckBoxDecorator(binding.settingsNotifyMemoryDays, prefs, MEMORY_DAYS_NOTIFY_ALLOW).prepare()
+
         CheckBoxDecorator(binding.settingsNotifySound, prefs, SOUND_OF_NOTIFICATION).prepare()
         CheckBoxDecorator(binding.settingsNotifyVibration, prefs, VIBRATION_OF_NOTIFICATION).prepare()
         CheckBoxDecorator(binding.settingsFirstLoadTileView, prefs, FIRST_LOADING_TILE_CALENDAR).prepare()
@@ -73,4 +77,10 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
 
     private fun getHoursNumbers() = getDaysNumbers().take(24).toTypedArray()
     private fun getDaysNumbers() = resources.getStringArray(R.array.spinner_days_numbers)
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+    }
 }

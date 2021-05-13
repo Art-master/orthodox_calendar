@@ -6,7 +6,7 @@ import moxy.viewstate.strategy.StateStrategyType
 
 interface ListViewContract : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun prepareAdapter()
+    fun prepareAdapter(position: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showList(position: Int)

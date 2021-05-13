@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.review.mvp
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
@@ -44,6 +46,7 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         fun newInstance(holiday: Holiday): HolidayFragment {
             val intent = Intent()
             intent.putExtra(Constants.Keys.HOLIDAY_ID.value, holiday.id)
+            intent.putExtra(Constants.Keys.YEAR.value, holiday.year)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             val fragment = HolidayFragment()
@@ -59,7 +62,8 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         if (!presenter.isInRestoreState(this)) {
             presenter.attachView(this)
             val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
-            presenter.init(id)
+            val year = requireArguments().getInt(Constants.Keys.YEAR.value)
+            presenter.init(id, year)
         }
     }
 
@@ -77,24 +81,27 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
         when (result.resultCode) {
             Constants.Keys.HOLIDAY.hashCode() -> {
                 val id = requireArguments().getLong(Constants.Keys.HOLIDAY_ID.value)
+                val year = requireArguments().getInt(Constants.Keys.YEAR.value)
                 val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                     override fun handleOnBackPressed() {
                         startActivity(buildIntentForMainActivity())
                     }
                 }
                 requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-                presenter.init(id)
+                presenter.init(id, year)
             }
         }
     }
 
     override fun initButtons(holiday: Holiday) {
+        if (holiday.isCreatedByUser.not()) return
         _binding?.apply {
-            if (holiday.isCreatedByUser.not()) {
-                editHolidayButton.hide()
-                deleteHolidayButton.hide()
-                return
-            }
+            editHolidayButton.visibility = View.VISIBLE
+            editHolidayButton.bringToFront()
+
+            deleteHolidayButton.visibility = View.VISIBLE
+            deleteHolidayButton.bringToFront()
+
             editHolidayButton.setOnClickListener {
                 val intent = buildIntentForEditHolidayActivity(holiday)
                 resultLauncher.launch(intent)
@@ -162,7 +169,10 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
             setLeadingMargin(3, 8)
             val strWithoutSpaces = deleteSpaces(description)
             setText(getTextByPadding(strWithoutSpaces))
-            setTextColor(binding.newDateStyleTextView.textColors)
+
+            val colorInt = ContextCompat.getColor(context, R.color.text)
+            val colors = ColorStateList.valueOf(colorInt)
+            setTextColor(colors)
         }
     }
 
@@ -219,8 +229,8 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
     }
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
         presenter.destroyView(this)
-        _binding = null
     }
 }

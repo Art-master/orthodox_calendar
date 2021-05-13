@@ -28,12 +28,16 @@
     <string name="check_box_allow_image_grayscale">черно-белые изображения</string>
 
     <!--Tipicon image code-->
+    <string name="main_holiday">*</string>
     <string name="head_holiday">^</string>
     <string name="twelve_movable_holiday">^</string>
     <string name="twelve_not_movable_holiday">^</string>
     <string name="average">^</string>
     <string name="average_polyleic_holiday">$</string>
     <string name="average_peppy_holiday">%</string>
+    <string name="memorial_day">‡</string>
+    <string name="birthday">{</string>
+    <string name="name_day">}</string>
 
     <!--notification text-->
     <string name="notif_holiday_today">Сегодня праздник </string>
@@ -63,6 +67,9 @@
     Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.
     \n \n Слава Господу нашему Иисусу Христу всегда и ныне и присно и во веки веков. Аминь.
     </string>
+    <string name="info_substring_lord_name_1">Христ</string>
+    <string name="info_substring_lord_name_2">Иисус</string>
+
 
     <string name="num_example_1">1</string>
     <string name="num_example_2">2</string>
@@ -88,6 +95,9 @@
     <string name="settings_name">Настройки</string>
     <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>
     <string name="settings_average_notifications">Уведомлять о средних праздниках</string>
+    <string name="settings_name_days_notifications">Уведомлять о именинах</string>
+    <string name="settings_birthdays_notifications">Уведомлять о днях рождения</string>
+    <string name="settings_memory_days_notifications">Уведомлять о днях памяти</string>
     <string name="settings_notifications_sound">Уведомления со звуком</string>
     <string name="settings_notifications_sound_default">Стандартный звук в уведомлениях</string>
     <string name="settings_notifications_vibration">Уведомления с вибрацией</string>
@@ -134,16 +144,19 @@
 
     <string-array name="user_holidays_names">
         <!-- @see Holiday.Type ids -->
-        <item id="8">День рождения</item>
+        <item id="8">День памяти</item>
         <item id="9">Именины</item>
-        <item id="10">День памяти</item>
+        <item id="10">День рождения</item>
     </string-array>
 
     <!--Notifications-->
-    <string name="notifications_today_name">Сегодня праздник</string>
-    <string name="notifications_tomorrow_name">Завтра праздник</string>
-    <string name="notifications_after_days_name">Через %1$d дн. праздник</string>
-    <string name="notifications_holiday">Праздник</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="after_days">Через %1$d дн.</string>
+    <string name="holiday_title">праздник</string>
+    <string name="name_title">именины</string>
+    <string name="birthday_title">день рождения</string>
+    <string name="memory_day_title">день памяти</string>
 
     <!-- IMG descriptors -->
     <string name="descriptor_img_load_holidays">Загрузка</string>
@@ -170,5 +183,7 @@
     <string name="type_holiday">Тип</string>
     <string name="description_holiday">Описание</string>
     <string name="save_holiday">Сохранить</string>
+    <string name="age_title">полных лет</string>
+    <string name="year_title_short">г.</string>
 
 </resources>

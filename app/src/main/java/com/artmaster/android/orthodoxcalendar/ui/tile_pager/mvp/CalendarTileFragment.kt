@@ -83,8 +83,10 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
 
     override fun setPageAdapter() {
         if (_binding == null) return
-        binding.holidayTilePager.adapter = getAdapter(this)
-        binding.holidayTilePager.currentItem = time.month
+        binding.holidayTilePager.apply {
+            adapter = getAdapter(this@CalendarTileFragment)
+            setCurrentItem(time.month, false)
+        }
     }
 
     override fun initSpinner() {
@@ -167,5 +169,11 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
             val transaction = parentFragmentManager.beginTransaction()
             fr.show(transaction, "helper")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
     }
 }

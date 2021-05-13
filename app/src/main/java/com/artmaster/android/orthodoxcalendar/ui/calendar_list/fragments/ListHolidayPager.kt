@@ -48,12 +48,15 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
             filters.addAll(item.toList())
             setPageAdapter()
             binding.holidayListPager.invalidate()
+            binding.holidayListPager.setCurrentItem(getPosition(time.year), false)
         })
 
         viewModel.time.observe(this, { item ->
             if (SharedTime.isTimeChanged(time, item)) {
-                if (item.year != time.year) {
-                    binding.holidayListPager.currentItem = getPosition(item.year)
+                if (item.year != time.year || item.month != time.month || item.day != time.day) {
+                    setPageAdapter()
+                    binding.holidayListPager.invalidate() //TODO make normal invalidate date
+                    binding.holidayListPager.setCurrentItem(getPosition(item.year), false)
                 }
                 time = item
             }
@@ -74,7 +77,7 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     override fun onResume() {
         super.onResume()
         binding.holidayListPager.apply {
-            currentItem = getPosition()
+            setCurrentItem(getPosition(), false)
             offscreenPageLimit = 3
             clipToPadding = false
             clipChildren = false
@@ -87,7 +90,9 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
     private fun setPageAdapter() {
         adapter = getAdapter(this)
         binding.holidayListPager.adapter = adapter
-        binding.holidayListPager.currentItem = getPosition()
+        binding.holidayListPager.post {
+            binding.holidayListPager.setCurrentItem(getPosition(), false)
+        }
         setChangePageListener()
     }
 
@@ -133,5 +138,10 @@ class ListHolidayPager : Fragment(), ListViewDiffContract.ViewListPager {
                 changedCallback?.invoke(position, time.year)
             }
         })
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

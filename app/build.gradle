@@ -11,8 +11,8 @@ android {
         applicationId "com.artmaster.android.orthodoxcalendar"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 32
-        versionName "3.2"
+        versionCode 33
+        versionName "4.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
         javaCompileOptions {
@@ -73,7 +73,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.google.firebase:firebase-core:18.0.2"
+    implementation "com.google.firebase:firebase-core:18.0.3"
 
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
