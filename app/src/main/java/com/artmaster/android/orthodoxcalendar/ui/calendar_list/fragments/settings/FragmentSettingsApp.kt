@@ -59,6 +59,7 @@ class FragmentSettingsApp : Fragment(), AppSettingView {
         }
         SpinnerPrepared(binding.timeInSpinner, prefs, HOURS_OF_NOTIFICATION, getHoursNumbers()).prepare().apply {
             onClick = {
+                prefs.set(LAST_EXECUTED_NOTIFICATIONS_DAY, "0")
                 AlarmBuilder.build(requireContext())
             }
         }

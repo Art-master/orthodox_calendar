@@ -13,7 +13,7 @@ class Settings {
     }
 
     enum class Name(val value: String, val defValue: String) {
-        FIRST_LOAD_APP("$PROJECT_DIR.app_first_initialization", FALSE),
+        FIRST_LOAD_APP("$PROJECT_DIR.app_first_initialization_v1", FALSE),
         IS_ENABLE_NOTIFICATION_TIME("$PROJECT_DIR.is_enable_notification_before", TRUE),
         IS_ENABLE_NOTIFICATION_IN_TIME("$PROJECT_DIR.is_enable_notification_in_time", FALSE),
         IS_ENABLE_NOTIFICATION_TODAY("$PROJECT_DIR.is_enable_notification_today", TRUE),
@@ -29,7 +29,7 @@ class Settings {
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
         SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE),
-        LAST_EXECUTED_NOTIFICATIONS_DAY("$PROJECT_DIR.last_executed_notifications_hour", "0"),
+        LAST_EXECUTED_NOTIFICATIONS_DAY("$PROJECT_DIR.last_executed_notifications_day", "0"),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),

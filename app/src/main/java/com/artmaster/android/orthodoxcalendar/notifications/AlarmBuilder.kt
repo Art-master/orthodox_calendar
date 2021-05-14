@@ -27,17 +27,22 @@ object AlarmBuilder {
     // Set the alarm to start at by setting time
     private fun buildCalendarByAppSettings(): Calendar {
         val time = Time()
+        val hourSettings = getHoursBySettings()
         val lastSavedDay = prefs.get(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY).toInt()
-        return if (time.dayOfYear != lastSavedDay) {
+        return if (time.dayOfYear != lastSavedDay && time.hour >= hourSettings) {
             prefs.set(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY, time.dayOfYear.toString())
 
             Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+                set(Calendar.MINUTE, 0)
+                set(Calendar.HOUR_OF_DAY, hourSettings)
             }
+
+            //set next day time
         } else time.calculateDate(time.year, time.month, time.dayOfYear, Calendar.DAY_OF_YEAR, time.dayOfYear + 1)
                 .apply {
-                    set(Calendar.HOUR_OF_DAY, getHoursBySettings())
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.HOUR_OF_DAY, hourSettings)
                 }
     }
 

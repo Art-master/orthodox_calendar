@@ -30,6 +30,7 @@ class SpinnerPrepared(private val spinner: AppCompatSpinner,
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View?, position: Int, id: Long) {
                 saveSetting()
+                onClick.invoke(true)
             }
             override fun onNothingSelected(parentView: AdapterView<*>) {}
         }

@@ -63,9 +63,7 @@ class NotificationsService : Service() {
 
     private fun timeCoincidence(): Boolean {
         val time = Time()
-        val isAppropriateHour = time.hour == getHoursInSettings()
-        if (isAppropriateHour.not()) return false
-        return false
+        return time.hour == getHoursInSettings()
     }
 
     private fun getHoursInSettings() = prefs.get(HOURS_OF_NOTIFICATION).toInt()
