@@ -9,12 +9,12 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.Layout
 import android.view.*
 import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,10 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.data.components.CustomFont
 import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentMonthTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.databinding.TileDayLayoutBinding
+import com.artmaster.android.orthodoxcalendar.databinding.TileDayNameLayoutBinding
 import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
@@ -288,17 +288,19 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
     }
 
     private fun getDayNames() = resources.getStringArray(R.array.daysNamesAbb)
+    private fun getDayOfWeekLayout() = TileDayNameLayoutBinding.inflate(layoutInflater)
 
-    private fun createDayOtWeek(month: Int): TextView {
-        return TextViewWithCustomFont(requireContext()).apply {
-            val dayNames = getDayNames()
-            text = dayNames[month - 1]
-            setTextColor(Color.RED)
-            textSize = resources.getDimension(R.dimen.size_tile_day_of_week)
-            typeface = CustomFont.getFont(requireContext(), getString(R.string.font_basic))
-            textAlignment = Layout.Alignment.ALIGN_CENTER.ordinal
-            setPadding(0, 0, 20, 0)
+    private fun createDayOtWeek(dayOfWeek: Int): ConstraintLayout {
+        val layout = getDayOfWeekLayout()
+        val dayNames = getDayNames()
+        layout.nameDay.apply {
+            text = dayNames[dayOfWeek - 1]
+            val color = if (dayOfWeek == 7) Color.RED else {
+                ContextCompat.getColor(requireContext(), R.color.text)
+            }
+            setTextColor(color)
         }
+        return layout.root
     }
 
     private fun createDayOfWeekRow(): TableRow {

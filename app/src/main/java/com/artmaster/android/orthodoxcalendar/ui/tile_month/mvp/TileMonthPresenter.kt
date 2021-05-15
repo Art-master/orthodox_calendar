@@ -20,6 +20,7 @@ class TileMonthPresenter : MvpPresenter<ContractTileMonthView>(), ContractTileMo
     private var job: Job? = null
 
     override suspend fun viewIsReady(time: SharedTime, filters: ArrayList<Filter>) {
+        currentTime.calendar.firstDayOfWeek = Calendar.MONDAY
         currentTime.calendar.set(time.year, time.month, 1)
 
         job = GlobalScope.launch(Dispatchers.Unconfined) {

@@ -34,5 +34,5 @@
         <dimen name="size_email_font">20sp</dimen>
 
         <!-- Размер шрифта, для наименований дней недели в плитке -->
-        <dimen name="size_tile_day_of_week">6sp</dimen>
+        <dimen name="size_tile_day_of_week">20sp</dimen>
 </resources>
