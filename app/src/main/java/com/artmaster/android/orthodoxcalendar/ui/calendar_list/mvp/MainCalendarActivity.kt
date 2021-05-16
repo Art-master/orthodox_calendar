@@ -89,6 +89,8 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     private var _binding: ActivityCalendarBinding? = null
     private val binding get() = _binding!!
 
+    private var menuOpened = false
+
     override fun androidInjector(): AndroidInjector<Any> {
         return fragmentInjector
     }
@@ -116,13 +118,13 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         initFilters()
         initFiltersListeners()
         prepareNewHolidayButton()
+        initShowMenuButton()
     }
 
     private fun initFilters() {
         binding.showFiltersButton.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
-            binding.showFiltersButton.hide()
-            binding.addHoliday.hide()
+            setFloatingPanelVisibility(false)
         }
 
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -148,11 +150,18 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
     private fun setFloatingPanelVisibility(isShow: Boolean = true) {
         if (isShow) {
-            binding.showFiltersButton.show()
-            binding.addHoliday.show()
+            if (menuOpened) {
+                binding.showFiltersButton.show()
+                binding.addHoliday.show()
+            }
+
+            binding.showMenu.show()
         } else {
-            binding.showFiltersButton.hide()
-            binding.addHoliday.hide()
+            if (menuOpened) {
+                binding.showFiltersButton.hide()
+                binding.addHoliday.hide()
+            }
+            binding.showMenu.hide()
         }
     }
 
@@ -172,6 +181,21 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
 
             intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
             resultLauncher.launch(intent)
+        }
+    }
+
+    private fun initShowMenuButton() {
+        binding.showMenu.setOnClickListener {
+            if (menuOpened) {
+                binding.addHoliday.hide()
+                binding.showFiltersButton.hide()
+                binding.showMenu.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
+            } else {
+                binding.addHoliday.show()
+                binding.showFiltersButton.show()
+                binding.showMenu.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
+            }
+            menuOpened = !menuOpened
         }
     }
 
@@ -196,6 +220,14 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
                         else viewModel.addFilter(filter)
                     }
                 }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (menuOpened.not()) {
+            binding.showFiltersButton.hide()
+            binding.addHoliday.hide()
+        }
     }
 
     override fun onPause() {
@@ -446,11 +478,13 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             isExist(checkFragment(appSettingsFragment)) -> {
                 removeFragment(appSettingsFragment as Fragment)
                 showFragment(checkFragment(calendarFragment))
+                setFloatingPanelVisibility(true)
             }
 
             isExist(checkFragment(appInfoFragment)) -> {
                 removeFragment(appInfoFragment as Fragment)
                 showFragment(checkFragment(calendarFragment))
+                setFloatingPanelVisibility(true)
             }
 
             else -> OrtUtils.exitProgram(this)
