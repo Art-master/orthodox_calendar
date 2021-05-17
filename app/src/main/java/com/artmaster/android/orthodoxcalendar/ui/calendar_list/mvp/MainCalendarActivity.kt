@@ -278,11 +278,11 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         val lastPosition = getYears().lastIndex
         when (position) {
             lastPosition -> {
-                binding.arrowRight.visibility = View.GONE
+                binding.arrowRight.visibility = View.INVISIBLE
                 binding.arrowLeft.visibility = View.VISIBLE
             }
             firstPosition -> {
-                binding.arrowLeft.visibility = View.GONE
+                binding.arrowLeft.visibility = View.INVISIBLE
                 binding.arrowRight.visibility = View.VISIBLE
             }
             else -> {

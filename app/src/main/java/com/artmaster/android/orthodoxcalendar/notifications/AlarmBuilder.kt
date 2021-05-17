@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Time
@@ -28,22 +29,20 @@ object AlarmBuilder {
     private fun buildCalendarByAppSettings(): Calendar {
         val time = Time()
         val hourSettings = getHoursBySettings()
-        val lastSavedDay = prefs.get(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY).toInt()
-        return if (time.dayOfYear != lastSavedDay && time.hour >= hourSettings) {
-            prefs.set(Settings.Name.LAST_EXECUTED_NOTIFICATIONS_DAY, time.dayOfYear.toString())
 
-            Calendar.getInstance().apply {
+        return Calendar.getInstance().apply {
+            timeZone = TimeZone.getDefault()
+            if (time.hour < hourSettings) {
                 timeInMillis = System.currentTimeMillis()
                 set(Calendar.MINUTE, 0)
                 set(Calendar.HOUR_OF_DAY, hourSettings)
+            } else {
+                set(time.year, time.monthWith0, time.dayOfMonth, hourSettings, 0)
+                add(Calendar.HOUR_OF_DAY, hourSettings)
+                set(Calendar.HOUR_OF_DAY, hourSettings)
             }
-
-            //set next day time
-        } else time.calculateDate(time.year, time.month, time.dayOfYear, Calendar.DAY_OF_YEAR, time.dayOfYear + 1)
-                .apply {
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.HOUR_OF_DAY, hourSettings)
-                }
+            Log.d("NOTIFICATION_TIME", "${get(Calendar.DAY_OF_YEAR)} ${get(Calendar.HOUR_OF_DAY)} ${get(Calendar.MINUTE)}")
+        }
     }
 
     private fun launchAlarm(alarmManager: AlarmManager, triggerTime: Long, intent: PendingIntent) {
