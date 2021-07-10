@@ -123,7 +123,7 @@ class HolidayReviewPresenter : MvpPresenter<HolidayReviewContract.View>(), Holid
     private fun getDescription(description: String): Pair<String, String> {
         if (description.isEmpty()) return Pair("", "")
 
-        val textForDescription = description.replace("[\\s&&[^\t?\n]]+", " ")
+        val textForDescription = description.replace("[\\s&&[^\t?\n]]+", " ").trim()
         val result = textForDescription.substring(1)
         return textForDescription.first().toString() to result
     }
