@@ -321,8 +321,8 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        checkFloatingButtonVisibility(item!!)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { //TODO override ?
+        checkFloatingButtonVisibility(item)
 
         val additionalFragment = when (item.itemId) {
             R.id.item_about -> checkFragment(appInfoFragment)

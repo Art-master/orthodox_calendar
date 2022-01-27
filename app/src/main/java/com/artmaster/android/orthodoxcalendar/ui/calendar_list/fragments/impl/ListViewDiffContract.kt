@@ -13,7 +13,7 @@ interface ListViewDiffContract {
         fun getNewData(): List<T>
     }
 
-    interface PagedList<T> {
+    interface PagedList<T : Any> {
         fun get(): pgdList<T>
     }
 

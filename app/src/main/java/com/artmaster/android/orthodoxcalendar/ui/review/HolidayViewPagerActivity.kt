@@ -59,7 +59,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
         _binding = HolidayReviewPagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        currentHoliday = getCurrentHoliday()
+        currentHoliday = getCurrentHoliday()!!
         filters = getFilters()
 
         loadHolidays()
