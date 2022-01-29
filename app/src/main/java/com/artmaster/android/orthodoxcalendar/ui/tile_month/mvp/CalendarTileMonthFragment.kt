@@ -1,44 +1,19 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp
 
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
-import android.content.ClipDescription
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.*
-import android.widget.ImageView
-import android.widget.TableLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TableRow
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.data.components.TextViewWithCustomFont
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentMonthTileCalendarBinding
-import com.artmaster.android.orthodoxcalendar.databinding.TileDayLayoutBinding
-import com.artmaster.android.orthodoxcalendar.databinding.TileDayNameLayoutBinding
-import com.artmaster.android.orthodoxcalendar.domain.*
+import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.tile_month.impl.ContractTileMonthView
-import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
-import moxy.presenter.InjectPresenter
-import java.util.*
-import kotlin.collections.ArrayList
 
-internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileMonthView {
-
-    @InjectPresenter(tag = "TileMonthPresenter")
-    lateinit var presenter: TileMonthPresenter
+internal class CalendarTileMonthFragment : MvpAppCompatFragment() {
 
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -51,7 +26,7 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private var time: SharedTime = SharedTime()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+/*    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (!presenter.isInRestoreState(this)) {
@@ -64,17 +39,28 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
                 presenter.viewIsReady(time, filters)
             }
         }
+    }*/
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+
+            }
+        }
     }
 
-    private fun getFilters(): ArrayList<Filter> {
+/*    private fun getFilters(): ArrayList<Filter> {
         return requireArguments().getParcelableArrayList(Constants.Keys.FILTERS.value)!!
     }
 
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
+*//*    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMonthTileCalendarBinding.inflate(inflater, groupContainer, false)
         layoutManager = LinearLayoutManager(context)
         return binding.root
-    }
+    }*//*
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -172,7 +158,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         if (binding.recyclerViewDayHolidays.layoutManager == null) {
             binding.recyclerViewDayHolidays.layoutManager = layoutManager
         }
-        binding.recyclerViewDayHolidays.adapter = HolidayDayAdapter(holidays, requireContext(), getFilters())
+        binding.recyclerViewDayHolidays.adapter =
+            HolidayDayAdapter(holidays, requireContext(), getFilters())
     }
 
     private fun styleDayView(view: TileDayLayoutBinding, day: Day, dayOfWeek: Int) {
@@ -187,96 +174,9 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         setHolidaysAttributeVisibility(view, day)
     }
 
-    private fun setHolidaysAttributeVisibility(view: TileDayLayoutBinding, day: Day) {
-        view.dot.visibility = if (day.holidays.isEmpty()) View.GONE else View.VISIBLE
-    }
 
-    private fun styleTypeHoliday(day: Day, v: TileDayLayoutBinding) {
-        val holidays = day.holidays
-        val text = v.numDay
-        when {
-            isTypeHoliday(Holiday.Type.TWELVE_MOVABLE, holidays) ||
-                    isTypeHoliday(Holiday.Type.TWELVE_NOT_MOVABLE, holidays) -> {
-                setStyle(v, text, R.drawable.tile_twelve_holiday)
-            }
-            isTypeHoliday(Holiday.Type.GREAT_NOT_TWELVE, holidays) -> {
-                setStyle(v, text, R.drawable.tile_great_holiday)
-            }
-            isTypeHoliday(Holiday.Type.MAIN, holidays) -> {
-                setStyle(v, text, R.drawable.tile_easter)
-            }
-            day.fasting.type == Fasting.Type.FASTING -> {
-                setStyle(v, text, R.drawable.tile_fasting_day)
-            }
-            day.fasting.type == Fasting.Type.FASTING_DAY -> {
-                setStyle(v, text, R.drawable.tile_fasting_day)
-            }
-            day.fasting.type == Fasting.Type.SOLID_WEEK -> {
-                setStyle(v, text, R.drawable.tile_no_fasting, R.color.text)
-            }
-        }
-    }
 
-    private fun styleFastingHoliday(day: Day, v: TileDayLayoutBinding) {
-        if (day.fasting.type == Fasting.Type.NONE) return
-        for (permission in day.fasting.permissions) {
-            when (permission) {
-                Fasting.Permission.OIL ->
-                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.sun))
 
-                Fasting.Permission.FISH ->
-                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.fish))
-
-                Fasting.Permission.VINE ->
-                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.vine))
-
-                Fasting.Permission.STRICT ->
-                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.triangle))
-
-                Fasting.Permission.NO_EAT -> {
-                }
-                Fasting.Permission.CAVIAR -> {
-                }
-                Fasting.Permission.HOT_NO_OIL -> {
-                }
-                Fasting.Permission.NO_MEAT -> {
-                    setImg(v, ContextCompat.getDrawable(v.root.context, R.drawable.eggs))
-                }
-            }
-        }
-    }
-
-    private fun setImg(v: TileDayLayoutBinding, drawable: Drawable?) {
-        val imgContainer =
-                when {
-                    v.im3.drawable == null -> v.im3
-                    v.im2.drawable == null -> v.im2
-                    v.im1.drawable == null -> v.im1
-                    else -> return
-                }
-        imgContainer.setImageDrawable(drawable)
-    }
-
-    private fun styleMemoryTypeHoliday(day: Day, v: TileDayLayoutBinding) {
-        if (day.isMemorial.not()) return
-        val img = ContextCompat.getDrawable(requireContext(), R.drawable.cross)
-        if (v.im3.drawable == null) v.im3.setImageDrawable(img)
-        else v.im4.setImageDrawable(img)
-    }
-
-    private fun setStyle(view: TileDayLayoutBinding, text: TextViewWithCustomFont, style: Int,
-                         color: Int = R.color.colorTextHeadHolidays) {
-
-        text.setTextColor(ContextCompat.getColor(view.root.context, color))
-        view.container.background = ContextCompat.getDrawable(view.root.context, style)
-    }
-
-    private fun isTypeHoliday(type: Holiday.Type, holidays: List<Holiday>): Boolean {
-        for (holiday in holidays) {
-            if (holiday.typeId == type.id) return true
-        }
-        return false
-    }
 
     override fun prepareDaysOfWeekRows(dayOfWeek: IntRange) {
         if (tableRows.isEmpty().not()) tableRows.clear()
@@ -305,8 +205,10 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
 
     private fun createDayOfWeekRow(): TableRow {
         val row = TableRow(context)
-        row.layoutParams = ViewGroup.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.WRAP_CONTENT)
+        row.layoutParams = ViewGroup.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
         row.gravity = Gravity.CENTER_VERTICAL
         return row
     }
@@ -318,45 +220,8 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment(), ContractTileM
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDestroy()
-    }
-
-    //TODO resize tile calendar
-    private val onDragListener = View.OnDragListener { v, event ->
-        when (event.action) {
-            DragEvent.ACTION_DRAG_STARTED -> {
-                // Determines if this View can accept the dragged data
-                if (event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                    // As an example of what your application might do,
-                    // applies a blue color tint to the View to indicate that it can accept
-                    // data.
-                    (v as? ImageView)?.setColorFilter(Color.BLUE)
-
-                    // Invalidate the view to force a redraw in the new tint
-                    v?.invalidate()
-
-                    // returns true to indicate that the View can accept the dragged data.
-                    true
-                } else {
-                    // Returns false. During the current drag and drop operation, this View will
-                    // not receive events again until ACTION_DRAG_ENDED is sent.
-                    false
-                }
-            }
-        }
-        true
-    }
-
     private val onClick = View.OnClickListener {
         val r = 0
         val rw = 0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        _binding = null
-    }
+    }*/
 }
