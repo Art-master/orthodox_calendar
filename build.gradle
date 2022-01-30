@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.6.10'
-    ext.gradle_version = '7.0.4'
+    ext.gradle_version = '7.1.0'
     ext.moxy_version = '2.2.1'
     ext.room_version = '2.4.1'
     ext.dagger_version = '2.40.5'
