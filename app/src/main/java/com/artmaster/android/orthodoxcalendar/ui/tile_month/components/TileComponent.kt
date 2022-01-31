@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -59,71 +61,89 @@ fun PreviewGrid() {
 }
 
 @Composable
-fun EmptyDay(day: Day, isInvisible: Boolean = false) {
-    ApplicationsTheme {
-        Surface(color = MaterialTheme.colors.background) {
-            Box(
-                Modifier
-                    .widthIn(0.dp, 100.dp)
-                    .heightIn(0.dp, 100.dp)
-                    .background(color = Color.Transparent)
-            )
-        }
+fun EmptyDay() {
+    Box(
+        Modifier
+            .widthIn(0.dp, 100.dp)
+            .heightIn(0.dp, 100.dp)
+            .background(color = Color.Transparent)
+    ) {
+        MonthDay(Day())
     }
 }
 
 @Composable
-fun MonthDay(day: Day, isInvisible: Boolean = false) {
-    ApplicationsTheme {
-        // A surface container using the 'background' color from the theme
-
-        Box(
-            Modifier
-                .widthIn(0.dp, 100.dp)
-                .heightIn(0.dp, 100.dp)
-                .background(getTypeHolidayColor(day), shape = RoundedCornerShape(13.dp))
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(13.dp)
-                )
-        ) {
-            Text(
-                modifier = Modifier.fillMaxSize(0.7f),
-                text = day.dayOfMonth.toString(),
-                fontSize = 42.sp,
-                fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
-                textAlign = TextAlign.Left
+fun DayOfWeekName(dayOfWeekNum: Int) {
+    val daysNames = stringArrayResource(id = R.array.daysNamesAbb)
+    Box(
+        Modifier
+            .widthIn(0.dp, 100.dp)
+            .heightIn(0.dp, 100.dp)
+            .background(color = Color.Transparent)
+            .border(
+                width = 1.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(13.dp)
             )
-            if (day.holidays.isNotEmpty())
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(0.3f)
-                        .fillMaxHeight()
-                        .padding(top = 5.dp, end = 5.dp)
-                        .align(Alignment.TopEnd)
-                ) {
+    ) {
+        Text(
+            modifier = Modifier.fillMaxSize(0.7f),
+            text = daysNames[dayOfWeekNum - 1],
+            fontSize = 42.sp,
+            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            textAlign = TextAlign.Left
+        )
+    }
+}
 
-                    HolidaysDot()
-
-                }
+@Composable
+fun MonthDay(day: Day) {
+    Box(
+        Modifier
+            .widthIn(0.dp, 100.dp)
+            .heightIn(0.dp, 100.dp)
+            .background(getTypeHolidayColor(day), shape = RoundedCornerShape(13.dp))
+            .border(
+                width = 1.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(13.dp)
+            )
+    ) {
+        Text(
+            modifier = Modifier.fillMaxSize(0.7f),
+            text = day.dayOfMonth.toString(),
+            fontSize = 42.sp,
+            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            textAlign = TextAlign.Left
+        )
+        if (day.holidays.isNotEmpty())
             Column(
                 modifier = Modifier
                     .fillMaxWidth(0.3f)
                     .fillMaxHeight()
-                    .align(Alignment.BottomEnd)
+                    .padding(top = 5.dp, end = 5.dp)
+                    .align(Alignment.TopEnd)
             ) {
 
+                HolidaysDot()
+
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.3f)
-                    .padding(start = 5.dp, bottom = 5.dp)
-                    .align(Alignment.BottomStart)
-            ) {
-                HolidayPermissions(day = day)
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.3f)
+                .fillMaxHeight()
+                .align(Alignment.BottomEnd)
+        ) {
+
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.3f)
+                .padding(start = 5.dp, bottom = 5.dp)
+                .align(Alignment.BottomStart)
+        ) {
+            HolidayPermissions(day = day)
         }
     }
 }
