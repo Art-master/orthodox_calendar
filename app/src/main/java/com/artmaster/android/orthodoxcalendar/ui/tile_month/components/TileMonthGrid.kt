@@ -11,11 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.*
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.*
 import kotlin.math.ceil
-import kotlin.math.floor
 
 @Preview
 @Composable
@@ -23,7 +23,7 @@ fun ShowMonth() {
     val days = ArrayList<Day>()
     val time = Time()
     var dayInWeek = 3
-    for (index in 1..time.dayOfMonth) {
+    for (index in 1..time.daysInMonth) {
         days.add(
             Day(
                 year = time.year,
@@ -66,12 +66,16 @@ fun TileMonthGrid(days: List<Day>, time: Time) {
 
         var daysCount = 0
 
-        for (currentWeekNum in 1..maxWeekCount) {
+        for (currentWeekNum in 0..maxWeekCount) {
             Column(
                 modifier = Modifier.fillMaxWidth((1f / (maxWeekCount - currentWeekNum + 1))),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 for (index in 1..SUNDAY.num) {
+                    if (currentWeekNum == 0) {
+                        DayOfWeekName(dayOfWeekNum = index)
+                        continue
+                    }
                     val curDayNum = ((currentWeekNum - 1) * 7) + index
                     currentTime.calendar.set(Calendar.DAY_OF_MONTH, curDayNum)
                     if (daysCount < days.size && days[daysCount].dayInWeek == index) {

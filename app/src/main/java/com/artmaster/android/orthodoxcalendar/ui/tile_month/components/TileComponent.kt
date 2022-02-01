@@ -5,8 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,7 +13,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -64,12 +61,10 @@ fun PreviewGrid() {
 fun EmptyDay() {
     Box(
         Modifier
-            .widthIn(0.dp, 100.dp)
-            .heightIn(0.dp, 100.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
             .background(color = Color.Transparent)
-    ) {
-        MonthDay(Day())
-    }
+    )
 }
 
 @Composable
@@ -77,21 +72,16 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
     val daysNames = stringArrayResource(id = R.array.daysNamesAbb)
     Box(
         Modifier
-            .widthIn(0.dp, 100.dp)
-            .heightIn(0.dp, 100.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
             .background(color = Color.Transparent)
-            .border(
-                width = 1.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(13.dp)
-            )
     ) {
         Text(
-            modifier = Modifier.fillMaxSize(0.7f),
+            modifier = Modifier.fillMaxSize(),
             text = daysNames[dayOfWeekNum - 1],
-            fontSize = 42.sp,
+            fontSize = 38.sp,
             fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
-            textAlign = TextAlign.Left
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -100,8 +90,8 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
 fun MonthDay(day: Day) {
     Box(
         Modifier
-            .widthIn(0.dp, 100.dp)
-            .heightIn(0.dp, 100.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
             .background(getTypeHolidayColor(day), shape = RoundedCornerShape(13.dp))
             .border(
                 width = 1.dp,
