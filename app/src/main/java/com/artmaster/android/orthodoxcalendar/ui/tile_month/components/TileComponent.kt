@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -52,7 +53,7 @@ fun PreviewGrid() {
                         Fasting.Permission.CAVIAR,
                     )
                 )
-            )
+            ), isActive = false
         )
     }
 }
@@ -74,20 +75,20 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
         Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
-            .background(color = Color.Transparent)
+            .background(color = Color.Transparent),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = Modifier.fillMaxSize(),
             text = daysNames[dayOfWeekNum - 1],
             fontSize = 38.sp,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Center
         )
     }
 }
 
 @Composable
-fun MonthDay(day: Day) {
+fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
     Box(
         Modifier
             .fillMaxWidth()
@@ -95,9 +96,12 @@ fun MonthDay(day: Day) {
             .background(getTypeHolidayColor(day), shape = RoundedCornerShape(13.dp))
             .border(
                 width = 1.dp,
-                color = Color.Black,
+                color = if (isActive) Color.Red else Color.Black,
                 shape = RoundedCornerShape(13.dp)
             )
+            .clickable {
+                onClick.invoke()
+            }
     ) {
         Text(
             modifier = Modifier.fillMaxSize(0.7f),

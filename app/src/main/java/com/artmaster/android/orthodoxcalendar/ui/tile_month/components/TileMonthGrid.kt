@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +56,9 @@ fun ShowMonth() {
 }
 
 @Composable
-fun TileMonthGrid(days: List<Day>, time: Time) {
+fun TileMonthGrid(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Unit = {}) {
+    var focusedDay by remember { mutableStateOf(time.dayOfMonth) }
+
     Row(modifier = Modifier.fillMaxSize()) {
         val currentTime = Time(time.calendar)
         val numDays = currentTime.daysInMonth
@@ -79,7 +81,9 @@ fun TileMonthGrid(days: List<Day>, time: Time) {
                     val curDayNum = ((currentWeekNum - 1) * 7) + index
                     currentTime.calendar.set(Calendar.DAY_OF_MONTH, curDayNum)
                     if (daysCount < days.size && days[daysCount].dayInWeek == index) {
-                        MonthDay(days[daysCount])
+                        MonthDay(days[daysCount], focusedDay == curDayNum) {
+                            focusedDay = curDayNum
+                        }
                         daysCount++
                     } else EmptyDay()
                 }
