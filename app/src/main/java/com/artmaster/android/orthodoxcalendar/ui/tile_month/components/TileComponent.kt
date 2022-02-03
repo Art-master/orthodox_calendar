@@ -25,11 +25,13 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 
 @Preview
 @Composable
 fun PreviewGrid() {
+    val time = Time()
     Box(
         modifier = Modifier
             .width(100.dp)
@@ -37,12 +39,17 @@ fun PreviewGrid() {
     ) {
         MonthDay(
             Day(
-                year = 2022,
-                month = 1,
-                dayOfMonth = 23,
-                dayInWeek = 5,
+                year = time.year,
+                month = time.month,
+                dayOfMonth = time.dayOfMonth,
+                dayInWeek = time.dayOfWeek,
                 holidays = arrayListOf(
-                    Holiday(year = 2022, month = 23, day = 1, typeId = Holiday.Type.MAIN.id)
+                    Holiday(
+                        year = time.year,
+                        month = time.month,
+                        day = time.dayOfMonth,
+                        typeId = Holiday.Type.MAIN.id
+                    )
                 ),
                 fasting = Fasting(
                     Fasting.Type.SOLID_WEEK,

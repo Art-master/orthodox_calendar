@@ -15,9 +15,13 @@ val Gray700 = Color(0xFF616161)
 val Error = Color(0xFFD32F2F)
 val ErrorInactive = Color(0XFFFFCDD2)
 
+val Blue = Color(0XFF3F51B5)
+
 val Easter = Color(0XFFE53935)
 val HeadHoliday = Color(0XFFFF6D00)
 val TwelveHoliday = Color(0XFFDD6A66)
 val FastingDay = Color(0XFFBDBDBD)
 val UsualDay = Color(0XFFFFFFFF)
 val DayOfSolidWeek = Color(0XFFF4EB9B)
+
+val DefaultTextColor = Color(0XFF757575)
