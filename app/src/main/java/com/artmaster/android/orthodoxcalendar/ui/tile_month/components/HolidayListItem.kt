@@ -1,10 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
@@ -14,6 +13,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -35,6 +35,7 @@ fun HolidayListItemPreview() {
             dayInWeek = time.dayOfWeek,
             holidays = arrayListOf(
                 Holiday(
+                    title = "Праздник",
                     year = time.year,
                     month = time.month,
                     day = time.dayOfMonth,
@@ -56,12 +57,16 @@ fun HolidayListItemPreview() {
 
 @Composable
 fun HolidayDayItem(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        ItemHeader(day = day)
-        day.holidays.forEach {
-/*            AnimatedVisibility(visible = true) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(20.dp, 100.dp)
+    ) {
 
-            }*/
+        ItemHeader(day = day)
+
+        day.holidays.forEach {
+//      AnimatedVisibility(visible = true)
             HolidayItem(holiday = it)
         }
     }
@@ -69,29 +74,32 @@ fun HolidayDayItem(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
 
 @Composable
 fun ItemHeader(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
-    Row {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(20.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
-            modifier = Modifier.fillMaxWidth(),
             color = Color.Red,
             text = stringResource(id = R.string.ornament_for_headers_left),
             fontSize = 30.sp,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.ornament, FontWeight.Normal)),
             textAlign = TextAlign.Right
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
             color = DefaultTextColor,
             text = stringArrayResource(id = R.array.daysNames)[day.dayInWeek - 1],
             fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Center
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
             color = Color.Red,
             text = stringResource(id = R.string.ornament_for_headers_right),
             fontSize = 30.sp,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.ornament, FontWeight.Normal)),
             textAlign = TextAlign.Left
         )
     }
@@ -102,19 +110,19 @@ fun HolidayItem(holiday: Holiday) {
     val params = getTypyconFontImageAndColor(holiday = holiday)
     Row {
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(0.1f),
             color = params.second,
             text = stringResource(id = params.first),
             fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
-            textAlign = TextAlign.Left
+            textAlign = TextAlign.Center
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(0.9f),
             color = DefaultTextColor,
             text = holiday.title,
             fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Left
         )
     }
