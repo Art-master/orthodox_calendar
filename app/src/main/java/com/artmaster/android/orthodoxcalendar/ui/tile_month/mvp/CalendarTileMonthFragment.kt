@@ -10,6 +10,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.tile_month.components.HolidayTileMonthLayout
 import moxy.MvpAppCompatFragment
 
 internal class CalendarTileMonthFragment : MvpAppCompatFragment() {
@@ -30,7 +31,10 @@ internal class CalendarTileMonthFragment : MvpAppCompatFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-
+                HolidayTileMonthLayout(
+                    days = viewModel.getCurrentMonthData(),
+                    time = viewModel.getSelectedTime()
+                )
             }
         }
     }

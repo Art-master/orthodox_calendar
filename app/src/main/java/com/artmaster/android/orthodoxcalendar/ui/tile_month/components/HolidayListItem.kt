@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -56,28 +57,35 @@ fun HolidayListItemPreview() {
 }
 
 @Composable
-fun HolidayDayItem(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
+fun HolidayDayItem(
+    day: Day,
+    onClickHoliday: (holiday: Holiday) -> Unit = {},
+    onClickDay: (day: Day) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(20.dp, 100.dp)
     ) {
 
-        ItemHeader(day = day)
+        ItemHeader(day = day, onClick = onClickDay)
 
         day.holidays.forEach {
 //      AnimatedVisibility(visible = true)
-            HolidayItem(holiday = it)
+            HolidayItem(holiday = it, onClick = onClickHoliday)
         }
     }
 }
 
 @Composable
-fun ItemHeader(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
+fun ItemHeader(day: Day, onClick: (day: Day) -> Unit = {}) {
     Row(
         Modifier
             .fillMaxWidth()
-            .height(20.dp),
+            .height(20.dp)
+            .clickable {
+                onClick.invoke(day)
+            },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -106,9 +114,11 @@ fun ItemHeader(day: Day, onClick: (holiday: Holiday) -> Unit = {}) {
 }
 
 @Composable
-fun HolidayItem(holiday: Holiday) {
+fun HolidayItem(holiday: Holiday, onClick: (holiday: Holiday) -> Unit = {}) {
     val params = getTypyconFontImageAndColor(holiday = holiday)
-    Row {
+    Row(modifier = Modifier.clickable {
+        onClick.invoke(holiday)
+    }) {
         Text(
             modifier = Modifier.fillMaxWidth(0.1f),
             color = params.second,

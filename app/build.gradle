@@ -103,7 +103,10 @@ dependencies {
     //annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     // Paging
-    implementation 'androidx.paging:paging-runtime-ktx:3.1.0'
+    def paging_version = "3.1.0"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    // alternatively - without Android dependencies for tests
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
     //Retrofit
     implementation 'com.github.cd-butterfly:retrofit:1.0.3'

@@ -7,7 +7,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFull
 import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Get data from storage and prepare it
@@ -23,7 +22,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
     private val context = App.appComponent.getContext()
 
     @Synchronized
-    override fun getMonthDays(month: Int, year: Int, filters: ArrayList<Filter>): List<Day> {
+    override fun getMonthDays(month: Int, year: Int, filters: Collection<Filter>): List<Day> {
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0
         val daysCount = time.daysInMonth
@@ -69,7 +68,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         }
     }
 
-    override fun getData(year: Int, filters: List<Filter>): List<Holiday> {
+    override fun getData(year: Int, filters: Collection<Filter>): List<Holiday> {
         return getAllData(year, filters).sorted()
     }
 
@@ -81,7 +80,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return data.subList(start, endPosition)
     }
 
-    private fun getAllData(year: Int, filters: List<Filter>): List<Holiday> {
+    private fun getAllData(year: Int, filters: Collection<Filter>): List<Holiday> {
         val holidaysFromDb: List<Holiday> = getDataFromDb()
         val typeIds = getTypeIds(filters)
         return if (typeIds.isEmpty()) {
@@ -132,7 +131,7 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return holidays
     }
 
-    private fun getTypeIds(filters: List<Filter>): ArrayList<Int> {
+    private fun getTypeIds(filters: Collection<Filter>): ArrayList<Int> {
         val typeIds = ArrayList<Int>()
         filters.forEach { typeIds.addAll(Holiday.getTypeIdsByFilter(it)) }
         return typeIds
