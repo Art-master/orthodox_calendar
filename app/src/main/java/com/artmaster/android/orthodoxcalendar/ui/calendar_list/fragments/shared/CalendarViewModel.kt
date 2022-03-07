@@ -18,9 +18,9 @@ class CalendarViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
-    private val monthData = MutableLiveData(emptyList<Day>())
+    val daysByMonth = HashMap<Int, MutableLiveData<List<Day>>>()
 
-    private val _filters = MutableLiveData<Set<Filter>>()
+    private val _filters = MutableLiveData<Set<Filter>>(emptySet())
     val filters: LiveData<Set<Filter>> get() = _filters
 
     private val _time = MutableLiveData(SharedTime())
@@ -30,7 +30,6 @@ class CalendarViewModel : ViewModel() {
         initTime()
         viewModelScope.launch {
             initFilters()
-            getMonthData()
         }
     }
 
@@ -47,9 +46,20 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    private fun getMonthData() {
-        time.value?.let {
-            monthData.value = repository.getMonthDays(it.month, it.year, filters.value!!)
+    public suspend fun loadMonthData(monthNum: Int, year: Int) {
+        daysByMonth.getOrPut(monthNum) {
+            MutableLiveData(ArrayList())
+        }.value = emptyList()
+
+        withContext(Dispatchers.IO) {
+            time.value?.let {
+                val value = repository.getMonthDays(monthNum, it.year, filters.value!!)
+                withContext(Dispatchers.Main) {
+                    daysByMonth.getOrPut(monthNum) {
+                        MutableLiveData(ArrayList(value))
+                    }.value = value
+                }
+            }
         }
     }
 
@@ -84,6 +94,12 @@ class CalendarViewModel : ViewModel() {
         val previous = _time.value ?: SharedTime()
         val obj = SharedTime(year, previous.month, previous.day)
         _time.value = obj
+
+        if (previous.year != year) {
+            viewModelScope.launch {
+                loadMonthData(monthNum = obj.month, year = obj.year)
+            }
+        }
     }
 
     fun setMonth(month: Int) {
@@ -108,5 +124,7 @@ class CalendarViewModel : ViewModel() {
         return Time(time.value!!.year, time.value!!.month, time.value!!.day)
     }
 
-    fun getCurrentMonthData() = monthData.value!!
+    fun getCurrentMonthData(monthNum: Int) = daysByMonth.getOrPut(monthNum) {
+        MutableLiveData(ArrayList())
+    }
 }

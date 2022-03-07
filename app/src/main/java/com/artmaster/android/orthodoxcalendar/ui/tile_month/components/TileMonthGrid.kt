@@ -15,7 +15,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.*
-import kotlin.math.ceil
 
 @Preview
 @Composable
@@ -61,10 +60,12 @@ fun TileMonthGrid(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Un
 
     Row(modifier = Modifier.fillMaxSize()) {
         val currentTime = Time(time.calendar)
-        val numDays = currentTime.daysInMonth
 
+/*        val numDays = currentTime.daysInMonth
         val firstDayInWeek = days.first().dayInWeek
-        val maxWeekCount = ceil((firstDayInWeek + numDays) / 7f).toInt()
+        val maxWeekCount = ceil((firstDayInWeek + numDays) / 7f).toInt()*/
+
+        val maxWeekCount = 6
 
         var daysCount = 0
 

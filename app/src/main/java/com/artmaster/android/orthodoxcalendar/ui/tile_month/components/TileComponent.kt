@@ -87,7 +87,8 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
     ) {
         Text(
             text = daysNames[dayOfWeekNum - 1],
-            fontSize = 38.sp,
+            fontSize = 20.sp,
+            color = DefaultTextColor,
             fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Center
         )
@@ -113,7 +114,8 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
         Text(
             modifier = Modifier.fillMaxSize(0.7f),
             text = day.dayOfMonth.toString(),
-            fontSize = 42.sp,
+            fontSize = 30.sp,
+            color = DefaultTextColor,
             fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
             textAlign = TextAlign.Left
         )

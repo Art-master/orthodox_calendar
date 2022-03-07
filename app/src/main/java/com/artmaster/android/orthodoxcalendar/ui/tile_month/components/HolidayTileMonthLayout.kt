@@ -2,7 +2,10 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -43,13 +46,25 @@ fun Preview() {
         dayInWeek = if (dayInWeek == Holiday.DayOfWeek.SUNDAY.num) Holiday.DayOfWeek.MONDAY.num
         else dayInWeek.inc()
     }
-    HolidayTileMonthLayout(days = days, time = time)
+
+    val monthData = MutableLiveData<List<Day>>()
+
+    HolidayTileMonthLayout(data = monthData, time = time)
 }
 
 @Composable
-fun HolidayTileMonthLayout(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Unit = {}) {
+fun HolidayTileMonthLayout(
+    data: LiveData<List<Day>>,
+    time: Time,
+    onClick: (holiday: Holiday) -> Unit = {}
+) {
+    val days = data.observeAsState(emptyList())
     Column {
-        TileMonthGrid(days, time, onClick)
+        if (days.value.isEmpty()) {
+            Spinner()
+        } else {
+            TileMonthGrid(days.value, time, onClick)
+        }
         //HolidayList(data = Pager<Int, Day>())
     }
 }
