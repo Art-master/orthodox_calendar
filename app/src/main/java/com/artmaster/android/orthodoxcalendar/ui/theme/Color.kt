@@ -25,3 +25,6 @@ val UsualDay = Color(0XFFFFFFFF)
 val DayOfSolidWeek = Color(0XFFF4EB9B)
 
 val DefaultTextColor = Color(0XFF757575)
+val HeadSymbolTextColor = Color(0XFFE53935)
+
+val WindowBackground = Color(0XFFFBF5CF)

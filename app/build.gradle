@@ -98,6 +98,8 @@ dependencies {
     //Compose runtime
     implementation "androidx.compose.runtime:runtime:1.2.0-alpha04"
     implementation "androidx.compose.runtime:runtime-livedata:1.2.0-alpha04"
+    //Navigation
+    implementation "androidx.navigation:navigation-compose:2.5.0-alpha03"
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-pager:0.23.1" // Pager
