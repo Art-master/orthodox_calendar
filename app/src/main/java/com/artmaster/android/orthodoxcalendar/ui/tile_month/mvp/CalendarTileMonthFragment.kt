@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
@@ -15,9 +16,8 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.components.HolidayTileMonthLayout
 import kotlinx.coroutines.launch
-import moxy.MvpAppCompatFragment
 
-internal class CalendarTileMonthFragment : MvpAppCompatFragment() {
+internal class CalendarTileMonthFragment : Fragment() {
 
     private val viewModel: CalendarViewModel by viewModels({ requireParentFragment() })
 

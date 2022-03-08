@@ -46,7 +46,13 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    public suspend fun loadMonthData(monthNum: Int, year: Int) {
+    suspend fun loadMonthData(monthNum: Int, year: Int) {
+        val prev = daysByMonth[monthNum]
+        val currTime = time.value ?: SharedTime()
+        if (year != currTime.year && prev != null && !prev.value.isNullOrEmpty()) {
+            return
+        }
+
         daysByMonth.getOrPut(monthNum) {
             MutableLiveData(ArrayList())
         }.value = emptyList()
@@ -95,10 +101,8 @@ class CalendarViewModel : ViewModel() {
         val obj = SharedTime(year, previous.month, previous.day)
         _time.value = obj
 
-        if (previous.year != year) {
-            viewModelScope.launch {
-                loadMonthData(monthNum = obj.month, year = obj.year)
-            }
+        viewModelScope.launch {
+            loadMonthData(monthNum = obj.month, year = obj.year)
         }
     }
 

@@ -63,6 +63,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
         useIR = true
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.2.0-alpha02"
@@ -97,6 +98,10 @@ dependencies {
     //Compose runtime
     implementation "androidx.compose.runtime:runtime:1.2.0-alpha04"
     implementation "androidx.compose.runtime:runtime-livedata:1.2.0-alpha04"
+
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-pager:0.23.1" // Pager
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.23.1" // Pager Indicators
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"

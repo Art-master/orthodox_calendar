@@ -4,32 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
-import com.artmaster.android.orthodoxcalendar.common.SpinnerAdapter
-import com.artmaster.android.orthodoxcalendar.databinding.FragmentTileCalendarBinding
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.tile_month.components.HolidayTileLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
-import com.artmaster.android.orthodoxcalendar.ui.tile_pager.fragment.CalendarInfoFragment
 import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
-import moxy.MvpAppCompatFragment
-import moxy.presenter.InjectPresenter
 
-internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
-
-    @InjectPresenter(tag = "TilePresenter")
-    lateinit var presenter: TilePresenter
-
-    private var _binding: FragmentTileCalendarBinding? = null
-    private val binding get() = _binding!!
+internal class CalendarTileFragment : Fragment(), ContractTileView {
 
     private val viewModel: CalendarViewModel by activityViewModels()
 
@@ -43,78 +33,34 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
         }
 
         subscribeToDataUpdate()
+    }
 
-        if (!presenter.isInRestoreState(this)) {
-            presenter.attachView(this)
-            presenter.viewIsReady()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val currentTime = Time(time.year, time.month, time.day)
+                HolidayTileLayout(viewModel, currentTime)
+            }
         }
     }
 
     private fun subscribeToDataUpdate() {
-        viewModel.filters.observe(this, { item ->
+        viewModel.filters.observe(this) { item ->
             filters.clear()
             filters.addAll(item.toList())
-            setPageAdapter()
-            binding.holidayTilePager.invalidate()
-        })
+        }
 
-        viewModel.time.observe(this, { item ->
+        viewModel.time.observe(this) { item ->
             if (SharedTime.isTimeChanged(time, item)) {
-                if (item.year != time.year) setPageAdapter()
-                else if (item.month != time.month) {
-                    binding.holidayTilePager.currentItem = item.month
-                }
                 time = item
             }
-        })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, groupContainer: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentTileCalendarBinding.inflate(inflater, groupContainer, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        presenter.viewIsCreated()
-        setChangePageListener()
-        initHelper()
-    }
-
-    override fun setPageAdapter() {
-        if (_binding == null) return
-        binding.holidayTilePager.apply {
-            adapter = getAdapter(this@CalendarTileFragment)
-            setCurrentItem(time.month, false)
         }
-    }
-
-    override fun initSpinner() {
-        if (_binding == null) return
-        val mNames = getMonthsNames()
-        val adapter = SpinnerAdapter(requireContext(), R.layout.spinner_year_item, mNames)
-        adapter.setDropDownViewResource(R.layout.spinner_year_dropdown)
-        binding.monthSpinner.adapter = adapter
-        binding.monthSpinner.setSelection(time.month)
-        setOnItemSpinnerSelected()
     }
 
     private fun getMonthsNames() = resources.getStringArray(R.array.months_names_gen)
-
-    private fun setOnItemSpinnerSelected() {
-        binding.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding.holidayTilePager.apply {
-                    if (currentItem != position) {
-                        if (time.month != position) viewModel.setMonth(position)
-                        currentItem = position
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>) {}
-        }
-    }
 
     private fun getAdapter(fa: Fragment): FragmentStateAdapter {
 
@@ -131,49 +77,5 @@ internal class CalendarTileFragment : MvpAppCompatFragment(), ContractTileView {
                 return fragment
             }
         }
-    }
-
-    private fun setChangePageListener() {
-        binding.holidayTilePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (time.month != position) viewModel.setMonth(position)
-                binding.monthSpinner.setSelection(position)
-                setVisibleArrows(position)
-            }
-        })
-    }
-
-    private fun setVisibleArrows(position: Int) {
-        val firstPosition = 0
-        val lastPosition = MONTH_SIZE - 1
-
-        when (position) {
-            lastPosition -> {
-                binding.arrowRight.visibility = View.INVISIBLE
-                binding.arrowLeft.visibility = View.VISIBLE
-            }
-            firstPosition -> {
-                binding.arrowLeft.visibility = View.INVISIBLE
-                binding.arrowRight.visibility = View.VISIBLE
-            }
-            else -> {
-                binding.arrowLeft.visibility = View.VISIBLE
-                binding.arrowRight.visibility = View.VISIBLE
-            }
-        }
-    }
-
-    private fun initHelper() {
-        binding.helperButton.setOnClickListener {
-            val fr = CalendarInfoFragment()
-            val transaction = parentFragmentManager.beginTransaction()
-            fr.show(transaction, "helper")
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        _binding = null
     }
 }
