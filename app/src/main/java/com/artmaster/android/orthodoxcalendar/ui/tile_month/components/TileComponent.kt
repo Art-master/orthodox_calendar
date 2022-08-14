@@ -1,9 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -11,7 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.Font
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
@@ -111,42 +113,22 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
                 onClick.invoke()
             }
     ) {
-        Text(
-            modifier = Modifier.fillMaxSize(0.7f),
-            text = day.dayOfMonth.toString(),
-            fontSize = 30.sp,
-            color = DefaultTextColor,
-            fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
-            textAlign = TextAlign.Left
-        )
-        if (day.holidays.isNotEmpty())
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .fillMaxHeight()
-                    .padding(top = 5.dp, end = 5.dp)
-                    .align(Alignment.TopEnd)
-            ) {
-
-                HolidaysDot()
-
-            }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(0.3f)
-                .fillMaxHeight()
-                .align(Alignment.BottomEnd)
-        ) {
-
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-                .padding(start = 5.dp, bottom = 5.dp)
-                .align(Alignment.BottomStart)
-        ) {
-            HolidayPermissions(day = day)
+        ConstraintLayout {
+            Text(
+                modifier = Modifier.fillMaxSize(0.7f),
+                text = day.dayOfMonth.toString(),
+                fontSize = 30.sp,
+                color = DefaultTextColor,
+                fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
+                textAlign = TextAlign.Left
+            )
+            //if (day.holidays.isNotEmpty()) HolidaysDot()
+            HolidaysDot()
+            HolidaysDot()
+            HolidaysDot()
+            HolidaysDot()
+            HolidaysDot()
+            //HolidayPermissions(day = day)
         }
     }
 }
@@ -206,11 +188,53 @@ fun PermissionImage(resId: Int) {
 
 @Composable
 fun HolidaysDot() {
-    Image(
+    val backgroundColor = listOf(Color(0xFF2078EE), Color(0xFF74E6FE))
+    val sunColor = listOf(Color(0xFFFFC200), Color(0xFFFFE100))
+    Canvas(
         modifier = Modifier
-            .rotate(0f)
-            .fillMaxWidth(fraction = 0.5f),
-        painter = painterResource(id = R.drawable.ic_tile_dot),
-        contentDescription = ""
-    )
+            .size(100.dp)
+            .padding(16.dp)
+    ) {
+        val width = size.width
+        val height = size.height
+        val path = Path().apply {
+            moveTo(width.times(.76f), height.times(.72f))
+            cubicTo(
+                width.times(.93f),
+                height.times(.72f),
+                width.times(.98f),
+                height.times(.41f),
+                width.times(.76f),
+                height.times(.40f)
+            )
+            cubicTo(
+                width.times(.75f),
+                height.times(.21f),
+                width.times(.35f),
+                height.times(.21f),
+                width.times(.38f),
+                height.times(.50f)
+            )
+            cubicTo(
+                width.times(.25f),
+                height.times(.50f),
+                width.times(.20f),
+                height.times(.69f),
+                width.times(.41f),
+                height.times(.72f)
+            )
+            close()
+        }
+        drawRoundRect(
+            brush = Brush.verticalGradient(backgroundColor),
+            cornerRadius = CornerRadius(50f, 50f),
+
+            )
+        drawCircle(
+            brush = Brush.verticalGradient(sunColor),
+            radius = width.times(.17f),
+            center = Offset(width.times(.35f), height.times(.35f))
+        )
+        drawPath(path = path, color = Color.White.copy(alpha = .90f))
+    }
 }

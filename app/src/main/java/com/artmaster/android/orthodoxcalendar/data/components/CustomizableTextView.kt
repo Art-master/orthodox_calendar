@@ -1,6 +1,5 @@
 package com.artmaster.android.orthodoxcalendar.data.components
 
-import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
@@ -157,7 +156,7 @@ class CustomizableTextView : AppCompatTextView {
 
     /** Reverse animation */
     fun reverseAnimation() {
-        animator!!.addListener(object : Animator.AnimatorListener {
+/*        animator!!.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
 
             override fun onAnimationEnd(animation: Animator?) {
@@ -167,7 +166,7 @@ class CustomizableTextView : AppCompatTextView {
 
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {}
-        })
+        })*/
     }
 
     fun cancelAnimation() {

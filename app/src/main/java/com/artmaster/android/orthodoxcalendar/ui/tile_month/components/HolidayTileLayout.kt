@@ -30,7 +30,6 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.WindowBackground
 import com.google.accompanist.pager.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Preview
@@ -148,7 +147,7 @@ fun MonthDropdown(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
 @Composable
 fun MonthName(title: String) {
     val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(HeadSymbolTextColor)) {
+        withStyle(style = SpanStyle(color = HeadSymbolTextColor)) {
             append(title.first())
         }
         append(title.substring(1))

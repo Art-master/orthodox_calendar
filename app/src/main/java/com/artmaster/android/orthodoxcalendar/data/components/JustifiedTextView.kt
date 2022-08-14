@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import com.artmaster.android.orthodoxcalendar.R
-import java.util.*
 
 /**
  * Class for justify text
@@ -156,7 +155,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                     initNewWord(position)
                 }
                 //если попадается символ \n, то начинаем с новой строки, а отступы предыдущей не меняем
-                if (mText[position].toInt() == 0x0A) {
+                if (mText[position].code == 0x0A) {
                     //распределяем пробелы
                     redistributeSpaces(true)
                     //переходим на новую строку и обновляем переменные
