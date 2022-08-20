@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
@@ -49,13 +48,14 @@ fun Preview() {
 
     val monthData = MutableLiveData<List<Day>>()
 
-    HolidayTileMonthLayout(data = monthData, time = time)
+    HolidayTileMonthLayout(data = monthData, isCurrentPage = true, time = time)
 }
 
 @Composable
 fun HolidayTileMonthLayout(
-    data: LiveData<List<Day>>,
+    data: MutableLiveData<List<Day>>,
     time: Time,
+    isCurrentPage: Boolean,
     onClick: (holiday: Holiday) -> Unit = {}
 ) {
     val days = data.observeAsState(emptyList())

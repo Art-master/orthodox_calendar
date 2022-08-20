@@ -17,7 +17,7 @@ class Constants {
         const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
         const val RESOURCE_FOR_IMAGE = "drawable"
         const val VIEW_PAGER_SPEED = 800 //ms
-        const val MONTH_SIZE = 12
+        const val MONTH_COUNT = 12
         const val PROJECT_DIR = "com.artmaster.android.orthodoxcalendar"
     }
 

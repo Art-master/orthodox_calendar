@@ -91,22 +91,35 @@ fun HolidayTileLayout(
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setMonth(page.inc())
             monthNum = page.inc()
-            viewModel.loadMonthData(page.inc(), time.year)
+
+            //current page
+            viewModel.loadMonthData(monthNum, time.year)
+            //next page data
+            viewModel.loadMonthData(monthNum + 1, time.year)
+            //previous page data
+            viewModel.loadMonthData(monthNum - 1, time.year)
         }
     }
 
     Column(Modifier.fillMaxHeight()) {
+
         val monthCount = 12
-        MonthDropdown(pagerState = pagerState) {
+        MonthTabs(pagerState = pagerState) {
             monthNum = it
             scope.launch {
                 pagerState.scrollToPage(monthNum.dec())
             }
         }
+
         Row {
-            HorizontalPager(count = monthCount, state = pagerState) { page ->
-                val days = viewModel.getCurrentMonthData(monthNum = page)
-                HolidayTileMonthLayout(data = days, time = time)
+            HorizontalPager(count = monthCount, state = pagerState, key = { r -> r }) { page ->
+                val pageNumStartsWithOne = page.inc()
+                val days = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne)
+                HolidayTileMonthLayout(
+                    data = days,
+                    time = time,
+                    isCurrentPage = pageNumStartsWithOne == monthNum
+                )
             }
         }
     }
@@ -117,12 +130,12 @@ fun HolidayTileLayout(
 @Composable
 fun ShowTabs() {
     val pagerState = rememberPagerState(1)
-    MonthDropdown(pagerState = pagerState)
+    MonthTabs(pagerState = pagerState)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MonthDropdown(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
+fun MonthTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
     val items = stringArrayResource(id = R.array.months_names_gen)
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,

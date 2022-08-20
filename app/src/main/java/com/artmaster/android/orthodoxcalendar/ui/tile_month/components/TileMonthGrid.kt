@@ -70,23 +70,26 @@ fun TileMonthGrid(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Un
         var daysCount = 0
 
         for (currentWeekNum in 0..maxWeekCount) {
-            Column(
-                modifier = Modifier.fillMaxWidth((1f / (maxWeekCount - currentWeekNum + 1))),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                for (index in 1..SUNDAY.num) {
-                    if (currentWeekNum == 0) {
-                        DayOfWeekName(dayOfWeekNum = index)
-                        continue
-                    }
-                    val curDayNum = ((currentWeekNum - 1) * 7) + index
-                    currentTime.calendar.set(Calendar.DAY_OF_MONTH, curDayNum)
-                    if (daysCount < days.size && days[daysCount].dayInWeek == index) {
-                        MonthDay(days[daysCount], focusedDay == curDayNum) {
-                            focusedDay = curDayNum
+            key(currentWeekNum) {
+                Column(
+                    modifier = Modifier.fillMaxWidth((1f / (maxWeekCount - currentWeekNum + 1))),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    for (index in 1..SUNDAY.num) {
+                        if (currentWeekNum == 0) {
+                            DayOfWeekName(dayOfWeekNum = index)
+                            continue
                         }
-                        daysCount++
-                    } else EmptyDay()
+                        val curDayNum = ((currentWeekNum - 1) * 7) + index
+                        currentTime.calendar.set(Calendar.DAY_OF_MONTH, curDayNum)
+
+                        if (daysCount < days.size && days[daysCount].dayInWeek == index) {
+                            MonthDay(days[daysCount], focusedDay == curDayNum) {
+                                focusedDay = curDayNum
+                            }
+                            daysCount++
+                        } else EmptyDay()
+                    }
                 }
             }
         }

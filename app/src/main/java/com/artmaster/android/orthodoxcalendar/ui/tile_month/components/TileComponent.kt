@@ -123,11 +123,11 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
                 textAlign = TextAlign.Left
             )
             //if (day.holidays.isNotEmpty()) HolidaysDot()
-            HolidaysDot()
-            HolidaysDot()
-            HolidaysDot()
-            HolidaysDot()
-            HolidaysDot()
+            //HolidaysDot()
+            //HolidaysDot()
+            //HolidaysDot()
+            //HolidaysDot()
+            //HolidaysDot()
             //HolidayPermissions(day = day)
         }
     }

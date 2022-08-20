@@ -63,7 +63,7 @@ class CustomizableTextView : AppCompatTextView {
     private fun init() {
         animator = ValueAnimator.ofFloat(0.0f, 2.0f)
         animator!!.addUpdateListener(listener)
-        animator!!.duration = durationAnim.toLong()
+        animator!!.duration = durationAnim
     }
 
     fun toggleReverseAnim() {
@@ -125,7 +125,7 @@ class CustomizableTextView : AppCompatTextView {
             textString = text.toString()
             spannableString = SpannableString(textString)
             mSpans = Array(textString.length) { MutableForegroundSpan() }
-            for (i in 0 until textString.length) {
+            for (i in textString.indices) {
                 val span = MutableForegroundSpan()
                 spannableString!!.setSpan(span, i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 mSpans!![i] = span
@@ -146,7 +146,7 @@ class CustomizableTextView : AppCompatTextView {
      * @return alpha values from 0 to 1
      */
     private fun clamp(value: Double): Int {
-        return (255 * Math.min(Math.max(value, 0.0), 1.0)).toInt()
+        return (255 * value.coerceAtLeast(0.0).coerceAtMost(1.0)).toInt()
     }
 
     fun setDurationAnim(durationMs: Long) {

@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
-import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_SIZE
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.Time
@@ -65,7 +65,7 @@ internal class CalendarTileFragment : Fragment(), ContractTileView {
     private fun getAdapter(fa: Fragment): FragmentStateAdapter {
 
         return object : FragmentStateAdapter(fa) {
-            override fun getItemCount() = MONTH_SIZE
+            override fun getItemCount() = MONTH_COUNT
 
             override fun createFragment(position: Int): Fragment {
                 val fragment = CalendarTileMonthFragment()

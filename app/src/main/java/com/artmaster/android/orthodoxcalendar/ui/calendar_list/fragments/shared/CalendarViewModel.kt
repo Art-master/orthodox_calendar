@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Filter
@@ -18,7 +19,10 @@ class CalendarViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
-    val daysByMonth = HashMap<Int, MutableLiveData<List<Day>>>()
+    private val daysByMonthCache = HashMap<Int, MutableLiveData<List<Day>>>(MONTH_COUNT)
+        .apply {
+            for (num in 1..MONTH_COUNT) this[num] = MutableLiveData(ArrayList())
+        }
 
     private val _filters = MutableLiveData<Set<Filter>>(emptySet())
     val filters: LiveData<Set<Filter>> get() = _filters
@@ -47,23 +51,20 @@ class CalendarViewModel : ViewModel() {
     }
 
     suspend fun loadMonthData(monthNum: Int, year: Int) {
-        val prev = daysByMonth[monthNum]
+        if (monthNum < 1 || monthNum > MONTH_COUNT) return
+
+        val prev = daysByMonthCache[monthNum]
         val currTime = time.value ?: SharedTime()
         if (year != currTime.year && prev != null && !prev.value.isNullOrEmpty()) {
             return
         }
 
-        daysByMonth.getOrPut(monthNum) {
-            MutableLiveData(ArrayList())
-        }.value = emptyList()
-
         withContext(Dispatchers.IO) {
             time.value?.let {
                 val value = repository.getMonthDays(monthNum, it.year, filters.value!!)
                 withContext(Dispatchers.Main) {
-                    daysByMonth.getOrPut(monthNum) {
-                        MutableLiveData(ArrayList(value))
-                    }.value = value
+                    val monthData = getCurrentMonthData(monthNum)
+                    monthData.value = value
                 }
             }
         }
@@ -128,7 +129,5 @@ class CalendarViewModel : ViewModel() {
         return Time(time.value!!.year, time.value!!.month, time.value!!.day)
     }
 
-    fun getCurrentMonthData(monthNum: Int) = daysByMonth.getOrPut(monthNum) {
-        MutableLiveData(ArrayList())
-    }
+    fun getCurrentMonthData(monthNum: Int) = daysByMonthCache[monthNum]!!
 }

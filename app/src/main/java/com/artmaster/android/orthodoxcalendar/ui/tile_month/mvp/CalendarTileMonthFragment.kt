@@ -43,7 +43,7 @@ internal class CalendarTileMonthFragment : Fragment() {
             setContent {
                 val currentTime = Time(time.year, time.month, time.day)
                 val state = viewModel.getCurrentMonthData(time.month)
-                HolidayTileMonthLayout(state, currentTime)
+                HolidayTileMonthLayout(state, currentTime, false)
             }
         }
     }
