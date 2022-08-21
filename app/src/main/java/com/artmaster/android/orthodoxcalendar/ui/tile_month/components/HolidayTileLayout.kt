@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
@@ -18,9 +19,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -30,7 +33,9 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.WindowBackground
 import com.google.accompanist.pager.*
+import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 @Preview
 @Composable
@@ -74,7 +79,7 @@ fun PreviewLayout() {
     //HolidayTileLayout(data = monthData, time = time)
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
 @Composable
 fun HolidayTileLayout(
     viewModel: CalendarViewModel,
@@ -103,21 +108,27 @@ fun HolidayTileLayout(
 
     Column(Modifier.fillMaxHeight()) {
 
-        val monthCount = 12
         MonthTabs(pagerState = pagerState) {
             monthNum = it
             scope.launch {
-                pagerState.scrollToPage(monthNum.dec())
+                //pagerState.scrollToPage(monthNum.dec())
+                pagerState.animateScrollToPage(monthNum.dec())
             }
         }
 
         Row {
-            HorizontalPager(count = monthCount, state = pagerState, key = { r -> r }) { page ->
+            HorizontalPager(
+                modifier = Modifier.padding(15.dp),
+                count = MONTH_COUNT, state = pagerState, key = { r -> r }
+            ) { page ->
                 val pageNumStartsWithOne = page.inc()
                 val days = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne)
+                val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+
                 HolidayTileMonthLayout(
                     data = days,
                     time = time,
+                    pageOffset = pageOffset,
                     isCurrentPage = pageNumStartsWithOne == monthNum
                 )
             }

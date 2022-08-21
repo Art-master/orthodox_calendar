@@ -63,7 +63,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
         useIR = true
-        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = ["-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=enable"]
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.2.0-alpha02"
@@ -109,8 +109,8 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     // Accompanist
-    implementation "com.google.accompanist:accompanist-pager:0.23.1" // Pager
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.23.1" // Pager Indicators
+    implementation "com.google.accompanist:accompanist-pager:0.26.1-alpha" // Pager
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.26.1-alpha" // Pager Indicators
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"

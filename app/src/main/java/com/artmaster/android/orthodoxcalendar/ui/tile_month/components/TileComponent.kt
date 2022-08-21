@@ -127,7 +127,7 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
             //HolidaysDot()
             //HolidaysDot()
             //HolidaysDot()
-            //HolidaysDot()
+            HolidaysDot()
             //HolidayPermissions(day = day)
         }
     }
@@ -180,7 +180,7 @@ fun PermissionImage(resId: Int) {
         modifier = Modifier
             .rotate(0f)
             .padding(start = 2.dp)
-            .fillMaxHeight(),
+            .fillMaxSize(3f),
         painter = painterResource(id = resId),
         contentDescription = ""
     )

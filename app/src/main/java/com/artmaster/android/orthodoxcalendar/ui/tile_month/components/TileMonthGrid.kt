@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -55,15 +59,22 @@ fun ShowMonth() {
 }
 
 @Composable
-fun TileMonthGrid(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Unit = {}) {
+fun TileMonthGrid(
+    days: List<Day>,
+    time: Time,
+    pageOffset: Float = 0f,
+    onClick: (holiday: Holiday) -> Unit = {}
+) {
     var focusedDay by remember { mutableStateOf(time.dayOfMonth) }
 
-    Row(modifier = Modifier.fillMaxSize()) {
+    Row(modifier = Modifier
+        .fillMaxSize()
+        .graphicsLayer { graphicalLayerTransform(this, pageOffset) }) {
         val currentTime = Time(time.calendar)
 
-/*        val numDays = currentTime.daysInMonth
+/*      val numDays = currentTime.daysInMonth
         val firstDayInWeek = days.first().dayInWeek
-        val maxWeekCount = ceil((firstDayInWeek + numDays) / 7f).toInt()*/
+        val maxWeekCount = ceil((firstDayInWeek + numDays) / 7f).toInt() */
 
         val maxWeekCount = 6
 
@@ -93,5 +104,26 @@ fun TileMonthGrid(days: List<Day>, time: Time, onClick: (holiday: Holiday) -> Un
                 }
             }
         }
+    }
+}
+
+fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
+    scope.apply {
+        // We animate the scaleX + scaleY, between 85% and 100%
+        lerp(
+            start = 0.85.dp,
+            stop = 1.dp,
+            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        ).also { scale ->
+            scaleX = scale.toPx() / 3
+            scaleY = scale.toPx() / 3
+        }
+
+        // We animate the alpha, between 50% and 100%
+        alpha = lerp(
+            start = 0.5.dp,
+            stop = 1.dp,
+            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        ).toPx()
     }
 }

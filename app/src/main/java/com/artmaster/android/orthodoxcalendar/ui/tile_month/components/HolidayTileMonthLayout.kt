@@ -56,14 +56,15 @@ fun HolidayTileMonthLayout(
     data: MutableLiveData<List<Day>>,
     time: Time,
     isCurrentPage: Boolean,
+    pageOffset: Float = 0f,
     onClick: (holiday: Holiday) -> Unit = {}
 ) {
     val days = data.observeAsState(emptyList())
     Column {
-        if (days.value.isEmpty()) {
+        if (days.value.isEmpty() || isCurrentPage.not()) {
             Spinner()
         } else {
-            TileMonthGrid(days.value, time, onClick)
+            TileMonthGrid(days.value, time, pageOffset, onClick)
         }
         //HolidayList(data = Pager<Int, Day>())
     }
