@@ -3,8 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,15 +43,12 @@ fun Spinner(isProcessing: Boolean = true) {
     }
 
     Box(
-        modifier = Modifier
-            .width(150.dp)
-            .height(150.dp),
+        modifier = Modifier.size(100.dp),
         contentAlignment = Alignment.Center
 
     ) {
         Image(
-            modifier = Modifier
-                .rotate(rotation.value),
+            modifier = Modifier.rotate(rotation.value),
             painter = painterResource(id = R.drawable.ring),
             contentDescription = ""
         )
