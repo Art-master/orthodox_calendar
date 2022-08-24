@@ -3,6 +3,8 @@ package com.artmaster.android.orthodoxcalendar.data.di.modules
 import android.content.Context
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
+import com.artmaster.android.orthodoxcalendar.data.repository.FileParser
+import com.artmaster.android.orthodoxcalendar.impl.AppFileParser
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import dagger.Module
@@ -20,8 +22,14 @@ open class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providePreference(context: Context): AppPreferences{
+    fun providePreference(context: Context): AppPreferences {
         return CalendarPreferences(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFileParser(context: Context): AppFileParser {
+        return FileParser(context)
     }
 
 }

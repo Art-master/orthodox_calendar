@@ -3,7 +3,7 @@ package com.artmaster.android.orthodoxcalendar
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.artmaster.android.orthodoxcalendar.ui.init.mvp.InitAppActivity
+import com.artmaster.android.orthodoxcalendar.ui.init.InitAppActivity
 
 class StartActivity : AppCompatActivity() {
 
