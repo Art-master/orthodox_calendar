@@ -1,9 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.init.components
 
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import com.artmaster.android.orthodoxcalendar.ui.init.DisappearingTextView
 
 @Composable
 fun TextAnimation(time: Long) {
-    Text("Hello world!")
+    DisappearingTextView("Какой-то очень длинный текст")
 }
