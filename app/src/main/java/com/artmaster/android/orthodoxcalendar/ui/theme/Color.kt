@@ -17,6 +17,9 @@ val ErrorInactive = Color(0XFFFFCDD2)
 
 val Blue = Color(0XFF3F51B5)
 
+
+val TopBarColor = Color(0xFFFAF0B6)
+
 val Easter = Color(0XFFE53935)
 val HeadHoliday = Color(0XFFFF6D00)
 val TwelveHoliday = Color(0XFFDD6A66)
