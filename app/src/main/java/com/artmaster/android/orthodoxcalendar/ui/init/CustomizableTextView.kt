@@ -1,14 +1,11 @@
 package com.artmaster.android.orthodoxcalendar.ui.init
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
@@ -25,48 +22,61 @@ import kotlin.random.Random
 @Preview
 @Composable
 fun Preview() {
-    DisappearingTextView(title = "Какой-то очень длинный текст")
+    DisappearingTextView(title = "Какой-то очень длинный текст", 6000)
 }
 
-
 @Composable
-fun DisappearingTextView(title: String, withReverse: Boolean = true, animDurationMs: Int = 6000) {
+fun DisappearingTextView(
+    title: String,
+    animDurationMs: Int,
+    withReverse: Boolean = true,
+    onComplete: () -> Unit = {}
+) {
 
     val animStartBySymbols = remember {
-        getAnimationOffsets(title.length, maxValue = animDurationMs / 3)
+        val maxValue = (animDurationMs / 1.3).toInt()
+        getAnimationOffsets(title.length, maxValue = maxValue)
     }
 
-    val infiniteTransition = rememberInfiniteTransition()
-    val animValue by infiniteTransition.animateFloat(
-        0f, animDurationMs.toFloat(),
-        animationSpec = infiniteRepeatable(
+    var targetValue by remember { mutableStateOf(0f) }
+
+    val animation by animateFloatAsState(
+        targetValue = targetValue,
+        animationSpec = repeatable(
             animation = tween(durationMillis = animDurationMs),
-            repeatMode = RepeatMode.Reverse
-        )
+            repeatMode = RepeatMode.Reverse,
+            iterations = if (withReverse) 2 else 1
+        ),
+        finishedListener = {
+            onComplete.invoke()
+        }
     )
+
+    SideEffect { targetValue = animDurationMs.toFloat() }
 
     val annotatedString = buildAnnotatedString {
         title.forEachIndexed { index, char ->
+
             val value = animStartBySymbols[index]
-            val alpha = calculateAlpha(value, animValue, animDurationMs)
+            var alpha = calculateAlpha(value, animation, animDurationMs)
+
+            // for excluding blinking text
+            if (animation == 0f || animation == animDurationMs.toFloat()) alpha = 0f
+
             val color = DefaultTextColor.copy(alpha = alpha)
+
             withStyle(style = SpanStyle(color = color)) {
                 append(char)
             }
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            textAlign = TextAlign.Center,
-            text = annotatedString, color = DefaultTextColor,
-            fontSize = 35.sp,
-            fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
-        )
-    }
+    Text(
+        textAlign = TextAlign.Center,
+        text = annotatedString, color = DefaultTextColor,
+        fontSize = 35.sp,
+        fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
+    )
 }
 
 fun calculateAlpha(value: Int, animValue: Float, animDuration: Int): Float {

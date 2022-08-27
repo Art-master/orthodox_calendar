@@ -5,11 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
-import com.artmaster.android.orthodoxcalendar.ui.init.components.TextAnimation
+import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import dagger.android.AndroidInjection
 
 class InitAppActivity : ComponentActivity() {
@@ -19,18 +18,23 @@ class InitAppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_init_app)
+
+        viewModel.loadData {
+            initNotifications()
+        }
 
         setContent {
-            TextAnimation(viewModel.animationTime)
+            AppStartTextAnimation(viewModel.animationTime.toInt()) {
+                nextScreen()
+            }
         }
     }
 
-    fun initNotifications() {
+    private fun initNotifications() {
         AlarmBuilder.build(applicationContext)
     }
 
-    fun nextScreen() {
+    private fun nextScreen() {
         startActivity(getArgs())
         finish()
     }

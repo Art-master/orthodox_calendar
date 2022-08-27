@@ -33,7 +33,7 @@ class LoadDataViewModel : ViewModel() {
         return isOffAnimation == Settings.FALSE
     }
 
-    fun loadData() {
+    fun loadData(callback: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (isAppFirstLoad()) {
@@ -41,6 +41,8 @@ class LoadDataViewModel : ViewModel() {
                     repository.insertHolidays(data)
                     preferences.set(FIRST_LOAD_APP, Settings.TRUE)
                 }
+
+                callback.invoke()
             }
         }
     }
