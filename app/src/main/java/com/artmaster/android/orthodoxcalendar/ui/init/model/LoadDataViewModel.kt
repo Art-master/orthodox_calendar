@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.init
+package com.artmaster.android.orthodoxcalendar.ui.init.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoadDataViewModel : ViewModel() {
+
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
     private val fileParser = App.appComponent.getFileParser()
@@ -33,7 +34,7 @@ class LoadDataViewModel : ViewModel() {
         return isOffAnimation == Settings.FALSE
     }
 
-    fun loadData(callback: () -> Unit) {
+    fun fillDatabaseIfNeed(callback: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (isAppFirstLoad()) {

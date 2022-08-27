@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.init
+package com.artmaster.android.orthodoxcalendar.ui.init.components
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,7 +21,7 @@ import kotlin.random.Random
 
 @Preview
 @Composable
-fun Preview() {
+fun DisappearingTextPreview() {
     DisappearingTextView(title = "Какой-то очень длинный текст", 6000)
 }
 

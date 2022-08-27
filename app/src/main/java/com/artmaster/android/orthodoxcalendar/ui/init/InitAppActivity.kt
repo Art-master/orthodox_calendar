@@ -5,21 +5,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.artmaster.android.orthodoxcalendar.common.OrtUtils
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
-import dagger.android.AndroidInjection
+import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
 
 class InitAppActivity : ComponentActivity() {
 
     private val viewModel: LoadDataViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel.loadData {
+        viewModel.fillDatabaseIfNeed {
             initNotifications()
         }
 
@@ -42,6 +40,4 @@ class InitAppActivity : ComponentActivity() {
     private fun getArgs() = Intent(applicationContext, MainCalendarActivity::class.java).apply {
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }
-
-    override fun onBackPressed() = OrtUtils.exitProgram(applicationContext)
 }

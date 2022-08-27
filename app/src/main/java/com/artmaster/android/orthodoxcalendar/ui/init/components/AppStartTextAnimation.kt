@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.ui.init.DisappearingTextView
 import java.util.*
 
 @Preview
