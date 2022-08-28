@@ -13,7 +13,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
-import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.components.HolidayTileLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_month.mvp.CalendarTileMonthFragment
@@ -41,7 +41,7 @@ internal class CalendarTileFragment : Fragment(), ContractTileView {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val currentTime = Time(time.year, time.month, time.day)
+                val currentTime = CurrentTime(time.year, time.month, time.day)
                 HolidayTileLayout(viewModel, currentTime)
             }
         }

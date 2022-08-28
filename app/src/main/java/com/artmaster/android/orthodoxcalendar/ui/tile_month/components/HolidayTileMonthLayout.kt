@@ -9,6 +9,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 
 @Preview
 @Composable
@@ -47,14 +48,14 @@ fun Preview() {
     }
 
     val monthData = MutableLiveData<List<Day>>()
-
-    HolidayTileMonthLayout(data = monthData, isCurrentPage = true, time = time)
+    val currentTime = CurrentTime(year = time.year, month = time.month, time.dayOfMonth)
+    HolidayTileMonthLayout(data = monthData, isCurrentPage = true, time = currentTime)
 }
 
 @Composable
 fun HolidayTileMonthLayout(
     data: MutableLiveData<List<Day>>,
-    time: Time,
+    time: CurrentTime,
     isCurrentPage: Boolean,
     pageOffset: Float = 0f,
     onClick: (holiday: Holiday) -> Unit = {}
@@ -64,7 +65,7 @@ fun HolidayTileMonthLayout(
         if (days.value.isEmpty() || isCurrentPage.not()) {
             Spinner()
         } else {
-            TileMonthGrid(days.value, time, pageOffset, onClick)
+            TileMonthGrid(days.value, time.dayOfMonth, pageOffset, onClick)
         }
         //HolidayList(data = Pager<Int, Day>())
     }

@@ -2,8 +2,6 @@ package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.*
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Calculated dynamic holidays
@@ -377,12 +375,8 @@ class DynamicData {
         setSolidWeek(day)
     }
 
-    fun fillDayInfoByHoliday(day: Day, holiday: Holiday) {
-        setMemorialType(day, holiday)
-    }
-
-    private fun setMemorialType(day: Day, holiday: Holiday) {
-        day.isMemorial = when (holiday.dynamicType) {
+    private fun getMemorialType(holiday: Holiday): Boolean {
+        return when (holiday.dynamicType) {
             MovableDay.MEATLESS_SATURDAY.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_2.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_3.dynamicType,

@@ -14,6 +14,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -69,7 +70,7 @@ fun PreviewLayout() {
 @Composable
 fun HolidayTileLayout(
     viewModel: CalendarViewModel,
-    time: Time,
+    time: CurrentTime,
     onClick: (holiday: Holiday) -> Unit = {}
 ) {
     var monthNum by remember { mutableStateOf(time.month) }

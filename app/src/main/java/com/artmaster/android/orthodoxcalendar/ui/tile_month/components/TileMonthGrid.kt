@@ -18,7 +18,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import java.util.*
 
 @Preview
 @Composable
@@ -55,24 +54,23 @@ fun ShowMonth() {
         dayInWeek = if (dayInWeek == SUNDAY.num) MONDAY.num
         else dayInWeek.inc()
     }
-    TileMonthGrid(days = days, time = time)
+    TileMonthGrid(days = days, dayOfMonth = time.dayOfMonth)
 }
 
 @Composable
 fun TileMonthGrid(
     days: List<Day>,
-    time: Time,
+    dayOfMonth: Int,
     pageOffset: Float = 0f,
     onClick: (holiday: Holiday) -> Unit = {}
 ) {
-    var focusedDay by remember { mutableStateOf(time.dayOfMonth) }
+    var focusedDay by remember { mutableStateOf(dayOfMonth) }
 
     Row(modifier = Modifier
         .fillMaxSize()
         .graphicsLayer { graphicalLayerTransform(this, pageOffset) }) {
-        val currentTime = Time(time.calendar)
 
-/*      val numDays = currentTime.daysInMonth
+/*      val numDays = daysInMonth
         val firstDayInWeek = days.first().dayInWeek
         val maxWeekCount = ceil((firstDayInWeek + numDays) / 7f).toInt() */
 
@@ -92,7 +90,6 @@ fun TileMonthGrid(
                             continue
                         }
                         val curDayNum = ((currentWeekNum - 1) * 7) + index
-                        currentTime.calendar.set(Calendar.DAY_OF_MONTH, curDayNum)
 
                         if (daysCount < days.size && days[daysCount].dayInWeek == index) {
                             MonthDay(days[daysCount], focusedDay == curDayNum) {

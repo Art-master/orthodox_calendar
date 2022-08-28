@@ -24,7 +24,7 @@ fun HolidayList(data: Pager<Int, Day>) {
                 HolidayDayItem(message)
             } else {
                 //MessagePlaceholder()
-                HolidayDayItem(Day())
+                //HolidayDayItem(Day())
             }
         }
     }

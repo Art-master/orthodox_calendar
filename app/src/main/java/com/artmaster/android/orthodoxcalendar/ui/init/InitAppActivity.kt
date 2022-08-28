@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
-import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
@@ -40,7 +40,7 @@ class InitAppActivity : ComponentActivity() {
 
     private fun nextScreen() {
         setContent {
-            val currentTime = Time(time.year, time.month, time.day)
+            val currentTime = CurrentTime(time.year, time.month, time.day)
             Column {
                 AppBar()
                 HolidayTileLayout(viewModel, currentTime)

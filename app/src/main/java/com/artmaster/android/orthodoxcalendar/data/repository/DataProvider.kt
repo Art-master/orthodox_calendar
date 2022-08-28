@@ -13,15 +13,12 @@ import java.util.*
  */
 class DataProvider : CalendarListContractModel, RepositoryConnector {
 
-    @Volatile
     private var dynamicData = DynamicData()
 
-    @Volatile
     private var database = App.appComponent.getDatabase()
 
     private val context = App.appComponent.getContext()
 
-    @Synchronized
     override fun getMonthDays(month: Int, year: Int, filters: Collection<Filter>): List<Day> {
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0
@@ -63,7 +60,6 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
             if (dayNum > days.size || holiday.monthWith0 != month) continue
             days[dayNum - 1].apply {
                 this.holidays.add(holiday)
-                dynamicData.fillDayInfoByHoliday(this, holiday)
             }
         }
     }
@@ -72,7 +68,6 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return getAllData(year, filters).sorted()
     }
 
-    @Synchronized
     override fun getDataSequence(start: Int, size: Int, year: Int, filters: List<Filter>): List<Holiday> {
         val data = setFirstPosition(getAllData(year, filters).sorted())
         var endPosition = start + size - 1
@@ -102,7 +97,6 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return hds
     }
 
-    @Synchronized
     override fun getMonthData(month: Int, year: Int): List<Holiday> {
         val db = database.get(context)
         val holidaysFromDb = db.holidayDao().getByMonth(month)
@@ -111,7 +105,6 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return holidays.sorted()
     }
 
-    @Synchronized
     override fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
         val holidaysInMonth = getMonthData(month, year)
         val holidaysInDay: ArrayList<Holiday> = ArrayList()
@@ -153,7 +146,6 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
         return holidays
     }
 
-    @Synchronized
     override fun getHolidaysByTime(time: Time): List<Holiday> {
         val db = database.get(context)
         val holidays = db.holidayDao().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
