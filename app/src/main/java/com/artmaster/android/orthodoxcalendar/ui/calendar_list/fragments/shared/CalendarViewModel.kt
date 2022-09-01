@@ -1,5 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,10 +21,16 @@ class CalendarViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
-    private val daysByMonthCache = HashMap<Int, MutableLiveData<List<Day>>>(MONTH_COUNT)
+    private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
-            for (num in 1..MONTH_COUNT) this[num] = MutableLiveData(ArrayList())
+            for (num in 1..MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
         }
+
+    private val currentTime = Time()
+
+    private val dayOfMonth = mutableStateOf(currentTime.dayOfMonth)
+    private val month = mutableStateOf(currentTime.month)
+    private val year = mutableStateOf(currentTime.year)
 
     private val _filters = MutableLiveData<Set<Filter>>(emptySet())
     val filters: LiveData<Set<Filter>> get() = _filters
@@ -55,7 +63,7 @@ class CalendarViewModel : ViewModel() {
 
         val prev = daysByMonthCache[monthNum]
         val currTime = time.value ?: SharedTime()
-        if (year != currTime.year && prev != null && !prev.value.isNullOrEmpty()) {
+        if (year != currTime.year && prev != null && prev.value.isNotEmpty()) {
             return
         }
 
@@ -97,37 +105,31 @@ class CalendarViewModel : ViewModel() {
         _filters.value = copyData
     }
 
-    fun setYear(year: Int) {
-        val previous = _time.value ?: SharedTime()
-        val obj = SharedTime(year, previous.month, previous.day)
-        _time.value = obj
-
-        viewModelScope.launch {
-            loadMonthData(monthNum = obj.month, year = obj.year)
-        }
-    }
-
-    fun setMonth(month: Int) {
-        val previous = _time.value ?: SharedTime()
-        val obj = SharedTime(previous.year, month, previous.day)
-        _time.value = obj
-    }
-
-    fun setDayOfMonth(day: Int) {
-        val previous = _time.value ?: SharedTime()
-        val obj = SharedTime(previous.year, previous.month, day)
-        _time.value = obj
-    }
-
     fun setAllTime(year: Int? = null, month: Int? = null, day: Int? = null) {
         val previous = _time.value ?: SharedTime()
         val obj = SharedTime(year ?: previous.year, month ?: previous.month, day ?: previous.day)
         _time.value = obj
     }
 
-    fun getSelectedTime(): Time {
-        return Time(time.value!!.year, time.value!!.month, time.value!!.day)
+    fun setYear(year: Int) {
+        this.year.value = year
+        daysByMonthCache.forEach { it.value.value = emptyList() }
     }
+
+    fun getYear() = year
+
+    fun setMonth(month: Int) {
+        this.month.value = month
+    }
+
+    fun getMonth() = month
+
+    fun setDayOfMonth(day: Int) {
+        dayOfMonth.value = day
+    }
+
+    fun getDayOfMonth() = dayOfMonth
+
 
     fun getCurrentMonthData(monthNum: Int) = daysByMonthCache[monthNum]!!
 }

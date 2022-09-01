@@ -106,7 +106,8 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
 }
 
 @Composable
-fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
+fun MonthDay(day: Day, isActive: Boolean, onClick: (holiday: Day) -> Unit = {}) {
+
     val holidayColor = remember {
         getTypeHolidayColor(day)
     }
@@ -122,7 +123,7 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: () -> Unit = {}) {
                 shape = RoundedCornerShape(6.dp)
             )
             .clickable {
-                onClick.invoke()
+                onClick(day)
             }
     ) {
         Text(

@@ -6,21 +6,24 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -66,17 +69,17 @@ fun PreviewLayout() {
     //HolidayTileLayout(data = monthData, time = time)
 }
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HolidayTileLayout(
-    viewModel: CalendarViewModel,
-    time: CurrentTime,
-    onClick: (holiday: Holiday) -> Unit = {}
-) {
-    var monthNum by remember { mutableStateOf(time.month) }
+fun HolidayTileLayout(viewModel: CalendarViewModel) {
+    var monthNum by remember { viewModel.getMonth() }
 
     val pagerState = rememberPagerState(monthNum)
     val scope = rememberCoroutineScope()
+
+    val onDayClick = remember {
+        { day: Day -> viewModel.setDayOfMonth(day = day.dayOfMonth) }
+    }
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
@@ -84,12 +87,14 @@ fun HolidayTileLayout(
             viewModel.setMonth(page.inc())
             monthNum = page.inc()
 
+            val year = viewModel.getYear().value
+
             //current page
-            viewModel.loadMonthData(monthNum, time.year)
+            viewModel.loadMonthData(monthNum, year)
             //next page data
-            viewModel.loadMonthData(monthNum + 1, time.year)
+            viewModel.loadMonthData(monthNum + 1, year)
             //previous page data
-            viewModel.loadMonthData(monthNum - 1, time.year)
+            viewModel.loadMonthData(monthNum - 1, year)
         }
     }
 
@@ -106,19 +111,50 @@ fun HolidayTileLayout(
         Row {
             HorizontalPager(
                 modifier = Modifier.padding(15.dp),
-                count = MONTH_COUNT, state = pagerState, key = { r -> r }
+                count = MONTH_COUNT,
+                state = pagerState,
+                key = { r -> r }
             ) { page ->
                 val pageNumStartsWithOne = page.inc()
-                val days = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne)
                 val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-                HolidayTileMonthLayout(
-                    data = days,
-                    time = time,
-                    pageOffset = pageOffset,
-                    isCurrentPage = pageNumStartsWithOne == monthNum
-                )
+                if (needToShowLayout(pageOffset)) {
+                    HolidayTileMonthLayout(
+                        modifier = Modifier.graphicsLayer {
+                            graphicalLayerTransform(
+                                this,
+                                pageOffset
+                            )
+                        },
+                        data = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne),
+                        dayOfMonth = viewModel.getDayOfMonth().value,
+                        onDayClick = onDayClick
+                    )
+                }
             }
         }
+    }
+}
+
+fun needToShowLayout(pageOffset: Float) = pageOffset < 0.7f
+
+fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
+    scope.apply {
+        // We animate the scaleX + scaleY, between 85% and 100%
+        lerp(
+            start = 0.8.dp,
+            stop = 1.dp,
+            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        ).also { scale ->
+            scaleX = scale.toPx() / 3
+            scaleY = scale.toPx() / 3
+        }
+
+        // We animate the alpha, between 0% and 100%
+        alpha = lerp(
+            start = ScaleFactor(0f, 0f),
+            stop = ScaleFactor(1f, 1f),
+            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        ).scaleX
     }
 }

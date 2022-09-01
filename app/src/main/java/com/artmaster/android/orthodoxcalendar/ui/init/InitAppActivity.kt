@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
-import com.artmaster.android.orthodoxcalendar.domain.SharedTime
-import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
@@ -19,8 +17,6 @@ class InitAppActivity : ComponentActivity() {
     private val initViewModel: LoadDataViewModel by viewModels()
 
     private val viewModel: CalendarViewModel by viewModels()
-
-    private var time: SharedTime = SharedTime()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +36,9 @@ class InitAppActivity : ComponentActivity() {
 
     private fun nextScreen() {
         setContent {
-            val currentTime = CurrentTime(time.year, time.month, time.day)
             Column {
                 AppBar()
-                HolidayTileLayout(viewModel, currentTime)
+                HolidayTileLayout(viewModel)
             }
         }
     }

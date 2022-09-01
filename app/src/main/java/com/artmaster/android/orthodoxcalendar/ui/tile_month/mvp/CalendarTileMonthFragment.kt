@@ -14,7 +14,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.SharedTime
 import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.tile_month.components.HolidayTileMonthLayout
 import kotlinx.coroutines.launch
 
 internal class CalendarTileMonthFragment : Fragment() {
@@ -42,8 +41,8 @@ internal class CalendarTileMonthFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val currentTime = CurrentTime(time.year, time.month, time.day)
-                val state = viewModel.getCurrentMonthData(time.month)
-                HolidayTileMonthLayout(state, currentTime, false)
+                //val state = viewModel.getCurrentMonthData(time.month)
+                //HolidayTileMonthLayout(state, currentTime.dayOfMonth, false)
             }
         }
     }
