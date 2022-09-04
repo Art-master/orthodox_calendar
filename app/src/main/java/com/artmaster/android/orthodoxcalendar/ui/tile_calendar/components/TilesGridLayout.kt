@@ -33,7 +33,8 @@ fun ShowMonth() {
                         year = time.year,
                         month = time.month,
                         day = index,
-                        typeId = Holiday.Type.MAIN.id
+                        typeId = if (index % 4 == 0) Holiday.Type.TWELVE_MOVABLE.id
+                        else Holiday.Type.AVERAGE_PEPPY.id
                     )
                 ),
                 fasting = Fasting(
@@ -69,21 +70,28 @@ fun TilesGridLayout(
     }
 }
 
+const val MAX_COLUMN_COUNT = 6
+
+fun calculateColumnFraction(currentColumnNum: Int): Float {
+    return (1f / (MAX_COLUMN_COUNT - currentColumnNum + 1))
+}
+
+
 @Composable
 fun Grid(
     data: MutableState<List<Day>>,
     selectedDayOfMonth: Int,
     onDayClick: (day: Day) -> Unit = {},
 ) {
-    val maxColumnCount = 6
+
     val days = data.value
 
     var daysCount = 0
 
-    for (currentColumnNum in 0..maxColumnCount) {
+    for (currentColumnNum in 0..MAX_COLUMN_COUNT) {
         key(currentColumnNum) {
             Column(
-                modifier = Modifier.fillMaxWidth((1f / (maxColumnCount - currentColumnNum + 1))),
+                modifier = Modifier.fillMaxWidth(calculateColumnFraction(currentColumnNum)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 for (index in 1..SUNDAY.num) {
@@ -97,13 +105,13 @@ fun Grid(
                         daysCount++
                         val isActive = daysCount == selectedDayOfMonth
 
-                        MonthDay(
+                        DayOfMonthTile(
                             day = days[daysCount.dec()],
                             isActive = isActive,
                             onClick = onDayClick
                         )
 
-                    } else EmptyDay()
+                    } else EmptyInvisibleTile()
                 }
             }
         }

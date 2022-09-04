@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.Font
@@ -30,13 +31,13 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 
 @Composable
-fun PreviewGrid(size: Dp = 50.dp) {
+fun PreviewGrid(size: Dp = 50.dp, holidayType: Holiday.Type = Holiday.Type.AVERAGE_PEPPY) {
     val time = Time()
     AppTheme {
         Box(
             modifier = Modifier.size(size)
         ) {
-            MonthDay(
+            DayOfMonthTile(
                 Day(
                     year = time.year,
                     month = time.month,
@@ -47,7 +48,7 @@ fun PreviewGrid(size: Dp = 50.dp) {
                             year = time.year,
                             month = time.month,
                             day = time.dayOfMonth,
-                            typeId = Holiday.Type.AVERAGE_PEPPY.id
+                            typeId = holidayType.id
                         )
                     ),
                     fasting = Fasting(
@@ -68,7 +69,7 @@ fun PreviewGrid(size: Dp = 50.dp) {
 @Preview(widthDp = 50, heightDp = 50)
 @Composable
 fun NormalPreview() {
-    PreviewGrid()
+    PreviewGrid(holidayType = Holiday.Type.MAIN)
 }
 
 @Preview(widthDp = 150, heightDp = 150)
@@ -78,7 +79,7 @@ fun MinPreview() {
 }
 
 @Composable
-fun EmptyDay() {
+fun EmptyInvisibleTile() {
     Box(
         Modifier
             .fillMaxWidth()
@@ -100,7 +101,7 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
         Text(
             text = daysNames[dayOfWeekNum - 1],
             fontSize = 20.sp,
-            color = DefaultTextColor,
+            color = if (dayOfWeekNum == Holiday.DayOfWeek.SUNDAY.num) HeadSymbolTextColor else DefaultTextColor,
             fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Center
         )
@@ -108,11 +109,10 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
 }
 
 @Composable
-fun MonthDay(day: Day, isActive: Boolean, onClick: (holiday: Day) -> Unit = {}) {
+fun DayOfMonthTile(day: Day, isActive: Boolean, onClick: (holiday: Day) -> Unit = {}) {
 
-    val holidayColor = remember {
-        getTypeHolidayColor(day)
-    }
+    val holidayColor = remember { getTypeHolidayColor(day) }
+    val fontColor = remember { getTypeHolidayFontColor(day, holidayColor) }
 
     Box(
         Modifier
@@ -130,11 +130,13 @@ fun MonthDay(day: Day, isActive: Boolean, onClick: (holiday: Day) -> Unit = {}) 
     ) {
         Text(
             modifier = Modifier
-                .fillMaxSize(0.7f)
-                .padding(start = 2.dp, top = 2.dp),
+                .fillMaxSize(0.5f)
+                .padding(start = 2.dp, top = 1.dp),
             text = day.dayOfMonth.toString(),
-            fontSize = 30.sp,
-            color = DefaultTextColor,
+            fontSize = with(LocalDensity.current) {
+                (20 / fontScale).sp
+            },
+            color = fontColor,
             fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal)),
             textAlign = TextAlign.Left
         )
@@ -161,6 +163,17 @@ private fun getTypeHolidayColor(day: Day): Color {
         day.fasting.type == Fasting.Type.SOLID_WEEK -> DayOfSolidWeek
         else -> UsualDay
     }
+}
+
+private fun getTypeHolidayFontColor(day: Day, holidayColor: Color): Color {
+
+    val isBright = holidayColor == HeadHoliday
+            || holidayColor == Easter
+            || holidayColor == TwelveHoliday
+
+    if (day.dayInWeek == Holiday.DayOfWeek.SUNDAY.num && isBright.not()) return HeadSymbolTextColor
+
+    return if (isBright) Color.White else DefaultTextColor
 }
 
 private fun isTypeHoliday(type: Holiday.Type, holidays: List<Holiday>): Boolean {
@@ -230,19 +243,9 @@ fun PermissionImage(resId: Int, modifier: Modifier) {
 @Composable
 fun HolidaysIndicator(parent: BoxScope, holidayColor: Color) {
     parent.apply {
-        val isBright = holidayColor == HeadHoliday || holidayColor == Easter
 
-        val strokeColor = if (isBright) {
-            listOf(Color(0xFF000000), Color(0xFF000000))
-        } else {
-            listOf(Color(0xFFFFFFFF), Color(0xFFFFFFFF))
-        }
-
-        val background = if (isBright) {
-            listOf(Color(0xFFFFFFFF), Color(0xFFFFE4E4))
-        } else {
-            listOf(Color(0xFFFA2222), Color(0xFFFD4747))
-        }
+        val strokeColor = listOf(Color(0xFFFFFFFF), Color(0xFFFFFFFF))
+        val background = listOf(Color(0xFFFA2222), Color(0xFFFD4747))
 
         Canvas(
             modifier = Modifier
@@ -255,7 +258,7 @@ fun HolidaysIndicator(parent: BoxScope, holidayColor: Color) {
 
             drawCircle(
                 brush = Brush.verticalGradient(strokeColor),
-                radius = width.times(.43f),
+                radius = width.times(.45f),
                 center = Offset(width.times(.50f), height.times(.50f))
             )
 
