@@ -35,7 +35,6 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.setting
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractView
-import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp.UserHolidayActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -64,7 +63,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
     lateinit var listHolidayFragment: ListViewDiffContract.ViewListPager
 
     @Inject
-    lateinit var tileCalendarFragment: ContractTileView
+    lateinit var tileCalendarFragment: ListViewDiffContract.ViewListPager
 
     @Inject
     lateinit var appInfoFragment: AppInfoView
@@ -344,7 +343,7 @@ class MainCalendarActivity : MvpAppCompatActivity(), HasAndroidInjector, Calenda
             }
         } else if (item.itemId == R.id.item_view) {
             val fr = supportFragmentManager.findFragmentByTag(Tags.CALENDAR.toString())
-            if (fr is ListViewDiffContract.ViewListPager || fr is ContractTileView) {
+            if (fr is ListViewDiffContract.ViewListPager) {
                 changeMainFragment(item)
                 removeFragment(this.fragment)
                 showFragment(checkFragment(calendarFragment))

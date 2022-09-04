@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
+package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

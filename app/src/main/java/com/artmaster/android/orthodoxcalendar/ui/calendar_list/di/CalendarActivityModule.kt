@@ -9,8 +9,6 @@ import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.impl.Li
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.info.FragmentAppInfo
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.settings.FragmentSettingsApp
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
-import com.artmaster.android.orthodoxcalendar.ui.tile_pager.impl.ContractTileView
-import com.artmaster.android.orthodoxcalendar.ui.tile_pager.mvp.CalendarTileFragment
 import dagger.Module
 import dagger.Provides
 
@@ -26,12 +24,6 @@ class CalendarActivityModule {
     @Provides
     fun provideListHolidaysFragment(): ListViewDiffContract.ViewListPager {
         return ListHolidayPager()
-    }
-
-    @CalendarActivityScope
-    @Provides
-    fun provideTileHolidaysFragment(): ContractTileView {
-        return CalendarTileFragment()
     }
 
     @CalendarActivityScope

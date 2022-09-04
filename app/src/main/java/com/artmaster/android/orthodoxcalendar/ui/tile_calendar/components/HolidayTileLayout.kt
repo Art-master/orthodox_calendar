@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.tile_month.components
+package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -120,12 +120,8 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
 
                 if (needToShowLayout(pageOffset)) {
                     HolidayTileMonthLayout(
-                        modifier = Modifier.graphicsLayer {
-                            graphicalLayerTransform(
-                                this,
-                                pageOffset
-                            )
-                        },
+                        modifier = Modifier
+                            .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                         data = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne),
                         dayOfMonth = viewModel.getDayOfMonth().value,
                         onDayClick = onDayClick
