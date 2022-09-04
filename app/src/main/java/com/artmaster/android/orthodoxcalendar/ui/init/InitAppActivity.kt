@@ -5,11 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
+import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
 
 class InitAppActivity : ComponentActivity() {
@@ -36,9 +40,13 @@ class InitAppActivity : ComponentActivity() {
 
     private fun nextScreen() {
         setContent {
-            Column {
-                AppBar()
-                HolidayTileLayout(viewModel)
+            MaterialTheme {
+                CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                    Column {
+                        AppBar()
+                        HolidayTileLayout(viewModel)
+                    }
+                }
             }
         }
     }

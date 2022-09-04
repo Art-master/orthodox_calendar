@@ -32,34 +32,36 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.*
 @Composable
 fun PreviewGrid(size: Dp = 50.dp) {
     val time = Time()
-    Box(
-        modifier = Modifier.size(size)
-    ) {
-        MonthDay(
-            Day(
-                year = time.year,
-                month = time.month,
-                dayOfMonth = time.dayOfMonth,
-                dayInWeek = time.dayOfWeek,
-                holidays = arrayListOf(
-                    Holiday(
-                        year = time.year,
-                        month = time.month,
-                        day = time.dayOfMonth,
-                        typeId = Holiday.Type.AVERAGE_PEPPY.id
+    AppTheme {
+        Box(
+            modifier = Modifier.size(size)
+        ) {
+            MonthDay(
+                Day(
+                    year = time.year,
+                    month = time.month,
+                    dayOfMonth = time.dayOfMonth,
+                    dayInWeek = time.dayOfWeek,
+                    holidays = arrayListOf(
+                        Holiday(
+                            year = time.year,
+                            month = time.month,
+                            day = time.dayOfMonth,
+                            typeId = Holiday.Type.AVERAGE_PEPPY.id
+                        )
+                    ),
+                    fasting = Fasting(
+                        Fasting.Type.SOLID_WEEK,
+                        permissions = listOf(
+                            Fasting.Permission.FISH,
+                            Fasting.Permission.VINE,
+                            Fasting.Permission.OIL,
+                            Fasting.Permission.CAVIAR,
+                        )
                     )
-                ),
-                fasting = Fasting(
-                    Fasting.Type.SOLID_WEEK,
-                    permissions = listOf(
-                        Fasting.Permission.FISH,
-                        Fasting.Permission.VINE,
-                        Fasting.Permission.OIL,
-                        Fasting.Permission.CAVIAR,
-                    )
-                )
-            ), isActive = false
-        )
+                ), isActive = false
+            )
+        }
     }
 }
 
