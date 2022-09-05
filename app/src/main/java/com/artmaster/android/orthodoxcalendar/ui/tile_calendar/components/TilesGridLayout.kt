@@ -1,13 +1,16 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -58,6 +61,9 @@ fun ShowMonth() {
     TilesGridLayout(data = data, selectedDayOfMonth = time.dayOfMonth)
 }
 
+const val MAX_COLUMN_COUNT = 6
+const val DAYS_IN_WEEK_COUNT = 7
+
 @Composable
 fun TilesGridLayout(
     data: MutableState<List<Day>>,
@@ -65,54 +71,34 @@ fun TilesGridLayout(
     onDayClick: (day: Day) -> Unit = {}
 ) {
 
-    Row(modifier = Modifier.fillMaxSize()) {
-        Grid(data = data, selectedDayOfMonth = selectedDayOfMonth, onDayClick = onDayClick)
-    }
-}
-
-const val MAX_COLUMN_COUNT = 6
-
-fun calculateColumnFraction(currentColumnNum: Int): Float {
-    return (1f / (MAX_COLUMN_COUNT - currentColumnNum + 1))
-}
-
-
-@Composable
-fun Grid(
-    data: MutableState<List<Day>>,
-    selectedDayOfMonth: Int,
-    onDayClick: (day: Day) -> Unit = {},
-) {
-
     val days = data.value
 
     var daysCount = 0
 
-    for (currentColumnNum in 0..MAX_COLUMN_COUNT) {
-        key(currentColumnNum) {
-            Column(
-                modifier = Modifier.fillMaxWidth(calculateColumnFraction(currentColumnNum)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                for (index in 1..SUNDAY.num) {
-                    if (currentColumnNum == 0) {
-                        DayOfWeekName(dayOfWeekNum = index)
-                        continue
-                    }
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        columns = GridCells.Fixed(MAX_COLUMN_COUNT),
+        contentPadding = PaddingValues(1.dp)
+    ) {
+        items(MAX_COLUMN_COUNT * DAYS_IN_WEEK_COUNT) { item ->
 
-                    if (daysCount < days.size && days[daysCount].dayInWeek == index) {
+            val week = item % MAX_COLUMN_COUNT
+            val dayWith0 = item / MAX_COLUMN_COUNT
+            val daysCountStartOffset = days.first().dayInWeek.dec()
+            val dayIndex = ((week.dec() * DAYS_IN_WEEK_COUNT) + dayWith0) - daysCountStartOffset
 
-                        daysCount++
-                        val isActive = daysCount == selectedDayOfMonth
+            if (week == 0) {
+                DayOfWeekName(dayOfWeekNum = (dayWith0).inc())
 
-                        DayOfMonthTile(
-                            day = days[daysCount.dec()],
-                            isActive = isActive,
-                            onClick = onDayClick
-                        )
+            } else if (dayIndex >= 0 && dayIndex.inc() <= days.size) {
+                daysCount++
+                val isActive = dayIndex.inc() == selectedDayOfMonth
 
-                    } else EmptyInvisibleTile()
-                }
+                DayOfMonthTile(
+                    day = days[dayIndex],
+                    isActive = isActive,
+                    onClick = onDayClick
+                )
             }
         }
     }
