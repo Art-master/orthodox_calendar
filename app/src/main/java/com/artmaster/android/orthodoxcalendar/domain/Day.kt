@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class Day(
     val year: Int,
-    val month: Int,
+    val month: Int, //with 0
     val dayOfMonth: Int,
     val dayInWeek: Int,
     val holidays: ArrayList<Holiday> = ArrayList(),

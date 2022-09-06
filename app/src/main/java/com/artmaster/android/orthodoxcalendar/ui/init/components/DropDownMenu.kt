@@ -20,22 +20,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 
 @Preview
 @Composable
 fun DropDownYearMenuPreview() {
-    DropDownYearMenu(currentYear = 2022)
+    val year = remember { mutableStateOf(2022) }
+    DropDownYearMenu(currentYear = year)
 }
 
 @Composable
-fun DropDownYearMenu(currentYear: Int) {
-    val items = getYears(currentYear)
+fun DropDownYearMenu(currentYear: MutableState<Int>, onYearSelect: (year: Int) -> Unit = {}) {
+
+    val items by remember {
+        mutableStateOf(getYears(Time().year))
+    }
 
     var expanded by remember { mutableStateOf(false) }
 
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember(currentYear) {
+        mutableStateOf(getYearIndex(currentYear.value, items))
+    }
 
     Box(modifier = Modifier.wrapContentSize(Alignment.Center)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -70,6 +77,7 @@ fun DropDownYearMenu(currentYear: Int) {
 
                 DropdownMenuItem(onClick = {
                     selectedIndex = index
+                    onYearSelect(index)
                     expanded = false
                 }) {
                     ItemContent(text = text)
@@ -92,7 +100,12 @@ fun ItemContent(text: String, color: Color = DefaultTextColor, onClick: () -> Un
     )
 }
 
-private fun getYears(currentYear: Int): ArrayList<String> {
+private fun getYearIndex(currentYear: Int, years: List<String>): Int {
+    return years.indexOf(currentYear.toString())
+}
+
+
+private fun getYears(currentYear: Int): List<String> {
     val size = Constants.HolidayList.PAGE_SIZE.value
     val firstYear = currentYear - size / 2
     val years = ArrayList<String>(size)

@@ -23,7 +23,7 @@ class CalendarViewModel : ViewModel() {
 
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
-            for (num in 1..MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
+            for (num in 0 until MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
         }
 
     private val currentTime = Time()
@@ -58,22 +58,20 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    suspend fun loadMonthData(monthNum: Int, year: Int) {
-        if (monthNum < 1 || monthNum > MONTH_COUNT) return
+    suspend fun loadMonthData(monthNumWith0: Int, year: Int) {
+        if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
 
-        val prev = daysByMonthCache[monthNum]
-        val currTime = time.value ?: SharedTime()
-        if (year != currTime.year && prev != null && prev.value.isNotEmpty()) {
+        val prev = daysByMonthCache[monthNumWith0]
+        val oldYear = getYear().value
+        if (year != oldYear && prev != null && prev.value.isNotEmpty()) {
             return
         }
 
         withContext(Dispatchers.IO) {
-            time.value?.let {
-                val value = repository.getMonthDays(monthNum, it.year, filters.value!!)
-                withContext(Dispatchers.Main) {
-                    val monthData = getCurrentMonthData(monthNum)
-                    monthData.value = value
-                }
+            val value = repository.getMonthDays(monthNumWith0, year, filters.value!!)
+            withContext(Dispatchers.Main) {
+                val monthData = getCurrentMonthData(monthNumWith0)
+                monthData.value = value
             }
         }
     }
@@ -131,5 +129,7 @@ class CalendarViewModel : ViewModel() {
     fun getDayOfMonth() = dayOfMonth
 
 
-    fun getCurrentMonthData(monthNum: Int) = daysByMonthCache[monthNum]!!
+    fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>> {
+        return daysByMonthCache[monthNum]!!
+    }
 }

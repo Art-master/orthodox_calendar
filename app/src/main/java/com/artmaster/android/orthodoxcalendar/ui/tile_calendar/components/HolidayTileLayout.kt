@@ -74,7 +74,7 @@ fun PreviewLayout() {
 fun HolidayTileLayout(viewModel: CalendarViewModel) {
     var monthNum by remember { viewModel.getMonth() }
 
-    val pagerState = rememberPagerState(monthNum)
+    val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
 
     val onDayClick = remember {
@@ -84,8 +84,8 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            viewModel.setMonth(page.inc())
-            monthNum = page.inc()
+            viewModel.setMonth(page)
+            monthNum = page
 
             val year = viewModel.getYear().value
 
@@ -103,8 +103,7 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
         MonthTabs(pagerState = pagerState) {
             monthNum = it
             scope.launch {
-                //pagerState.scrollToPage(monthNum.dec())
-                pagerState.animateScrollToPage(monthNum.dec())
+                pagerState.animateScrollToPage(monthNum)
             }
         }
 
@@ -115,14 +114,13 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
                 state = pagerState,
                 key = { r -> r }
             ) { page ->
-                val pageNumStartsWithOne = page.inc()
                 val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
                 if (needToShowLayout(pageOffset)) {
                     HolidayTileMonthLayout(
                         modifier = Modifier
                             .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                        data = viewModel.getCurrentMonthData(monthNum = pageNumStartsWithOne),
+                        data = viewModel.getCurrentMonthData(monthNum = page),
                         dayOfMonth = viewModel.getDayOfMonth().value,
                         onDayClick = onDayClick
                     )

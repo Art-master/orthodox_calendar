@@ -19,6 +19,12 @@ class DataProvider : CalendarListContractModel, RepositoryConnector {
 
     private val context = App.appComponent.getContext()
 
+    /**
+     * Get current month data
+     * @param month - num of month starts with 0
+     * @param month - year for select
+     * @param filters - filters for select
+     */
     override fun getMonthDays(month: Int, year: Int, filters: Collection<Filter>): List<Day> {
         val time = Time()
         time.calendar.set(year, month, 1) // in calendar month with 0

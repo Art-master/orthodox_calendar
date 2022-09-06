@@ -51,7 +51,7 @@ fun MonthTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
             Tab(
                 text = { MonthName(title = title) },
                 selected = pagerState.currentPage == index,
-                onClick = { onClick.invoke(index.inc()) },
+                onClick = { onClick.invoke(index) },
             )
         }
     }

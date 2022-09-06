@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
 @Preview
@@ -24,7 +25,7 @@ fun AppBarPreview() {
 }
 
 @Composable
-fun AppBar() {
+fun AppBar(viewModel: CalendarViewModel = CalendarViewModel()) {
     Surface(
         modifier = Modifier
             .padding(bottom = 5.dp)
@@ -41,7 +42,9 @@ fun AppBar() {
         color = TopBarColor,
         elevation = 3.dp
     ) {
-        DropDownYearMenu(currentYear = 2022)
+        DropDownYearMenu(currentYear = viewModel.getYear()) {
+            viewModel.setYear(it)
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End

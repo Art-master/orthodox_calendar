@@ -43,7 +43,7 @@ class InitAppActivity : ComponentActivity() {
             MaterialTheme {
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
                     Column {
-                        AppBar()
+                        AppBar(viewModel)
                         HolidayTileLayout(viewModel)
                     }
                 }
