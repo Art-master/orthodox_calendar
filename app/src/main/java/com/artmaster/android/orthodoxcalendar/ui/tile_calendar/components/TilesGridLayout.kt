@@ -1,7 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
@@ -76,8 +76,9 @@ fun TilesGridLayout(
     var daysCount = 0
 
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(0.9f),
         columns = GridCells.Fixed(MAX_COLUMN_COUNT),
+        userScrollEnabled = false,
         contentPadding = PaddingValues(1.dp)
     ) {
         items(MAX_COLUMN_COUNT * DAYS_IN_WEEK_COUNT) { item ->

@@ -3,14 +3,15 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.domain.model.CurrentTime
 
 @Preview
 @Composable
@@ -48,9 +49,11 @@ fun Preview() {
         else dayInWeek.inc()
     }
 
-    val monthData = MutableLiveData<List<Day>>()
-    val currentTime = CurrentTime(year = time.year, month = time.month, time.dayOfMonth)
-    //HolidayTileMonthLayout(data = monthData.value!!, isCurrentPage = true, dayOfMonth = 4)
+    val monthData = remember {
+        mutableStateOf(days as List<Day>)
+    }
+
+    HolidayTileMonthLayout(data = monthData, dayOfMonth = 4)
 }
 
 @Composable
@@ -62,12 +65,15 @@ fun HolidayTileMonthLayout(
 ) {
 
     val days = data.value
-    Column(modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (days.isEmpty()) {
             Spinner()
         } else {
             TilesGridLayout(data, dayOfMonth, onDayClick)
+            OneDayHolidayList(day = data.value[dayOfMonth.dec()])
         }
-        //HolidayList(data = Pager<Int, Day>())
     }
 }

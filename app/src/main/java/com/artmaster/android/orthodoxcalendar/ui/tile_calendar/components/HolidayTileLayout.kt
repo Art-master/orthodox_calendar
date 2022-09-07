@@ -130,7 +130,7 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
     }
 }
 
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.7f
+fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
 
 fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {

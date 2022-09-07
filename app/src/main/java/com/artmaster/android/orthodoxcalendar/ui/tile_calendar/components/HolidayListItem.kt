@@ -1,7 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,90 +26,65 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.Easter
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 
 @Preview
 @Composable
-fun HolidayListItemPreview() {
+fun ItemHeaderPreview() {
     val time = Time()
-    HolidayDayItem(
-        day = Day(
-            year = time.year,
-            month = time.month,
-            dayOfMonth = time.dayOfMonth,
-            dayInWeek = time.dayOfWeek,
-            holidays = arrayListOf(
-                Holiday(
-                    title = "Праздник",
-                    year = time.year,
-                    month = time.month,
-                    day = time.dayOfMonth,
-                    typeId = Holiday.Type.MAIN.id
-                )
-            ),
-            fasting = Fasting(
-                Fasting.Type.SOLID_WEEK,
-                permissions = listOf(
-                    Fasting.Permission.FISH,
-                    Fasting.Permission.VINE,
-                    Fasting.Permission.OIL,
-                    Fasting.Permission.CAVIAR,
-                )
+    val dayInWeek = 3
+
+    val day = Day(
+        year = time.year,
+        month = time.month,
+        dayOfMonth = time.dayOfMonth,
+        dayInWeek = dayInWeek,
+        holidays = arrayListOf(),
+        fasting = Fasting(
+            Fasting.Type.SOLID_WEEK,
+            permissions = listOf(
+                Fasting.Permission.FISH,
+                Fasting.Permission.VINE,
+                Fasting.Permission.OIL,
+                Fasting.Permission.CAVIAR,
             )
         )
     )
-}
-
-@Composable
-fun HolidayDayItem(
-    day: Day,
-    onClickHoliday: (holiday: Holiday) -> Unit = {},
-    onClickDay: (day: Day) -> Unit = {}
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(20.dp, 100.dp)
-    ) {
-
-        ItemHeader(day = day, onClick = onClickDay)
-
-        day.holidays.forEach {
-//      AnimatedVisibility(visible = true)
-            HolidayItem(holiday = it, onClick = onClickHoliday)
-        }
-    }
+    ItemHeader(day = day)
 }
 
 @Composable
 fun ItemHeader(day: Day, onClick: (day: Day) -> Unit = {}) {
+    val title = day.run {
+        "$dayOfMonth ${stringArrayResource(id = R.array.months_names_acc)[day.month]}"
+    }
+
     Row(
         Modifier
             .fillMaxWidth()
-            .height(20.dp)
-            .clickable {
-                onClick.invoke(day)
-            },
+            .height(35.dp)
+            .clickable { onClick(day) },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            color = Color.Red,
+            color = HeadSymbolTextColor,
             text = stringResource(id = R.string.ornament_for_headers_left),
-            fontSize = 30.sp,
+            fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.ornament, FontWeight.Normal)),
             textAlign = TextAlign.Right
         )
         Text(
             color = DefaultTextColor,
-            text = stringArrayResource(id = R.array.daysNames)[day.dayInWeek - 1],
-            fontSize = 20.sp,
+            text = title,
+            fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
             textAlign = TextAlign.Center
         )
         Text(
-            color = Color.Red,
+            color = HeadSymbolTextColor,
             text = stringResource(id = R.string.ornament_for_headers_right),
-            fontSize = 30.sp,
+            fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.ornament, FontWeight.Normal)),
             textAlign = TextAlign.Left
         )
