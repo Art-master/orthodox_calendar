@@ -15,8 +15,8 @@
     <string name="toolbar_header_arrow_right">    %1$d &gt;</string>
     <string name="toolbar_header_arrow_left">&lt; %1$d     </string>
 
-    <string name="new_style_date_string">по новому стилю \n %1$s</string>
-    <string name="old_style_date_string">по старому стилю \n %1$s</string>
+    <string name="new_style_date_string">по новому стилю %1$s</string>
+    <string name="old_style_date_string">по старому стилю %1$s</string>
 
     <!--Settings-->
     <string name="check_box_sett_typycon_icon">показывать знаки типикона</string>
@@ -185,5 +185,14 @@
     <string name="save_holiday">Сохранить</string>
     <string name="age_title">полных лет</string>
     <string name="year_title_short">г.</string>
+
+    <!-- Fastings -->
+    <string name="no_fasting">Поста нет</string>
+    <string name="peter_and_paul_fasting">Петров пост</string>
+    <string name="assumption_fasting">Успенский пост</string>
+    <string name="christmas_fasting">Рождественский пост</string>
+    <string name="great_fasting">Великий пост</string>
+    <string name="solid_week">Сплошная неделя</string>
+    <string name="epiphany_eve">Крещенский сочельник</string>
 
 </resources>

@@ -172,22 +172,22 @@ class DynamicData {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
         if (isPeterAndPaulFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.PETER_AND_PAUL_FASTING
             fillDayAsPeterFasting(day)
         }
         if (isAssumptionFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.ASSUMPTION_FASTING
             fillDayAsAssumptionFasting(day)
         }
         if (isChristmasFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.CHRISTMAS_FASTING
             fillDayAsChristmasFasting(day)
         }
         if (isGreatFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.GREAT_FASTING
             fillDayAsGreatFasting(day)
         }
-        if (isYole(day) || isBeheadingOfStJohnTheBaptist(day) || isFeastOfTheCross(day)) {
+        if (isEpiphanyEve(day) || isBeheadingOfStJohnTheBaptist(day) || isFeastOfTheCross(day)) {
             day.fasting.type = Fasting.Type.FASTING_DAY
             day.fasting.permissions = listOf(Fasting.Permission.STRICT)
         }
@@ -293,7 +293,7 @@ class DynamicData {
         return false
     }
 
-    private fun isYole(day: Day): Boolean {
+    private fun isEpiphanyEve(day: Day): Boolean {
         return day.month == Month.JANUARY.num && day.dayOfMonth == 18
     }
 

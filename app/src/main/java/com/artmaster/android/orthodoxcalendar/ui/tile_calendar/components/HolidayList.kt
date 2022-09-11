@@ -1,8 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -99,11 +99,11 @@ fun OneDayHolidayList(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(headerHeight)
+            .fillMaxHeight(0.8f)
             .padding(top = 15.dp)
     ) {
 
-        ItemHeader(day = day)
+        ItemHeader(day = day, headerHeight)
 
         day.holidays.forEach {
 //      AnimatedVisibility(visible = true)

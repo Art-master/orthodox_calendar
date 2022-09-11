@@ -158,8 +158,13 @@ private fun getTypeHolidayColor(day: Day): Color {
         }
         isTypeHoliday(Holiday.Type.GREAT_NOT_TWELVE, holidays) -> HeadHoliday
         isTypeHoliday(Holiday.Type.MAIN, holidays) -> Easter
-        day.fasting.type == Fasting.Type.FASTING -> FastingDay
+
+        day.fasting.type == Fasting.Type.CHRISTMAS_FASTING -> FastingDay
         day.fasting.type == Fasting.Type.FASTING_DAY -> FastingDay
+        day.fasting.type == Fasting.Type.ASSUMPTION_FASTING -> FastingDay
+        day.fasting.type == Fasting.Type.PETER_AND_PAUL_FASTING -> FastingDay
+        day.fasting.type == Fasting.Type.GREAT_FASTING -> FastingDay
+
         day.fasting.type == Fasting.Type.SOLID_WEEK -> DayOfSolidWeek
         else -> UsualDay
     }
