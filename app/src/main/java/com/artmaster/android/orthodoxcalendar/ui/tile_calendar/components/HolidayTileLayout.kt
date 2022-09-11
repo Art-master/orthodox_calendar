@@ -3,7 +3,6 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.GraphicsLayerScope
@@ -109,7 +108,6 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
 
         Row {
             HorizontalPager(
-                modifier = Modifier.padding(15.dp),
                 count = MONTH_COUNT,
                 state = pagerState,
                 key = { r -> r }

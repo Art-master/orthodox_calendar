@@ -2,12 +2,13 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
@@ -92,17 +93,17 @@ fun HolidayList(data: Day) {
 @Composable
 fun OneDayHolidayList(
     day: Day,
-    onClickHoliday: (holiday: Holiday) -> Unit = {},
-    onClickDay: (day: Day) -> Unit = {}
+    headerHeight: Dp = 56.dp,
+    onClickHoliday: (holiday: Holiday) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .height(headerHeight)
             .padding(top = 15.dp)
-            .heightIn(20.dp, 100.dp)
     ) {
 
-        ItemHeader(day = day, onClick = onClickDay)
+        ItemHeader(day = day)
 
         day.holidays.forEach {
 //      AnimatedVisibility(visible = true)
