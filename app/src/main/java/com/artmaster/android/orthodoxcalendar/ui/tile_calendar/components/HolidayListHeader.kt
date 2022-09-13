@@ -1,8 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -88,10 +90,7 @@ fun ItemHeader(day: Day, headerHeight: Dp = 300.dp, onClick: (day: Day) -> Unit 
         )
 
         OldStyleDateText(day = day.dayOfMonth, month = day.month)
-        if (day.fasting.type != Fasting.Type.NONE) FastingText(day = day)
-
-        HolidaysDivider()
-
+        FastingText(day = day)
     }
 }
 
@@ -145,42 +144,12 @@ fun FastingText(day: Day) {
 
 fun getIdByFasting(type: Fasting.Type): Int {
     return when (type) {
-        Fasting.Type.NONE -> 0
+        Fasting.Type.NONE -> R.string.no_fasting
         Fasting.Type.PETER_AND_PAUL_FASTING -> R.string.peter_and_paul_fasting
         Fasting.Type.ASSUMPTION_FASTING -> R.string.assumption_fasting
         Fasting.Type.CHRISTMAS_FASTING -> R.string.christmas_fasting
         Fasting.Type.GREAT_FASTING -> R.string.great_fasting
         Fasting.Type.FASTING_DAY -> R.string.fasting_day
         Fasting.Type.SOLID_WEEK -> R.string.solid_week
-    }
-}
-
-@Composable
-fun HolidaysDivider() {
-    Row(
-        modifier = Modifier.padding(top = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            color = DefaultTextColor,
-            text = stringResource(id = R.string.ornament_for_name_date_left),
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.ornament)),
-            textAlign = TextAlign.Center
-        )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(1.dp)
-                .offset(y = 3.dp)
-                .background(DefaultTextColor)
-        )
-        Text(
-            color = DefaultTextColor,
-            text = stringResource(id = R.string.ornament_for_name_date_right),
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.ornament)),
-            textAlign = TextAlign.Center
-        )
     }
 }

@@ -76,7 +76,7 @@ fun HolidayTileMonthLayout(
     val state = rememberDrawerState(DrawerValue.Closed)
     val drawerState = rememberBottomSheetScaffoldState(state)
 
-    val sheetPeekHeight = 300.dp
+    val sheetPeekHeight = 100.dp
 
     Column(
         modifier = Modifier.padding(15.dp),

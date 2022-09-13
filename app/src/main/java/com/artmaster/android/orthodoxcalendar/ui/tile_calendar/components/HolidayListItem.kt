@@ -15,8 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
@@ -26,25 +24,14 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.Easter
 @Composable
 fun ItemListPreview() {
     val time = Time()
-    val dayInWeek = 3
 
-    val day = Day(
+    val holiday = Holiday(
         year = time.year,
         month = time.month,
-        dayOfMonth = time.dayOfMonth,
-        dayInWeek = dayInWeek,
-        holidays = arrayListOf(),
-        fasting = Fasting(
-            Fasting.Type.SOLID_WEEK,
-            permissions = listOf(
-                Fasting.Permission.FISH,
-                Fasting.Permission.VINE,
-                Fasting.Permission.OIL,
-                Fasting.Permission.CAVIAR,
-            )
-        )
+        day = time.dayOfMonth,
+        typeId = Holiday.Type.AVERAGE_PEPPY.id
     )
-    //HolidayItem(day = day)
+    HolidayItem(holiday = holiday)
 }
 
 @Composable
