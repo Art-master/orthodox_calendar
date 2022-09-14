@@ -132,4 +132,8 @@ class CalendarViewModel : ViewModel() {
     fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>> {
         return daysByMonthCache[monthNum]!!
     }
+
+    fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
+        return daysByMonthCache[yearNum]!!
+    }
 }

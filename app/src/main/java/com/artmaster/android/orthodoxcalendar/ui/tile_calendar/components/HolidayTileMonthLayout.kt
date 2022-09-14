@@ -56,7 +56,7 @@ fun Preview() {
     }
 
     val monthData = remember {
-        mutableStateOf(days as List<Day>)
+        mutableStateOf(emptyList<Day>())
     }
 
     HolidayTileMonthLayout(data = monthData, dayOfMonth = 4)

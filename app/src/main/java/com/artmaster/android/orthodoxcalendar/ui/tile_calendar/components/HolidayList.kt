@@ -3,8 +3,12 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,7 +50,10 @@ fun HolidayListPreview() {
         )
     )
     day.holidays.addAll(getHolidays(time))
-    HolidayList(data = day)
+    val data = remember {
+        mutableStateOf(listOf(day))
+    }
+    HolidayList(data = data)
 }
 
 fun getHolidays(time: Time = Time()): List<Holiday> {
@@ -111,13 +118,13 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
 }
 
 @Composable
-fun HolidayList(data: Day) {
-
-    val holidays: List<Holiday> = data.holidays
-
-    LazyColumn {
-        items(holidays.size) { index ->
-            HolidayItem(holidays[index])
+fun HolidayList(modifier: Modifier = Modifier, data: MutableState<List<Day>>) {
+    val days = data.value
+    LazyColumn(modifier) {
+        items(days) { day ->
+            day.holidays.forEach {
+                HolidayItem(it)
+            }
         }
     }
 }

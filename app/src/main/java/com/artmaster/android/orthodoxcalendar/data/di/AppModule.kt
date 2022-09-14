@@ -3,10 +3,10 @@ package com.artmaster.android.orthodoxcalendar.data.di
 import com.artmaster.android.orthodoxcalendar.data.di.modules.DatabaseModule
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
 import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
+import com.artmaster.android.orthodoxcalendar.ui.InitAppActivity
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.di.CalendarActivityModule
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.di.CalendarActivityScope
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
-import com.artmaster.android.orthodoxcalendar.ui.init.InitAppActivity
 import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityModule
 import com.artmaster.android.orthodoxcalendar.ui.init.di.InitAppActivityScope
 import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity

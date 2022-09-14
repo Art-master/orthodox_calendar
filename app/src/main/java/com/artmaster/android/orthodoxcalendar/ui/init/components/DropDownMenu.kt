@@ -100,12 +100,12 @@ fun ItemContent(text: String, color: Color = DefaultTextColor, onClick: () -> Un
     )
 }
 
-private fun getYearIndex(currentYear: Int, years: List<String>): Int {
+fun getYearIndex(currentYear: Int, years: List<String>): Int {
     return years.indexOf(currentYear.toString())
 }
 
 
-private fun getYears(currentYear: Int): List<String> {
+fun getYears(currentYear: Int): List<String> {
     val size = Constants.HolidayList.PAGE_SIZE.value
     val firstYear = currentYear - size / 2
     val years = ArrayList<String>(size)

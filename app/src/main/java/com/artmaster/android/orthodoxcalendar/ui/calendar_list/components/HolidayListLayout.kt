@@ -1,7 +1,9 @@
-package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
+package com.artmaster.android.orthodoxcalendar.ui.calendar_list.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.GraphicsLayerScope
@@ -11,13 +13,12 @@ import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import androidx.lifecycle.MutableLiveData
-import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.Fasting
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.MonthTabs
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -27,49 +28,17 @@ import kotlin.math.absoluteValue
 
 @Preview
 @Composable
-fun PreviewLayout() {
-    val days = ArrayList<Day>()
-    val time = Time()
-    var dayInWeek = 3
-    for (index in 1..time.daysInMonth) {
-        days.add(
-            Day(
-                year = time.year,
-                month = time.month,
-                dayOfMonth = index,
-                dayInWeek = dayInWeek,
-                holidays = arrayListOf(
-                    Holiday(
-                        year = time.year,
-                        month = time.month,
-                        day = index,
-                        typeId = Holiday.Type.MAIN.id
-                    )
-                ),
-                fasting = Fasting(
-                    Fasting.Type.SOLID_WEEK,
-                    permissions = listOf(
-                        Fasting.Permission.FISH,
-                        Fasting.Permission.VINE,
-                        Fasting.Permission.OIL,
-                        Fasting.Permission.CAVIAR,
-                    )
-                )
-            )
-        )
-        dayInWeek = if (dayInWeek == Holiday.DayOfWeek.SUNDAY.num) Holiday.DayOfWeek.MONDAY.num
-        else dayInWeek.inc()
+fun HolidayListLayoutPreview() {
+    MaterialTheme {
+        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+            HolidayPagerListLayout()
+        }
     }
-
-    val monthData = HashMap<Int, MutableLiveData<List<Day>>>()
-    monthData[1] = MutableLiveData(days)
-
-    //HolidayTileLayout(data = monthData, time = time)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HolidayTileLayout(viewModel: CalendarViewModel) {
+fun HolidayPagerListLayout(viewModel: CalendarViewModel = CalendarViewModel()) {
     var monthNum by remember { viewModel.getMonth() }
 
     val pagerState = rememberPagerState(monthNum.dec())
@@ -106,19 +75,17 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
         }
 
         HorizontalPager(
-            count = MONTH_COUNT,
+            count = Constants.HolidayList.PAGE_SIZE.value,
             state = pagerState,
             key = { r -> r }
         ) { page ->
             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
             if (needToShowLayout(pageOffset)) {
-                HolidayTileMonthLayout(
+                HolidayList(
                     modifier = Modifier
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentMonthData(monthNum = page),
-                    dayOfMonth = viewModel.getDayOfMonth().value,
-                    onDayClick = onDayClick
+                    data = viewModel.getCurrentYearData(yearNum = page),
                 )
             }
         }

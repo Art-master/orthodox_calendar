@@ -3,14 +3,13 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.R
 
 @Preview
@@ -43,7 +42,7 @@ fun Spinner(isProcessing: Boolean = true) {
     }
 
     Box(
-        modifier = Modifier.size(100.dp),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
 
     ) {

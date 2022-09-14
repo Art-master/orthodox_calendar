@@ -18,8 +18,7 @@
         android:theme="@style/Theme.AppCompat.Light.FullScreen"
         android:uiOptions="splitActionBarWhenNarrow">
         <activity
-            android:name=".StartActivity"
-            android:screenOrientation="portrait"
+            android:name=".ui.InitAppActivity"
             android:exported="true">
 
             <intent-filter>
@@ -39,7 +38,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.init.InitAppActivity" />
         <activity android:name=".ui.calendar_list.mvp.MainCalendarActivity" />
         <activity android:name=".ui.review.HolidayViewPagerActivity" />
         <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />

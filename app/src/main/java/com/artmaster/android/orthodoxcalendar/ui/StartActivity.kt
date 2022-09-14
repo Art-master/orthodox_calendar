@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.init
+package com.artmaster.android.orthodoxcalendar.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,7 @@ import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
 
-class InitAppActivity : ComponentActivity() {
+class StartActivity : ComponentActivity() {
 
     private val initViewModel: LoadDataViewModel by viewModels()
 
