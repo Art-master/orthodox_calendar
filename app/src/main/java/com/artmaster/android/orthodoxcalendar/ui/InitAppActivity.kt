@@ -33,24 +33,19 @@ class InitAppActivity : ComponentActivity() {
         }
 
         setContent {
-            AppStartTextAnimation(initViewModel.animationTime.toInt()) {
-                nextScreen()
-            }
-        }
-    }
-
-    private fun initNotifications() = AlarmBuilder.build(applicationContext)
-
-    private fun nextScreen() {
-        setContent {
             val navController = rememberNavController()
             MaterialTheme {
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
 
                     NavHost(
                         navController = navController,
-                        startDestination = Route.TILE_CALENDAR.name
+                        startDestination = Route.INIT_PAGE.name
                     ) {
+                        composable(Route.INIT_PAGE.name) {
+                            AppStartTextAnimation(initViewModel.animationTime.toInt()) {
+                                navController.navigate(Route.TILE_CALENDAR.name)
+                            }
+                        }
                         composable(Route.TILE_CALENDAR.name) {
                             Column {
                                 AppBar(viewModel)
@@ -68,4 +63,6 @@ class InitAppActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun initNotifications() = AlarmBuilder.build(applicationContext)
 }
