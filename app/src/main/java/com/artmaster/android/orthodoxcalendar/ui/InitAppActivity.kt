@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
+import com.artmaster.android.orthodoxcalendar.ui.calendar_list.components.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
@@ -48,14 +49,14 @@ class InitAppActivity : ComponentActivity() {
                         }
                         composable(Route.TILE_CALENDAR.name) {
                             Column {
-                                AppBar(viewModel)
+                                AppBar(viewModel, navController)
                                 HolidayTileLayout(viewModel)
                             }
                         }
                         composable(Route.LIST_CALENDAR.name) {
                             Column {
-                                AppBar(viewModel)
-                                HolidayTileLayout(viewModel)
+                                AppBar(viewModel, navController)
+                                HolidayPagerListLayout(viewModel)
                             }
                         }
                     }

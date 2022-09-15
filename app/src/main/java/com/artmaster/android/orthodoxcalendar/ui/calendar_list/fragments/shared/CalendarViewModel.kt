@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -21,16 +22,24 @@ class CalendarViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
-    private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
-        .apply {
-            for (num in 0 until MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
-        }
-
     private val currentTime = Time()
 
     private val dayOfMonth = mutableStateOf(currentTime.dayOfMonth)
     private val month = mutableStateOf(currentTime.month)
     private val year = mutableStateOf(currentTime.year)
+    val availableYears = getAvailableYears(currentYear = currentTime.year)
+
+    private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
+        .apply {
+            for (num in 0 until MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
+        }
+
+    private val daysByYearsCache = HashMap<Int, MutableState<List<Day>>>(availableYears.size)
+        .apply {
+            for (num in availableYears.indices) {
+                this[availableYears.first() + num] = mutableStateOf(ArrayList())
+            }
+        }
 
     private val _filters = MutableLiveData<Set<Filter>>(emptySet())
     val filters: LiveData<Set<Filter>> get() = _filters
@@ -58,6 +67,16 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
+    private fun getAvailableYears(currentYear: Int): List<Int> {
+        val size = Constants.HolidayList.PAGE_SIZE.value
+        val firstYear = currentYear - size / 2
+        val years = ArrayList<Int>(size)
+        for (element in firstYear until firstYear + size) {
+            years.add(element)
+        }
+        return years
+    }
+
     suspend fun loadMonthData(monthNumWith0: Int, year: Int) {
         if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
 
@@ -71,6 +90,24 @@ class CalendarViewModel : ViewModel() {
             val value = repository.getMonthDays(monthNumWith0, year, filters.value!!)
             withContext(Dispatchers.Main) {
                 val monthData = getCurrentMonthData(monthNumWith0)
+                monthData.value = value
+            }
+        }
+    }
+
+    suspend fun loadYearData(year: Int) {
+        if (year !in availableYears.first()..availableYears.last()) return
+
+        val prev = daysByYearsCache[year]
+        val oldYear = getYear().value
+        if (year != oldYear && prev != null && prev.value.isNotEmpty()) {
+            return
+        }
+
+        withContext(Dispatchers.IO) {
+            val value = repository.getYearDays(year, filters.value!!)
+            withContext(Dispatchers.Main) {
+                val monthData = getCurrentYearData(year)
                 monthData.value = value
             }
         }
@@ -134,6 +171,6 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
-        return daysByMonthCache[yearNum]!!
+        return daysByYearsCache[yearNum]!!
     }
 }

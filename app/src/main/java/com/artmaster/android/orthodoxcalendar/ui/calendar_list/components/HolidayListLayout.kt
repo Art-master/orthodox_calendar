@@ -18,7 +18,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.MonthTabs
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -57,17 +56,17 @@ fun HolidayPagerListLayout(viewModel: CalendarViewModel = CalendarViewModel()) {
             val year = viewModel.getYear().value
 
             //current page
-            viewModel.loadMonthData(monthNum, year)
+            viewModel.loadYearData(year)
             //next page data
-            viewModel.loadMonthData(monthNum + 1, year)
+            viewModel.loadYearData(year + 1)
             //previous page data
-            viewModel.loadMonthData(monthNum - 1, year)
+            viewModel.loadYearData(year - 1)
         }
     }
 
     Column(Modifier.fillMaxHeight()) {
 
-        MonthTabs(pagerState = pagerState) {
+        YearsTabs(pagerState = pagerState) {
             monthNum = it
             scope.launch {
                 pagerState.animateScrollToPage(monthNum)
@@ -85,7 +84,7 @@ fun HolidayPagerListLayout(viewModel: CalendarViewModel = CalendarViewModel()) {
                 HolidayList(
                     modifier = Modifier
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentYearData(yearNum = page),
+                    data = viewModel.getCurrentYearData(yearNum = viewModel.availableYears.first() + page),
                 )
             }
         }

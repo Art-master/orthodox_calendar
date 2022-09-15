@@ -14,18 +14,22 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.Route
 import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
 @Preview
 @Composable
 fun AppBarPreview() {
-    AppBar()
+    val navController = rememberNavController()
+    AppBar(navController = navController)
 }
 
 @Composable
-fun AppBar(viewModel: CalendarViewModel = CalendarViewModel()) {
+fun AppBar(viewModel: CalendarViewModel = CalendarViewModel(), navController: NavHostController) {
     Surface(
         modifier = Modifier
             .padding(bottom = 5.dp)
@@ -50,7 +54,13 @@ fun AppBar(viewModel: CalendarViewModel = CalendarViewModel()) {
             horizontalArrangement = Arrangement.End
         ) {
 
-            MenuItem(iconId = R.drawable.icon_tile, "Calendar")
+            MenuItem(iconId = R.drawable.icon_tile, "Calendar") {
+                val currentRoute = navController.currentDestination?.route ?: ""
+                if (currentRoute == Route.TILE_CALENDAR.name) {
+                    navController.navigate(Route.LIST_CALENDAR.name)
+                } else navController.navigate(Route.TILE_CALENDAR.name)
+
+            }
             MenuItem(iconId = R.drawable.icon_reset_date, "Reset")
             MenuItem(iconId = R.drawable.icon_settings, "Settings")
             MenuItem(iconId = R.drawable.icon_info, "Info")
