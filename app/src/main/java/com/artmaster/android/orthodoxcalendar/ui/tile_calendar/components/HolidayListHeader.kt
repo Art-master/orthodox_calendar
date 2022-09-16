@@ -59,9 +59,19 @@ fun ItemHeaderPreview() {
 }
 
 @Composable
-fun ItemHeader(day: Day, headerHeight: Dp = 300.dp, onClick: (day: Day) -> Unit = {}) {
+fun ItemHeader(
+    day: Day,
+    headerHeight: Dp = 300.dp,
+    showDaysOfWeek: Boolean = false,
+    onClick: (day: Day) -> Unit = {}
+) {
     val title = day.run {
-        "$dayOfMonth ${stringArrayResource(id = R.array.months_names_acc)[day.month]}"
+
+        val dw = if (showDaysOfWeek) {
+            "${stringArrayResource(R.array.daysNames)[day.dayInWeek.dec()]}:  "
+        } else ""
+
+        "$dw$dayOfMonth ${stringArrayResource(R.array.months_names_acc)[day.month]}"
     }
 
     Column(
@@ -122,7 +132,7 @@ fun OldStyleDateText(day: Int, month: Int) {
         color = DefaultTextColor,
         text = text,
         fontSize = 20.sp,
-        fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+        fontFamily = FontFamily(Font(R.font.cyrillic_old)),
         textAlign = TextAlign.Center
     )
 }
@@ -137,7 +147,7 @@ fun FastingText(day: Day) {
         color = DefaultTextColor,
         text = text,
         fontSize = 20.sp,
-        fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+        fontFamily = FontFamily(Font(R.font.cyrillic_old)),
         textAlign = TextAlign.Center
     )
 }

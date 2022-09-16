@@ -40,7 +40,7 @@ fun HolidayListPreview() {
         dayInWeek = dayInWeek,
         holidays = arrayListOf(),
         fasting = Fasting(
-            Fasting.Type.NONE,
+            Fasting.Type.FASTING_DAY,
             permissions = listOf(
                 Fasting.Permission.FISH,
                 Fasting.Permission.VINE,
@@ -81,7 +81,7 @@ fun HolidayListOneDayPreview() {
             dayInWeek = time.dayOfWeek,
             holidays = getHolidays(time) as ArrayList<Holiday>,
             fasting = Fasting(
-                Fasting.Type.SOLID_WEEK,
+                Fasting.Type.FASTING_DAY,
                 permissions = listOf(
                     Fasting.Permission.FISH,
                     Fasting.Permission.VINE,
@@ -105,7 +105,7 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
             dayInWeek = time.dayOfWeek,
             holidays = ArrayList(),
             fasting = Fasting(
-                Fasting.Type.SOLID_WEEK,
+                Fasting.Type.GREAT_FASTING,
                 permissions = listOf(
                     Fasting.Permission.FISH,
                     Fasting.Permission.VINE,
@@ -118,10 +118,17 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
 }
 
 @Composable
-fun HolidayList(modifier: Modifier = Modifier, data: MutableState<List<Day>>) {
+fun HolidayList(
+    modifier: Modifier = Modifier,
+    headerHeight: Dp = 90.dp,
+    data: MutableState<List<Day>>
+) {
     val days = data.value
     LazyColumn(modifier) {
         items(days) { day ->
+            Spacer(modifier = Modifier.height(20.0.dp))
+            ItemHeader(day = day, showDaysOfWeek = true, headerHeight = headerHeight)
+            HolidaysDivider()
             day.holidays.forEach {
                 HolidayItem(it)
             }
@@ -132,7 +139,7 @@ fun HolidayList(modifier: Modifier = Modifier, data: MutableState<List<Day>>) {
 @Composable
 fun OneDayHolidayList(
     day: Day,
-    headerHeight: Dp = 56.dp,
+    headerHeight: Dp = 90.dp,
     onClickHoliday: (holiday: Holiday) -> Unit = {}
 ) {
     Column(
@@ -142,7 +149,7 @@ fun OneDayHolidayList(
             .padding(top = 15.dp)
     ) {
 
-        ItemHeader(day = day, headerHeight)
+        ItemHeader(day = day, headerHeight = headerHeight)
 
         HolidaysDivider()
         Column(
