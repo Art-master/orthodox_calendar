@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
@@ -37,15 +38,15 @@ fun HolidayListLayoutPreview() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HolidayPagerListLayout(viewModel: CalendarViewModel = CalendarViewModel()) {
+fun HolidayPagerListLayout(
+    viewModel: CalendarViewModel = CalendarViewModel(),
+    onDayClick: (day: Day) -> Unit = {},
+    onHolidayClick: (day: Holiday) -> Unit = {},
+) {
     var monthNum by remember { viewModel.getMonth() }
 
     val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
-
-    val onDayClick = remember {
-        { day: Day -> viewModel.setDayOfMonth(day = day.dayOfMonth) }
-    }
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
@@ -85,6 +86,8 @@ fun HolidayPagerListLayout(viewModel: CalendarViewModel = CalendarViewModel()) {
                     modifier = Modifier
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentYearData(yearNum = viewModel.availableYears.first() + page),
+                    onDayClick = onDayClick,
+                    onHolidayClick = onHolidayClick
                 )
             }
         }

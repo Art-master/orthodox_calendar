@@ -68,7 +68,8 @@ fun HolidayTileMonthLayout(
     modifier: Modifier = Modifier,
     data: MutableState<List<Day>>,
     dayOfMonth: Int,
-    onDayClick: (day: Day) -> Unit = {}
+    onDayClick: (day: Day) -> Unit = {},
+    onHolidayClick: (holiday: Holiday) -> Unit = {}
 ) {
 
     val days = data.value
@@ -91,7 +92,11 @@ fun HolidayTileMonthLayout(
                 modifier = modifier,
                 scaffoldState = drawerState,
                 sheetContent = {
-                    OneDayHolidayList(day = day, headerHeight = sheetPeekHeight)
+                    OneDayHolidayList(
+                        day = day,
+                        headerHeight = sheetPeekHeight,
+                        onHolidayClick = onHolidayClick
+                    )
                 },
                 sheetShape = RoundedCornerShape(5.dp),
                 sheetElevation = 8.dp,

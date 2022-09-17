@@ -110,7 +110,8 @@ dependencies {
 
     // Accompanist
     implementation "com.google.accompanist:accompanist-pager:0.26.1-alpha" // Pager
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.26.1-alpha" // Pager Indicators
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.26.1-alpha"
+    // Pager Indicators
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -156,6 +157,12 @@ dependencies {
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // compose image loading
+    implementation "com.github.skydoves:landscapist-coil:$landscapist_version"
+    implementation "com.github.skydoves:landscapist-animation:$landscapist_version"
+    implementation "com.github.skydoves:landscapist-placeholder:$landscapist_version"
+    implementation "com.github.skydoves:landscapist-palette:$landscapist_version"
 
     //Moxy
     implementation "com.github.moxy-community:moxy:$moxy_version"

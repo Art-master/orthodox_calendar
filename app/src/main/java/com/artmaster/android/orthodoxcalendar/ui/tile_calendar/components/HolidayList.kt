@@ -121,16 +121,23 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
 fun HolidayList(
     modifier: Modifier = Modifier,
     headerHeight: Dp = 90.dp,
-    data: MutableState<List<Day>>
+    data: MutableState<List<Day>>,
+    onDayClick: (day: Day) -> Unit = {},
+    onHolidayClick: (day: Holiday) -> Unit = {},
 ) {
     val days = data.value
     LazyColumn(modifier) {
         items(days) { day ->
             Spacer(modifier = Modifier.height(20.0.dp))
-            ItemHeader(day = day, showDaysOfWeek = true, headerHeight = headerHeight)
+            ItemHeader(
+                day = day,
+                showDaysOfWeek = true,
+                headerHeight = headerHeight,
+                onClick = onDayClick
+            )
             HolidaysDivider()
             day.holidays.forEach {
-                HolidayItem(it)
+                HolidayItem(holiday = it, onClick = onHolidayClick)
             }
         }
     }
@@ -140,7 +147,7 @@ fun HolidayList(
 fun OneDayHolidayList(
     day: Day,
     headerHeight: Dp = 93.dp,
-    onClickHoliday: (holiday: Holiday) -> Unit = {}
+    onHolidayClick: (holiday: Holiday) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -160,7 +167,7 @@ fun OneDayHolidayList(
             if (day.holidays.isNotEmpty()) {
                 day.holidays.forEach {
                     //AnimatedVisibility(visible = true)
-                    HolidayItem(holiday = it, onClick = onClickHoliday)
+                    HolidayItem(holiday = it, onClick = onHolidayClick)
                 }
             } else NoItems()
         }

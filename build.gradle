@@ -8,6 +8,7 @@ buildscript {
     ext.dagger_version = '2.40.5'
     ext.leakcanary_version = "2.7"
     ext.compose_version = '1.3.0'
+    ext.landscapist_version = "2.0.0"
 
     repositories {
         google()

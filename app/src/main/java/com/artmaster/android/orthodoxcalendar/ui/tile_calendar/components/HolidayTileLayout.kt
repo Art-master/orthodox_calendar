@@ -69,15 +69,15 @@ fun PreviewLayout() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HolidayTileLayout(viewModel: CalendarViewModel) {
+fun HolidayTileLayout(
+    viewModel: CalendarViewModel,
+    onDayClick: (day: Day) -> Unit = {},
+    onHolidayClick: (day: Holiday) -> Unit = {},
+) {
     var monthNum by remember { viewModel.getMonth() }
 
     val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
-
-    val onDayClick = remember {
-        { day: Day -> viewModel.setDayOfMonth(day = day.dayOfMonth) }
-    }
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
@@ -118,7 +118,8 @@ fun HolidayTileLayout(viewModel: CalendarViewModel) {
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentMonthData(monthNum = page),
                     dayOfMonth = viewModel.getDayOfMonth().value,
-                    onDayClick = onDayClick
+                    onDayClick = onDayClick,
+                    onHolidayClick = onHolidayClick
                 )
             }
         }
