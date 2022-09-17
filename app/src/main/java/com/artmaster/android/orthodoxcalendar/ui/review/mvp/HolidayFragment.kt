@@ -25,7 +25,6 @@ import com.artmaster.android.orthodoxcalendar.data.components.JustifiedTextView
 import com.artmaster.android.orthodoxcalendar.databinding.FragmentHolidayBinding
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.MessageBuilderFragment
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.impl.HolidayReviewContract
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday.mvp.UserHolidayActivity
 import com.squareup.picasso.Picasso
@@ -132,7 +131,7 @@ class HolidayFragment : MvpAppCompatFragment(), HolidayReviewContract.View {
     }
 
     private fun buildIntentForMainActivity(): Intent {
-        val intent = Intent(requireContext(), MainCalendarActivity::class.java)
+        val intent = Intent(requireContext(), this::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         intent.putExtra(Constants.Keys.HOLIDAY.value, Constants.Keys.HOLIDAY.hashCode())
         return intent

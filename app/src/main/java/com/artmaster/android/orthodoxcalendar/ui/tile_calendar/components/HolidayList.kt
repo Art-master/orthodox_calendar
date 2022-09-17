@@ -139,7 +139,7 @@ fun HolidayList(
 @Composable
 fun OneDayHolidayList(
     day: Day,
-    headerHeight: Dp = 90.dp,
+    headerHeight: Dp = 93.dp,
     onClickHoliday: (holiday: Holiday) -> Unit = {}
 ) {
     Column(

@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared
+package com.artmaster.android.orthodoxcalendar.ui
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

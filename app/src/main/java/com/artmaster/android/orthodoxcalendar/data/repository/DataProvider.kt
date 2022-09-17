@@ -5,13 +5,12 @@ import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData.Companion.fill
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
 import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.impl.CalendarListContractModel
 import java.util.*
 
 /**
  * Get data from storage and prepare it
  */
-class DataProvider : CalendarListContractModel, RepositoryConnector {
+class DataProvider : RepositoryConnector {
 
     private var dynamicData = DynamicData()
 

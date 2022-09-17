@@ -13,7 +13,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.mvp.MainCalendarActivity
 import com.artmaster.android.orthodoxcalendar.ui.review.mvp.HolidayFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -108,7 +107,7 @@ class HolidayViewPagerActivity : AppCompatActivity(), HasAndroidInjector {
         }
     }
 
-    private fun getArgs() = Intent(applicationContext, MainCalendarActivity::class.java).apply {
+    private fun getArgs() = Intent(applicationContext, this::class.java).apply {
         putExtra(Constants.Keys.NEED_UPDATE.value, Time().year)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     }

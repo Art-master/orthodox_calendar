@@ -12,11 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.components.HolidayPagerListLayout
-import com.artmaster.android.orthodoxcalendar.ui.calendar_list.fragments.shared.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
+import com.artmaster.android.orthodoxcalendar.ui.list_calendar.components.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
 

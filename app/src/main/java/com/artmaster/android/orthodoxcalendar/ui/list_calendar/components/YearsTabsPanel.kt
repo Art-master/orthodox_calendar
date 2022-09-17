@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.calendar_list.components
+package com.artmaster.android.orthodoxcalendar.ui.list_calendar.components
 
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
