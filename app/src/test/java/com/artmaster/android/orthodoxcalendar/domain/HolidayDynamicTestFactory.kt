@@ -1,3 +1,4 @@
+/*
 package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type
@@ -248,3 +249,4 @@ abstract class HolidayDynamicTestFactory {
 
     abstract fun checkDynamicHoliday(year: Int, type: Holiday.MovableDay, expectedHoliday: Holiday)
 }
+*/

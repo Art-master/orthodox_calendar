@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
 import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -10,6 +11,7 @@ import kotlinx.parcelize.Parcelize
 import com.artmaster.android.orthodoxcalendar.domain.DbSchema.Holiday as Schema
 
 @Parcelize
+@Stable
 @Entity(tableName = Schema.TABLE_NAME)
 data class Holiday(
 

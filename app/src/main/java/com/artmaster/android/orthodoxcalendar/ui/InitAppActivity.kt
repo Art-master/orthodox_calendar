@@ -47,7 +47,10 @@ class InitAppActivity : ComponentActivity() {
             }
 
             val onHolidayClick = remember {
-                { holiday: Holiday -> currentHoliday.value = holiday }
+                { holiday: Holiday ->
+                    currentHoliday.value = holiday
+                    navController.navigate(Route.HOLIDAY_PAGE.name)
+                }
             }
 
             MaterialTheme {
