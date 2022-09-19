@@ -18,6 +18,7 @@ val ErrorInactive = Color(0XFFFFCDD2)
 val Blue = Color(0XFF3F51B5)
 
 
+val Background = Color(0xFFFBF5CF)
 val TopBarColor = Color(0xFFFAF0B6)
 
 val CheckBoxCheckmarkColor = Color(0xFFD32F2F)

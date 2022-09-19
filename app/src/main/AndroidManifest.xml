@@ -38,7 +38,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.review.HolidayViewPagerActivity" />
         <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />
 
         <service

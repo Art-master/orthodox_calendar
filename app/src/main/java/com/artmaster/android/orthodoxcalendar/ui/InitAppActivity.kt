@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -40,7 +38,7 @@ class InitAppActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val currentHoliday = rememberSaveable { mutableStateOf<Holiday?>(null) }
+            val currentHoliday = viewModel.getCurrentHoliday()
 
             val onDayClick = remember {
                 { day: Day -> viewModel.setDayOfMonth(day = day.dayOfMonth) }
@@ -48,7 +46,7 @@ class InitAppActivity : ComponentActivity() {
 
             val onHolidayClick = remember {
                 { holiday: Holiday ->
-                    currentHoliday.value = holiday
+                    viewModel.loadHolidayAdditionalInfo(holiday)
                     navController.navigate(Route.HOLIDAY_PAGE.name)
                 }
             }

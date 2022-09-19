@@ -1,6 +1,5 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +24,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 
 @Preview
@@ -135,7 +135,7 @@ fun HolidayList(
                 headerHeight = headerHeight,
                 onClick = onDayClick
             )
-            HolidaysDivider()
+            Divider()
             day.holidays.forEach {
                 HolidayItem(holiday = it, onClick = onHolidayClick)
             }
@@ -158,7 +158,7 @@ fun OneDayHolidayList(
 
         ItemHeader(day = day, headerHeight = headerHeight)
 
-        HolidaysDivider()
+        Divider()
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -171,36 +171,6 @@ fun OneDayHolidayList(
                 }
             } else NoItems()
         }
-    }
-}
-
-@Composable
-fun HolidaysDivider() {
-    Row(
-        modifier = Modifier.padding(top = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            color = DefaultTextColor,
-            text = stringResource(id = R.string.ornament_for_name_date_left),
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.ornament)),
-            textAlign = TextAlign.Center
-        )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(1.dp)
-                .offset(y = 3.dp)
-                .background(DefaultTextColor)
-        )
-        Text(
-            color = DefaultTextColor,
-            text = stringResource(id = R.string.ornament_for_name_date_right),
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.ornament)),
-            textAlign = TextAlign.Center
-        )
     }
 }
 

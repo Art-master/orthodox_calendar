@@ -10,10 +10,7 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.Filter
-import com.artmaster.android.orthodoxcalendar.domain.SharedTime
-import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,6 +25,8 @@ class CalendarViewModel : ViewModel() {
     private val month = mutableStateOf(currentTime.month)
     private val year = mutableStateOf(currentTime.year)
     val availableYears = getAvailableYears(currentYear = currentTime.year)
+
+    private val currentHoliday = mutableStateOf<Holiday?>(null)
 
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
@@ -172,5 +171,21 @@ class CalendarViewModel : ViewModel() {
 
     fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
         return daysByYearsCache[yearNum]!!
+    }
+
+    fun loadHolidayAdditionalInfo(holiday: Holiday) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val value = repository.getFullHolidayData(holiday.id, holiday.year)
+                withContext(Dispatchers.Main) {
+                    val data = getCurrentHoliday()
+                    data.value = value
+                }
+            }
+        }
+    }
+
+    fun getCurrentHoliday(): MutableState<Holiday?> {
+        return currentHoliday
     }
 }

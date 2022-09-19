@@ -196,5 +196,6 @@
     <string name="epiphany_eve">Крещенский сочельник</string>
 
     <string name="no_holidays">Нет событий</string>
+    <string name="no_description">Описание отсутствует</string>
 
 </resources>
