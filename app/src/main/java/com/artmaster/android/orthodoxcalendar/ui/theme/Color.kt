@@ -35,3 +35,4 @@ val DefaultTextColor = Color(0XFF757575)
 val HeadSymbolTextColor = Color(0XFFE53935)
 
 val WindowBackground = Color(0XFFFBF5CF)
+val HeaderTextColor = Color(0XFFE53935)

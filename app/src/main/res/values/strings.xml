@@ -91,6 +91,10 @@
     <string name="no_fasting_days">Сплошная седьмица</string>
     <string name="have_holidays">Есть праздники</string>
 
+    <!--Settings subtypes-->
+    <string name="settings_notifications_header">Уведомления</string>
+    <string name="settings_interface_header">Интерфейс</string>
+
     <!--Settings-->
     <string name="settings_name">Настройки</string>
     <string name="settings_notifications">Уведомлять о праздниках в текущий день</string>

@@ -23,8 +23,9 @@ import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
-import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 
 @Preview(showBackground = true)
 @Composable
@@ -37,16 +38,72 @@ fun SettingsLayout() {
     Column(Modifier.fillMaxSize()) {
         Header()
 
+        DividerWithText(text = stringResource(id = R.string.settings_notifications_header))
+        CheckBoxSettings(
+            setting = Settings.Name.IS_ENABLE_NOTIFICATION_TODAY,
+            title = stringResource(id = R.string.settings_notifications)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.AVERAGE_HOLIDAYS_NOTIFY_ALLOW,
+            title = stringResource(id = R.string.settings_average_notifications)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW,
+            title = stringResource(id = R.string.settings_memory_days_notifications)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.BIRTHDAYS_NOTIFY_ALLOW,
+            title = stringResource(id = R.string.settings_birthdays_notifications)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW,
+            title = stringResource(id = R.string.settings_memory_days_notifications)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.SOUND_OF_NOTIFICATION,
+            title = stringResource(id = R.string.settings_notifications_sound)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.STANDARD_SOUND,
+            title = stringResource(id = R.string.settings_notifications_sound_default)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.VIBRATION_OF_NOTIFICATION,
+            title = stringResource(id = R.string.settings_notifications_vibration)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.TIME_OF_NOTIFICATION,
+            title = stringResource(id = R.string.settings_notifications_time)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HOURS_OF_NOTIFICATION,
+            title = stringResource(id = R.string.settings_notifications_in_time)
+        )
+
+        DividerWithText(text = stringResource(id = R.string.settings_interface_header))
+
+        CheckBoxSettings(
+            setting = Settings.Name.FIRST_LOADING_TILE_CALENDAR,
+            title = stringResource(id = R.string.settings_first_load_view)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.SPEED_UP_START_ANIMATION,
+            title = stringResource(id = R.string.settings_speed_up_start_anim)
+        )
         CheckBoxSettings(
             setting = Settings.Name.OFF_START_ANIMATION,
-            title = stringResource(id = R.string.settings_average_notifications)
+            title = stringResource(id = R.string.settings_off_start_anim)
         )
     }
 }
 
 @Composable
-fun CheckBoxSettings(setting: Settings.Name, title: String) {
-    CheckBox(title = title, initialState = setting.defValue.toBoolean())
+fun CheckBoxSettings(
+    setting: Settings.Name,
+    title: String,
+    onCheck: (value: Boolean) -> Unit = {}
+) {
+    CheckBox(title = title, initialState = setting.defValue.toBoolean(), onCheck = onCheck)
 }
 
 @Composable
@@ -70,7 +127,7 @@ fun Header() {
         }
 
         Text(
-            color = DefaultTextColor,
+            color = HeaderTextColor,
             text = annotatedString,
             fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),

@@ -36,14 +36,22 @@ fun CustomCheckBoxPreview() {
 
 
 @Composable
-fun CheckBox(title: String, initialState: Boolean = false) {
+fun CheckBox(
+    title: String,
+    initialState: Boolean = false,
+    onCheck: (value: Boolean) -> Unit = {}
+) {
+
     val checked = remember { mutableStateOf(initialState) }
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = checked.value,
-            onCheckedChange = { checked.value = it },
+            onCheckedChange = {
+                checked.value = it
+                onCheck(it)
+            },
             colors = CheckboxDefaults.colors(
                 checkedColor = CheckBoxCheckedColor,
                 checkmarkColor = CheckBoxCheckmarkColor
