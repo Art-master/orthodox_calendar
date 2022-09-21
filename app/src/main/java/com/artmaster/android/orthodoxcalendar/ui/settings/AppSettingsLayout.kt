@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,49 +35,59 @@ fun PreviewSettingsLayout() {
 }
 
 @Composable
-fun SettingsLayout() {
+fun SettingsLayout(viewModel: SettingsViewModel = SettingsViewModel()) {
     Column(Modifier.fillMaxSize()) {
         Header()
 
         DividerWithText(text = stringResource(id = R.string.settings_notifications_header))
         CheckBoxSettings(
             setting = Settings.Name.IS_ENABLE_NOTIFICATION_TODAY,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.AVERAGE_HOLIDAYS_NOTIFY_ALLOW,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_average_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_memory_days_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.BIRTHDAYS_NOTIFY_ALLOW,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_birthdays_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_memory_days_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.SOUND_OF_NOTIFICATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications_sound)
         )
         CheckBoxSettings(
             setting = Settings.Name.STANDARD_SOUND,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications_sound_default)
         )
         CheckBoxSettings(
             setting = Settings.Name.VIBRATION_OF_NOTIFICATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications_vibration)
         )
         CheckBoxSettings(
             setting = Settings.Name.TIME_OF_NOTIFICATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications_time)
         )
         CheckBoxSettings(
             setting = Settings.Name.HOURS_OF_NOTIFICATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_notifications_in_time)
         )
 
@@ -84,14 +95,17 @@ fun SettingsLayout() {
 
         CheckBoxSettings(
             setting = Settings.Name.FIRST_LOADING_TILE_CALENDAR,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_first_load_view)
         )
         CheckBoxSettings(
             setting = Settings.Name.SPEED_UP_START_ANIMATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_speed_up_start_anim)
         )
         CheckBoxSettings(
             setting = Settings.Name.OFF_START_ANIMATION,
+            viewModel = viewModel,
             title = stringResource(id = R.string.settings_off_start_anim)
         )
     }
@@ -101,9 +115,13 @@ fun SettingsLayout() {
 fun CheckBoxSettings(
     setting: Settings.Name,
     title: String,
-    onCheck: (value: Boolean) -> Unit = {}
+    viewModel: SettingsViewModel
 ) {
-    CheckBox(title = title, initialState = setting.defValue.toBoolean(), onCheck = onCheck)
+    val onCheck = remember {
+        { flag: Boolean -> viewModel.setSetting(setting, flag.toString()) }
+    }
+    val state = viewModel.getSetting(setting)
+    CheckBox(title = title, initialState = state?.value.toBoolean(), onCheck = onCheck)
 }
 
 @Composable

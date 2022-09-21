@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 class SettingsViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
 
-
     private val settings = HashMap<String, MutableState<String>>(Settings.Name.values().size)
 
     init {
@@ -38,6 +37,10 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
-    fun getSettings(setting: Settings.Name) = settings[setting.value]
+    fun getSetting(setting: Settings.Name) = settings[setting.value]
+    fun setSetting(setting: Settings.Name, value: String) {
+        settings[setting.value]?.value = value
+        preferences.set(setting, value)
+    }
 
 }

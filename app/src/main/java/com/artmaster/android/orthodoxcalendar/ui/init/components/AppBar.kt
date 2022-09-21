@@ -62,7 +62,9 @@ fun AppBar(viewModel: CalendarViewModel = CalendarViewModel(), navController: Na
 
             }
             MenuItem(iconId = R.drawable.icon_reset_date, "Reset")
-            MenuItem(iconId = R.drawable.icon_settings, "Settings")
+            MenuItem(iconId = R.drawable.icon_settings, "Settings") {
+                navController.navigate(Route.SETTINGS.name)
+            }
             MenuItem(iconId = R.drawable.icon_info, "Info")
         }
     }

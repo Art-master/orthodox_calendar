@@ -20,14 +20,16 @@ import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAni
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar.components.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.review.components.HolidayPage
+import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayout
+import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
 
 class InitAppActivity : ComponentActivity() {
 
     private val initViewModel: LoadDataViewModel by viewModels()
-
-    private val viewModel: CalendarViewModel by viewModels()
+    private val calendarViewModel: CalendarViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,15 +40,15 @@ class InitAppActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val currentHoliday = viewModel.getCurrentHoliday()
+            val currentHoliday = calendarViewModel.getCurrentHoliday()
 
             val onDayClick = remember {
-                { day: Day -> viewModel.setDayOfMonth(day = day.dayOfMonth) }
+                { day: Day -> calendarViewModel.setDayOfMonth(day = day.dayOfMonth) }
             }
 
             val onHolidayClick = remember {
                 { holiday: Holiday ->
-                    viewModel.loadHolidayAdditionalInfo(holiday)
+                    calendarViewModel.loadHolidayAdditionalInfo(holiday)
                     navController.navigate(Route.HOLIDAY_PAGE.name)
                 }
             }
@@ -65,22 +67,33 @@ class InitAppActivity : ComponentActivity() {
                         }
                         composable(Route.TILE_CALENDAR.name) {
                             Column {
-                                AppBar(viewModel, navController)
-                                HolidayTileLayout(viewModel, onDayClick, onHolidayClick)
+                                AppBar(calendarViewModel, navController)
+                                HolidayTileLayout(calendarViewModel, onDayClick, onHolidayClick)
                             }
                         }
                         composable(Route.LIST_CALENDAR.name) {
                             Column {
-                                AppBar(viewModel, navController)
-                                HolidayPagerListLayout(viewModel, onDayClick, onHolidayClick)
+                                AppBar(calendarViewModel, navController)
+                                HolidayPagerListLayout(
+                                    calendarViewModel,
+                                    onDayClick,
+                                    onHolidayClick
+                                )
                             }
                         }
                         composable(Route.HOLIDAY_PAGE.name) {
                             Column {
-                                AppBar(viewModel, navController)
-                                HolidayPage(viewModel, currentHoliday)
+                                AppBar(calendarViewModel, navController)
+                                HolidayPage(calendarViewModel, currentHoliday)
                             }
                         }
+                        composable(Route.SETTINGS.name) {
+                            Column {
+                                AppBar(calendarViewModel, navController)
+                                SettingsLayout(settingsViewModel)
+                            }
+                        }
+
                     }
                 }
             }
