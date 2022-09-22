@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,6 +29,7 @@ import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
 import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.Spinner
 
 @Preview(showBackground = true)
 @Composable
@@ -36,7 +39,18 @@ fun PreviewSettingsLayout() {
 
 @Composable
 fun SettingsLayout(viewModel: SettingsViewModel = SettingsViewModel()) {
-    Column(Modifier.fillMaxSize()) {
+    val scroll = rememberScrollState(0)
+
+    if (viewModel.isInit.value.not()) {
+        Spinner()
+        return
+    }
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(scroll)
+    ) {
         Header()
 
         DividerWithText(text = stringResource(id = R.string.settings_notifications_header))
@@ -121,7 +135,7 @@ fun CheckBoxSettings(
         { flag: Boolean -> viewModel.setSetting(setting, flag.toString()) }
     }
     val state = viewModel.getSetting(setting)
-    CheckBox(title = title, initialState = state?.value.toBoolean(), onCheck = onCheck)
+    CheckBox(title = title, state = state?.value.toBoolean(), onCheck = onCheck)
 }
 
 @Composable

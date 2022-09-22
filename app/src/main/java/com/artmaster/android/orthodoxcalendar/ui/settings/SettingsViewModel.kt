@@ -14,6 +14,7 @@ class SettingsViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
 
     private val settings = HashMap<String, MutableState<String>>(Settings.Name.values().size)
+    val isInit = mutableStateOf(false)
 
     init {
         initSettings()
@@ -32,6 +33,7 @@ class SettingsViewModel : ViewModel() {
                     map.forEach {
                         settings[it.key] = mutableStateOf(it.value)
                     }
+                    isInit.value = true
                 }
             }
         }

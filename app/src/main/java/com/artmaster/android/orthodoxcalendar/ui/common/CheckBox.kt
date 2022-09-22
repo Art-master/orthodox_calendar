@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,8 +9,6 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
@@ -29,7 +28,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 fun CustomCheckBoxPreview() {
     AppTheme {
         Column(Modifier.fillMaxSize()) {
-            CheckBox("Какое-то название")
+            CheckBox("Какое-то название", false)
         }
     }
 }
@@ -38,20 +37,16 @@ fun CustomCheckBoxPreview() {
 @Composable
 fun CheckBox(
     title: String,
-    initialState: Boolean = false,
+    state: Boolean,
     onCheck: (value: Boolean) -> Unit = {}
 ) {
 
-    val checked = remember { mutableStateOf(initialState) }
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
-            checked = checked.value,
-            onCheckedChange = {
-                checked.value = it
-                onCheck(it)
-            },
+            checked = state,
+            onCheckedChange = onCheck,
             colors = CheckboxDefaults.colors(
                 checkedColor = CheckBoxCheckedColor,
                 checkmarkColor = CheckBoxCheckmarkColor
@@ -59,7 +54,11 @@ fun CheckBox(
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onCheck(state.not())
+                },
             text = title,
             fontSize = 20.sp,
             color = DefaultTextColor,
