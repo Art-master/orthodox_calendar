@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -28,7 +27,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 fun CustomCheckBoxPreview() {
     AppTheme {
         Column(Modifier.fillMaxSize()) {
-            CheckBox("Какое-то название", false)
+            CheckBox(title = "Какое-то название", state = false)
         }
     }
 }
@@ -36,6 +35,7 @@ fun CustomCheckBoxPreview() {
 
 @Composable
 fun CheckBox(
+    modifier: Modifier = Modifier,
     title: String,
     state: Boolean,
     onCheck: (value: Boolean) -> Unit = {}
@@ -54,15 +54,16 @@ fun CheckBox(
         )
 
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .clickable {
                     onCheck(state.not())
-                },
+                }
+                .then(modifier),
             text = title,
             fontSize = 20.sp,
             color = DefaultTextColor,
-            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+            fontFamily = FontFamily(Font(R.font.cyrillic_old)),
             textAlign = TextAlign.Left
         )
     }

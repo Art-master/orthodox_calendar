@@ -20,7 +20,7 @@ import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAni
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar.components.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.review.components.HolidayPage
-import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayout
+import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
@@ -90,7 +90,7 @@ class InitAppActivity : ComponentActivity() {
                         composable(Route.SETTINGS.name) {
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                SettingsLayout(settingsViewModel)
+                                SettingsLayoutWrapper(settingsViewModel)
                             }
                         }
 

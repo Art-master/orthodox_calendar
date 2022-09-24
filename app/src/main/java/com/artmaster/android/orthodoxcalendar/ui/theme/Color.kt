@@ -36,3 +36,9 @@ val HeadSymbolTextColor = Color(0XFFE53935)
 
 val WindowBackground = Color(0XFFFBF5CF)
 val HeaderTextColor = Color(0XFFE53935)
+
+
+val EditTextBackground = Background
+val EditTextIndicatorColor = Color(0xFFCCA94E)
+val EditTextCursorColor = Color(0xFFC09831)
+val DisabledTextColor = DefaultTextColor.copy(alpha = 0.5f)

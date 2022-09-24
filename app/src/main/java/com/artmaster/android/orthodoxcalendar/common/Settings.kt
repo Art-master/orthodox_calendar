@@ -12,13 +12,17 @@ class Settings {
         const val FALSE: String = "false"
     }
 
-    enum class Name(val value: String, val defValue: String) {
+    enum class Name(
+        val value: String,
+        val defValue: String,
+        val type: Class<*> = Boolean::class.java
+    ) {
         FIRST_LOAD_APP("$PROJECT_DIR.app_first_initialization_v1", FALSE),
         IS_ENABLE_NOTIFICATION_TIME("$PROJECT_DIR.is_enable_notification_before", TRUE),
         IS_ENABLE_NOTIFICATION_IN_TIME("$PROJECT_DIR.is_enable_notification_in_time", FALSE),
         IS_ENABLE_NOTIFICATION_TODAY("$PROJECT_DIR.is_enable_notification_today", TRUE),
-        TIME_OF_NOTIFICATION("$PROJECT_DIR.time_of_notification", "1"),
-        HOURS_OF_NOTIFICATION("$PROJECT_DIR.hours_of_notification", "13"),
+        TIME_OF_NOTIFICATION("$PROJECT_DIR.time_of_notification", "1", Int::class.java),
+        HOURS_OF_NOTIFICATION("$PROJECT_DIR.hours_of_notification", "13", Int::class.java),
         SOUND_OF_NOTIFICATION("$PROJECT_DIR.sound_of_notification", TRUE),
         VIBRATION_OF_NOTIFICATION("$PROJECT_DIR.vibration_of_notification", FALSE),
         AVERAGE_HOLIDAYS_NOTIFY_ALLOW("$PROJECT_DIR.average_holidays_notification", TRUE),
@@ -29,7 +33,11 @@ class Settings {
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
         SPEED_UP_START_ANIMATION("$PROJECT_DIR.speed_off_start_animation", FALSE),
-        LAST_EXECUTED_NOTIFICATIONS_DAY("$PROJECT_DIR.last_executed_notifications_day", "0"),
+        LAST_EXECUTED_NOTIFICATIONS_DAY(
+            "$PROJECT_DIR.last_executed_notifications_day",
+            "0",
+            Int::class.java
+        ),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),
