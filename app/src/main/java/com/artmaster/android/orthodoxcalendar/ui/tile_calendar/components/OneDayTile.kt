@@ -79,16 +79,6 @@ fun MinPreview() {
 }
 
 @Composable
-fun EmptyInvisibleTile() {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .background(color = Color.Transparent)
-    )
-}
-
-@Composable
 fun DayOfWeekName(dayOfWeekNum: Int) {
     val daysNames = stringArrayResource(id = R.array.daysNamesAbb)
     Box(
@@ -109,7 +99,7 @@ fun DayOfWeekName(dayOfWeekNum: Int) {
 }
 
 @Composable
-fun DayOfMonthTile(day: Day, isActive: Boolean, onClick: (holiday: Day) -> Unit = {}) {
+fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: (holiday: Day) -> Unit = {}) {
 
     val holidayColor = remember { getTypeHolidayColor(day) }
     val fontColor = remember { getTypeHolidayFontColor(day, holidayColor) }

@@ -43,7 +43,9 @@
     <string name="notif_holiday_today">Сегодня праздник </string>
     <string name="notif_holiday_tomorrow">Завтра отмечают праздник </string>
     <string name="notif_holiday_later"> отмечают праздник </string>
-    <string name="text_view_about_app_email">ggn.master@gmail.com</string>
+    <string name="app_email">ggn.master@gmail.com</string>
+    <string name="app_email_subject">Вопрос по календарю</string>
+    <string name="app_contacts">Все вопросы, жалобы и предложения можете присылать на почту: </string>
 
     <string name="arrow_left">&lt;</string>
     <string name="arrow_right">&gt;</string>
@@ -62,14 +64,6 @@
     </string-array>
 
     <!--icon_tile menu text-->
-    <string name="text_view_about_app" formatted="true">Это приложение было выполнено с целью
-        бесплатного использования и для прославления Господа нашего Иисуса Христа.
-    Все вопросы, жалобы и предложения можете присылать на почту указанную ниже.
-    \n \n Слава Господу нашему Иисусу Христу всегда и ныне и присно и во веки веков. Аминь.
-    </string>
-    <string name="info_substring_lord_name_1">Христ</string>
-    <string name="info_substring_lord_name_2">Иисус</string>
-
 
     <string name="num_example_1">1</string>
     <string name="num_example_2">2</string>
@@ -86,10 +80,13 @@
     <string name="oil_allow">Разрешение на растительное масло</string>
     <string name="vine_allow">Разрешение на вино</string>
     <string name="eggs_allow">Трапеза без мяса</string>
-    <string name="remember_day">Особые дни памяти</string>
+    <string name="remember_day">Дни памяти</string>
     <string name="strict_fasting">Строгий пост</string>
     <string name="no_fasting_days">Сплошная седьмица</string>
     <string name="have_holidays">Есть праздники</string>
+    <string name="colors">Цвета</string>
+    <string name="images">Изображения</string>
+    <string name="contacts">Контакты</string>
 
     <!--Settings subtypes-->
     <string name="settings_notifications_header">Уведомления</string>

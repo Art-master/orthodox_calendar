@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
+import com.artmaster.android.orthodoxcalendar.ui.app_info.AppInfoLayout
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
@@ -91,6 +92,12 @@ class InitAppActivity : ComponentActivity() {
                             Column {
                                 AppBar(calendarViewModel, navController)
                                 SettingsLayoutWrapper(settingsViewModel)
+                            }
+                        }
+                        composable(Route.APP_INFO.name) {
+                            Column {
+                                AppBar(calendarViewModel, navController)
+                                AppInfoLayout()
                             }
                         }
 

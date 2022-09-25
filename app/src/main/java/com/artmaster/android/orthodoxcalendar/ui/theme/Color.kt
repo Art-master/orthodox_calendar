@@ -30,6 +30,8 @@ val TwelveHoliday = Color(0XFFDD6A66)
 val FastingDay = Color(0XFFBDBDBD)
 val UsualDay = Color(0XFFFFFFFF)
 val DayOfSolidWeek = Color(0XFFF4EB9B)
+val Birthday = Color(0XFFFF6D00)
+val NameDay = Color(0XFFFF6D00)
 
 val DefaultTextColor = Color(0XFF757575)
 val HeadSymbolTextColor = Color(0XFFE53935)
@@ -42,3 +44,6 @@ val EditTextBackground = Background
 val EditTextIndicatorColor = Color(0xFFCCA94E)
 val EditTextCursorColor = Color(0xFFC09831)
 val DisabledTextColor = DefaultTextColor.copy(alpha = 0.5f)
+
+
+val LinksColor = Color.Blue
