@@ -1,21 +1,24 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.components
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextPaint
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import androidx.annotation.FontRes
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.res.ResourcesCompat
 
 /**
  * Class for justify text
  * Так же есть возможность установить построчные отступы
  * и указать кол-во символов для отступа
  */
-class JustifiedTextViewCompose {
+class JustifiedTextViewCompose(private val context: Context) {
 
     private var textPaint: Paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
@@ -25,7 +28,7 @@ class JustifiedTextViewCompose {
     private lateinit var mTextBlocksDrawable: ArrayList<TextBlockDrawable>
 
     lateinit var widths: FloatArray
-    internal var minSymWidth: Float = 0.toFloat()
+    internal var minSymWidth: Float = 0f
 
 
     private var fontDescent: Int = 0
@@ -57,10 +60,19 @@ class JustifiedTextViewCompose {
         }
     }
 
+    fun setWidth(width: Int) {
+        w = width
+    }
+
+    fun getCalculatedHeight(): Int {
+        //assert(text.isNotEmpty() && mTextBlocksDrawable.isNotEmpty())
+        if (mTextBlocksDrawable.isEmpty()) return 0
+        return mTextBlocksDrawable.last().y + 50
+    }
+
     fun setCanvasSize(size: Size) {
         h = size.height.toInt()
         w = size.width.toInt()
-        lineBreaker.buildTextBlocks()
     }
 
     /**
@@ -329,8 +341,9 @@ class JustifiedTextViewCompose {
         widths = FloatArray(this.text.length)
         textPaint.getTextWidths(this.text, widths)
 
-        if (w == 0) return
+    }
 
+    fun calculate() {
         lineBreaker.buildTextBlocks()
     }
 
@@ -351,6 +364,11 @@ class JustifiedTextViewCompose {
         if (textPaint.typeface !== tf) {
             textPaint.typeface = tf
         }
+    }
+
+    fun setFont(@FontRes id: Int) {
+        val typeface = ResourcesCompat.getFont(context, id)
+        setTypeface(typeface!!)
     }
 
     /**
