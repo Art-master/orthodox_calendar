@@ -67,7 +67,7 @@ class JustifiedTextViewCompose(private val context: Context) {
     fun getCalculatedHeight(): Int {
         //assert(text.isNotEmpty() && mTextBlocksDrawable.isNotEmpty())
         if (mTextBlocksDrawable.isEmpty()) return 0
-        return mTextBlocksDrawable.last().y + 50
+        return mTextBlocksDrawable.last().y + 10
     }
 
     fun setCanvasSize(size: Size) {

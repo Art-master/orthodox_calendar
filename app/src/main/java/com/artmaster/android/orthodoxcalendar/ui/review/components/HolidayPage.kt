@@ -10,7 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
-import com.artmaster.android.orthodoxcalendar.common.OrtUtils.setDp
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
@@ -57,13 +58,11 @@ fun HolidayPage(
 
         val scroll = rememberScrollState(0)
         val sheetPeekHeight = remember { mutableStateOf(200.dp) }
-        var size by remember { mutableStateOf(IntSize.Zero) }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scroll)
-                .onSizeChanged { size = it },
+                .verticalScroll(scroll),
         ) {
             Image(
                 modifier = Modifier
@@ -76,7 +75,7 @@ fun HolidayPage(
                 alignment = Alignment.Center
             )
             HolidayPageTitle(holiday = holiday, headerHeight = sheetPeekHeight.value)
-            HolidayDescriptionLayout(holiday = holiday, parentSize = size)
+            HolidayDescriptionLayout(holiday = holiday)
         }
     }
 }
@@ -117,12 +116,16 @@ fun HolidayPageTitle(holiday: Holiday, headerHeight: Dp = 80.dp) {
 }
 
 @Composable
-fun HolidayDescriptionLayout(holiday: Holiday, parentSize: IntSize) {
-
+fun HolidayDescriptionLayout(holiday: Holiday) {
     val context = LocalContext.current
-    val justifiedTextViewCompose = remember(parentSize.width) {
+    val configuration = LocalConfiguration.current
+    val screenWidthPx = with(LocalDensity.current) { configuration.screenWidthDp.dp.toPx() }
+    var size by remember { mutableStateOf(IntSize.Zero) }
+
+    val justifiedTextViewCompose = remember(size.width) {
+        val width = if (size.width > 0) size.width else screenWidthPx.toInt()
         JustifiedTextViewCompose(context).apply {
-            setWidth(parentSize.width)
+            setWidth(width)
             setRawTextSize(convertSpToPixels(context, 20f))
             setTextColor(DefaultTextColor)
             setFont(R.font.cyrillic_old)
@@ -132,31 +135,29 @@ fun HolidayDescriptionLayout(holiday: Holiday, parentSize: IntSize) {
         }
     }
 
+    val symbolSizePx = with(LocalDensity.current) { 60.dp.toPx() }
+    val headSymbol = remember(size.width) {
+        HeadSymbol(context).apply {
+            setSize(symbolSizePx.toInt())
+            setRawTextSize(convertSpToPixels(context, 60f))
+            setTextColor(HeadSymbolTextColor)
+            setFont(R.font.bukvica)
+            setTextScaleX(1.5f)
+            setHeadSymbol(holiday.description.first())
+        }
+    }
+
+    val height = justifiedTextViewCompose.getCalculatedHeight()
+    val dpHeight = with(LocalDensity.current) { height.toDp() }
     Canvas(modifier = Modifier
         .fillMaxWidth()
-        .height(
-            setDp(
-                context,
-                justifiedTextViewCompose
-                    .getCalculatedHeight()
-                    .toFloat()
-            ).dp
-        ),
+        .height(dpHeight)
+        .padding(horizontal = 8.dp)
+        .onSizeChanged { size = it },
         onDraw = {
             drawContext.canvas.nativeCanvas.apply {
+                headSymbol.onDraw(this)
                 justifiedTextViewCompose.onDraw(this)
             }
         })
-}
-
-@Composable
-fun HeadSymbol(text: String) {
-    Text(
-        modifier = Modifier.size(60.dp),
-        text = text,
-        color = HeadSymbolTextColor,
-        fontFamily = FontFamily(Font(R.font.bukvica)),
-        fontSize = 60.sp,
-        textAlign = TextAlign.Center
-    )
 }
