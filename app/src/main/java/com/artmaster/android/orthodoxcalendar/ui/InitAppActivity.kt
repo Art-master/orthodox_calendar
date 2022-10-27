@@ -20,7 +20,7 @@ import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar.components.HolidayPagerListLayout
-import com.artmaster.android.orthodoxcalendar.ui.review.components.HolidayPage
+import com.artmaster.android.orthodoxcalendar.ui.review.components.HolidayInfoPager
 import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
@@ -85,7 +85,7 @@ class InitAppActivity : ComponentActivity() {
                         composable(Route.HOLIDAY_PAGE.name) {
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                HolidayPage(calendarViewModel, currentHoliday)
+                                HolidayInfoPager(calendarViewModel, currentHoliday)
                             }
                         }
                         composable(Route.SETTINGS.name) {

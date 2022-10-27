@@ -47,7 +47,6 @@ class CalendarViewModel : ViewModel() {
     val time: LiveData<SharedTime> get() = _time
 
     init {
-        initTime()
         viewModelScope.launch {
             initFilters()
         }
@@ -76,7 +75,7 @@ class CalendarViewModel : ViewModel() {
         return years
     }
 
-    suspend fun loadMonthData(monthNumWith0: Int, year: Int) {
+    suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int) {
         if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
 
         val prev = daysByMonthCache[monthNumWith0]
@@ -94,7 +93,7 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    suspend fun loadYearData(year: Int) {
+    suspend fun loadAllHolidaysOfYear(year: Int) {
         if (year !in availableYears.first()..availableYears.last()) return
 
         val prev = daysByYearsCache[year]
@@ -110,11 +109,6 @@ class CalendarViewModel : ViewModel() {
                 monthData.value = value
             }
         }
-    }
-
-    private fun initTime() {
-        val time = Time()
-        setAllTime(time.year, time.monthWith0, time.dayOfMonth)
     }
 
     fun addFilter(item: Filter) {
@@ -137,12 +131,6 @@ class CalendarViewModel : ViewModel() {
         val copyData = HashSet(_filters.value)
         copyData.remove(item)
         _filters.value = copyData
-    }
-
-    fun setAllTime(year: Int? = null, month: Int? = null, day: Int? = null) {
-        val previous = _time.value ?: SharedTime()
-        val obj = SharedTime(year ?: previous.year, month ?: previous.month, day ?: previous.day)
-        _time.value = obj
     }
 
     fun setYear(year: Int) {
@@ -187,5 +175,10 @@ class CalendarViewModel : ViewModel() {
 
     fun getCurrentHoliday(): MutableState<Holiday?> {
         return currentHoliday
+    }
+
+    fun getAllHolidaysOfYear(): List<Holiday> {
+        val days = daysByYearsCache[currentTime.year]?.value?.flatMap { d -> d.holidays }
+        return days!!
     }
 }

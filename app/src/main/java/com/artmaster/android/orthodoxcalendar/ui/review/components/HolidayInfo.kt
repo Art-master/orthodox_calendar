@@ -39,44 +39,46 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.Orname
 @Composable
 fun HolidayPagePreview() {
     val holiday = Holiday(
+        imageId = "image1",
         title = "Самый большой праздник",
-        description = "Просто длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
+        description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
-    val data = remember { mutableStateOf<Holiday?>(holiday) }
-
-    HolidayPage(viewModel = null, currentHoliday = data)
+    HolidayPage(viewModel = null, holiday = holiday)
 }
 
 
 @Composable
 fun HolidayPage(
+    modifier: Modifier = Modifier,
     viewModel: CalendarViewModel?,
-    currentHoliday: MutableState<Holiday?>
+    holiday: Holiday
 ) {
-    currentHoliday.value?.let { holiday ->
+    val context = LocalContext.current
+    val drawableId = remember {
+        context.resources.getIdentifier(holiday.imageId, "drawable", context.packageName)
+    }
 
-        val scroll = rememberScrollState(0)
-        val sheetPeekHeight = remember { mutableStateOf(200.dp) }
+    val scroll = rememberScrollState(0)
+    val sheetPeekHeight = remember { mutableStateOf(200.dp) }
 
-        Column(
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scroll),
+    ) {
+        Image(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scroll),
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Green)
-                    .fillMaxHeight(0.6f),
-                painter = painterResource(id = R.drawable.image1),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
-            HolidayPageTitle(holiday = holiday, headerHeight = sheetPeekHeight.value)
-            HolidayDescriptionLayout(holiday = holiday)
-        }
+                .fillMaxWidth()
+                .background(Color.Green)
+                .fillMaxHeight(0.6f),
+            painter = painterResource(id = drawableId),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
+        HolidayPageTitle(holiday = holiday, headerHeight = sheetPeekHeight.value)
+        HolidayDescriptionLayout(holiday = holiday)
     }
 }
 
@@ -129,7 +131,7 @@ fun HolidayDescriptionLayout(holiday: Holiday) {
             setRawTextSize(convertSpToPixels(context, 20f))
             setTextColor(DefaultTextColor)
             setFont(R.font.cyrillic_old)
-            setLeadingMargin(3, 6)
+            setLeadingMargin(3, 9)
             setText(holiday.description.substring(startIndex = 1))
             calculate()
         }

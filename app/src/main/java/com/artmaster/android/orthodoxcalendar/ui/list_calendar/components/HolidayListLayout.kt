@@ -57,11 +57,11 @@ fun HolidayPagerListLayout(
             val year = viewModel.getYear().value
 
             //current page
-            viewModel.loadYearData(year)
+            viewModel.loadAllHolidaysOfYear(year)
             //next page data
-            viewModel.loadYearData(year + 1)
+            viewModel.loadAllHolidaysOfYear(year + 1)
             //previous page data
-            viewModel.loadYearData(year - 1)
+            viewModel.loadAllHolidaysOfYear(year - 1)
         }
     }
 

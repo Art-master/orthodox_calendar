@@ -88,11 +88,11 @@ fun HolidayTileLayout(
             val year = viewModel.getYear().value
 
             //current page
-            viewModel.loadMonthData(monthNum, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum, year)
             //next page data
-            viewModel.loadMonthData(monthNum + 1, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum + 1, year)
             //previous page data
-            viewModel.loadMonthData(monthNum - 1, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum - 1, year)
         }
     }
 
