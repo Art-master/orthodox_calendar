@@ -68,6 +68,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.2.0-alpha02"
     }
+    namespace 'com.artmaster.android.orthodoxcalendar'
 }
 
 dependencies {
