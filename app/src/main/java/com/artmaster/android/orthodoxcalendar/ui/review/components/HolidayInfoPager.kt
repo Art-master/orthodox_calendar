@@ -45,9 +45,9 @@ fun HolidayInfoPager(
     var isInit by remember { mutableStateOf(false) }
 
     val year = viewModel.getYear().value
-    var currentHolidayIndex = remember { 0 }
-    var holidays = remember { emptyList<Holiday>() }
-    val pagerState = rememberPagerState(currentHolidayIndex)
+    var currentHolidayIndex by remember { mutableStateOf(0) }
+    var holidays by remember { mutableStateOf(emptyList<Holiday>()) }
+
 
     LaunchedEffect(year) {
         viewModel.loadAllHolidaysOfYear(year)
@@ -61,6 +61,8 @@ fun HolidayInfoPager(
         Spinner()
         return
     }
+
+    val pagerState = rememberPagerState(currentHolidayIndex)
 
     HorizontalPager(
         count = holidays.size,

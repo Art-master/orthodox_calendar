@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.review.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -48,21 +49,34 @@ fun HolidayPagePreview() {
 }
 
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun HolidayPage(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel?,
     holiday: Holiday
 ) {
+
+    var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
+    LaunchedEffect(holiday) {
+        val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
+        fullHolidayInfo = data
+    }
+
     val context = LocalContext.current
     val drawableId = remember {
-        context.resources.getIdentifier(holiday.imageId, "drawable", context.packageName)
+        var imageId = holiday.imageId
+        if (holiday.imageId.isEmpty()) imageId = "image_holiday"
+        val id = context.resources.getIdentifier(imageId, "drawable", context.packageName)
+        if (id == 0) { // if not found
+            context.resources.getIdentifier("image_holiday", "drawable", context.packageName)
+        } else id
     }
 
     val scroll = rememberScrollState(0)
     val sheetPeekHeight = remember { mutableStateOf(200.dp) }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scroll),
@@ -119,6 +133,11 @@ fun HolidayPageTitle(holiday: Holiday, headerHeight: Dp = 80.dp) {
 
 @Composable
 fun HolidayDescriptionLayout(holiday: Holiday) {
+    if (holiday.description.isEmpty()) {
+        //TODO info
+        return
+    }
+
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val screenWidthPx = with(LocalDensity.current) { configuration.screenWidthDp.dp.toPx() }

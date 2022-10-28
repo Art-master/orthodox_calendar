@@ -173,6 +173,12 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
+    suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday {
+        return withContext(Dispatchers.IO) {
+            repository.getFullHolidayData(holidayId, year)
+        }
+    }
+
     fun getCurrentHoliday(): MutableState<Holiday?> {
         return currentHoliday
     }
