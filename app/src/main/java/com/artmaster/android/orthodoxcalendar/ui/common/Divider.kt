@@ -22,9 +22,17 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 
 @Composable
 @Preview(showBackground = true)
-fun DividerPreview() {
+fun DividerWithTextPreview() {
     Row(modifier = Modifier.fillMaxSize()) {
         DividerWithText(text = "Уведомления")
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DividerPreview() {
+    Row(modifier = Modifier.fillMaxSize()) {
+        Divider()
     }
 }
 

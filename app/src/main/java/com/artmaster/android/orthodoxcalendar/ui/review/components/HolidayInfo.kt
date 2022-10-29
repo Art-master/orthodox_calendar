@@ -95,7 +95,7 @@ fun HolidayPage(
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(top = (configuration.screenHeightDp / 1.45).dp) // height control
+                .padding(top = (configuration.screenHeightDp / 1.5).dp) // height control
                 .drawBehind {
                     // Shadow
                     drawRoundRect(
@@ -146,7 +146,7 @@ fun HolidayPageTitle(holiday: Holiday) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp)
+            .height(160.dp)
             .padding(top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -161,7 +161,7 @@ fun HolidayPageTitle(holiday: Holiday) {
                 modifier = Modifier.padding(start = 2.dp),
                 color = HeadSymbolTextColor,
                 text = stringResource(id = R.string.ornament_for_headers_left),
-                fontSize = 30.sp,
+                fontSize = 28.sp,
                 fontFamily = FontFamily(Font(R.font.ornament)),
                 textAlign = TextAlign.Right
             )
@@ -169,7 +169,7 @@ fun HolidayPageTitle(holiday: Holiday) {
                 modifier = Modifier.fillMaxWidth(0.9f),
                 color = DefaultTextColor,
                 text = holiday.title,
-                fontSize = 23.sp,
+                fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
                 textAlign = TextAlign.Center
             )
@@ -177,7 +177,7 @@ fun HolidayPageTitle(holiday: Holiday) {
                 modifier = Modifier.padding(end = 2.dp),
                 color = HeadSymbolTextColor,
                 text = stringResource(id = R.string.ornament_for_headers_right),
-                fontSize = 30.sp,
+                fontSize = 28.sp,
                 fontFamily = FontFamily(Font(R.font.ornament)),
                 textAlign = TextAlign.Left
             )
