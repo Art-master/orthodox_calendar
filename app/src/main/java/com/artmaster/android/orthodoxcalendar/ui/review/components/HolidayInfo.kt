@@ -34,6 +34,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
@@ -44,7 +45,7 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.StyleD
 fun HolidayPagePreview() {
     val holiday = Holiday(
         imageId = "image1",
-        title = "Святителя Афанасия, патриарха Константинопольского, Лубенского и Харьковского чудотворца",
+        title = "Святителей Московских и всея России чудотворцев Петра, Алексия, Ионы, Макария, Филиппа, Иова, Ермогена, Филарета, Иннокентия, Тихона, Макария и Петра",
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
@@ -59,12 +60,6 @@ fun HolidayPage(
     viewModel: CalendarViewModel?,
     holiday: Holiday
 ) {
-
-    var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
-    LaunchedEffect(holiday) {
-        val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
-        fullHolidayInfo = data
-    }
 
     val context = LocalContext.current
     val drawableId = remember {
@@ -115,8 +110,33 @@ fun HolidayPage(
         ) {
 
             HolidayPageTitle(holiday = holiday)
-            fullHolidayInfo?.let {
-                HolidayDescriptionLayout(holiday = it)
+
+            //
+            var scrollActivate by remember { mutableStateOf(false) }
+            var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
+
+            if (scroll.isScrollInProgress && scrollActivate.not()) {
+                scrollActivate = true
+            }
+
+            if (fullHolidayInfo == null) {
+                // Empty space for starting scrolling
+                Spacer(modifier = Modifier.height(300.0.dp))
+            }
+
+            // Lazy loading
+            if (scrollActivate) {
+
+                LaunchedEffect(holiday) {
+                    val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
+                    fullHolidayInfo = data
+                }
+
+                // if full data loaded (etc. include holiday description)
+                fullHolidayInfo?.let {
+                    Divider()
+                    HolidayDescriptionLayout(holiday = it)
+                }
             }
         }
     }
@@ -127,7 +147,7 @@ fun HolidayPageTitle(holiday: Holiday) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(170.dp)
+            .height(140.dp)
             .padding(top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
