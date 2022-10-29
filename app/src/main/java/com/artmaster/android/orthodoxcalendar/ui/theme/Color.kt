@@ -15,8 +15,6 @@ val Gray700 = Color(0xFF616161)
 val Error = Color(0xFFD32F2F)
 val ErrorInactive = Color(0XFFFFCDD2)
 
-val Blue = Color(0XFF3F51B5)
-
 
 val Background = Color(0xFFFBF5CF)
 val TopBarColor = Color(0xFFFAF0B6)
@@ -35,6 +33,7 @@ val NameDay = Color(0XFFFF6D00)
 
 val DefaultTextColor = Color(0XFF757575)
 val HeadSymbolTextColor = Color(0XFFE53935)
+val OldDateTextColor = Color(0xFF2196F3)
 
 val WindowBackground = Color(0XFFFBF5CF)
 val HeaderTextColor = Color(0XFFE53935)

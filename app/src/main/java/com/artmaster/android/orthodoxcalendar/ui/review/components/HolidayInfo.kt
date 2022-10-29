@@ -3,10 +3,15 @@ package com.artmaster.android.orthodoxcalendar.ui.review.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
@@ -16,14 +21,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,17 +34,17 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.OldStyleDateText
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.Ornament
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.StyleDatesText
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
 fun HolidayPagePreview() {
     val holiday = Holiday(
         imageId = "image1",
-        title = "Самый большой праздник",
+        title = "Святителя Афанасия, патриарха Константинопольского, Лубенского и Харьковского чудотворца",
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
@@ -65,68 +68,103 @@ fun HolidayPage(
 
     val context = LocalContext.current
     val drawableId = remember {
-        var imageId = holiday.imageId
-        if (holiday.imageId.isEmpty()) imageId = "image_holiday"
+        val imageId = holiday.imageId
+        if (imageId.isEmpty()) {
+            return@remember R.drawable.image_holiday
+        }
         val id = context.resources.getIdentifier(imageId, "drawable", context.packageName)
         if (id == 0) { // if not found
-            context.resources.getIdentifier("image_holiday", "drawable", context.packageName)
+            R.drawable.image_holiday
         } else id
     }
 
     val scroll = rememberScrollState(0)
-    val sheetPeekHeight = remember { mutableStateOf(200.dp) }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scroll),
     ) {
+        val configuration = LocalConfiguration.current
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Green)
-                .fillMaxHeight(0.6f),
+                .background(Background)
+                .height((configuration.screenHeightDp / 1.2).dp),
             painter = painterResource(id = drawableId),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillHeight,
             alignment = Alignment.Center
         )
-        HolidayPageTitle(holiday = holiday, headerHeight = sheetPeekHeight.value)
-        HolidayDescriptionLayout(holiday = holiday)
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(top = (configuration.screenHeightDp / 1.45).dp) // height control
+                .drawBehind {
+                    // Shadow
+                    drawRoundRect(
+                        color = Color.Black,
+                        topLeft = Offset(0f, -10f),
+                        alpha = 0.3f,
+                        cornerRadius = CornerRadius(40f, 40f)
+                    )
+                }
+                .clip(RoundedCornerShape(20.dp))
+                .background(Background)
+        ) {
+
+            HolidayPageTitle(holiday = holiday)
+            fullHolidayInfo?.let {
+                HolidayDescriptionLayout(holiday = it)
+            }
+        }
     }
 }
 
 @Composable
-fun HolidayPageTitle(holiday: Holiday, headerHeight: Dp = 80.dp) {
-
+fun HolidayPageTitle(holiday: Holiday) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 15.dp),
+            .height(170.dp)
+            .padding(top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        val annotatedString = buildAnnotatedString {
-            Ornament(
-                builder = this,
-                text = stringResource(id = R.string.ornament_for_headers_left)
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 2.dp),
+                color = HeadSymbolTextColor,
+                text = stringResource(id = R.string.ornament_for_headers_left),
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.ornament)),
+                textAlign = TextAlign.Right
             )
-            append(holiday.title)
-            Ornament(
-                builder = this,
-                text = stringResource(id = R.string.ornament_for_headers_right)
+            Text(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                color = DefaultTextColor,
+                text = holiday.title,
+                fontSize = 23.sp,
+                fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                modifier = Modifier.padding(end = 2.dp),
+                color = HeadSymbolTextColor,
+                text = stringResource(id = R.string.ornament_for_headers_right),
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.ornament)),
+                textAlign = TextAlign.Left
             )
         }
 
-        Text(
-            color = DefaultTextColor,
-            text = annotatedString,
-            fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
-            textAlign = TextAlign.Center
-        )
-
-        OldStyleDateText(day = holiday.day, month = holiday.month)
+        StyleDatesText(day = holiday.day, month = holiday.month)
     }
 
 }

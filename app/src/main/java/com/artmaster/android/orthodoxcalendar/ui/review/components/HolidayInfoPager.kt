@@ -81,7 +81,7 @@ fun HolidayInfoPager(
     }
 }
 
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
+fun needToShowLayout(pageOffset: Float) = pageOffset < 0.8f
 
 fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {

@@ -29,6 +29,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.OldDateTextColor
 import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
@@ -99,7 +100,7 @@ fun ItemHeader(
             textAlign = TextAlign.Center
         )
 
-        OldStyleDateText(day = day.dayOfMonth, month = day.month)
+        StyleDatesText(day = day.dayOfMonth, month = day.month)
         FastingText(day = day)
     }
 }
@@ -120,17 +121,30 @@ fun Ornament(builder: AnnotatedString.Builder, text: String) {
 }
 
 @Composable
-fun OldStyleDateText(day: Int, month: Int) {
+fun StyleDatesText(day: Int, month: Int) {
     val calendar = GregorianCalendar()
     calendar.set(Time().year, month, day)
+
+    var monthName = stringArrayResource(id = R.array.months_names_acc)[calendar.get(MONTH)]
+    val newDate = "${calendar.get(DAY_OF_MONTH)} " + monthName.lowercase()
+
     calendar.gregorianChange = Date(Long.MAX_VALUE)
-    val monthName = stringArrayResource(id = R.array.months_names_acc)[calendar.get(MONTH)]
-    val date = "${calendar.get(DAY_OF_MONTH)} " + monthName.lowercase()
-    val text = "(" + stringResource(id = R.string.old_style_date_string, date) + ")"
+    monthName = stringArrayResource(id = R.array.months_names_acc)[calendar.get(MONTH)]
+    val oldDate = "${calendar.get(DAY_OF_MONTH)} " + monthName.lowercase()
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = HeadSymbolTextColor)) {
+            append(newDate)
+        }
+        append(" / ")
+        withStyle(style = SpanStyle(color = OldDateTextColor)) {
+            append(oldDate)
+        }
+    }
 
     Text(
         color = DefaultTextColor,
-        text = text,
+        text = annotatedString,
         fontSize = 20.sp,
         fontFamily = FontFamily(Font(R.font.cyrillic_old)),
         textAlign = TextAlign.Center
