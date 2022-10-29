@@ -111,7 +111,6 @@ fun HolidayPage(
 
             HolidayPageTitle(holiday = holiday)
 
-            //
             var scrollActivate by remember { mutableStateOf(false) }
             var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
 
@@ -124,7 +123,7 @@ fun HolidayPage(
                 Spacer(modifier = Modifier.height(300.0.dp))
             }
 
-            // Lazy loading
+            // Lazy loading when user scrolling page
             if (scrollActivate) {
 
                 LaunchedEffect(holiday) {
@@ -162,7 +161,7 @@ fun HolidayPageTitle(holiday: Holiday) {
                 modifier = Modifier.padding(start = 2.dp),
                 color = HeadSymbolTextColor,
                 text = stringResource(id = R.string.ornament_for_headers_left),
-                fontSize = 20.sp,
+                fontSize = 30.sp,
                 fontFamily = FontFamily(Font(R.font.ornament)),
                 textAlign = TextAlign.Right
             )
@@ -178,7 +177,7 @@ fun HolidayPageTitle(holiday: Holiday) {
                 modifier = Modifier.padding(end = 2.dp),
                 color = HeadSymbolTextColor,
                 text = stringResource(id = R.string.ornament_for_headers_right),
-                fontSize = 20.sp,
+                fontSize = 30.sp,
                 fontFamily = FontFamily(Font(R.font.ornament)),
                 textAlign = TextAlign.Left
             )
@@ -192,7 +191,16 @@ fun HolidayPageTitle(holiday: Holiday) {
 @Composable
 fun HolidayDescriptionLayout(holiday: Holiday) {
     if (holiday.description.isEmpty()) {
-        //TODO info
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 50.dp),
+            color = DefaultTextColor,
+            text = stringResource(id = R.string.no_description),
+            fontSize = 23.sp,
+            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+            textAlign = TextAlign.Center
+        )
         return
     }
 
