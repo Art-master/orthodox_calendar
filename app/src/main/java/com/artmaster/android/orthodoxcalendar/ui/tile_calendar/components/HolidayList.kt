@@ -128,16 +128,18 @@ fun HolidayList(
     val days = data.value
     LazyColumn(modifier) {
         items(days) { day ->
-            Spacer(modifier = Modifier.height(20.0.dp))
-            ItemHeader(
-                day = day,
-                showDaysOfWeek = true,
-                headerHeight = headerHeight,
-                onClick = onDayClick
-            )
-            Divider()
-            day.holidays.forEach {
-                HolidayItem(holiday = it, onClick = onHolidayClick)
+            if (day.holidays.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(20.0.dp))
+                ItemHeader(
+                    day = day,
+                    showDaysOfWeek = true,
+                    headerHeight = headerHeight,
+                    onClick = onDayClick
+                )
+                day.holidays.forEach {
+                    HolidayItem(holiday = it, onClick = onHolidayClick)
+                }
+                Divider()
             }
         }
     }

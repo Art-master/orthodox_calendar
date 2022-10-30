@@ -183,7 +183,7 @@ fun HolidayPageTitle(holiday: Holiday) {
             )
         }
 
-        StyleDatesText(day = holiday.day, month = holiday.month)
+        StyleDatesText(day = holiday.day, month = holiday.monthWith0)
     }
 
 }

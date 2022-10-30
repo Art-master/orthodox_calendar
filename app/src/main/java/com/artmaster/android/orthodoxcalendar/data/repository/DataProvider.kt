@@ -38,7 +38,7 @@ class DataProvider : RepositoryConnector {
             days.add(createDay(time))
         }
         val typeIds = getTypeIds(filters)
-        distributeHoliday(holidaysFromDb, days, month, year, typeIds)
+        specifyHolidays(holidaysFromDb, days, month, year, typeIds)
 
         db.close()
         return days
@@ -51,10 +51,13 @@ class DataProvider : RepositoryConnector {
         return dayObj
     }
 
-    private fun distributeHoliday(
-        holidays: List<Holiday>, days: ArrayList<Day>, month: Int, year: Int,
+    private fun specifyHolidays(
+        holidays: List<Holiday>,
+        days: ArrayList<Day>,
+        month: Int, year: Int,
         typeIds: ArrayList<Int>
     ) {
+
 
         for (holiday in holidays) {
             holiday.year = year
@@ -62,11 +65,36 @@ class DataProvider : RepositoryConnector {
             val dayNum = holiday.day
             holiday.monthWith0 = holiday.month - 1
 
+            // Filters
             if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
-            if (month != -1 && (dayNum > days.size || holiday.monthWith0 != month)) continue
+            if (dayNum > days.size || holiday.monthWith0 != month) continue
 
             days[dayNum - 1].apply {
+                this.holidays.add(holiday)
+            }
+        }
+    }
+
+    private fun specifyHolidays(
+        holidays: List<Holiday>,
+        days: ArrayList<Day>,
+        year: Int,
+        typeIds: ArrayList<Int>
+    ) {
+        val time = Time()
+
+        for (holiday in holidays) {
+            holiday.year = year
+            dynamicData.calcHolidayDateIfDynamic(holiday)
+            holiday.monthWith0 = holiday.month - 1
+
+            // Filters
+            if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
+
+            time.calendar.set(year, holiday.monthWith0, holiday.day) // in calendar month with 0
+
+            days[time.dayOfYear - 1].apply {
                 this.holidays.add(holiday)
             }
         }
@@ -90,8 +118,7 @@ class DataProvider : RepositoryConnector {
             days.add(createDay(time))
         }
         val typeIds = getTypeIds(filters)
-        val allMonthsNum = -1
-        distributeHoliday(holidaysFromDb, days, allMonthsNum, year, typeIds)
+        specifyHolidays(holidaysFromDb, days, year, typeIds)
 
         db.close()
         return days
