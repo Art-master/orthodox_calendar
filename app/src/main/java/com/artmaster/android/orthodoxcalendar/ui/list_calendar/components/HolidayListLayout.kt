@@ -43,18 +43,21 @@ fun HolidayPagerListLayout(
     onDayClick: (day: Day) -> Unit = {},
     onHolidayClick: (day: Holiday) -> Unit = {},
 ) {
-    var monthNum by remember { viewModel.getMonth() }
 
-    val pagerState = rememberPagerState(monthNum.dec())
+    val availableYears = viewModel.availableYears
+    val startIndex = viewModel.getYear().value - availableYears.first()
+    var yearNum by remember { mutableStateOf(startIndex) }
+
+    val pagerState = rememberPagerState(yearNum)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setMonth(page)
-            monthNum = page
+            yearNum = page
 
-            val year = viewModel.getYear().value
+            val year = availableYears.first() + page
 
             //current page
             viewModel.loadAllHolidaysOfYear(year)
@@ -68,9 +71,9 @@ fun HolidayPagerListLayout(
     Column(Modifier.fillMaxHeight()) {
 
         YearsTabs(pagerState = pagerState) {
-            monthNum = it
+            yearNum = it
             scope.launch {
-                pagerState.animateScrollToPage(monthNum)
+                pagerState.animateScrollToPage(yearNum)
             }
         }
 
@@ -85,7 +88,7 @@ fun HolidayPagerListLayout(
                 HolidayList(
                     modifier = Modifier
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentYearData(yearNum = viewModel.availableYears.first() + page),
+                    data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
                     onDayClick = onDayClick,
                     onHolidayClick = onHolidayClick
                 )
