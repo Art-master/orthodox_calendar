@@ -3,7 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.init.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
@@ -24,11 +25,17 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DropDownYearMenuPreview() {
     val year = remember { mutableStateOf(2022) }
     DropDownYearMenu(currentYear = year)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ItemContentPreview() {
+    ItemContent(text = "2022")
 }
 
 @Composable
@@ -69,18 +76,29 @@ fun DropDownYearMenu(currentYear: MutableState<Int>, onYearSelect: (year: Int) -
 
 
         DropdownMenu(
+            modifier = Modifier
+                .width(100.dp)
+                .align(Alignment.BottomCenter),
             expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            onDismissRequest = { expanded = false }
         ) {
             items.forEachIndexed { index, text ->
+                key(index) {
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedIndex = index
+                            val year = items[index]
+                            onYearSelect(year.toInt())
+                            expanded = false
+                        }) {
 
-                DropdownMenuItem(onClick = {
-                    selectedIndex = index
-                    onYearSelect(index)
-                    expanded = false
-                }) {
-                    ItemContent(text = text)
+                        ItemContent(text = text) {
+                            selectedIndex = index
+                            val year = items[index]
+                            onYearSelect(year.toInt())
+                            expanded = false
+                        }
+                    }
                 }
             }
         }

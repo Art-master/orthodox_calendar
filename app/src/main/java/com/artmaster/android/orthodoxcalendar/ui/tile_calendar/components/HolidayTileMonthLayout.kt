@@ -104,7 +104,7 @@ fun HolidayTileMonthLayout(
                 sheetPeekHeight = sheetPeekHeight
 
             ) {
-                TilesGridLayout(data, dayOfMonth, onDayClick)
+                TilesGridLayout(days, dayOfMonth, onDayClick)
             }
         }
     }

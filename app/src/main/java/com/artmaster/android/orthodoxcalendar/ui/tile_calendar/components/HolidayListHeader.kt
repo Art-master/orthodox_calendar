@@ -26,9 +26,11 @@ import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.OldDateTextColor
 import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
@@ -68,11 +70,12 @@ fun ItemHeader(
 ) {
     val title = day.run {
 
-        val dw = if (showDaysOfWeek) {
-            "${stringArrayResource(R.array.daysNames)[day.dayInWeek.dec()]}:  "
+        if (showDaysOfWeek) {
+            stringArrayResource(R.array.daysNames)[day.dayInWeek.dec()]
         } else ""
 
-        "$dw$dayOfMonth ${stringArrayResource(R.array.months_names_acc)[day.month]}"
+        //Day of month
+        //"$dw$dayOfMonth ${stringArrayResource(R.array.months_names_acc)[day.month]}"
     }
 
     Column(
@@ -93,7 +96,7 @@ fun ItemHeader(
         }
 
         Text(
-            color = DefaultTextColor,
+            color = if (day.dayInWeek == Holiday.DayOfWeek.SUNDAY.num) HeaderTextColor else DefaultTextColor,
             text = annotatedString,
             fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),

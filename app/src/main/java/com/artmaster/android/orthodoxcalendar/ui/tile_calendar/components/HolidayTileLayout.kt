@@ -75,6 +75,7 @@ fun HolidayTileLayout(
     onHolidayClick: (day: Holiday) -> Unit = {},
 ) {
     var monthNum by remember { viewModel.getMonth() }
+    val currentYear by remember { viewModel.getYear() }
 
     val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
@@ -85,14 +86,12 @@ fun HolidayTileLayout(
             viewModel.setMonth(page)
             monthNum = page
 
-            val year = viewModel.getYear().value
-
             //current page
-            viewModel.loadAllHolidaysOfMonth(monthNum, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum, currentYear)
             //next page data
-            viewModel.loadAllHolidaysOfMonth(monthNum + 1, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum + 1, currentYear)
             //previous page data
-            viewModel.loadAllHolidaysOfMonth(monthNum - 1, year)
+            viewModel.loadAllHolidaysOfMonth(monthNum - 1, currentYear)
         }
     }
 

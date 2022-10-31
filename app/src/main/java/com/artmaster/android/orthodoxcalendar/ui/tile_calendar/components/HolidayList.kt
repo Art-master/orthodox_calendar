@@ -158,7 +158,7 @@ fun OneDayHolidayList(
             .padding(top = 15.dp)
     ) {
 
-        ItemHeader(day = day, headerHeight = headerHeight)
+        ItemHeader(day = day, showDaysOfWeek = true, headerHeight = headerHeight)
 
         Divider()
         Column(

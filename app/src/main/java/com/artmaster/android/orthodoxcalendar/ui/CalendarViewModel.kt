@@ -134,8 +134,13 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun setYear(year: Int) {
+        clearCaches()
         this.year.value = year
+    }
+
+    private fun clearCaches() {
         daysByMonthCache.forEach { it.value.value = emptyList() }
+        daysByYearsCache.forEach { it.value.value = emptyList() }
     }
 
     fun getYear() = year

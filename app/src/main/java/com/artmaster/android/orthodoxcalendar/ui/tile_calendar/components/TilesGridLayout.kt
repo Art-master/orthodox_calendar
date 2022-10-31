@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,9 +53,7 @@ fun ShowMonth() {
         else dayInWeek.inc()
     }
 
-    val data = remember {
-        mutableStateOf(days.toList())
-    }
+    val data = remember { days.toList() }
     TilesGridLayout(data = data, selectedDayOfMonth = time.dayOfMonth)
 }
 
@@ -66,12 +62,10 @@ const val DAYS_IN_WEEK_COUNT = 7
 
 @Composable
 fun TilesGridLayout(
-    data: MutableState<List<Day>>,
+    data: List<Day>,
     selectedDayOfMonth: Int,
     onDayClick: (day: Day) -> Unit = {}
 ) {
-
-    val days = data.value
 
     var daysCount = 0
 
@@ -85,18 +79,18 @@ fun TilesGridLayout(
 
             val week = item % MAX_COLUMN_COUNT
             val dayWith0 = item / MAX_COLUMN_COUNT
-            val daysCountStartOffset = days.first().dayInWeek.dec()
+            val daysCountStartOffset = data.first().dayInWeek.dec()
             val dayIndex = ((week.dec() * DAYS_IN_WEEK_COUNT) + dayWith0) - daysCountStartOffset
 
             if (week == 0) {
                 DayOfWeekName(dayOfWeekNum = (dayWith0).inc())
 
-            } else if (dayIndex >= 0 && dayIndex.inc() <= days.size) {
+            } else if (dayIndex >= 0 && dayIndex.inc() <= data.size) {
                 daysCount++
                 val isActive = dayIndex.inc() == selectedDayOfMonth
 
                 DayOfMonthTile(
-                    day = days[dayIndex],
+                    day = data[dayIndex],
                     isActive = isActive,
                     onClick = onDayClick
                 )
