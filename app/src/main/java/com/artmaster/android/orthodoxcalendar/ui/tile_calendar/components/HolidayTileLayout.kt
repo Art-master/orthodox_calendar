@@ -80,7 +80,7 @@ fun HolidayTileLayout(
     val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, currentYear) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setMonth(page)
