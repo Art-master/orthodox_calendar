@@ -92,7 +92,10 @@ fun DropDownYearMenu(currentYear: MutableState<Int>, onYearSelect: (year: Int) -
                             expanded = false
                         }) {
 
-                        ItemContent(text = text) {
+                        val color =
+                            if (selectedIndex == index) HeadSymbolTextColor else DefaultTextColor
+
+                        ItemContent(text = text, color = color) {
                             selectedIndex = index
                             val year = items[index]
                             onYearSelect(year.toInt())
@@ -114,7 +117,7 @@ fun ItemContent(text: String, color: Color = DefaultTextColor, onClick: () -> Un
         text = text,
         color = color,
         fontSize = 30.sp,
-        fontFamily = FontFamily(Font(R.font.ort_basic, FontWeight.Normal))
+        fontFamily = FontFamily(Font(R.font.ort_basic))
     )
 }
 

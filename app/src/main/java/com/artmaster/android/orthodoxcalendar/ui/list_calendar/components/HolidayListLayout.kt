@@ -1,7 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.list_calendar.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.*
@@ -17,6 +16,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.filters.Tools
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -68,33 +68,37 @@ fun HolidayPagerListLayout(
         }
     }
 
-    Column(Modifier.fillMaxHeight()) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxHeight()) {
 
-        YearsTabs(pagerState = pagerState) {
-            yearNum = it
-            scope.launch {
-                pagerState.animateScrollToPage(yearNum)
+            YearsTabs(pagerState = pagerState) {
+                yearNum = it
+                scope.launch {
+                    pagerState.animateScrollToPage(yearNum)
+                }
+            }
+
+            HorizontalPager(
+                count = Constants.HolidayList.PAGE_SIZE.value,
+                state = pagerState,
+                key = { r -> r }
+            ) { page ->
+                val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+
+                if (needToShowLayout(pageOffset)) {
+                    HolidayList(
+                        modifier = Modifier
+                            .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                        data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
+                        onDayClick = onDayClick,
+                        onHolidayClick = onHolidayClick
+                    )
+                }
             }
         }
-
-        HorizontalPager(
-            count = Constants.HolidayList.PAGE_SIZE.value,
-            state = pagerState,
-            key = { r -> r }
-        ) { page ->
-            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-
-            if (needToShowLayout(pageOffset)) {
-                HolidayList(
-                    modifier = Modifier
-                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
-                    onDayClick = onDayClick,
-                    onHolidayClick = onHolidayClick
-                )
-            }
-        }
+        Tools(parent = this)
     }
+
 }
 
 fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f

@@ -48,7 +48,6 @@ fun AppBar(viewModel: CalendarViewModel = CalendarViewModel(), navController: Na
     ) {
         DropDownYearMenu(currentYear = viewModel.getYear()) {
             viewModel.setYear(it)
-            //navController.navigate(navController.currentDestination?.route!!)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),

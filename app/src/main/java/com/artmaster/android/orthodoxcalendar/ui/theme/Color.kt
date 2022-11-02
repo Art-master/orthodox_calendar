@@ -44,5 +44,8 @@ val EditTextIndicatorColor = Color(0xFFCCA94E)
 val EditTextCursorColor = Color(0xFFC09831)
 val DisabledTextColor = DefaultTextColor.copy(alpha = 0.5f)
 
+val FloatingButtonColor = Color(0xFFFF6D00)
+val FiltersContentColor = Color(0xFF4E453F)
+
 
 val LinksColor = Color.Blue
