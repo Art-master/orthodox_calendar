@@ -2,15 +2,16 @@ package com.artmaster.android.orthodoxcalendar.ui
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.domain.*
+import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,29 +41,20 @@ class CalendarViewModel : ViewModel() {
             }
         }
 
-    private val _filters = MutableLiveData<Set<Filter>>(emptySet())
-    val filters: LiveData<Set<Filter>> get() = _filters
-
-    private val _time = MutableLiveData(SharedTime())
-    val time: LiveData<SharedTime> get() = _time
+    private lateinit var filters: MutableState<Set<Filter>>
 
     init {
-        viewModelScope.launch {
-            initFilters()
-        }
+        initFilters()
     }
 
-    private suspend fun initFilters() {
-        withContext(Dispatchers.IO) {
-            val filters = HashSet<Filter>()
-            Filter.values().forEach {
-                val data = preferences.get(it.settingName)
-                if (data == Settings.TRUE) filters.add(it)
-            }
-            withContext(Dispatchers.Main) {
-                if (filters.isNotEmpty()) _filters.value = filters
-            }
+    private fun initFilters() {
+        val filters = HashSet<Filter>()
+        Filter.values().forEach {
+            val data = preferences.get(it.settingName)
+            if (data == Settings.TRUE) filters.add(it)
         }
+
+        this@CalendarViewModel.filters = mutableStateOf(filters)
     }
 
     private fun getAvailableYears(currentYear: Int): List<Int> {
@@ -85,7 +77,7 @@ class CalendarViewModel : ViewModel() {
         }
 
         withContext(Dispatchers.IO) {
-            val value = repository.getMonthDays(monthNumWith0, year, filters.value!!)
+            val value = repository.getMonthDays(monthNumWith0, year, filters.value)
             withContext(Dispatchers.Main) {
                 val monthData = getCurrentMonthData(monthNumWith0)
                 monthData.value = value
@@ -103,7 +95,7 @@ class CalendarViewModel : ViewModel() {
         }
 
         withContext(Dispatchers.IO) {
-            val value = repository.getYearDays(year, filters.value!!)
+            val value = repository.getYearDays(year, filters.value)
             withContext(Dispatchers.Main) {
                 val monthData = getCurrentYearData(year)
                 monthData.value = value
@@ -112,25 +104,21 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun addFilter(item: Filter) {
-        val copyData = HashSet(_filters.value ?: HashSet())
+        val copyData = HashSet(filters.value)
         copyData.add(item)
-        _filters.value = copyData
-    }
-
-    fun update() {
-        val copyData = HashSet(_filters.value ?: HashSet())
-        _filters.value = copyData
-
-        val previous = _time.value ?: SharedTime()
-        val obj = SharedTime(previous.year, previous.month, previous.day)
-        _time.value = obj
+        filters.value = copyData
+        item.enabled = true
     }
 
     fun removeFilter(item: Filter) {
-        if (_filters.value == null) return
-        val copyData = HashSet(_filters.value)
+        val copyData = HashSet(filters.value)
         copyData.remove(item)
-        _filters.value = copyData
+        filters.value = copyData
+        item.enabled = false
+    }
+
+    fun getFilters(): MutableState<Set<Filter>> {
+        return filters
     }
 
     fun setYear(year: Int) {

@@ -7,9 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,54 +19,109 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import kotlinx.coroutines.launch
 
+
+enum class Tabs {
+    FILTERS, NEW_EVENT
+}
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun ToolsPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
-        Tools(parent = this)
+        Tools(parent = this, isVisible = true)
     }
 }
 
 @Composable
-fun Tools(parent: BoxScope) {
-    parent.run {
-        var state by remember { mutableStateOf(MultiFabState.EXPANDED) }
+fun CalendarToolsDrawer(viewModel: CalendarViewModel, content: @Composable () -> Unit) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
+    var isToolsPanelVisible by remember { mutableStateOf(true) }
 
-        MultiFloatingActionButton(
-            parent = parent,
-            fabIcon = painterResource(R.drawable.ic_baseline_arrow_drop_up_24),
-            toState = state,
-            items = listOf(
-                MultiFabItem(
-                    identifier = "1",
-                    icon = ImageBitmap.imageResource(R.drawable.ic_add_button),
-                    label = "Добавить праздник"
-                ),
-                MultiFabItem(
-                    identifier = "2",
-                    icon = ImageBitmap.imageResource(R.drawable.ic_filter),
-                    label = "Фильтры"
-                )
-            ),
-            onFabItemClicked = {
-
-            },
-            stateChanged = { state = it }
-        )
+    val onToolItemClick = remember {
+        { item: MultiFabItem ->
+            when (item.identifier) {
+                Tabs.FILTERS.name -> {
+                    coroutineScope.launch {
+                        drawerState.open()
+                    }
+                }
+                Tabs.NEW_EVENT.name -> {}
+                else -> throw IllegalStateException("Wrong item name")
+            }
+            isToolsPanelVisible = false
+        }
     }
+
+    LaunchedEffect(key1 = drawerState.currentValue) {
+        if (drawerState.isClosed) isToolsPanelVisible = true
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            ModalDrawer(
+                drawerState = drawerState,
+                drawerBackgroundColor = Background,
+                drawerContentColor = Background,
+                drawerContent = {
+                    FiltersLayoutWrapper(viewModel = viewModel)
+                }
+            ) {
+                content()
+            }
+        }
+        Tools(parent = this, isVisible = isToolsPanelVisible, onItemClicked = onToolItemClick)
+    }
+}
+
+@Composable
+fun Tools(
+    parent: BoxScope,
+    isVisible: Boolean = true,
+    onItemClicked: (item: MultiFabItem) -> Unit = {}
+) {
+    var state by remember { mutableStateOf(MultiFabState.COLLAPSED) }
+
+    MultiFloatingActionButton(
+        parent = parent,
+        fabIcon = painterResource(R.drawable.ic_baseline_arrow_drop_up_24),
+        toState = state,
+        items = listOf(
+            MultiFabItem(
+                identifier = Tabs.NEW_EVENT.name,
+                icon = ImageBitmap.imageResource(R.drawable.ic_add_button),
+                label = stringResource(id = R.string.add_holiday)
+            ),
+            MultiFabItem(
+                identifier = Tabs.FILTERS.name,
+                icon = ImageBitmap.imageResource(R.drawable.ic_filter),
+                label = stringResource(id = R.string.filters_title)
+            )
+        ),
+        onFabItemClicked = onItemClicked,
+        stateChanged = { state = it },
+        visible = isVisible
+    )
 }
 
 class MultiFabItem(
@@ -85,7 +138,8 @@ fun MultiFloatingActionButton(
     showLabels: Boolean = true,
     stateChanged: (fabstate: MultiFabState) -> Unit,
     onFabItemClicked: (item: MultiFabItem) -> Unit,
-    parent: BoxScope
+    parent: BoxScope,
+    visible: Boolean = true
 ) {
     parent.run {
         val transition: Transition<MultiFabState> =
@@ -114,8 +168,11 @@ fun MultiFloatingActionButton(
         val rotation: Float by transition.animateFloat(label = "rotation") { state ->
             if (state == MultiFabState.EXPANDED) 180f else 0f
         }
+
         Column(
-            modifier = Modifier.align(Alignment.BottomEnd),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .alpha(if (visible) 1f else 0f),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {

@@ -164,7 +164,7 @@
     <string name="fab_content_desc">Фильтр</string>
 
 
-    <string name="filters_name">Фильтры</string>
+    <string name="filters_title">Фильтры</string>
     <string name="filter_easter">Пасха</string>
     <string name="filter_head_holidays">Великие праздники</string>
     <string name="filter_average_holidays">Средние праздники</string>

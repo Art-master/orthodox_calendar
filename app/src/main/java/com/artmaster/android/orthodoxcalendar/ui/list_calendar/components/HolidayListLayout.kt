@@ -16,7 +16,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.filters.Tools
+import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -68,7 +68,7 @@ fun HolidayPagerListLayout(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    CalendarToolsDrawer(viewModel = viewModel) {
         Column(Modifier.fillMaxHeight()) {
 
             YearsTabs(pagerState = pagerState) {
@@ -96,7 +96,6 @@ fun HolidayPagerListLayout(
                 }
             }
         }
-        Tools(parent = this)
     }
 
 }
