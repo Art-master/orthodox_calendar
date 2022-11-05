@@ -16,8 +16,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.imageResource
@@ -27,10 +31,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
@@ -83,14 +84,34 @@ fun CalendarToolsDrawer(viewModel: CalendarViewModel, content: @Composable () ->
                 drawerState = drawerState,
                 drawerBackgroundColor = Background,
                 drawerContentColor = Background,
+                // drawerShape = drawerShape(),
                 drawerContent = {
                     FiltersLayoutWrapper(viewModel = viewModel)
                 }
             ) {
-                content()
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    content()
+                }
             }
         }
         Tools(parent = this, isVisible = isToolsPanelVisible, onItemClicked = onToolItemClick)
+    }
+}
+
+fun drawerShape() = object : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        return Outline.Rectangle(
+            Rect(
+                size.width - 800,
+                size.height - 1200,
+                size.width /* width */,
+                size.height /* height */
+            )
+        )
     }
 }
 

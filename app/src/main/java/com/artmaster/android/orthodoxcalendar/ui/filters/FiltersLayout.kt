@@ -1,7 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.filters
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
@@ -63,8 +64,9 @@ fun FiltersLayout(
 
     Column(
         Modifier
-            .fillMaxSize()
-            .verticalScroll(scroll)
+            .fillMaxWidth()
+            .verticalScroll(scroll),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Header(title = stringResource(id = R.string.filters_title))
 
@@ -84,9 +86,13 @@ fun FilterCheckBox(
     filter: Filter,
     onFilterChange: (filter: Filter, enabled: Boolean) -> Unit
 ) {
+    var state by remember { mutableStateOf(filter.enabled) }
     val onCheck = remember {
-        { flag: Boolean -> onFilterChange(filter, flag) }
+        { flag: Boolean ->
+            onFilterChange(filter, flag)
+            state = flag
+        }
     }
     val title = stringResource(id = filter.resId)
-    CheckBox(title = title, state = filter.enabled, onCheck = onCheck)
+    CheckBox(title = title, state = state, onCheck = onCheck)
 }

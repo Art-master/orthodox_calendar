@@ -9,8 +9,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -18,6 +16,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -95,31 +94,32 @@ fun HolidayTileLayout(
         }
     }
 
-    Column(Modifier.fillMaxHeight()) {
-
-        MonthTabs(pagerState = pagerState) {
-            monthNum = it
-            scope.launch {
-                pagerState.animateScrollToPage(monthNum)
+    CalendarToolsDrawer(viewModel = viewModel) {
+        Column(Modifier.fillMaxHeight()) {
+            MonthTabs(pagerState = pagerState) {
+                monthNum = it
+                scope.launch {
+                    pagerState.animateScrollToPage(monthNum)
+                }
             }
-        }
 
-        HorizontalPager(
-            count = MONTH_COUNT,
-            state = pagerState,
-            key = { r -> r }
-        ) { page ->
-            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+            HorizontalPager(
+                count = MONTH_COUNT,
+                state = pagerState,
+                key = { r -> r }
+            ) { page ->
+                val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-            if (needToShowLayout(pageOffset)) {
-                HolidayTileMonthLayout(
-                    modifier = Modifier
-                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentMonthData(monthNum = page),
-                    dayOfMonth = viewModel.getDayOfMonth().value,
-                    onDayClick = onDayClick,
-                    onHolidayClick = onHolidayClick
-                )
+                if (needToShowLayout(pageOffset)) {
+                    HolidayTileMonthLayout(
+                        modifier = Modifier
+                            .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                        data = viewModel.getCurrentMonthData(monthNum = page),
+                        dayOfMonth = viewModel.getDayOfMonth().value,
+                        onDayClick = onDayClick,
+                        onHolidayClick = onHolidayClick
+                    )
+                }
             }
         }
     }
@@ -129,16 +129,6 @@ fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
 
 fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {
-        // We animate the scaleX + scaleY, between 85% and 100%
-        lerp(
-            start = 0.8.dp,
-            stop = 1.dp,
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).also { scale ->
-            scaleX = scale.toPx() / 3
-            scaleY = scale.toPx() / 3
-        }
-
         // We animate the alpha, between 0% and 100%
         alpha = lerp(
             start = ScaleFactor(0f, 0f),
