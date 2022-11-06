@@ -55,15 +55,8 @@ data class Holiday(
     @Ignore
     var description: String = "",
 
-    @Ignore
-    var monthWith0: Int = month - 1,
+    ) : Comparable<Holiday>, Parcelable {
 
-    @Ignore
-    var firstInGroup: Boolean = false
-
-) : Comparable<Holiday>, Parcelable {
-
-    @JvmName("getMonthWith01")
     fun getMonthWith0() = month.dec()
 
     override fun compareTo(other: Holiday): Int {
@@ -74,19 +67,19 @@ data class Holiday(
         return monthComparison
     }
 
-    enum class Type(val value: String, val id: Int) {
-        MAIN("главный", 1),
-        TWELVE_MOVABLE("великий двунадесятый переходящий", 2),
-        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный", 3),
-        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный", 4),
-        GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
-        AVERAGE_POLYLEIC("средний полиелейный", 6),
-        AVERAGE_PEPPY("средний бденный", 7),
-        COMMON_MEMORY_DAY("день памяти", 8),
+    enum class Type(val id: Int) {
+        MAIN(1), // главный
+        TWELVE_MOVABLE(2), // великий двунадесятый переходящий
+        TWELVE_NOT_MOVABLE(3), // великий двунадесятый неподвижный
+        NOT_TWELVE_NOT_MOVABLE(4), // великий недвунадесятый неподвижный
+        GREAT_NOT_TWELVE(5), // великий недвунадесятый переходящий
+        AVERAGE_POLYLEIC(6), // средний полиелейный
+        AVERAGE_PEPPY(7), // средний бденный
+        COMMON_MEMORY_DAY(8), // день памяти
 
-        USERS_MEMORY_DAY("средний бденный", 9),
-        USERS_NAME_DAY("именины", 10),
-        USERS_BIRTHDAY("день рождения", 11),
+        USERS_MEMORY_DAY(9), // пользовательский день памяти
+        USERS_NAME_DAY(10), // именины
+        USERS_BIRTHDAY(11), // день рождения
     }
 
     enum class DayOfWeek(val num: Int) {
@@ -178,7 +171,6 @@ data class Holiday(
 
         fun Holiday.mergeFullData(data: AdditionalHolidayData): Holiday {
             description = data.description
-            monthWith0 = month - 1
             return this
         }
     }

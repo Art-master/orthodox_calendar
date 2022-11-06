@@ -28,7 +28,7 @@ import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
-import com.artmaster.android.orthodoxcalendar.ui.user_holiday.components.UserHolidayLayout
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday.UserHolidayLayout
 
 class InitAppActivity : ComponentActivity() {
 

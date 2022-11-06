@@ -63,12 +63,11 @@ class DataProvider : RepositoryConnector {
             holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
             val dayNum = holiday.day
-            holiday.monthWith0 = holiday.month - 1
 
             // Filters
             if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
-            if (dayNum > days.size || holiday.monthWith0 != month) continue
+            if (dayNum > days.size || holiday.getMonthWith0() != month) continue
 
             days[dayNum - 1].apply {
                 this.holidays.add(holiday)
@@ -87,12 +86,15 @@ class DataProvider : RepositoryConnector {
         for (holiday in holidays) {
             holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
-            holiday.monthWith0 = holiday.month - 1
 
             // Filters
             if (typeIds.isNotEmpty() && typeIds.contains(holiday.typeId).not()) continue
 
-            time.calendar.set(year, holiday.monthWith0, holiday.day) // in calendar month with 0
+            time.calendar.set(
+                year,
+                holiday.getMonthWith0(),
+                holiday.day
+            ) // in calendar month with 0
 
             days[time.dayOfYear - 1].apply {
                 this.holidays.add(holiday)
@@ -124,18 +126,6 @@ class DataProvider : RepositoryConnector {
         return days
     }
 
-    override fun getDataSequence(
-        start: Int,
-        size: Int,
-        year: Int,
-        filters: List<Filter>
-    ): List<Holiday> {
-        val data = setFirstPosition(getAllData(year, filters).sorted())
-        var endPosition = start + size - 1
-        if (endPosition > data.size - 1) endPosition = data.size
-        return data.subList(start, endPosition)
-    }
-
     private fun getAllData(year: Int, filters: Collection<Filter>): List<Holiday> {
         val holidaysFromDb: List<Holiday> = getDataFromDb()
         val typeIds = getTypeIds(filters)
@@ -156,8 +146,7 @@ class DataProvider : RepositoryConnector {
                 dynamicData.calcHolidayDateIfDynamic(holiday)
             }
 
-            holiday.monthWith0 = holiday.month - 1
-            if (month < 0 || holiday.monthWith0 == month) hds.add(holiday) //month in holiday with 1
+            if (month < 0 || holiday.getMonthWith0() == month) hds.add(holiday) //month in holiday with 1
         }
         return hds
     }
@@ -193,22 +182,6 @@ class DataProvider : RepositoryConnector {
         val typeIds = ArrayList<Int>()
         filters.forEach { typeIds.addAll(Holiday.getTypeIdsByFilter(it)) }
         return typeIds
-    }
-
-    private fun setFirstPosition(holidays: List<Holiday>): List<Holiday> {
-        var day = 0
-        var month = 0
-        for (holiday in holidays) {
-            if (month == holiday.month && day == holiday.day) {
-                holiday.firstInGroup = false
-            } else {
-                holiday.firstInGroup = true
-                month = holiday.month
-                day = holiday.day
-            }
-
-        }
-        return holidays
     }
 
     override fun getHolidaysByTime(time: Time): List<Holiday> {

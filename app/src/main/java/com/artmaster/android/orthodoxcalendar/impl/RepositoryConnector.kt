@@ -6,7 +6,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 
 interface RepositoryConnector {
-    fun getDataSequence(start: Int, size: Int, year: Int, filters: List<Filter>): List<Holiday>
     fun getData(year: Int, filters: Collection<Filter> = emptyList()): List<Holiday>
     fun getYearDays(year: Int, filters: Collection<Filter> = ArrayList()): List<Day>
     fun getMonthData(month: Int, year: Int): List<Holiday>

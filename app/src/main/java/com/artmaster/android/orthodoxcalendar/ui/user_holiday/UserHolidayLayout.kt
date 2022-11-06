@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.user_holiday.components
+package com.artmaster.android.orthodoxcalendar.ui.user_holiday
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -86,13 +86,13 @@ fun UserHolidayLayout(
 
     val onYearChange = remember {
         { year: String ->
-            target.year = year.toInt()
+            target = target.copy(year = year.toInt())
         }
     }
 
     val onDescriptionChange = remember {
         { description: String ->
-            target.description = description
+            target = target.copy(description = description)
         }
     }
 
@@ -184,7 +184,6 @@ fun createNewHolidayTemplate(title: String): Holiday {
         typeId = Type.USERS_BIRTHDAY.id
         day = time.dayOfMonth
         month = time.month
-        monthWith0 = time.monthWith0
         year = time.year
         this.title = title
     }

@@ -114,7 +114,6 @@ class DynamicData {
 
         holiday.day = time.dayOfMonth
         holiday.month = time.month
-        holiday.monthWith0 = time.monthWith0
     }
 
     private fun calculateLastDayOfWeekTime(month: Int, day: Int, year: Int, dayOfWeek: Int): Time {
