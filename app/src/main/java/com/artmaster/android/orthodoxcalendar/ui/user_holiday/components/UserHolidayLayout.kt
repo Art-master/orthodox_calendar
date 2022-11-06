@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -13,12 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_DAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
-import com.artmaster.android.orthodoxcalendar.ui.common.EditText
-import com.artmaster.android.orthodoxcalendar.ui.common.Header
-import com.artmaster.android.orthodoxcalendar.ui.common.Select
+import com.artmaster.android.orthodoxcalendar.ui.common.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
@@ -30,7 +29,7 @@ fun UserHolidayLayoutPreview() {
         year = time.year,
         month = time.month,
         day = time.dayOfMonth,
-        typeId = Holiday.Type.USERS_BIRTHDAY.id
+        typeId = Type.USERS_BIRTHDAY.id
     )
 
     UserHolidayLayout(holiday)
@@ -55,25 +54,45 @@ fun UserHolidayLayout(
 
     val onTypeSelect = remember {
         { type: String ->
-
+            val index = types.indexOf(type)
+            target = target.copy(typeId = COMMON_MEMORY_DAY.id + index.inc())
         }
     }
 
     val onMonthSelect = remember {
-        { month: String ->
-
+        { monthName: String ->
+            val index = months.indexOf(monthName)
+            target = target.copy(month = index.inc())
         }
     }
 
     val onDayChange = remember {
         { day: String ->
-
+            target = target.copy(day = day.toInt())
         }
     }
 
     val onTitleChange = remember {
         { title: String ->
             target = target.copy(title = title)
+        }
+    }
+    var yearEnabled by rememberSaveable { mutableStateOf(target.year != 0) }
+    val onYearFlagChange = remember {
+        { flag: Boolean ->
+            yearEnabled = flag
+        }
+    }
+
+    val onYearChange = remember {
+        { year: String ->
+            target.year = year.toInt()
+        }
+    }
+
+    val onDescriptionChange = remember {
+        { description: String ->
+            target.description = description
         }
     }
 
@@ -116,27 +135,31 @@ fun UserHolidayLayout(
                 Select(
                     modifier = Modifier.padding(start = padding, end = padding),
                     label = stringResource(id = R.string.month_title),
-                    selectedOption = months[target.monthWith0],
+                    selectedOption = months[target.getMonthWith0()],
                     options = months,
                     onSelect = onMonthSelect
                 )
             }
             Spacer(modifier = Modifier.height(spaseBetween))
-            Row {
-                CheckBox(
-                    modifier = Modifier.fillMaxWidth(0.4f),
-                    title = stringResource(id = R.string.year_title),
-                    state = false
-                )
+            if (target.typeId != Type.USERS_NAME_DAY.id) {
+                Row {
+                    CheckBox(
+                        modifier = Modifier.fillMaxWidth(0.4f),
+                        title = stringResource(id = R.string.year_title),
+                        state = yearEnabled,
+                        onCheck = onYearFlagChange
+                    )
 
-                EditText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = padding, end = padding),
-                    label = "",
-                    value = target.year.toString(),
-                    onValueChange = onTitleChange
-                )
+                    EditText(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .alpha(if (yearEnabled) 1f else 0f)
+                            .padding(start = padding, end = padding),
+                        label = "",
+                        value = target.year.toString(),
+                        onValueChange = onYearChange
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(spaseBetween))
             EditText(
@@ -145,9 +168,12 @@ fun UserHolidayLayout(
                     .height(300.dp)
                     .padding(start = padding, end = padding),
                 label = stringResource(id = R.string.description_holiday),
-                value = target.year.toString(),
-                onValueChange = onTitleChange
+                value = target.description,
+                onValueChange = onDescriptionChange
             )
+
+            Spacer(modifier = Modifier.height(spaseBetween))
+            StyledButton(title = stringResource(id = R.string.save_holiday))
         }
     }
 }
@@ -155,7 +181,7 @@ fun UserHolidayLayout(
 fun createNewHolidayTemplate(title: String): Holiday {
     val time = Time()
     return Holiday().apply {
-        typeId = Holiday.Type.USERS_BIRTHDAY.id
+        typeId = Type.USERS_BIRTHDAY.id
         day = time.dayOfMonth
         month = time.month
         monthWith0 = time.monthWith0

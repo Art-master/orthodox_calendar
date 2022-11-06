@@ -24,9 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.ui.common.CustomText
 import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
+import com.artmaster.android.orthodoxcalendar.ui.common.StyledText
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
@@ -125,7 +125,7 @@ fun Element(title: String, image: @Composable RowScope.() -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         image()
-        CustomText(modifier = Modifier.padding(start = 10.dp), title = title)
+        StyledText(modifier = Modifier.padding(start = 10.dp), title = title)
     }
 }
 

@@ -115,10 +115,7 @@ class InitAppActivity : ComponentActivity() {
                             }
                         }
                         composable(Route.USERS_HOLIDAY_EDITOR.name) {
-                            Column {
-                                AppBar(calendarViewModel, navController)
-                                UserHolidayLayout()
-                            }
+                            UserHolidayLayout()
                         }
                         composable(Route.SETTINGS.name) {
                             Column {

@@ -13,7 +13,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 
 @Composable
-fun CustomText(modifier: Modifier = Modifier, title: String) {
+fun StyledText(modifier: Modifier = Modifier, title: String) {
     Text(
         modifier = Modifier
             .padding(start = 5.dp)

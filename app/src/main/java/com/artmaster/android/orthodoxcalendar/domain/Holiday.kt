@@ -15,53 +15,56 @@ import com.artmaster.android.orthodoxcalendar.domain.DbSchema.Holiday as Schema
 @Entity(tableName = Schema.TABLE_NAME)
 data class Holiday(
 
-        @PrimaryKey(autoGenerate = true)
-        @SerializedName(Schema.ID)
-        @ColumnInfo(name = Schema.ID)
-        var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    @SerializedName(Schema.ID)
+    @ColumnInfo(name = Schema.ID)
+    var id: Long = 0,
 
-        @SerializedName(Schema.TITLE)
-        @ColumnInfo(name = Schema.TITLE)
-        var title: String = "",
+    @SerializedName(Schema.TITLE)
+    @ColumnInfo(name = Schema.TITLE)
+    var title: String = "",
 
-        @SerializedName(Schema.DAY)
-        @ColumnInfo(name = Schema.DAY)
-        var day: Int = 0,
+    @SerializedName(Schema.DAY)
+    @ColumnInfo(name = Schema.DAY)
+    var day: Int = 0,
 
-        @SerializedName(Schema.MONTH)
-        @ColumnInfo(name = Schema.MONTH)
-        var month: Int = 0,
+    @SerializedName(Schema.MONTH)
+    @ColumnInfo(name = Schema.MONTH)
+    var month: Int = 0,
 
-        @SerializedName(Schema.TYPE_ID)
-        @ColumnInfo(name = Schema.TYPE_ID)
-        var typeId: Int = 0,
+    @SerializedName(Schema.TYPE_ID)
+    @ColumnInfo(name = Schema.TYPE_ID)
+    var typeId: Int = 0,
 
-        @SerializedName(Schema.DYNAMIC_TYPE)
-        @ColumnInfo(name = Schema.DYNAMIC_TYPE)
-        var dynamicType: Int = 0,
+    @SerializedName(Schema.DYNAMIC_TYPE)
+    @ColumnInfo(name = Schema.DYNAMIC_TYPE)
+    var dynamicType: Int = 0,
 
-        @SerializedName(Schema.IMAGE_ID)
-        @ColumnInfo(name = Schema.IMAGE_ID)
-        var imageId: String = "",
+    @SerializedName(Schema.IMAGE_ID)
+    @ColumnInfo(name = Schema.IMAGE_ID)
+    var imageId: String = "",
 
-        @SerializedName(Schema.CREATED_BY_USER)
-        @ColumnInfo(name = Schema.CREATED_BY_USER)
-        var isCreatedByUser: Boolean = false,
+    @SerializedName(Schema.CREATED_BY_USER)
+    @ColumnInfo(name = Schema.CREATED_BY_USER)
+    var isCreatedByUser: Boolean = false,
 
-        @SerializedName(Schema.YEAR)
-        @ColumnInfo(name = Schema.YEAR)
-        var year: Int = 0,
+    @SerializedName(Schema.YEAR)
+    @ColumnInfo(name = Schema.YEAR)
+    var year: Int = 0,
 
-        @Ignore
-        var description: String = "",
+    @Ignore
+    var description: String = "",
 
-        @Ignore
-        var monthWith0: Int = month - 1,
+    @Ignore
+    var monthWith0: Int = month - 1,
 
-        @Ignore
-        var firstInGroup: Boolean = false
+    @Ignore
+    var firstInGroup: Boolean = false
 
 ) : Comparable<Holiday>, Parcelable {
+
+    @JvmName("getMonthWith01")
+    fun getMonthWith0() = month.dec()
 
     override fun compareTo(other: Holiday): Int {
         val monthComparison = month.compareTo(other.month)
@@ -144,8 +147,10 @@ data class Holiday(
                 return listOf(Type.MAIN.id)
             }
             if (filter == Filter.HEAD_HOLIDAYS) {
-                return listOf(Type.TWELVE_MOVABLE.id, Type.TWELVE_NOT_MOVABLE.id,
-                        Type.GREAT_NOT_TWELVE.id, Type.NOT_TWELVE_NOT_MOVABLE.id)
+                return listOf(
+                    Type.TWELVE_MOVABLE.id, Type.TWELVE_NOT_MOVABLE.id,
+                    Type.GREAT_NOT_TWELVE.id, Type.NOT_TWELVE_NOT_MOVABLE.id
+                )
             }
             if (filter == Filter.AVERAGE_HOLIDAYS) {
                 return listOf(Type.AVERAGE_PEPPY.id, Type.AVERAGE_POLYLEIC.id)
