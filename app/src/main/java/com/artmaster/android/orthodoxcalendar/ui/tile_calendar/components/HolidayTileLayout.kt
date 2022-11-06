@@ -16,7 +16,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -94,32 +93,30 @@ fun HolidayTileLayout(
         }
     }
 
-    CalendarToolsDrawer(viewModel = viewModel) {
-        Column(Modifier.fillMaxHeight()) {
-            MonthTabs(pagerState = pagerState) {
-                monthNum = it
-                scope.launch {
-                    pagerState.animateScrollToPage(monthNum)
-                }
+    Column(Modifier.fillMaxHeight()) {
+        MonthTabs(pagerState = pagerState) {
+            monthNum = it
+            scope.launch {
+                pagerState.animateScrollToPage(monthNum)
             }
+        }
 
-            HorizontalPager(
-                count = MONTH_COUNT,
-                state = pagerState,
-                key = { r -> r }
-            ) { page ->
-                val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+        HorizontalPager(
+            count = MONTH_COUNT,
+            state = pagerState,
+            key = { r -> r }
+        ) { page ->
+            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-                if (needToShowLayout(pageOffset)) {
-                    HolidayTileMonthLayout(
-                        modifier = Modifier
-                            .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                        data = viewModel.getCurrentMonthData(monthNum = page),
-                        dayOfMonth = viewModel.getDayOfMonth().value,
-                        onDayClick = onDayClick,
-                        onHolidayClick = onHolidayClick
-                    )
-                }
+            if (needToShowLayout(pageOffset)) {
+                HolidayTileMonthLayout(
+                    modifier = Modifier
+                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                    data = viewModel.getCurrentMonthData(monthNum = page),
+                    dayOfMonth = viewModel.getDayOfMonth().value,
+                    onDayClick = onDayClick,
+                    onHolidayClick = onHolidayClick
+                )
             }
         }
     }

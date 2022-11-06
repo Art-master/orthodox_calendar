@@ -16,6 +16,9 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.app_info.AppInfoLayout
+import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
+import com.artmaster.android.orthodoxcalendar.ui.filters.MultiFabItem
+import com.artmaster.android.orthodoxcalendar.ui.filters.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
@@ -25,6 +28,7 @@ import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday.components.UserHolidayLayout
 
 class InitAppActivity : ComponentActivity() {
 
@@ -54,6 +58,17 @@ class InitAppActivity : ComponentActivity() {
                 }
             }
 
+            val onToolItemClick = remember {
+                { item: MultiFabItem ->
+                    when (item.identifier) {
+                        Tabs.NEW_EVENT.name -> {
+                            navController.navigate(Route.USERS_HOLIDAY_EDITOR.name)
+                        }
+                        else -> throw IllegalStateException("Wrong item name")
+                    }
+                }
+            }
+
             MaterialTheme {
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
 
@@ -69,23 +84,40 @@ class InitAppActivity : ComponentActivity() {
                         composable(Route.TILE_CALENDAR.name) {
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                HolidayTileLayout(calendarViewModel, onDayClick, onHolidayClick)
+                                CalendarToolsDrawer(
+                                    viewModel = calendarViewModel,
+                                    onToolClick = onToolItemClick
+                                ) {
+                                    HolidayTileLayout(calendarViewModel, onDayClick, onHolidayClick)
+                                }
                             }
                         }
                         composable(Route.LIST_CALENDAR.name) {
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                HolidayPagerListLayout(
-                                    calendarViewModel,
-                                    onDayClick,
-                                    onHolidayClick
-                                )
+                                CalendarToolsDrawer(
+                                    viewModel = calendarViewModel,
+                                    onToolClick = onToolItemClick
+                                ) {
+                                    HolidayPagerListLayout(
+                                        calendarViewModel,
+                                        onDayClick,
+                                        onHolidayClick
+                                    )
+
+                                }
                             }
                         }
                         composable(Route.HOLIDAY_PAGE.name) {
                             Column {
                                 AppBar(calendarViewModel, navController)
                                 HolidayInfoPager(calendarViewModel, currentHoliday)
+                            }
+                        }
+                        composable(Route.USERS_HOLIDAY_EDITOR.name) {
+                            Column {
+                                AppBar(calendarViewModel, navController)
+                                UserHolidayLayout()
                             }
                         }
                         composable(Route.SETTINGS.name) {

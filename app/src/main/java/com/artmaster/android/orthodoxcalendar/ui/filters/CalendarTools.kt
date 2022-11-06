@@ -51,7 +51,11 @@ fun ToolsPreview() {
 }
 
 @Composable
-fun CalendarToolsDrawer(viewModel: CalendarViewModel, content: @Composable () -> Unit) {
+fun CalendarToolsDrawer(
+    viewModel: CalendarViewModel,
+    onToolClick: (MultiFabItem) -> Unit = {},
+    content: @Composable () -> Unit
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     var isToolsPanelVisible by remember { mutableStateOf(true) }
@@ -68,6 +72,7 @@ fun CalendarToolsDrawer(viewModel: CalendarViewModel, content: @Composable () ->
                 else -> throw IllegalStateException("Wrong item name")
             }
             isToolsPanelVisible = false
+            onToolClick(item)
         }
     }
 

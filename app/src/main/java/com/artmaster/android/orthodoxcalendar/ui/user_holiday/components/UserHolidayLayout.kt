@@ -40,10 +40,16 @@ val padding = 8.dp
 val spaseBetween = 15.dp
 
 @Composable
-fun UserHolidayLayout(holiday: Holiday, onSave: (Holiday) -> Unit = {}) {
+fun UserHolidayLayout(
+    holiday: Holiday? = null,
+    onSave: (Holiday) -> Unit = {}
+) {
     val scroll = rememberScrollState(0)
+    val title = stringResource(id = R.string.add_holiday)
 
-    var target by rememberSaveable { mutableStateOf(holiday.copy()) }
+    var target by rememberSaveable {
+        mutableStateOf(holiday?.copy() ?: createNewHolidayTemplate(title))
+    }
     val months = stringArrayResource(id = R.array.months_names_gen)
     val types = stringArrayResource(id = R.array.user_holidays_names)
 
@@ -77,7 +83,7 @@ fun UserHolidayLayout(holiday: Holiday, onSave: (Holiday) -> Unit = {}) {
                 .fillMaxSize()
                 .verticalScroll(scroll)
         ) {
-            Header(title = stringResource(id = R.string.add_holiday))
+            Header(title = title)
             Spacer(modifier = Modifier.height(spaseBetween))
             Select(
                 modifier = Modifier.padding(start = padding, end = padding),
@@ -143,5 +149,17 @@ fun UserHolidayLayout(holiday: Holiday, onSave: (Holiday) -> Unit = {}) {
                 onValueChange = onTitleChange
             )
         }
+    }
+}
+
+fun createNewHolidayTemplate(title: String): Holiday {
+    val time = Time()
+    return Holiday().apply {
+        typeId = Holiday.Type.USERS_BIRTHDAY.id
+        day = time.dayOfMonth
+        month = time.month
+        monthWith0 = time.monthWith0
+        year = time.year
+        this.title = title
     }
 }

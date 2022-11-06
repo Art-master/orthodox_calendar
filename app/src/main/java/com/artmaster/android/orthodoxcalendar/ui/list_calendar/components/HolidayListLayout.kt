@@ -16,7 +16,6 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayList
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -68,32 +67,30 @@ fun HolidayPagerListLayout(
         }
     }
 
-    CalendarToolsDrawer(viewModel = viewModel) {
-        Column(Modifier.fillMaxHeight()) {
+    Column(Modifier.fillMaxHeight()) {
 
-            YearsTabs(pagerState = pagerState) {
-                yearNum = it
-                scope.launch {
-                    pagerState.animateScrollToPage(yearNum)
-                }
+        YearsTabs(pagerState = pagerState) {
+            yearNum = it
+            scope.launch {
+                pagerState.animateScrollToPage(yearNum)
             }
+        }
 
-            HorizontalPager(
-                count = Constants.HolidayList.PAGE_SIZE.value,
-                state = pagerState,
-                key = { r -> r }
-            ) { page ->
-                val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+        HorizontalPager(
+            count = Constants.HolidayList.PAGE_SIZE.value,
+            state = pagerState,
+            key = { r -> r }
+        ) { page ->
+            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-                if (needToShowLayout(pageOffset)) {
-                    HolidayList(
-                        modifier = Modifier
-                            .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                        data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
-                        onDayClick = onDayClick,
-                        onHolidayClick = onHolidayClick
-                    )
-                }
+            if (needToShowLayout(pageOffset)) {
+                HolidayList(
+                    modifier = Modifier
+                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                    data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
+                    onDayClick = onDayClick,
+                    onHolidayClick = onHolidayClick
+                )
             }
         }
     }
