@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 
 
@@ -97,15 +99,18 @@ fun SelectContent(
             ),
             colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = {
-            expanded = false
-        }) {
+        ExposedDropdownMenu(
+            modifier = Modifier.background(Background),
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            }) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(onClick = {
                     onSelect(selectionOption)
                     expanded = false
                 }) {
-                    Text(text = selectionOption)
+                    StyledText(title = selectionOption)
                 }
             }
         }

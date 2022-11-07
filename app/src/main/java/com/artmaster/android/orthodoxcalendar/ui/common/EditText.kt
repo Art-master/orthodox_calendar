@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.common
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,6 +23,8 @@ fun EditText(
     label: String,
     leftLabel: Boolean = false,
     value: String,
+    isError: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
 ) {
     if (leftLabel) {
@@ -32,14 +35,26 @@ fun EditText(
                     text = label
                 )
             }
-            EditTextContent(modifier = modifier, value = value, onValueChange = onValueChange)
+            EditTextContent(
+                modifier = modifier,
+                value = value,
+                keyboardOptions = keyboardOptions,
+                isError = isError,
+                onValueChange = onValueChange
+            )
         }
     } else {
         Column(modifier = modifier, horizontalAlignment = Alignment.Start) {
             if (label.isNotEmpty()) {
                 EditTextLabel(text = label)
             }
-            EditTextContent(modifier = modifier, value = value, onValueChange = onValueChange)
+            EditTextContent(
+                modifier = modifier,
+                value = value,
+                keyboardOptions = keyboardOptions,
+                isError = isError,
+                onValueChange = onValueChange
+            )
         }
     }
 
@@ -59,10 +74,18 @@ fun EditTextLabel(modifier: Modifier = Modifier, text: String) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun EditTextContent(modifier: Modifier, value: String, onValueChange: (String) -> Unit) {
+fun EditTextContent(
+    modifier: Modifier,
+    value: String,
+    isError: Boolean,
+    keyboardOptions: KeyboardOptions,
+    onValueChange: (String) -> Unit
+) {
     TextField(
         modifier = modifier,
+        keyboardOptions = keyboardOptions,
         readOnly = false,
+        isError = isError,
         value = value,
         onValueChange = onValueChange,
         trailingIcon = { },

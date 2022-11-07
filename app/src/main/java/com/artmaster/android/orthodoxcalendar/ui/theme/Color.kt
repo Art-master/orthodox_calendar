@@ -52,3 +52,8 @@ val FiltersLabelColor = Color(0xFFD3CFCC)
 
 val LinksColor = Color.Blue
 val ShadowColor = Color(0XFF757575)
+
+val ButtonBackground = Color(0xFFCCA94E)
+val DisabledButtonBackground = Color(0xFF9C9C9C)
+val ButtonContent = Color(0xFFFFFFFF)
+val DisabledButtonContent = Color(0xFFD1D1D1)
