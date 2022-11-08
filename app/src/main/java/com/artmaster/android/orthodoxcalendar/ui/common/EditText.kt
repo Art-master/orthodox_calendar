@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,7 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.theme.CursorColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextErrorBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.customTextSelectionColors
 
 @Composable
 fun EditText(
@@ -24,6 +28,7 @@ fun EditText(
     leftLabel: Boolean = false,
     value: String,
     isError: Boolean = false,
+    maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
 ) {
@@ -40,6 +45,7 @@ fun EditText(
                 value = value,
                 keyboardOptions = keyboardOptions,
                 isError = isError,
+                maxLines = maxLines,
                 onValueChange = onValueChange
             )
         }
@@ -53,6 +59,7 @@ fun EditText(
                 value = value,
                 keyboardOptions = keyboardOptions,
                 isError = isError,
+                maxLines = maxLines,
                 onValueChange = onValueChange
             )
         }
@@ -78,23 +85,34 @@ fun EditTextContent(
     modifier: Modifier,
     value: String,
     isError: Boolean,
+    maxLines: Int,
     keyboardOptions: KeyboardOptions,
     onValueChange: (String) -> Unit
 ) {
-    TextField(
-        modifier = modifier,
-        keyboardOptions = keyboardOptions,
-        readOnly = false,
-        isError = isError,
-        value = value,
-        onValueChange = onValueChange,
-        trailingIcon = { },
-        textStyle = TextStyle(
-            fontSize = 25.sp,
-            color = DefaultTextColor,
-            fontFamily = FontFamily(Font(R.font.cyrillic_old))
-        ),
-        colors = ExposedDropdownMenuDefaults.textFieldColors()
-    )
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+        TextField(
+            modifier = modifier,
+            keyboardOptions = keyboardOptions,
+            readOnly = false,
+            isError = isError,
+            maxLines = maxLines,
+            value = value,
+            onValueChange = onValueChange,
+            trailingIcon = { },
+            textStyle = TextStyle(
+                fontSize = 25.sp,
+                color = DefaultTextColor,
+                fontFamily = FontFamily(Font(R.font.cyrillic_old))
+            ),
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                cursorColor = CursorColor,
+                focusedIndicatorColor = CursorColor,
+                leadingIconColor = CursorColor,
+                trailingIconColor = CursorColor,
+                backgroundColor = if (isError) EditTextErrorBackground else
+                    MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity)
+            )
+        )
+    }
 }
 

@@ -12,11 +12,17 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DisabledButtonBackground
 import com.artmaster.android.orthodoxcalendar.ui.theme.DisabledButtonContent
 
 @Composable
-fun StyledButton(modifier: Modifier = Modifier, title: String, onClick: () -> Unit = {}) {
+fun StyledButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    title: String,
+    onClick: () -> Unit = {}
+) {
     Button(
         modifier = Modifier
             .padding(start = 5.dp)
             .then(modifier),
+        enabled = enabled,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = ButtonBackground,

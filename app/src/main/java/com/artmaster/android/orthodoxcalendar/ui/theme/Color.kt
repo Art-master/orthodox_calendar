@@ -1,16 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.theme
 
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.ui.graphics.Color
-
-val Teal200 = Color(0xFF03DAC5)
-
-val Cian400 = Color(0xFF26C6DA)
-val Cian200 = Color(0xFF80DEEA)
-val Cian500 = Color(0xFF00BCD4)
-
-
-val Brown50 = Color(0xFFEFEBE9)
-val Gray700 = Color(0xFF616161)
 
 val Error = Color(0xFFD32F2F)
 val ErrorInactive = Color(0XFFFFCDD2)
@@ -40,6 +31,7 @@ val HeaderTextColor = Color(0XFFE53935)
 
 
 val EditTextBackground = Background
+val EditTextErrorBackground = Error.copy(alpha = 0.3f)
 val EditTextIndicatorColor = Color(0xFFCCA94E)
 val EditTextCursorColor = Color(0xFFC09831)
 val DisabledTextColor = DefaultTextColor.copy(alpha = 0.5f)
@@ -53,7 +45,14 @@ val FiltersLabelColor = Color(0xFFD3CFCC)
 val LinksColor = Color.Blue
 val ShadowColor = Color(0XFF757575)
 
+val CursorColor = Color(0xFFFF6D00)
+
 val ButtonBackground = Color(0xFFCCA94E)
 val DisabledButtonBackground = Color(0xFF9C9C9C)
 val ButtonContent = Color(0xFFFFFFFF)
 val DisabledButtonContent = Color(0xFFD1D1D1)
+
+val customTextSelectionColors = TextSelectionColors(
+    handleColor = CursorColor,
+    backgroundColor = Background
+)

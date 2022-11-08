@@ -70,20 +70,33 @@ fun UserHolidayLayout(
     var dayError by rememberSaveable { mutableStateOf("") }
     val onDayChange = remember {
         { day: String ->
-            dayError = if (day.isDigitsOnly()
-                    .not() || day.toInt() > MAX_DAYS_IN_MONTH_COUNT
-            ) "error" else ""
+            dayError =
+                if (day.isEmpty() || !day.isDigitsOnly() || day.toInt() > MAX_DAYS_IN_MONTH_COUNT
+                ) "error" else ""
 
-            target = target.copy(day = day.toInt())
+            if (day.isEmpty()) {
+                target = target.copy(day = 0)
+            } else if (day.isDigitsOnly()) {
+                target = target.copy(day = day.toInt())
+            }
+        }
+    }
+
+    var yearEnabled by rememberSaveable { mutableStateOf(target.year != 0) }
+    val onYearFlagChange = remember {
+        { flag: Boolean ->
+            yearEnabled = flag
         }
     }
 
     val onMonthSelect = remember {
         { monthName: String ->
             val index = months.indexOf(monthName)
-/*          val time = Time()
-            time.calendar.set(time.year, index, time.dayOfMonth)
-            if (target.day > time.daysInMonth) onDayChange(time.daysInMonth.toString())*/
+            if (yearEnabled) {
+                val time = Time()
+                time.calendar.set(time.year, index, time.dayOfMonth)
+                if (target.day > time.daysInMonth) dayError = "error"
+            }
 
             target = target.copy(month = index.inc())
         }
@@ -96,18 +109,18 @@ fun UserHolidayLayout(
             target = target.copy(title = title)
         }
     }
-    var yearEnabled by rememberSaveable { mutableStateOf(target.year != 0) }
-    val onYearFlagChange = remember {
-        { flag: Boolean ->
-            yearEnabled = flag
-        }
-    }
 
     var yearError by rememberSaveable { mutableStateOf("") }
     val onYearChange = remember {
         { year: String ->
-            yearError = if (year.isDigitsOnly().not() || year.toInt() > time.year) "error" else ""
-            if (year.length <= MAX_YEAR_LENGTH) target = target.copy(year = year.toInt())
+            yearError =
+                if (year.isEmpty() || !year.isDigitsOnly() || year.toInt() > time.year) "error" else ""
+
+            if (year.isEmpty()) {
+                target = target.copy(year = 0)
+            } else if (year.length <= MAX_YEAR_LENGTH && year.isDigitsOnly()) {
+                target = target.copy(year = year.toInt())
+            }
         }
     }
 
@@ -159,7 +172,7 @@ fun UserHolidayLayout(
                         .padding(start = padding, end = padding),
                     label = stringResource(id = R.string.day_title),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    value = target.day.toString(),
+                    value = (if (target.day > 0) target.day else "").toString(),
                     isError = dayError.isNotEmpty(),
                     onValueChange = onDayChange
                 )
@@ -191,7 +204,7 @@ fun UserHolidayLayout(
                             .padding(start = padding, end = padding),
                         label = "",
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        value = target.year.toString(),
+                        value = (if (target.year > 0) target.year else "").toString(),
                         isError = yearError.isNotEmpty(),
                         onValueChange = onYearChange
                     )
@@ -208,6 +221,7 @@ fun UserHolidayLayout(
                 label = stringResource(id = R.string.description_holiday),
                 value = target.description,
                 isError = descriptionError.isNotEmpty(),
+                maxLines = 15,
                 onValueChange = onDescriptionChange
             )
 
@@ -216,6 +230,10 @@ fun UserHolidayLayout(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 StyledButton(
                     title = stringResource(id = R.string.save_holiday),
+                    enabled = titleError.isEmpty()
+                            && descriptionError.isEmpty()
+                            && yearError.isEmpty()
+                            && dayError.isEmpty(),
                     onClick = { onSave(target) })
             }
         }

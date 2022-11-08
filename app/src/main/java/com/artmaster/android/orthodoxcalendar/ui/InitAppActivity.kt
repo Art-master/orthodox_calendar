@@ -115,7 +115,9 @@ class InitAppActivity : ComponentActivity() {
                             }
                         }
                         composable(Route.USERS_HOLIDAY_EDITOR.name) {
-                            UserHolidayLayout()
+                            UserHolidayLayout() {
+
+                            }
                         }
                         composable(Route.SETTINGS.name) {
                             Column {

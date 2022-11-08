@@ -10,7 +10,6 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import com.artmaster.android.orthodoxcalendar.R
 
 /**
  * Class for justify text
@@ -53,11 +52,6 @@ constructor(
     private var mLineBreaker: LineBreaker
 
     init {
-        CustomFont.setCustomFont(
-            this, context, attrs,
-            R.styleable.customizableView,
-            R.styleable.customizableView_customFont
-        )
 
         mTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
         //final Resources.Theme theme = context.getTheme();

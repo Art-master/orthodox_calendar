@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
+import com.artmaster.android.orthodoxcalendar.ui.theme.CursorColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.customTextSelectionColors
 
 
 @Composable
@@ -78,39 +81,45 @@ fun SelectContent(
 ) {
 
     var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
-        expanded = !expanded
-    }) {
-        TextField(
-            modifier = modifier,
-            readOnly = true,
-            value = selectedOption,
-            onValueChange = { },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
+            expanded = !expanded
+        }) {
+            TextField(
+                modifier = modifier,
+                readOnly = true,
+                value = selectedOption,
+                onValueChange = { },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                textStyle = TextStyle(
+                    fontSize = 25.sp,
+                    color = DefaultTextColor,
+                    fontFamily = FontFamily(Font(R.font.cyrillic_old))
+                ),
+                colors = ExposedDropdownMenuDefaults.textFieldColors(
+                    cursorColor = CursorColor,
+                    focusedIndicatorColor = CursorColor,
+                    leadingIconColor = CursorColor,
+                    trailingIconColor = CursorColor
                 )
-            },
-            textStyle = TextStyle(
-                fontSize = 25.sp,
-                color = DefaultTextColor,
-                fontFamily = FontFamily(Font(R.font.cyrillic_old))
-            ),
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
-        )
-        ExposedDropdownMenu(
-            modifier = Modifier.background(Background),
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(onClick = {
-                    onSelect(selectionOption)
+            )
+            ExposedDropdownMenu(
+                modifier = Modifier.background(Background),
+                expanded = expanded,
+                onDismissRequest = {
                     expanded = false
                 }) {
-                    StyledText(title = selectionOption)
+                options.forEach { selectionOption ->
+                    DropdownMenuItem(onClick = {
+                        onSelect(selectionOption)
+                        expanded = false
+                    }) {
+                        StyledText(title = selectionOption)
+                    }
                 }
             }
         }

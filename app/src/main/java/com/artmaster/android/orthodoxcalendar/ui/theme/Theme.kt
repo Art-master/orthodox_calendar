@@ -8,17 +8,17 @@ import androidx.compose.runtime.Composable
 import com.c23v.ui.theme.Shapes
 
 private val DarkColorPalette = darkColors(
-    primary = Cian200,
-    primaryVariant = Cian400,
-    secondary = Teal200,
-    background = Gray700,
+    primary = TopBarColor,
+    primaryVariant = Background,
+    secondary = Background,
+    background = Background,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Cian500,
-    primaryVariant = Cian400,
-    secondary = Teal200,
-    background = Brown50,
+    primary = TopBarColor,
+    primaryVariant = Background,
+    secondary = Background,
+    background = Background,
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,
