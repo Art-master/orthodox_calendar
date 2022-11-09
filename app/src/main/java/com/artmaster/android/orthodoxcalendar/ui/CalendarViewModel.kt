@@ -121,6 +121,38 @@ class CalendarViewModel : ViewModel() {
         return filters
     }
 
+    fun insertHoliday(holiday: Holiday) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.insert(holiday)
+                //fixCaches(holiday)
+                clearCaches()
+            }
+        }
+    }
+
+    fun updateHoliday(holiday: Holiday) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.update(holiday)
+                //fixCaches(holiday)
+                clearCaches()
+            }
+        }
+    }
+
+    private suspend fun fixCaches(value: Holiday) {
+        withContext(Dispatchers.Main) {
+            daysByMonthCache.forEach { entry ->
+                entry.value.value.forEach { day ->
+                    day.holidays.find {
+                        it.day >= 1
+                    }
+                }
+            }
+        }
+    }
+
     fun setYear(year: Int) {
         clearCaches()
         this.year.value = year
@@ -179,5 +211,15 @@ class CalendarViewModel : ViewModel() {
     fun getAllHolidaysOfYear(): List<Holiday> {
         val days = daysByYearsCache[currentTime.year]?.value?.flatMap { d -> d.holidays }
         return days!!
+    }
+
+    fun getHolidayById(id: Long): Holiday {
+        val days = daysByYearsCache[currentTime.year]?.value
+        var holiday = Holiday()
+        days?.first { day ->
+            holiday = day.holidays.first { it.id == id }
+            return@first true
+        }
+        return holiday
     }
 }
