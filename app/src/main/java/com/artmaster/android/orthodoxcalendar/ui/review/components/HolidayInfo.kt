@@ -45,6 +45,7 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.StyleD
 fun HolidayPagePreview() {
     val holiday = Holiday(
         imageId = "image1",
+        isCreatedByUser = true,
         title = "Святителей Московских и всея России чудотворцев Петра, Алексия, Ионы, Макария, Филиппа, Иова, Ермогена, Филарета, Иннокентия, Тихона, Макария и Петра",
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
@@ -58,7 +59,9 @@ fun HolidayPagePreview() {
 fun HolidayPage(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel?,
-    holiday: Holiday
+    holiday: Holiday,
+    onEditClick: (holiday: Holiday) -> Unit = {},
+    onDeleteClick: (holiday: Holiday) -> Unit = {}
 ) {
 
     val context = LocalContext.current
@@ -91,6 +94,14 @@ fun HolidayPage(
             contentScale = ContentScale.FillHeight,
             alignment = Alignment.Center
         )
+
+        if (holiday.isCreatedByUser) {
+            UserHolidayControlMenu(
+                holiday = holiday,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick
+            )
+        }
 
         Column(
             modifier = Modifier

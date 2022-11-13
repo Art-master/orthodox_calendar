@@ -62,8 +62,7 @@ class InitAppActivity : ComponentActivity() {
                 { item: MultiFabItem ->
                     when (item.identifier) {
                         Tabs.NEW_EVENT.name -> {
-                            val id = currentHoliday.value!!.id
-                            navController.navigate(route = Route.USERS_HOLIDAY_EDITOR.name + "/" + id)
+                            navController.navigate(route = Route.USERS_HOLIDAY_EDITOR.name + "/" + 0L)
                         }
                         else -> throw IllegalStateException("Wrong item name")
                     }
@@ -118,12 +117,17 @@ class InitAppActivity : ComponentActivity() {
                         composable(
                             route = Route.USERS_HOLIDAY_EDITOR.name + "/{id}"
                         ) { backStackEntry ->
-                            val id = backStackEntry.arguments?.getString("id")
-                            val holiday = id?.let {
-                                calendarViewModel.getHolidayById(it.toLong())
-                            }
+                            val id = backStackEntry.arguments!!.getString("id")!!
+                            val holiday = if (id != "0") {
+                                calendarViewModel.getHolidayById(id.toLong())
+                            } else null
+
                             UserHolidayLayout(holiday) { data ->
-                                calendarViewModel.insertHoliday(data)
+                                if (holiday == null) {
+                                    calendarViewModel.insertHoliday(data)
+                                } else {
+                                    calendarViewModel.updateHoliday(data)
+                                }
                             }
                         }
                         composable(Route.SETTINGS.name) {
