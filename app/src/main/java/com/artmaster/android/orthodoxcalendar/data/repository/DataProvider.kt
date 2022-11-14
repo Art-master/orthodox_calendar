@@ -191,16 +191,18 @@ class DataProvider : RepositoryConnector {
         return calculateDynamicData(holidays, time.year)
     }
 
-    override fun insert(holiday: Holiday) {
+    override fun insert(holiday: Holiday): Holiday {
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holidayDao = database.get(context).holidayDao()
         val id = holidayDao.insertHoliday(holiday)
+        holiday.id = id
 
         val additionalData = AdditionalHolidayData().fill(holiday)
         additionalData.holidayId = id
         fullHolidayDao.insert(additionalData)
         HolidaysCache.holidays = emptyList()
         database.close()
+        return holiday
     }
 
     override fun insertHolidays(holidays: List<Holiday>) {
@@ -226,6 +228,7 @@ class DataProvider : RepositoryConnector {
 
         additionalHolidayDataDao.update(additionalData)
         database.close()
+
     }
 
     override fun getFullHolidayData(id: Long, year: Int): Holiday {

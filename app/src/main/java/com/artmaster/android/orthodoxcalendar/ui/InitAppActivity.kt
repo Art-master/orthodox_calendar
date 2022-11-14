@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -45,7 +46,6 @@ class InitAppActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val currentHoliday = calendarViewModel.getCurrentHoliday()
 
             val onDayClick = remember {
                 { day: Day -> calendarViewModel.setDayOfMonth(day = day.dayOfMonth) }
@@ -53,7 +53,6 @@ class InitAppActivity : ComponentActivity() {
 
             val onHolidayClick = remember {
                 { holiday: Holiday ->
-                    calendarViewModel.loadHolidayAdditionalInfo(holiday)
                     navController.navigate(Route.HOLIDAY_PAGE.name)
                 }
             }
@@ -64,6 +63,7 @@ class InitAppActivity : ComponentActivity() {
                         Tabs.NEW_EVENT.name -> {
                             navController.navigate(route = Route.USERS_HOLIDAY_EDITOR.name + "/" + 0L)
                         }
+                        Tabs.FILTERS.name -> {} //No actions
                         else -> throw IllegalStateException("Wrong item name")
                     }
                 }
@@ -108,15 +108,14 @@ class InitAppActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        composable(Route.HOLIDAY_PAGE.name) {
+                        composable("${Route.HOLIDAY_PAGE.name}/{id}") { backStackEntry ->
+                            val id = backStackEntry.arguments!!.getString("id")!!
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                HolidayInfoPager(calendarViewModel, currentHoliday)
+                                HolidayInfoPager(calendarViewModel, id.toLong())
                             }
                         }
-                        composable(
-                            route = Route.USERS_HOLIDAY_EDITOR.name + "/{id}"
-                        ) { backStackEntry ->
+                        composable(route = "${Route.USERS_HOLIDAY_EDITOR.name}/{id}") { backStackEntry ->
                             val id = backStackEntry.arguments!!.getString("id")!!
                             val holiday = if (id != "0") {
                                 calendarViewModel.getHolidayById(id.toLong())
@@ -124,9 +123,13 @@ class InitAppActivity : ComponentActivity() {
 
                             UserHolidayLayout(holiday) { data ->
                                 if (holiday == null) {
-                                    calendarViewModel.insertHoliday(data)
+                                    calendarViewModel.insertHoliday(data) {
+                                        navigateToHolidayPage(navController, it.id)
+                                    }
                                 } else {
-                                    calendarViewModel.updateHoliday(data)
+                                    calendarViewModel.updateHoliday(data) {
+                                        navigateToHolidayPage(navController, data.id)
+                                    }
                                 }
                             }
                         }
@@ -145,6 +148,14 @@ class InitAppActivity : ComponentActivity() {
 
                     }
                 }
+            }
+        }
+    }
+
+    private fun navigateToHolidayPage(navController: NavHostController, id: Long) {
+        navController.navigate("${Route.HOLIDAY_PAGE.name}/${id}") {
+            popUpTo("${Route.USERS_HOLIDAY_EDITOR.name}/{id}") {
+                inclusive = true
             }
         }
     }

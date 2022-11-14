@@ -121,22 +121,26 @@ class CalendarViewModel : ViewModel() {
         return filters
     }
 
-    fun insertHoliday(holiday: Holiday) {
+    fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {}) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.insert(holiday)
-                //fixCaches(holiday)
                 clearCaches()
+                withContext(Dispatchers.Main) {
+                    onComplete(holiday)
+                }
             }
         }
     }
 
-    fun updateHoliday(holiday: Holiday) {
+    fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {}) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.update(holiday)
-                //fixCaches(holiday)
                 clearCaches()
+                withContext(Dispatchers.Main) {
+                    onComplete(holiday)
+                }
             }
         }
     }

@@ -22,15 +22,7 @@ import kotlin.math.absoluteValue
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
 fun HolidayInfoPagerPreview() {
-    val holiday = Holiday(
-        imageId = "image1",
-        title = "Самый большой праздник",
-        description = "Просто длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
-    )
-
-    val data = remember { mutableStateOf<Holiday?>(holiday) }
-
-    HolidayInfoPager(viewModel = null, currentHoliday = data)
+    HolidayInfoPager(viewModel = null, holidayId = 0L)
 }
 
 
@@ -38,7 +30,7 @@ fun HolidayInfoPagerPreview() {
 @Composable
 fun HolidayInfoPager(
     viewModel: CalendarViewModel?,
-    currentHoliday: MutableState<Holiday?>
+    holidayId: Long
 ) {
     viewModel ?: return
 
@@ -52,7 +44,7 @@ fun HolidayInfoPager(
     LaunchedEffect(year) {
         viewModel.loadAllHolidaysOfYear(year)
         val hs = viewModel.getAllHolidaysOfYear()
-        currentHolidayIndex = hs.indexOfFirst { h -> h.id == currentHoliday.value?.id }
+        currentHolidayIndex = hs.indexOfFirst { h -> h.id == holidayId }
         holidays = hs
         isInit = true
     }

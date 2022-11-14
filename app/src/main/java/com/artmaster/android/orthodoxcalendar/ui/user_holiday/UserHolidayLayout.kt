@@ -132,6 +132,14 @@ fun UserHolidayLayout(
         }
     }
 
+    val onCheckAndSave = remember {
+        { holiday: Holiday ->
+            if (!yearEnabled) holiday.year = 0
+            holiday.isCreatedByUser = true
+            onSave(holiday)
+        }
+    }
+
     Box {
         Column(
             Modifier
@@ -234,7 +242,7 @@ fun UserHolidayLayout(
                             && descriptionError.isEmpty()
                             && yearError.isEmpty()
                             && dayError.isEmpty(),
-                    onClick = { onSave(target) })
+                    onClick = { onCheckAndSave(target) })
             }
         }
     }
