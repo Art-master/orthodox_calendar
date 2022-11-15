@@ -34,6 +34,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
@@ -77,6 +78,7 @@ fun HolidayPage(
     }
 
     val scroll = rememberScrollState(0)
+    val modalState = remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -99,7 +101,7 @@ fun HolidayPage(
             UserHolidayControlMenu(
                 holiday = holiday,
                 onEditClick = onEditClick,
-                onDeleteClick = onDeleteClick
+                onDeleteClick = { modalState.value = true }
             )
         }
 
@@ -148,6 +150,13 @@ fun HolidayPage(
                     HolidayDescriptionLayout(holiday = it)
                 }
             }
+        }
+
+        DeleteHolidayDialog(
+            state = modalState.value,
+            onRejectClick = { modalState.value = false }) {
+            onDeleteClick(holiday)
+            modalState.value = false
         }
     }
 }

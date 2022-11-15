@@ -30,7 +30,9 @@ fun HolidayInfoPagerPreview() {
 @Composable
 fun HolidayInfoPager(
     viewModel: CalendarViewModel?,
-    holidayId: Long
+    holidayId: Long,
+    onEditClick: (holiday: Holiday) -> Unit = {},
+    onDeleteClick: (holiday: Holiday) -> Unit = {}
 ) {
     viewModel ?: return
 
@@ -67,7 +69,9 @@ fun HolidayInfoPager(
             HolidayPage(
                 modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                 viewModel = viewModel,
-                holiday = holidays[page]
+                holiday = holidays[page],
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick
             )
         }
     }

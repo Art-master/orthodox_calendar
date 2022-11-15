@@ -61,7 +61,7 @@ class InitAppActivity : ComponentActivity() {
                 { item: MultiFabItem ->
                     when (item.identifier) {
                         Tabs.NEW_EVENT.name -> {
-                            navController.navigate(route = Route.USERS_HOLIDAY_EDITOR.name + "/" + 0L)
+                            navController.navigate(route = "${Route.USERS_HOLIDAY_EDITOR.name}/0")
                         }
                         Tabs.FILTERS.name -> {} //No actions
                         else -> throw IllegalStateException("Wrong item name")
@@ -109,10 +109,27 @@ class InitAppActivity : ComponentActivity() {
                             }
                         }
                         composable("${Route.HOLIDAY_PAGE.name}/{id}") { backStackEntry ->
+                            val onEditClick = remember {
+                                { holiday: Holiday ->
+                                    navController.navigate(route = "${Route.USERS_HOLIDAY_EDITOR.name}/${holiday.id}")
+                                }
+                            }
+                            val onDeleteClick = remember {
+                                { holiday: Holiday ->
+                                    calendarViewModel.deleteHoliday(holiday.id)
+                                    navigateToCalendar(navController)
+                                }
+                            }
+
                             val id = backStackEntry.arguments!!.getString("id")!!
                             Column {
                                 AppBar(calendarViewModel, navController)
-                                HolidayInfoPager(calendarViewModel, id.toLong())
+                                HolidayInfoPager(
+                                    viewModel = calendarViewModel,
+                                    holidayId = id.toLong(),
+                                    onEditClick = onEditClick,
+                                    onDeleteClick = onDeleteClick
+                                )
                             }
                         }
                         composable(route = "${Route.USERS_HOLIDAY_EDITOR.name}/{id}") { backStackEntry ->
@@ -158,6 +175,15 @@ class InitAppActivity : ComponentActivity() {
                 inclusive = true
             }
         }
+    }
+
+    private fun navigateToCalendar(navController: NavHostController) {
+        val currentRoute = navController.currentDestination?.route ?: ""
+        val targetRoute = if (currentRoute == Route.TILE_CALENDAR.name) {
+            Route.LIST_CALENDAR.name
+        } else Route.TILE_CALENDAR.name
+
+        navController.navigate(targetRoute)
     }
 
     private fun initNotifications() = AlarmBuilder.build(applicationContext)

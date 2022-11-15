@@ -145,13 +145,13 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    private suspend fun fixCaches(value: Holiday) {
-        withContext(Dispatchers.Main) {
-            daysByMonthCache.forEach { entry ->
-                entry.value.value.forEach { day ->
-                    day.holidays.find {
-                        it.day >= 1
-                    }
+    fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit = {}) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteById(id)
+                clearCaches()
+                withContext(Dispatchers.Main) {
+                    onComplete(id)
                 }
             }
         }
@@ -188,18 +188,6 @@ class CalendarViewModel : ViewModel() {
 
     fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
         return daysByYearsCache[yearNum]!!
-    }
-
-    fun loadHolidayAdditionalInfo(holiday: Holiday) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val value = repository.getFullHolidayData(holiday.id, holiday.year)
-                withContext(Dispatchers.Main) {
-                    val data = getCurrentHoliday()
-                    data.value = value
-                }
-            }
-        }
     }
 
     suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday {
