@@ -75,14 +75,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.firebase:firebase-core:21.1.0"
 
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.databinding:databinding-common:7.2.2'
-    implementation 'androidx.databinding:databinding-adapters:7.2.2'
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     implementation 'com.google.android.material:material:1.6.1'
 
@@ -129,14 +123,6 @@ dependencies {
     // alternatively - without Android dependencies for tests
     implementation "androidx.paging:paging-compose:1.0.0-alpha16"
 
-    //Retrofit
-    implementation 'com.github.cd-butterfly:retrofit:1.0.3'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    //Rx
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex:rxkotlin:2.0.0-RC1'
-
     //Dagger 2
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
@@ -164,11 +150,6 @@ dependencies {
     // compose image loading
     implementation "io.coil-kt:coil:2.2.1"
     implementation "io.coil-kt:coil-compose:2.2.1"
-
-    //Moxy
-    implementation "com.github.moxy-community:moxy:$moxy_version"
-    implementation "com.github.moxy-community:moxy-androidx:$moxy_version"
-    kapt "com.github.moxy-community:moxy-compiler:$moxy_version"
 
     implementation 'androidx.multidex:multidex:2.0.1'
 

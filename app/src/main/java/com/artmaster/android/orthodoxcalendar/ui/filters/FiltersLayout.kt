@@ -36,9 +36,9 @@ fun FiltersLayoutWrapper(viewModel: CalendarViewModel) {
     val onFilterChange = remember {
         { filter: Filter, enabled: Boolean ->
             if (enabled) {
-                viewModel.removeFilter(filter)
-            } else {
                 viewModel.addFilter(filter)
+            } else {
+                viewModel.removeFilter(filter)
             }
 
         }
