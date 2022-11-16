@@ -85,6 +85,12 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
+    fun loadAllHolidaysOfCurrentYear() {
+        viewModelScope.launch {
+            loadAllHolidaysOfYear(currentTime.year)
+        }
+    }
+
     suspend fun loadAllHolidaysOfYear(year: Int) {
         if (year !in availableYears.first()..availableYears.last()) return
 
@@ -97,8 +103,8 @@ class CalendarViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             val value = repository.getYearDays(year, filters.value)
             withContext(Dispatchers.Main) {
-                val monthData = getCurrentYearData(year)
-                monthData.value = value
+                val data = getCurrentYearData(year)
+                data.value = value
             }
         }
     }
@@ -162,7 +168,7 @@ class CalendarViewModel : ViewModel() {
         this.year.value = year
     }
 
-    private fun clearCaches() {
+    fun clearCaches() {
         daysByMonthCache.forEach { it.value.value = emptyList() }
         daysByYearsCache.forEach { it.value.value = emptyList() }
     }
@@ -208,9 +214,12 @@ class CalendarViewModel : ViewModel() {
     fun getHolidayById(id: Long): Holiday {
         val days = daysByYearsCache[currentTime.year]?.value
         var holiday = Holiday()
-        days?.first { day ->
-            holiday = day.holidays.first { it.id == id }
-            return@first true
+        days?.forEach { day ->
+            val found = day.holidays.find { it.id == id }
+            if (found != null) {
+                holiday = found
+                return@forEach
+            }
         }
         return holiday
     }

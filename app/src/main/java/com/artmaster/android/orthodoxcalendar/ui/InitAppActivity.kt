@@ -141,10 +141,14 @@ class InitAppActivity : ComponentActivity() {
                             UserHolidayLayout(holiday) { data ->
                                 if (holiday == null) {
                                     calendarViewModel.insertHoliday(data) {
+                                        calendarViewModel.clearCaches()
+                                        calendarViewModel.loadAllHolidaysOfCurrentYear()
                                         navigateToHolidayPage(navController, it.id)
                                     }
                                 } else {
                                     calendarViewModel.updateHoliday(data) {
+                                        calendarViewModel.clearCaches()
+                                        calendarViewModel.loadAllHolidaysOfCurrentYear()
                                         navigateToHolidayPage(navController, data.id)
                                     }
                                 }

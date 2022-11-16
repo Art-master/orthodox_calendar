@@ -169,11 +169,10 @@ class DataProvider : RepositoryConnector {
     }
 
     private fun getDataFromDb(): List<Holiday> {
-        val data = HolidaysCache.holidays
-        if (data.isEmpty().not()) return data
+        if (HolidaysCache.isNotEmpty()) return HolidaysCache.getCopy()
         val db = database.get(context)
         val holidays = db.holidayDao().getAll()
-        HolidaysCache.holidays = holidays
+        HolidaysCache.set(holidays)
         db.close()
         return holidays
     }
@@ -200,7 +199,7 @@ class DataProvider : RepositoryConnector {
         val additionalData = AdditionalHolidayData().fill(holiday)
         additionalData.holidayId = id
         fullHolidayDao.insert(additionalData)
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
         database.close()
         return holiday
     }
@@ -220,7 +219,7 @@ class DataProvider : RepositoryConnector {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.update(holiday)
 
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
 
         val additionalHolidayDataDao = database.get(context).additionalHolidayDataDao()
         val data = additionalHolidayDataDao.getFullDataByHolidayId(holiday.id)
@@ -247,7 +246,7 @@ class DataProvider : RepositoryConnector {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.delete(id)
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
         fullHolidayDao.delete(id)
         database.close()
     }
