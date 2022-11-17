@@ -27,8 +27,6 @@ class CalendarViewModel : ViewModel() {
     private val year = mutableStateOf(currentTime.year)
     val availableYears = getAvailableYears(currentYear = currentTime.year)
 
-    private val currentHoliday = mutableStateOf<Holiday?>(null)
-
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
             for (num in 0 until MONTH_COUNT) this[num] = mutableStateOf(ArrayList())
@@ -69,12 +67,6 @@ class CalendarViewModel : ViewModel() {
 
     suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int) {
         if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
-
-        val prev = daysByMonthCache[monthNumWith0]
-        val oldYear = getYear().value
-        if (year != oldYear && prev != null && prev.value.isNotEmpty()) {
-            return
-        }
 
         withContext(Dispatchers.IO) {
             val value = repository.getMonthDays(monthNumWith0, year, filters.value)
@@ -122,6 +114,12 @@ class CalendarViewModel : ViewModel() {
         filters.value = copyData
         item.enabled = false
     }
+
+    fun clearAllFilters() {
+        filters.value = HashSet()
+        Filter.values().forEach { it.enabled = false }
+    }
+
 
     fun getFilters(): MutableState<Set<Filter>> {
         return filters
@@ -200,10 +198,6 @@ class CalendarViewModel : ViewModel() {
         return withContext(Dispatchers.IO) {
             repository.getFullHolidayData(holidayId, year)
         }
-    }
-
-    fun getCurrentHoliday(): MutableState<Holiday?> {
-        return currentHoliday
     }
 
     fun getAllHolidaysOfYear(): List<Holiday> {

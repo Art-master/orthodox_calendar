@@ -172,6 +172,7 @@
     <string name="filter_memory_days">Дни памяти</string>
     <string name="filter_name_days">Именины</string>
     <string name="filter_birthdays">Дни рождения</string>
+    <string name="filter_clear_all">Очистить все</string>
 
     <!-- New holiday -->
     <string name="add_holiday">Новое событие</string>

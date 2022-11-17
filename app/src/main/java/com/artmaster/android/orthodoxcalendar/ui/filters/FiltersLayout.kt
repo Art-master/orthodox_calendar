@@ -3,31 +3,40 @@ package com.artmaster.android.orthodoxcalendar.ui.filters
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
+import com.artmaster.android.orthodoxcalendar.ui.common.StyledButton
 
 @Preview
 @Composable
 fun FiltersLayoutPreview() {
     val onFilterChange = remember { { _: Filter, _: Boolean -> } }
+    val clearAllFilters = remember { {} }
 
     val filters = remember {
         mutableStateOf(Filter.values())
     }
 
-    FiltersLayout(filters = filters, onFilterChange = onFilterChange)
+    FiltersLayout(
+        filters = filters,
+        onFilterChange = onFilterChange,
+        clearAllFilters = clearAllFilters
+    )
 }
 
 @Composable
@@ -40,7 +49,12 @@ fun FiltersLayoutWrapper(viewModel: CalendarViewModel) {
             } else {
                 viewModel.removeFilter(filter)
             }
+        }
+    }
 
+    val clearAllFilters = remember {
+        {
+            viewModel.clearAllFilters()
         }
     }
 
@@ -50,7 +64,8 @@ fun FiltersLayoutWrapper(viewModel: CalendarViewModel) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         FiltersLayout(
             filters = filters,
-            onFilterChange = onFilterChange
+            onFilterChange = onFilterChange,
+            clearAllFilters = clearAllFilters
         )
     }
 }
@@ -58,9 +73,11 @@ fun FiltersLayoutWrapper(viewModel: CalendarViewModel) {
 @Composable
 fun FiltersLayout(
     filters: MutableState<Array<Filter>>,
-    onFilterChange: (Filter, Boolean) -> Unit
+    onFilterChange: (Filter, Boolean) -> Unit,
+    clearAllFilters: () -> Unit
 ) {
     val scroll = rememberScrollState(0)
+    var updateFlag by remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -72,11 +89,27 @@ fun FiltersLayout(
 
         Divider()
 
-        filters.value.forEach { filter ->
-            FilterCheckBox(
-                filter = filter,
-                onFilterChange = onFilterChange
-            )
+        key(updateFlag) {
+            filters.value.forEach { filter ->
+                FilterCheckBox(
+                    filter = filter,
+                    updateFlag = updateFlag,
+                    onFilterChange = {
+                        onFilterChange(filter, it)
+                        updateFlag = updateFlag.not()
+                    }
+                )
+            }
+        }
+
+        StyledButton(
+            modifier = Modifier
+                .align(CenterHorizontally)
+                .padding(top = 50.dp),
+            title = stringResource(id = R.string.filter_clear_all)
+        ) {
+            clearAllFilters()
+            updateFlag = updateFlag.not()
         }
     }
 }
@@ -84,15 +117,10 @@ fun FiltersLayout(
 @Composable
 fun FilterCheckBox(
     filter: Filter,
-    onFilterChange: (filter: Filter, enabled: Boolean) -> Unit
+    updateFlag: Boolean,
+    onFilterChange: (enabled: Boolean) -> Unit
 ) {
-    var state by remember { mutableStateOf(filter.enabled) }
-    val onCheck = remember {
-        { flag: Boolean ->
-            onFilterChange(filter, flag)
-            state = flag
-        }
-    }
+
     val title = stringResource(id = filter.resId)
-    CheckBox(title = title, state = state, onCheck = onCheck)
+    CheckBox(title = title, state = filter.enabled, onCheck = onFilterChange)
 }

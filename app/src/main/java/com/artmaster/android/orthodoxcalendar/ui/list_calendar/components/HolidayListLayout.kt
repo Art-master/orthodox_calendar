@@ -46,11 +46,13 @@ fun HolidayPagerListLayout(
     val availableYears = viewModel.availableYears
     val startIndex = viewModel.getYear().value - availableYears.first()
     var yearNum by remember { mutableStateOf(startIndex) }
+    val currentYear by remember { viewModel.getYear() }
 
     val pagerState = rememberPagerState(yearNum)
     val scope = rememberCoroutineScope()
+    val filters = viewModel.getFilters()
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, currentYear, filters.value) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setMonth(page)
