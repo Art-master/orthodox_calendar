@@ -2,8 +2,6 @@ package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.*
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Calculated dynamic holidays
@@ -116,7 +114,6 @@ class DynamicData {
 
         holiday.day = time.dayOfMonth
         holiday.month = time.month
-        holiday.monthWith0 = time.monthWith0
     }
 
     private fun calculateLastDayOfWeekTime(month: Int, day: Int, year: Int, dayOfWeek: Int): Time {
@@ -174,22 +171,22 @@ class DynamicData {
             day.fasting.permissions = listOf(Fasting.Permission.FISH)
         }
         if (isPeterAndPaulFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.PETER_AND_PAUL_FASTING
             fillDayAsPeterFasting(day)
         }
         if (isAssumptionFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.ASSUMPTION_FASTING
             fillDayAsAssumptionFasting(day)
         }
         if (isChristmasFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.CHRISTMAS_FASTING
             fillDayAsChristmasFasting(day)
         }
         if (isGreatFasting(day)) {
-            day.fasting.type = Fasting.Type.FASTING
+            day.fasting.type = Fasting.Type.GREAT_FASTING
             fillDayAsGreatFasting(day)
         }
-        if (isYole(day) || isBeheadingOfStJohnTheBaptist(day) || isFeastOfTheCross(day)) {
+        if (isEpiphanyEve(day) || isBeheadingOfStJohnTheBaptist(day) || isFeastOfTheCross(day)) {
             day.fasting.type = Fasting.Type.FASTING_DAY
             day.fasting.permissions = listOf(Fasting.Permission.STRICT)
         }
@@ -295,7 +292,7 @@ class DynamicData {
         return false
     }
 
-    private fun isYole(day: Day): Boolean {
+    private fun isEpiphanyEve(day: Day): Boolean {
         return day.month == Month.JANUARY.num && day.dayOfMonth == 18
     }
 
@@ -377,12 +374,8 @@ class DynamicData {
         setSolidWeek(day)
     }
 
-    fun fillDayInfoByHoliday(day: Day, holiday: Holiday) {
-        setMemorialType(day, holiday)
-    }
-
-    private fun setMemorialType(day: Day, holiday: Holiday) {
-        day.isMemorial = when (holiday.dynamicType) {
+    private fun getMemorialType(holiday: Holiday): Boolean {
+        return when (holiday.dynamicType) {
             MovableDay.MEATLESS_SATURDAY.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_2.dynamicType,
             MovableDay.SATURDAY_OF_PARENT_3.dynamicType,

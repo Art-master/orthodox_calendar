@@ -1,11 +1,13 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Day(
-        var year: Int = 0,
-        var month: Int = 0,
-        var dayOfMonth: Int = 0,
-        var dayInWeek: Int = 0,
-        var holidays: ArrayList<Holiday> = ArrayList(),
-        var fasting: Fasting = Fasting(),
-        var isMemorial: Boolean = false
+    val year: Int,
+    val month: Int, //with 0
+    val dayOfMonth: Int,
+    val dayInWeek: Int,
+    val holidays: ArrayList<Holiday> = ArrayList(),
+    val fasting: Fasting = Fasting()
 )

@@ -10,8 +10,6 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import com.artmaster.android.orthodoxcalendar.R
-import java.util.*
 
 /**
  * Class for justify text
@@ -19,8 +17,12 @@ import java.util.*
  * и указать кол-во символов для отступа
  */
 class JustifiedTextView @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : View(context, attrs, defStyleAttr, defStyleRes) {
+constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     private var mTextPaint: Paint
 
@@ -50,9 +52,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private var mLineBreaker: LineBreaker
 
     init {
-        CustomFont.setCustomFont(this, context, attrs,
-                R.styleable.customizableView,
-                R.styleable.customizableView_customFont)
 
         mTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
         //final Resources.Theme theme = context.getTheme();
@@ -71,8 +70,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         super.onDraw(canvas)
 
         for (textBlockDrawable in mTextBlocksDrawable) {
-            canvas.drawText(mText, textBlockDrawable.start, textBlockDrawable.end,
-                    textBlockDrawable.x.toFloat(), textBlockDrawable.y.toFloat(), mTextPaint)
+            canvas.drawText(
+                mText, textBlockDrawable.start, textBlockDrawable.end,
+                textBlockDrawable.x.toFloat(), textBlockDrawable.y.toFloat(), mTextPaint
+            )
         }
     }
 
@@ -101,27 +102,27 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
      * Внутренний класс, которые выстраивает символы текста по строкам и рассчитывает пробелы между ними
      */
     private inner class LineBreaker {
-        internal var x: Int = 0
-        internal var y: Int = 0
+        var x: Int = 0
+        var y: Int = 0
 
-        internal var symbolPadding: Int = 0
+        var symbolPadding: Int = 0
 
         /** координаты  */
-        internal var posLenStart: Int = 0
+        var posLenStart: Int = 0
 
         /** кол-во пробелов в строке  */
-        internal var spacesLen: Int = 0
+        var spacesLen: Int = 0
 
-        internal var posEOL: Int = 0
+        var posEOL: Int = 0
 
         /** кол-во символов в тексте */
-        internal var len: Int = 0
+        var len: Int = 0
 
         /** массив слов */
-        internal lateinit var words: ArrayList<TextBlockDrawable>
+        lateinit var words: ArrayList<TextBlockDrawable>
 
         /** обьект для хранения слова. Хранит начальную, конечную позицию */
-        internal lateinit var textBlockDrawable: TextBlockDrawable
+        lateinit var textBlockDrawable: TextBlockDrawable
 
         fun buildTextBlocks() {
             init()
@@ -156,7 +157,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                     initNewWord(position)
                 }
                 //если попадается символ \n, то начинаем с новой строки, а отступы предыдущей не меняем
-                if (mText[position].toInt() == 0x0A) {
+                if (mText[position].code == 0x0A) {
                     //распределяем пробелы
                     redistributeSpaces(true)
                     //переходим на новую строку и обновляем переменные
@@ -188,11 +189,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 }
 
                 //если заданы отступы, вычисляем ширину рабочей области с учетом отступов
-                if ((mNumSymbolPadding != 0) and (mLinesCount < mNumLeadingLines)) {
-                    mWidth = w - symbolPadding
-                } else {
-                    mWidth = w
-                }
+                mWidth = if ((mNumSymbolPadding != 0) and (mLinesCount < mNumLeadingLines)) {
+                    w - symbolPadding
+                } else w
+
                 //если позиция выходит за пределы экрана, то ищем место с предыдущим пробелом
                 if (x.toFloat() + widths[position] + spacesLen.toFloat() > w) {
 
@@ -275,10 +275,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             spacesLen = 0
 
             //смотрим, если заданы отступы, устанавниваем значение х, равное этому расстоянию
-            if ((mNumSymbolPadding > 0) and (mLinesCount < mNumLeadingLines - 1)) {
-                x = symbolPadding
+            x = if ((mNumSymbolPadding > 0) and (mLinesCount < mNumLeadingLines - 1)) {
+                symbolPadding
             } else {
-                x = 0
+                0
             }
             y += fontInterline
             mLinesCount++
@@ -289,12 +289,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
          * @param backStep true- если необходимо оставить пробелы как есть. Без распределения по ширине
          */
         private fun redistributeSpaces(backStep: Boolean) {
-            var widthTotal: Int
-            if ((mNumSymbolPadding > 0) and (mLinesCount < mNumLeadingLines)) {
-                widthTotal = mWidth
-            } else {
-                widthTotal = w
-            }
+            var widthTotal = if ((mNumSymbolPadding > 0) and (mLinesCount < mNumLeadingLines)) {
+                mWidth
+            } else w
 
             if (words.size <= 1) {
                 words.clear()
@@ -381,22 +378,20 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     fun setTextSize(unit: Int, size: Float) {
         val c = context
-        val r: Resources
 
-        r = if (c == null) Resources.getSystem() else c.resources
+        val r: Resources = if (c == null) Resources.getSystem() else c.resources
 
-        setRawTextSize(TypedValue.applyDimension(
-                unit, size, r.displayMetrics).toInt())
+        setRawTextSize(TypedValue.applyDimension(unit, size, r.displayMetrics).toInt())
         invalidate()
     }
 
     /** safe info about words in text */
-    private class TextBlockDrawable internal constructor(
-            internal var x: Int,
-            internal var y: Int,
-            internal var start: Int,
-            internal var end: Int = 0
-            )
+    private class TextBlockDrawable constructor(
+        var x: Int,
+        var y: Int,
+        var start: Int,
+        var end: Int = 0
+    )
 
     /** set custom font */
     fun setTypeface(tf: Typeface) {

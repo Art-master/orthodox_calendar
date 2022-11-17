@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.artmaster.android.orthodoxcalendar"
     android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -18,8 +17,8 @@
         android:theme="@style/Theme.AppCompat.Light.FullScreen"
         android:uiOptions="splitActionBarWhenNarrow">
         <activity
-            android:name=".StartActivity"
-            android:screenOrientation="portrait">
+            android:name=".ui.InitAppActivity"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,9 +37,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.init.mvp.InitAppActivity" />
-        <activity android:name=".ui.calendar_list.mvp.MainCalendarActivity" />
-        <activity android:name=".ui.review.HolidayViewPagerActivity" />
         <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />
 
         <service

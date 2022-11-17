@@ -26,6 +26,9 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
     val daysInMonth: Int
         get() = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
+    val daysInYear: Int
+        get() = calendar.getActualMaximum(Calendar.DAY_OF_YEAR)
+
     val dayOfWeek: Int
         get() {
             val day = calendar.get(Calendar.DAY_OF_WEEK)

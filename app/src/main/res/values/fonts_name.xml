@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="font_church_slavonic">Wooden Ship Decorated.ttf</string>
-    <string name="font_ornament">ornament.ttf</string>
-    <string name="font_tipicon_image">Ort_W3eR.ttf</string>
-    <string name="font_basic">cyrillic_old.ttf</string>
-    <string name="font_for_bukvica">Bukvica.ttf</string>
-</resources>

@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
 import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -10,56 +11,53 @@ import kotlinx.parcelize.Parcelize
 import com.artmaster.android.orthodoxcalendar.domain.DbSchema.Holiday as Schema
 
 @Parcelize
+@Stable
 @Entity(tableName = Schema.TABLE_NAME)
 data class Holiday(
 
-        @PrimaryKey(autoGenerate = true)
-        @SerializedName(Schema.ID)
-        @ColumnInfo(name = Schema.ID)
-        var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    @SerializedName(Schema.ID)
+    @ColumnInfo(name = Schema.ID)
+    var id: Long = 0,
 
-        @SerializedName(Schema.TITLE)
-        @ColumnInfo(name = Schema.TITLE)
-        var title: String = "",
+    @SerializedName(Schema.TITLE)
+    @ColumnInfo(name = Schema.TITLE)
+    var title: String = "",
 
-        @SerializedName(Schema.DAY)
-        @ColumnInfo(name = Schema.DAY)
-        var day: Int = 0,
+    @SerializedName(Schema.DAY)
+    @ColumnInfo(name = Schema.DAY)
+    var day: Int = 0,
 
-        @SerializedName(Schema.MONTH)
-        @ColumnInfo(name = Schema.MONTH)
-        var month: Int = 0,
+    @SerializedName(Schema.MONTH)
+    @ColumnInfo(name = Schema.MONTH)
+    var month: Int = 0,
 
-        @SerializedName(Schema.TYPE_ID)
-        @ColumnInfo(name = Schema.TYPE_ID)
-        var typeId: Int = 0,
+    @SerializedName(Schema.TYPE_ID)
+    @ColumnInfo(name = Schema.TYPE_ID)
+    var typeId: Int = 0,
 
-        @SerializedName(Schema.DYNAMIC_TYPE)
-        @ColumnInfo(name = Schema.DYNAMIC_TYPE)
-        var dynamicType: Int = 0,
+    @SerializedName(Schema.DYNAMIC_TYPE)
+    @ColumnInfo(name = Schema.DYNAMIC_TYPE)
+    var dynamicType: Int = 0,
 
-        @SerializedName(Schema.IMAGE_ID)
-        @ColumnInfo(name = Schema.IMAGE_ID)
-        var imageId: String = "",
+    @SerializedName(Schema.IMAGE_ID)
+    @ColumnInfo(name = Schema.IMAGE_ID)
+    var imageId: String = "",
 
-        @SerializedName(Schema.CREATED_BY_USER)
-        @ColumnInfo(name = Schema.CREATED_BY_USER)
-        var isCreatedByUser: Boolean = false,
+    @SerializedName(Schema.CREATED_BY_USER)
+    @ColumnInfo(name = Schema.CREATED_BY_USER)
+    var isCreatedByUser: Boolean = false,
 
-        @SerializedName(Schema.YEAR)
-        @ColumnInfo(name = Schema.YEAR)
-        var year: Int = 0,
+    @SerializedName(Schema.YEAR)
+    @ColumnInfo(name = Schema.YEAR)
+    var year: Int = 0,
 
-        @Ignore
-        var description: String = "",
+    @Ignore
+    var description: String = "",
 
-        @Ignore
-        var monthWith0: Int = month - 1,
+    ) : Comparable<Holiday>, Parcelable {
 
-        @Ignore
-        var firstInGroup: Boolean = false
-
-) : Comparable<Holiday>, Parcelable {
+    fun getMonthWith0() = month.dec()
 
     override fun compareTo(other: Holiday): Int {
         val monthComparison = month.compareTo(other.month)
@@ -69,19 +67,19 @@ data class Holiday(
         return monthComparison
     }
 
-    enum class Type(val value: String, val id: Int) {
-        MAIN("главный", 1),
-        TWELVE_MOVABLE("великий двунадесятый переходящий", 2),
-        TWELVE_NOT_MOVABLE("великий двунадесятый неподвижный", 3),
-        NOT_TWELVE_NOT_MOVABLE("великий недвунадесятый неподвижный", 4),
-        GREAT_NOT_TWELVE("великий недвунадесятый переходящий", 5),
-        AVERAGE_POLYLEIC("средний полиелейный", 6),
-        AVERAGE_PEPPY("средний бденный", 7),
-        COMMON_MEMORY_DAY("день памяти", 8),
+    enum class Type(val id: Int) {
+        MAIN(1), // главный
+        TWELVE_MOVABLE(2), // великий двунадесятый переходящий
+        TWELVE_NOT_MOVABLE(3), // великий двунадесятый неподвижный
+        NOT_TWELVE_NOT_MOVABLE(4), // великий недвунадесятый неподвижный
+        GREAT_NOT_TWELVE(5), // великий недвунадесятый переходящий
+        AVERAGE_POLYLEIC(6), // средний полиелейный
+        AVERAGE_PEPPY(7), // средний бденный
+        COMMON_MEMORY_DAY(8), // день памяти
 
-        USERS_MEMORY_DAY("средний бденный", 9),
-        USERS_NAME_DAY("именины", 10),
-        USERS_BIRTHDAY("день рождения", 11),
+        USERS_MEMORY_DAY(9), // пользовательский день памяти
+        USERS_NAME_DAY(10), // именины
+        USERS_BIRTHDAY(11), // день рождения
     }
 
     enum class DayOfWeek(val num: Int) {
@@ -142,8 +140,10 @@ data class Holiday(
                 return listOf(Type.MAIN.id)
             }
             if (filter == Filter.HEAD_HOLIDAYS) {
-                return listOf(Type.TWELVE_MOVABLE.id, Type.TWELVE_NOT_MOVABLE.id,
-                        Type.GREAT_NOT_TWELVE.id, Type.NOT_TWELVE_NOT_MOVABLE.id)
+                return listOf(
+                    Type.TWELVE_MOVABLE.id, Type.TWELVE_NOT_MOVABLE.id,
+                    Type.GREAT_NOT_TWELVE.id, Type.NOT_TWELVE_NOT_MOVABLE.id
+                )
             }
             if (filter == Filter.AVERAGE_HOLIDAYS) {
                 return listOf(Type.AVERAGE_PEPPY.id, Type.AVERAGE_POLYLEIC.id)
@@ -171,7 +171,6 @@ data class Holiday(
 
         fun Holiday.mergeFullData(data: AdditionalHolidayData): Holiday {
             description = data.description
-            monthWith0 = month - 1
             return this
         }
     }

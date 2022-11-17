@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.RingtoneManager
@@ -15,10 +16,11 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
 import com.artmaster.android.orthodoxcalendar.common.Settings
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.ui.review.HolidayViewPagerActivity
 
 class Notification(private val context: Context, private val holiday: Holiday) {
     companion object {
@@ -72,10 +74,20 @@ class Notification(private val context: Context, private val holiday: Holiday) {
         notificationManager.notify(holiday.id.toInt(), notification.build())
     }
 
-    private fun createIntent(): PendingIntent{
-        val notificationIntent = HolidayViewPagerActivity.getIntent(context, holiday, ArrayList())
-        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+    private fun createIntent(): PendingIntent {
+        val notificationIntent = getIntent(context, holiday, ArrayList())
+        return PendingIntent.getActivity(
+            context, holiday.id.toInt(), notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun getIntent(context: Context, holiday: Holiday, filters: ArrayList<Filter>): Intent {
+        val intent = Intent(context, this::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
+        intent.putExtra(Constants.Keys.FILTERS.value, filters)
+        return intent
     }
 
     private fun getBuilder(notificationManager: NotificationManager): NotificationCompat.Builder {
