@@ -4,10 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.GraphicsLayerScope
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
@@ -111,8 +107,6 @@ fun HolidayTileLayout(
 
             if (needToShowLayout(pageOffset)) {
                 HolidayTileMonthLayout(
-                    modifier = Modifier
-                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentMonthData(monthNum = page),
                     dayOfMonth = viewModel.getDayOfMonth().value,
                     onDayClick = onDayClick,
@@ -123,15 +117,4 @@ fun HolidayTileLayout(
     }
 }
 
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
-
-fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
-    scope.apply {
-        // We animate the alpha, between 0% and 100%
-        alpha = lerp(
-            start = ScaleFactor(0f, 0f),
-            stop = ScaleFactor(1f, 1f),
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).scaleX
-    }
-}
+fun needToShowLayout(pageOffset: Float) = pageOffset < 0.8f

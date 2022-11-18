@@ -93,7 +93,6 @@ fun FiltersLayout(
             filters.value.forEach { filter ->
                 FilterCheckBox(
                     filter = filter,
-                    updateFlag = updateFlag,
                     onFilterChange = {
                         onFilterChange(filter, it)
                         updateFlag = updateFlag.not()
@@ -117,10 +116,8 @@ fun FiltersLayout(
 @Composable
 fun FilterCheckBox(
     filter: Filter,
-    updateFlag: Boolean,
     onFilterChange: (enabled: Boolean) -> Unit
 ) {
-
     val title = stringResource(id = filter.resId)
     CheckBox(title = title, state = filter.enabled, onCheck = onFilterChange)
 }

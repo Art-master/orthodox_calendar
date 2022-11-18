@@ -16,12 +16,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.imageResource
@@ -31,9 +27,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.filters.MultitoolState.COLLAPSED
+import com.artmaster.android.orthodoxcalendar.ui.filters.MultitoolState.EXPANDED
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -46,7 +47,7 @@ enum class Tabs {
 @Composable
 fun ToolsPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
-        Tools(parent = this, isVisible = true)
+        Tools(parent = this, isVisible = true, multiToolState = EXPANDED)
     }
 }
 
@@ -59,6 +60,7 @@ fun CalendarToolsDrawer(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     var isToolsPanelVisible by remember { mutableStateOf(true) }
+    var multiToolState by remember { mutableStateOf(COLLAPSED) }
 
     val onToolItemClick = remember {
         { item: MultiFabItem ->
@@ -72,6 +74,7 @@ fun CalendarToolsDrawer(
                 else -> throw IllegalStateException("Wrong item name")
             }
             isToolsPanelVisible = false
+            multiToolState = COLLAPSED
             onToolClick(item)
         }
     }
@@ -99,23 +102,12 @@ fun CalendarToolsDrawer(
                 }
             }
         }
-        Tools(parent = this, isVisible = isToolsPanelVisible, onItemClicked = onToolItemClick)
-    }
-}
-
-fun drawerShape() = object : Shape {
-    override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
-    ): Outline {
-        return Outline.Rectangle(
-            Rect(
-                size.width - 800,
-                size.height - 1200,
-                size.width /* width */,
-                size.height /* height */
-            )
+        Tools(
+            parent = this,
+            isVisible = isToolsPanelVisible,
+            multiToolState = multiToolState,
+            stateChanged = { multiToolState = it },
+            onItemClicked = onToolItemClick
         )
     }
 }
@@ -124,14 +116,15 @@ fun drawerShape() = object : Shape {
 fun Tools(
     parent: BoxScope,
     isVisible: Boolean = true,
+    multiToolState: MultitoolState = COLLAPSED,
+    stateChanged: (fabstate: MultitoolState) -> Unit = {},
     onItemClicked: (item: MultiFabItem) -> Unit = {}
 ) {
-    var state by remember { mutableStateOf(MultiFabState.COLLAPSED) }
 
     MultiFloatingActionButton(
         parent = parent,
         fabIcon = painterResource(R.drawable.ic_baseline_arrow_drop_up_24),
-        toState = state,
+        toState = multiToolState,
         items = listOf(
             MultiFabItem(
                 identifier = Tabs.NEW_EVENT.name,
@@ -145,7 +138,7 @@ fun Tools(
             )
         ),
         onFabItemClicked = onItemClicked,
-        stateChanged = { state = it },
+        stateChanged = stateChanged,
         visible = isVisible
     )
 }
@@ -160,19 +153,19 @@ class MultiFabItem(
 fun MultiFloatingActionButton(
     fabIcon: Painter,
     items: List<MultiFabItem>,
-    toState: MultiFabState,
+    toState: MultitoolState,
     showLabels: Boolean = true,
-    stateChanged: (fabstate: MultiFabState) -> Unit,
+    stateChanged: (fabstate: MultitoolState) -> Unit,
     onFabItemClicked: (item: MultiFabItem) -> Unit,
     parent: BoxScope,
     visible: Boolean = true
 ) {
     parent.run {
-        val transition: Transition<MultiFabState> =
+        val transition: Transition<MultitoolState> =
             updateTransition(targetState = toState, label = "transition")
 
         val scale: Float by transition.animateFloat(label = "scale") { state ->
-            if (state == MultiFabState.EXPANDED) 56f else 0f
+            if (state == EXPANDED) 56f else 0f
         }
 
         val alpha: Float by transition.animateFloat(
@@ -181,7 +174,7 @@ fun MultiFloatingActionButton(
                 tween(durationMillis = 50)
             }
         ) { state ->
-            if (state == MultiFabState.EXPANDED) 1f else 0f
+            if (state == EXPANDED) 1f else 0f
         }
         val shadow: Dp by transition.animateDp(
             label = "shadow",
@@ -189,10 +182,10 @@ fun MultiFloatingActionButton(
                 tween(durationMillis = 50)
             }
         ) { state ->
-            if (state == MultiFabState.EXPANDED) 2.dp else 0.dp
+            if (state == EXPANDED) 2.dp else 0.dp
         }
         val rotation: Float by transition.animateFloat(label = "rotation") { state ->
-            if (state == MultiFabState.EXPANDED) 180f else 0f
+            if (state == EXPANDED) 180f else 0f
         }
 
         Column(
@@ -215,9 +208,9 @@ fun MultiFloatingActionButton(
                 contentColor = FiltersContentColor,
                 onClick = {
                     stateChanged(
-                        if (transition.currentState == MultiFabState.EXPANDED) {
-                            MultiFabState.COLLAPSED
-                        } else MultiFabState.EXPANDED
+                        if (transition.currentState == EXPANDED) {
+                            COLLAPSED
+                        } else EXPANDED
                     )
                 }) {
                 Icon(

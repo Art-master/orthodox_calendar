@@ -10,19 +10,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.init.components.getYears
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
-import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.WindowBackground
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -66,15 +62,8 @@ fun YearsTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
 
 @Composable
 fun YearName(title: String) {
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = HeadSymbolTextColor)) {
-            append(title.first())
-        }
-        append(title.substring(1))
-    }
-
     Text(
-        text = annotatedString, color = DefaultTextColor,
+        text = title, color = DefaultTextColor,
         fontSize = 20.sp,
         fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal))
     )
