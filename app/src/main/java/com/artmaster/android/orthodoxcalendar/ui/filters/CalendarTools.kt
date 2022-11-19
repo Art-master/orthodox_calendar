@@ -83,10 +83,7 @@ fun CalendarToolsDrawer(
         if (drawerState.isClosed) isToolsPanelVisible = true
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             ModalDrawer(
                 drawerState = drawerState,
@@ -206,6 +203,7 @@ fun MultiFloatingActionButton(
                     .padding(bottom = 8.dp, end = 8.dp),
                 backgroundColor = FloatingButtonColor,
                 contentColor = FiltersContentColor,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 onClick = {
                     stateChanged(
                         if (transition.currentState == EXPANDED) {
@@ -241,7 +239,7 @@ private fun MiniFabItem(
         if (showLabel) {
             Text(
                 item.label,
-                fontSize = 16.sp,
+                fontSize = 23.sp,
                 fontFamily = FontFamily(Font(R.font.cyrillic_old)),
                 color = DefaultTextColor,
                 modifier = Modifier
@@ -249,6 +247,7 @@ private fun MiniFabItem(
                     .shadow(animateDpAsState(targetValue = shadow).value)
                     .background(color = FiltersLabelColor)
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
+                    .clickable(onClick = { onFabItemClicked(item) })
             )
             Spacer(modifier = Modifier.width(16.dp))
         }

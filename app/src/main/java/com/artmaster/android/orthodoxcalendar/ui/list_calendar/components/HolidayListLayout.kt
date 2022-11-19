@@ -45,18 +45,27 @@ fun HolidayPagerListLayout(
 
     val availableYears = viewModel.availableYears
     val startIndex = viewModel.getYear().value - availableYears.first()
-    var yearNum by remember { mutableStateOf(startIndex) }
-    val currentYear by remember { viewModel.getYear() }
+    val currentYear by viewModel.getYear()
 
-    val pagerState = rememberPagerState(yearNum)
+    val pagerState = rememberPagerState(startIndex)
     val scope = rememberCoroutineScope()
     val filters = viewModel.getFilters()
 
+    LaunchedEffect(currentYear) {
+        scope.launch {
+            val index = currentYear - availableYears.first()
+            pagerState.animateScrollToPage(index)
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        viewModel.setYear((availableYears.first() + pagerState.currentPage).inc())
+    }
+
     LaunchedEffect(pagerState, currentYear, filters.value) {
+
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            viewModel.setMonth(page)
-            yearNum = page
 
             val year = availableYears.first() + page
 
@@ -72,9 +81,8 @@ fun HolidayPagerListLayout(
     Column(Modifier.fillMaxHeight()) {
 
         YearsTabs(pagerState = pagerState) {
-            yearNum = it
             scope.launch {
-                pagerState.animateScrollToPage(yearNum)
+                pagerState.animateScrollToPage(it)
             }
         }
 

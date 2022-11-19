@@ -35,7 +35,7 @@ fun ShowTabs() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun YearsTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
+fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
     val items by remember {
         mutableStateOf(getYears(Time().year))
     }
@@ -54,7 +54,7 @@ fun YearsTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
             Tab(
                 text = { YearName(title = title) },
                 selected = pagerState.currentPage == index,
-                onClick = { onClick.invoke(index) },
+                onClick = { onClick(index) },
             )
         }
     }
