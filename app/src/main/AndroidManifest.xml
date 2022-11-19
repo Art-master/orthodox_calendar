@@ -37,7 +37,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />
+        <activity android:name=".ui.user_holiday_page.mvp.UserHolidayActivity" />
 
         <service
             android:name=".notifications.NotificationsService"

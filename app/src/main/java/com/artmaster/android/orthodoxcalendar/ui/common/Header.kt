@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.ui.settings.Ornament
+import com.artmaster.android.orthodoxcalendar.ui.settings_page.Ornament
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 
 @Composable

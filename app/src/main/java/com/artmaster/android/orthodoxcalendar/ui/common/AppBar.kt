@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.Route
-import com.artmaster.android.orthodoxcalendar.ui.init.components.DropDownYearMenu
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
 @Preview

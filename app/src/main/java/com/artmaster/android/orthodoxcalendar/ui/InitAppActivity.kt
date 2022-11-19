@@ -16,20 +16,20 @@ import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
-import com.artmaster.android.orthodoxcalendar.ui.app_info.AppInfoLayout
+import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBar
 import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.filters.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.filters.Tabs
-import com.artmaster.android.orthodoxcalendar.ui.init.components.AppStartTextAnimation
-import com.artmaster.android.orthodoxcalendar.ui.init.model.LoadDataViewModel
-import com.artmaster.android.orthodoxcalendar.ui.list_calendar.components.HolidayPagerListLayout
-import com.artmaster.android.orthodoxcalendar.ui.review.components.HolidayInfoPager
-import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsLayoutWrapper
-import com.artmaster.android.orthodoxcalendar.ui.settings.SettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayInfoPager
+import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTextAnimation
+import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
+import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPagerListLayout
+import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsLayoutWrapper
+import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar.components.HolidayTileLayout
-import com.artmaster.android.orthodoxcalendar.ui.user_holiday.UserHolidayLayout
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.HolidayTileLayout
+import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLayout
 
 class InitAppActivity : ComponentActivity() {
 
