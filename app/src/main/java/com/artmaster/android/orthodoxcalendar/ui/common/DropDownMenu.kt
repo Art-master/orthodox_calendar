@@ -28,8 +28,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 @Preview(showBackground = true)
 @Composable
 fun DropDownYearMenuPreview() {
-    val year = remember { mutableStateOf(2022) }
-    DropDownYearMenu(currentYear = year)
+    DropDownYearMenu(currentYear = 2022)
 }
 
 @Preview(showBackground = true)
@@ -39,7 +38,7 @@ fun ItemContentPreview() {
 }
 
 @Composable
-fun DropDownYearMenu(currentYear: MutableState<Int>, onYearSelect: (year: Int) -> Unit = {}) {
+fun DropDownYearMenu(currentYear: Int, onYearSelect: (year: Int) -> Unit = {}) {
 
     val items by remember {
         mutableStateOf(getYears(Time().year))
@@ -48,7 +47,7 @@ fun DropDownYearMenu(currentYear: MutableState<Int>, onYearSelect: (year: Int) -
     var expanded by remember { mutableStateOf(false) }
 
     var selectedIndex by remember(currentYear) {
-        mutableStateOf(getYearIndex(currentYear.value, items))
+        mutableStateOf(getYearIndex(currentYear, items))
     }
 
     Box(modifier = Modifier.wrapContentSize(Alignment.Center)) {

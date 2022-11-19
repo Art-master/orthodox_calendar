@@ -78,7 +78,15 @@ class InitAppActivity : ComponentActivity() {
                     ) {
                         composable(Route.INIT_PAGE.name) {
                             AppStartTextAnimation(initViewModel.animationTime.toInt()) {
-                                navController.navigate(Route.TILE_CALENDAR.name)
+                                val route = if (calendarViewModel.firstLoadingTileCalendar())
+                                    Route.TILE_CALENDAR
+                                else Route.LIST_CALENDAR
+
+                                navController.navigate(route.name) {
+                                    popUpTo(Route.INIT_PAGE.name) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
                         composable(Route.TILE_CALENDAR.name) {

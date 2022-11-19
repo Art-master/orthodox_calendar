@@ -217,4 +217,7 @@ class CalendarViewModel : ViewModel() {
         }
         return holiday
     }
+
+    fun firstLoadingTileCalendar() =
+        preferences.get(Settings.Name.FIRST_LOADING_TILE_CALENDAR).toBoolean()
 }
