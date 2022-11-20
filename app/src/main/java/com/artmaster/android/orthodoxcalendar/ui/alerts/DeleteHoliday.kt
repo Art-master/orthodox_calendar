@@ -33,15 +33,15 @@ fun DeleteHolidayDialog(
                 openDialog = false
                 onRejectClick()
             },
-            title = { StyledText(title = stringResource(id = R.string.holidayConfirmationHeader)) },
-            text = { StyledText(title = stringResource(id = R.string.holidayConfirmationMsg)) },
+            title = { StyledText(title = stringResource(id = R.string.holiday_confirmation_header)) },
+            text = { StyledText(title = stringResource(id = R.string.holiday_confirmation_msg)) },
             buttons = {
                 Row(
                     modifier = Modifier.padding(all = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     StyledButton(
-                        title = stringResource(id = R.string.buttonReject),
+                        title = stringResource(id = R.string.button_reject),
                         modifier = Modifier.weight(1f),
                         onClick = {
                             openDialog = false
@@ -49,7 +49,7 @@ fun DeleteHolidayDialog(
                         }
                     )
                     StyledButton(
-                        title = stringResource(id = R.string.buttonConfirm),
+                        title = stringResource(id = R.string.button_confirm),
                         modifier = Modifier.weight(1f),
                         onClick = {
                             openDialog = false

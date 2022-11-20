@@ -3,9 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -13,6 +11,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -22,6 +21,7 @@ import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
+import kotlinx.coroutines.launch
 
 enum class Item {
     CALENDAR, RESET, SETTINGS, INFO
@@ -58,6 +58,12 @@ fun AppBarWrapper(
         }
     }
 
+    val onTimeReset = remember {
+        {
+            viewModel.resetTime()
+        }
+    }
+
     val initCalendarType =
         if (viewModel.firstLoadingTileCalendar()) CalendarType.TILE else CalendarType.LIST
 
@@ -65,6 +71,7 @@ fun AppBarWrapper(
         year = viewModel.getYear(),
         initCalendarType = initCalendarType,
         onYearChange = onYearChange,
+        onTimeReset = onTimeReset,
         navController = navController
     )
 }
@@ -75,9 +82,15 @@ fun AppBar(
     year: MutableState<Int>,
     initCalendarType: CalendarType,
     onYearChange: (year: Int) -> Unit = {},
+    onTimeReset: () -> Unit = {},
     navController: NavHostController,
     forceVisibility: Boolean = false
 ) {
+
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    val timeResetMsg = stringResource(id = R.string.time_has_reset_msg)
+
     var currentItemSelected by rememberSaveable {
         mutableStateOf(Item.CALENDAR)
     }
@@ -127,7 +140,11 @@ fun AppBar(
             ) {
 
                 val icon = getCalendarIcon(currentCalendarType)
-                MenuItem(iconId = icon, item = Item.CALENDAR, selectedItem = currentItemSelected) {
+                MenuItem(
+                    iconId = icon,
+                    item = Item.CALENDAR,
+                    selectedItem = currentItemSelected
+                ) {
                     val newRoute = when (navController.currentDestination?.route ?: "") {
                         Navigation.TILE_CALENDAR.route -> Navigation.LIST_CALENDAR
                         Navigation.LIST_CALENDAR.route -> Navigation.TILE_CALENDAR
@@ -139,11 +156,12 @@ fun AppBar(
                     }
                     navController.navigate(newRoute.route)
 
-                    currentCalendarType = if (newRoute.route == Navigation.TILE_CALENDAR.route) {
-                        CalendarType.TILE
-                    } else {
-                        CalendarType.LIST
-                    }
+                    currentCalendarType =
+                        if (newRoute.route == Navigation.TILE_CALENDAR.route) {
+                            CalendarType.TILE
+                        } else {
+                            CalendarType.LIST
+                        }
                     currentItemSelected = Item.CALENDAR
 
                 }
@@ -152,6 +170,10 @@ fun AppBar(
                     item = Item.RESET,
                     selectedItem = currentItemSelected
                 ) {
+                    onTimeReset()
+                    coroutineScope.launch {
+                        snackState.showSnackbar(timeResetMsg)
+                    }
 
                 }
                 MenuItem(
@@ -170,6 +192,13 @@ fun AppBar(
                     currentItemSelected = Item.INFO
                     navController.navigate(Navigation.APP_INFO.route)
                 }
+            }
+
+            SnackbarHost(
+                modifier = Modifier.offset(y = (-500).dp),//align(Alignment.BottomStart),
+                hostState = snackState
+            ) { snackbarData: SnackbarData ->
+                StyledSnackBar(message = snackbarData.message)
             }
         }
 }

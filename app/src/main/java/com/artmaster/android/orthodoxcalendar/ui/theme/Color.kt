@@ -53,6 +53,7 @@ val ButtonContent = Color(0xFFFFFFFF)
 val DisabledButtonContent = Color(0xFFD1D1D1)
 
 val SelectedItemColor = Color(0x7A757575)
+val SnackBarBackground = Color(0x66838181)
 
 val customTextSelectionColors = TextSelectionColors(
     handleColor = CursorColor,

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
@@ -52,7 +53,7 @@ fun DropDownYearMenu(height: Dp, currentYear: Int, onYearSelect: (year: Int) -> 
         mutableStateOf(getYearIndex(currentYear, items))
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .height(height)
             .wrapContentSize(Alignment.Center)
@@ -99,13 +100,14 @@ fun DropDownYearMenu(height: Dp, currentYear: Int, onYearSelect: (year: Int) -> 
             )
         }
 
-
         DropdownMenu(
             modifier = Modifier
                 .width(100.dp)
-                .align(Alignment.BottomCenter),
+                .height(500.dp)
+                .align(Alignment.CenterHorizontally),
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(y = 0.dp, x = 20.dp)
         ) {
             items.forEachIndexed { index, text ->
                 key(index) {

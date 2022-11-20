@@ -218,6 +218,19 @@ class CalendarViewModel : ViewModel() {
         return holiday
     }
 
+    fun resetTime() {
+        val now = Time()
+        if (now.year != year.value) {
+            setYear(now.year)
+        }
+        if (now.month != month.value) {
+            setYear(now.year)
+        }
+        if (now.dayOfMonth != dayOfMonth.value) {
+            setDayOfMonth(now.dayOfMonth)
+        }
+    }
+
     fun firstLoadingTileCalendar() =
         preferences.get(Settings.Name.FIRST_LOADING_TILE_CALENDAR).toBoolean()
 }

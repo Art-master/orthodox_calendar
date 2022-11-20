@@ -89,7 +89,6 @@ fun CalendarToolsDrawer(
                 drawerState = drawerState,
                 drawerBackgroundColor = Background,
                 drawerContentColor = Background,
-                // drawerShape = drawerShape(),
                 drawerContent = {
                     FiltersLayoutWrapper(viewModel = viewModel)
                 }

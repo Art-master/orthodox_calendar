@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="buttonOk">Слава Богу</string>
-    <string name="buttonConfirm">Да</string>
-    <string name="buttonReject">Нет</string>
-    <string name="fatalErrorHeader">Системная ошибка</string>
-    <string name="fatalErrorText">Ошибка загрузки данных. \n Переустановите приложение и попробуйте снова</string>
-    <string name="holidayConfirmationHeader">Удаление события</string>
-    <string name="holidayConfirmationMsg">Удалить текущее событие?</string>
+    <string name="button_confirm">Да</string>
+    <string name="button_reject">Нет</string>
+    <string name="fatal_error_header">Системная ошибка</string>
+    <string name="fatal_error_text">Ошибка загрузки данных. \n Переустановите приложение и попробуйте снова</string>
+    <string name="holiday_confirmation_header">Удаление события</string>
+    <string name="holiday_confirmation_msg">Удалить текущее событие?</string>
+    <string name="time_has_reset_msg">Текущее время календаря сброшено</string>
 </resources>
