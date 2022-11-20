@@ -17,7 +17,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
-import com.artmaster.android.orthodoxcalendar.ui.common.AppBar
+import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.filters.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.filters.Tabs
@@ -72,7 +72,7 @@ class InitAppActivity : ComponentActivity() {
             MaterialTheme {
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
                     Column {
-                        AppBar(viewModel = calendarViewModel, navController = navController)
+                        AppBarWrapper(viewModel = calendarViewModel, navController = navController)
                         NavHost(
                             navController = navController,
                             startDestination = Navigation.INIT_PAGE.route

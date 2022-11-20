@@ -20,13 +20,20 @@ import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.Navigation
+import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
 @Preview
 @Composable
 fun AppBarPreview() {
     val navController = rememberNavController()
-    AppBarInner(year = 2022, initCalendarType = CalendarType.TILE, navController = navController)
+    val year = remember { mutableStateOf(2022) }
+    AppBar(
+        year = year,
+        initCalendarType = CalendarType.TILE,
+        navController = navController,
+        forceVisibility = true
+    )
 }
 
 enum class Item {
@@ -38,7 +45,7 @@ enum class CalendarType {
 }
 
 @Composable
-fun AppBar(
+fun AppBarWrapper(
     viewModel: CalendarViewModel = CalendarViewModel(),
     navController: NavHostController
 ) {
@@ -52,8 +59,8 @@ fun AppBar(
     val initCalendarType =
         if (viewModel.firstLoadingTileCalendar()) CalendarType.TILE else CalendarType.LIST
 
-    AppBarInner(
-        year = viewModel.getYear().value,
+    AppBar(
+        year = viewModel.getYear(),
         initCalendarType = initCalendarType,
         onYearChange = onYearChange,
         navController = navController
@@ -62,11 +69,12 @@ fun AppBar(
 
 
 @Composable
-fun AppBarInner(
-    year: Int,
+fun AppBar(
+    year: MutableState<Int>,
     initCalendarType: CalendarType,
     onYearChange: (year: Int) -> Unit = {},
-    navController: NavHostController
+    navController: NavHostController,
+    forceVisibility: Boolean = false
 ) {
     var currentItemSelected by rememberSaveable {
         mutableStateOf(Item.CALENDAR)
@@ -85,7 +93,7 @@ fun AppBarInner(
 
     val e = navController.currentBackStackEntryFlow.collectAsState(null)
 
-    if (e.value != null && visibility)
+    if (forceVisibility || (e.value != null && visibility))
         Surface(
             modifier = Modifier
                 .padding(bottom = 5.dp)
@@ -102,7 +110,7 @@ fun AppBarInner(
             color = TopBarColor,
             elevation = 3.dp
         ) {
-            DropDownYearMenu(currentYear = year) {
+            DropDownYearMenu(currentYear = year.value) {
                 onYearChange(it)
             }
             Row(
@@ -166,7 +174,7 @@ fun getCalendarIcon(currentCalendarType: CalendarType) =
 
 @Composable
 fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: () -> Unit = {}) {
-    val background = if (item == selectedItem) Color.Gray else Color.Transparent
+    val background = if (item == selectedItem) SelectedItemColor else Color.Transparent
     IconButton(
         modifier = Modifier
             .height(49.dp)

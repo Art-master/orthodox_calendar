@@ -101,10 +101,10 @@ fun SettingsLayout(
             title = stringResource(id = R.string.settings_average_notifications)
         )
         CheckBoxSettings(
-            setting = Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW,
+            setting = Settings.Name.NAME_DAYS_NOTIFY_ALLOW,
             onSettingChange = onSettingChange,
             getSettingValue = getSettingValue,
-            title = stringResource(id = R.string.settings_memory_days_notifications)
+            title = stringResource(id = R.string.settings_name_days_notifications)
         )
         CheckBoxSettings(
             setting = Settings.Name.BIRTHDAYS_NOTIFY_ALLOW,

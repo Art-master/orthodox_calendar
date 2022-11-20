@@ -59,7 +59,7 @@ fun HolidayPagerListLayout(
         }
     }
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState.currentPage) {
         viewModel.setYear(availableYears.first() + pagerState.currentPage)
     }
 
