@@ -3,7 +3,10 @@ package com.artmaster.android.orthodoxcalendar.ui.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -49,8 +52,11 @@ fun AppBarPreview() {
 @Composable
 fun AppBarWrapper(
     viewModel: CalendarViewModel = CalendarViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    snackState: SnackbarHostState
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val timeResetMsg = stringResource(id = R.string.time_has_reset_msg)
 
     val onYearChange = remember {
         { year: Int ->
@@ -61,6 +67,10 @@ fun AppBarWrapper(
     val onTimeReset = remember {
         {
             viewModel.resetTime()
+            coroutineScope.launch {
+                snackState.showSnackbar(timeResetMsg)
+            }
+            Unit
         }
     }
 
@@ -86,10 +96,6 @@ fun AppBar(
     navController: NavHostController,
     forceVisibility: Boolean = false
 ) {
-
-    val snackState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    val timeResetMsg = stringResource(id = R.string.time_has_reset_msg)
 
     var currentItemSelected by rememberSaveable {
         mutableStateOf(Item.CALENDAR)
@@ -168,14 +174,9 @@ fun AppBar(
                 MenuItem(
                     iconId = R.drawable.icon_reset_date,
                     item = Item.RESET,
-                    selectedItem = currentItemSelected
-                ) {
-                    onTimeReset()
-                    coroutineScope.launch {
-                        snackState.showSnackbar(timeResetMsg)
-                    }
-
-                }
+                    selectedItem = currentItemSelected,
+                    onClick = onTimeReset
+                )
                 MenuItem(
                     iconId = R.drawable.icon_settings,
                     item = Item.SETTINGS,
@@ -192,13 +193,6 @@ fun AppBar(
                     currentItemSelected = Item.INFO
                     navController.navigate(Navigation.APP_INFO.route)
                 }
-            }
-
-            SnackbarHost(
-                modifier = Modifier.offset(y = (-500).dp),//align(Alignment.BottomStart),
-                hostState = snackState
-            ) { snackbarData: SnackbarData ->
-                StyledSnackBar(message = snackbarData.message)
             }
         }
 }

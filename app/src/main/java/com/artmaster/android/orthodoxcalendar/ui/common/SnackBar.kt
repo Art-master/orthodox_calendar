@@ -31,7 +31,7 @@ fun StyledSnackBar(
                 if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
     ) {
         Row {
-            StyledText(title = message)
+            StyledText(title = message, color = Color.White)
         }
     }
 }
