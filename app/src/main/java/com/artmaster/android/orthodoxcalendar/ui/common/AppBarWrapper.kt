@@ -23,6 +23,16 @@ import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
+enum class Item {
+    CALENDAR, RESET, SETTINGS, INFO
+}
+
+enum class CalendarType {
+    TILE, LIST
+}
+
+val APP_BAR_HEIGHT = 49.dp
+
 @Preview
 @Composable
 fun AppBarPreview() {
@@ -34,14 +44,6 @@ fun AppBarPreview() {
         navController = navController,
         forceVisibility = true
     )
-}
-
-enum class Item {
-    CALENDAR, RESET, SETTINGS, INFO
-}
-
-enum class CalendarType {
-    TILE, LIST
 }
 
 @Composable
@@ -97,6 +99,12 @@ fun AppBar(
         Surface(
             modifier = Modifier
                 .padding(bottom = 5.dp)
+/*                .background(brush =
+                    verticalGradient(
+                        0.0f to Color.Red,
+                        0.5f to Color.Green,
+                        1.0f to Color.Yellow,
+                    ))*/
                 .drawWithContent {
                     clipRect(
                         left = 0f,
@@ -110,7 +118,7 @@ fun AppBar(
             color = TopBarColor,
             elevation = 3.dp
         ) {
-            DropDownYearMenu(currentYear = year.value) {
+            DropDownYearMenu(height = APP_BAR_HEIGHT, currentYear = year.value) {
                 onYearChange(it)
             }
             Row(
@@ -177,7 +185,7 @@ fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: () -> Unit = 
     val background = if (item == selectedItem) SelectedItemColor else Color.Transparent
     IconButton(
         modifier = Modifier
-            .height(49.dp)
+            .height(APP_BAR_HEIGHT)
             .background(background),
         onClick = onClick
     ) {

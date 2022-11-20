@@ -6,6 +6,7 @@
     <string name="ornament_for_headers_right">a</string>
     <string name="ornament_for_name_date_left">v</string>
     <string name="ornament_for_name_date_right">V</string>
+    <string name="ornament_for_app_bar">u</string>
 
     <!--name icon_tile for toolbar -->
     <string name="item_name_about">о сем творении</string>
