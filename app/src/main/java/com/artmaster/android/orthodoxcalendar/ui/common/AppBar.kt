@@ -1,9 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.common
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
@@ -11,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.Route
+import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 
 @Preview
@@ -38,7 +38,10 @@ enum class CalendarType {
 }
 
 @Composable
-fun AppBar(viewModel: CalendarViewModel = CalendarViewModel(), navController: NavHostController) {
+fun AppBar(
+    viewModel: CalendarViewModel = CalendarViewModel(),
+    navController: NavHostController
+) {
 
     val onYearChange = remember {
         { year: Int ->
@@ -73,77 +76,105 @@ fun AppBarInner(
         mutableStateOf(initCalendarType)
     }
 
-    Surface(
-        modifier = Modifier
-            .padding(bottom = 5.dp)
-            .drawWithContent {
-                clipRect(
-                    left = 0f,
-                    top = 0f,
-                    right = size.width,
-                    bottom = size.height + 5
-                ) {
-                    this@drawWithContent.drawContent()
-                }
-            },
-        color = TopBarColor,
-        elevation = 3.dp
-    ) {
-        DropDownYearMenu(currentYear = year) {
-            onYearChange(it)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-
-            val icon = getCalendarIcon(navController)
-            MenuItem(iconId = icon, Item.CALENDAR) {
-                val route = navController.currentDestination?.route ?: ""
-                when (route) {
-                    Route.TILE_CALENDAR.name -> navController.navigate(Route.LIST_CALENDAR.name)
-                    Route.LIST_CALENDAR.name -> navController.navigate(Route.TILE_CALENDAR.name)
-                    else -> {
-                        val newRoute =
-                            if (currentCalendarType == CalendarType.TILE)
-                                Route.LIST_CALENDAR
-                            else Route.TILE_CALENDAR
-
-                        navController.navigate(newRoute.name)
-                    }
-                }
-                currentCalendarType = if (route == Route.TILE_CALENDAR.name) {
-                    CalendarType.TILE
-                } else {
-                    CalendarType.LIST
-                }
-
-            }
-            MenuItem(iconId = R.drawable.icon_reset_date, Item.RESET) {
-
-            }
-            MenuItem(iconId = R.drawable.icon_settings, Item.SETTINGS) {
-                navController.navigate(Route.SETTINGS.name)
-                currentItemSelected = Item.SETTINGS
-            }
-            MenuItem(iconId = R.drawable.icon_info, Item.INFO) {
-                navController.navigate(Route.APP_INFO.name)
-            }
-        }
+    val visibility = navController.run {
+        val route = currentDestination?.route ?: ""
+        route != "${Navigation.HOLIDAY_PAGE.route}/{id}" &&
+                route != "${Navigation.USERS_HOLIDAY_EDITOR.route}/{id}" &&
+                route != Navigation.INIT_PAGE.route
     }
+
+    val e = navController.currentBackStackEntryFlow.collectAsState(null)
+
+    if (e.value != null && visibility)
+        Surface(
+            modifier = Modifier
+                .padding(bottom = 5.dp)
+                .drawWithContent {
+                    clipRect(
+                        left = 0f,
+                        top = 0f,
+                        right = size.width,
+                        bottom = size.height + 5
+                    ) {
+                        this@drawWithContent.drawContent()
+                    }
+                },
+            color = TopBarColor,
+            elevation = 3.dp
+        ) {
+            DropDownYearMenu(currentYear = year) {
+                onYearChange(it)
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+
+                val icon = getCalendarIcon(currentCalendarType)
+                MenuItem(iconId = icon, item = Item.CALENDAR, selectedItem = currentItemSelected) {
+                    val newRoute = when (navController.currentDestination?.route ?: "") {
+                        Navigation.TILE_CALENDAR.route -> Navigation.LIST_CALENDAR
+                        Navigation.LIST_CALENDAR.route -> Navigation.TILE_CALENDAR
+                        else -> {
+                            if (currentCalendarType == CalendarType.TILE)
+                                Navigation.TILE_CALENDAR
+                            else Navigation.LIST_CALENDAR
+                        }
+                    }
+                    navController.navigate(newRoute.route)
+
+                    currentCalendarType = if (newRoute.route == Navigation.TILE_CALENDAR.route) {
+                        CalendarType.TILE
+                    } else {
+                        CalendarType.LIST
+                    }
+                    currentItemSelected = Item.CALENDAR
+
+                }
+                MenuItem(
+                    iconId = R.drawable.icon_reset_date,
+                    item = Item.RESET,
+                    selectedItem = currentItemSelected
+                ) {
+
+                }
+                MenuItem(
+                    iconId = R.drawable.icon_settings,
+                    item = Item.SETTINGS,
+                    selectedItem = currentItemSelected
+                ) {
+                    currentItemSelected = Item.SETTINGS
+                    navController.navigate(Navigation.SETTINGS.route)
+                }
+                MenuItem(
+                    iconId = R.drawable.icon_info,
+                    item = Item.INFO,
+                    selectedItem = currentItemSelected
+                ) {
+                    currentItemSelected = Item.INFO
+                    navController.navigate(Navigation.APP_INFO.route)
+                }
+            }
+        }
 }
 
-fun getCalendarIcon(navController: NavHostController) = navController.run {
-    val currentRoute = currentDestination?.route ?: ""
-    if (currentRoute == Route.TILE_CALENDAR.name) {
-        R.drawable.icon_tile
-    } else R.drawable.icon_list
-}
+fun getCalendarIcon(currentCalendarType: CalendarType) =
+    if (currentCalendarType == CalendarType.TILE) {
+        R.drawable.icon_list
+    } else R.drawable.icon_tile
+
 
 @Composable
-fun MenuItem(iconId: Int, item: Item, onClick: () -> Unit = {}) {
-    IconButton(onClick = onClick) {
+fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: () -> Unit = {}) {
+    val background = if (item == selectedItem) Color.Gray else Color.Transparent
+    IconButton(
+        modifier = Modifier
+            .height(49.dp)
+            .background(background),
+        onClick = onClick
+    ) {
         Icon(
+            modifier = Modifier.clickable { onClick() },
             painter = painterResource(iconId),
             contentDescription = item.name
         )

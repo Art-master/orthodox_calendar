@@ -53,7 +53,7 @@ class InitAppActivity : ComponentActivity() {
 
             val onHolidayClick = remember {
                 { holiday: Holiday ->
-                    navController.navigate(Route.HOLIDAY_PAGE.name)
+                    navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${holiday.id}")
                 }
             }
 
@@ -61,7 +61,7 @@ class InitAppActivity : ComponentActivity() {
                 { item: MultiFabItem ->
                     when (item.identifier) {
                         Tabs.NEW_EVENT.name -> {
-                            navController.navigate(route = "${Route.USERS_HOLIDAY_EDITOR.name}/0")
+                            navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/0")
                         }
                         Tabs.FILTERS.name -> {} //No actions
                         else -> throw IllegalStateException("Wrong item name")
@@ -71,38 +71,38 @@ class InitAppActivity : ComponentActivity() {
 
             MaterialTheme {
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                    Column {
+                        AppBar(viewModel = calendarViewModel, navController = navController)
+                        NavHost(
+                            navController = navController,
+                            startDestination = Navigation.INIT_PAGE.route
+                        ) {
+                            composable(Navigation.INIT_PAGE.route) {
+                                AppStartTextAnimation(initViewModel.animationTime.toInt()) {
+                                    val route = if (calendarViewModel.firstLoadingTileCalendar())
+                                        Navigation.TILE_CALENDAR
+                                    else Navigation.LIST_CALENDAR
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = Route.INIT_PAGE.name
-                    ) {
-                        composable(Route.INIT_PAGE.name) {
-                            AppStartTextAnimation(initViewModel.animationTime.toInt()) {
-                                val route = if (calendarViewModel.firstLoadingTileCalendar())
-                                    Route.TILE_CALENDAR
-                                else Route.LIST_CALENDAR
-
-                                navController.navigate(route.name) {
-                                    popUpTo(Route.INIT_PAGE.name) {
-                                        inclusive = true
+                                    navController.navigate(route.route) {
+                                        popUpTo(Navigation.INIT_PAGE.route) {
+                                            inclusive = true
+                                        }
                                     }
                                 }
                             }
-                        }
-                        composable(Route.TILE_CALENDAR.name) {
-                            Column {
-                                AppBar(calendarViewModel, navController)
+                            composable(Navigation.TILE_CALENDAR.route) {
                                 CalendarToolsDrawer(
                                     viewModel = calendarViewModel,
                                     onToolClick = onToolItemClick
                                 ) {
-                                    HolidayTileLayout(calendarViewModel, onDayClick, onHolidayClick)
+                                    HolidayTileLayout(
+                                        calendarViewModel,
+                                        onDayClick,
+                                        onHolidayClick
+                                    )
                                 }
                             }
-                        }
-                        composable(Route.LIST_CALENDAR.name) {
-                            Column {
-                                AppBar(calendarViewModel, navController)
+                            composable(Navigation.LIST_CALENDAR.route) {
                                 CalendarToolsDrawer(
                                     viewModel = calendarViewModel,
                                     onToolClick = onToolItemClick
@@ -115,23 +115,20 @@ class InitAppActivity : ComponentActivity() {
 
                                 }
                             }
-                        }
-                        composable("${Route.HOLIDAY_PAGE.name}/{id}") { backStackEntry ->
-                            val onEditClick = remember {
-                                { holiday: Holiday ->
-                                    navController.navigate(route = "${Route.USERS_HOLIDAY_EDITOR.name}/${holiday.id}")
+                            composable("${Navigation.HOLIDAY_PAGE.route}/{id}") { backStackEntry ->
+                                val onEditClick = remember {
+                                    { holiday: Holiday ->
+                                        navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/${holiday.id}")
+                                    }
                                 }
-                            }
-                            val onDeleteClick = remember {
-                                { holiday: Holiday ->
-                                    calendarViewModel.deleteHoliday(holiday.id)
-                                    navigateToCalendar(navController)
+                                val onDeleteClick = remember {
+                                    { holiday: Holiday ->
+                                        calendarViewModel.deleteHoliday(holiday.id)
+                                        navigateToCalendar(navController)
+                                    }
                                 }
-                            }
 
-                            val id = backStackEntry.arguments!!.getString("id")!!
-                            Column {
-                                AppBar(calendarViewModel, navController)
+                                val id = backStackEntry.arguments!!.getString("id")!!
                                 HolidayInfoPager(
                                     viewModel = calendarViewModel,
                                     holidayId = id.toLong(),
@@ -139,42 +136,35 @@ class InitAppActivity : ComponentActivity() {
                                     onDeleteClick = onDeleteClick
                                 )
                             }
-                        }
-                        composable(route = "${Route.USERS_HOLIDAY_EDITOR.name}/{id}") { backStackEntry ->
-                            val id = backStackEntry.arguments!!.getString("id")!!
-                            val holiday = if (id != "0") {
-                                calendarViewModel.getHolidayById(id.toLong())
-                            } else null
+                            composable(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/{id}") { backStackEntry ->
+                                val id = backStackEntry.arguments!!.getString("id")!!
+                                val holiday = if (id != "0") {
+                                    calendarViewModel.getHolidayById(id.toLong())
+                                } else null
 
-                            UserHolidayLayout(holiday) { data ->
-                                if (holiday == null) {
-                                    calendarViewModel.insertHoliday(data) {
-                                        calendarViewModel.clearCaches()
-                                        calendarViewModel.loadAllHolidaysOfCurrentYear()
-                                        navigateToHolidayPage(navController, it.id)
-                                    }
-                                } else {
-                                    calendarViewModel.updateHoliday(data) {
-                                        calendarViewModel.clearCaches()
-                                        calendarViewModel.loadAllHolidaysOfCurrentYear()
-                                        navigateToHolidayPage(navController, data.id)
+                                UserHolidayLayout(holiday) { data ->
+                                    if (holiday == null) {
+                                        calendarViewModel.insertHoliday(data) {
+                                            calendarViewModel.clearCaches()
+                                            calendarViewModel.loadAllHolidaysOfCurrentYear()
+                                            navigateToHolidayPage(navController, it.id)
+                                        }
+                                    } else {
+                                        calendarViewModel.updateHoliday(data) {
+                                            calendarViewModel.clearCaches()
+                                            calendarViewModel.loadAllHolidaysOfCurrentYear()
+                                            navigateToHolidayPage(navController, data.id)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        composable(Route.SETTINGS.name) {
-                            Column {
-                                AppBar(calendarViewModel, navController)
+                            composable(Navigation.SETTINGS.route) {
                                 SettingsLayoutWrapper(settingsViewModel)
                             }
-                        }
-                        composable(Route.APP_INFO.name) {
-                            Column {
-                                AppBar(calendarViewModel, navController)
+                            composable(Navigation.APP_INFO.route) {
                                 AppInfoLayout()
                             }
                         }
-
                     }
                 }
             }
@@ -182,8 +172,8 @@ class InitAppActivity : ComponentActivity() {
     }
 
     private fun navigateToHolidayPage(navController: NavHostController, id: Long) {
-        navController.navigate("${Route.HOLIDAY_PAGE.name}/${id}") {
-            popUpTo("${Route.USERS_HOLIDAY_EDITOR.name}/{id}") {
+        navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${id}") {
+            popUpTo("${Navigation.USERS_HOLIDAY_EDITOR.route}/{id}") {
                 inclusive = true
             }
         }
@@ -191,9 +181,9 @@ class InitAppActivity : ComponentActivity() {
 
     private fun navigateToCalendar(navController: NavHostController) {
         val currentRoute = navController.currentDestination?.route ?: ""
-        val targetRoute = if (currentRoute == Route.TILE_CALENDAR.name) {
-            Route.LIST_CALENDAR.name
-        } else Route.TILE_CALENDAR.name
+        val targetRoute = if (currentRoute == Navigation.TILE_CALENDAR.route) {
+            Navigation.LIST_CALENDAR.route
+        } else Navigation.TILE_CALENDAR.route
 
         navController.navigate(targetRoute)
     }
