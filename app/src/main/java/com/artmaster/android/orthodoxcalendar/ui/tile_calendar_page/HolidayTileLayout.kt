@@ -70,33 +70,37 @@ fun HolidayTileLayout(
     onDayClick: (day: Day) -> Unit = {},
     onHolidayClick: (day: Holiday) -> Unit = {},
 ) {
-    var monthNum by remember { viewModel.getMonth() }
-    val currentYear by remember { viewModel.getYear() }
+    val monthNum by viewModel.getMonth()
+    val currentYear by viewModel.getYear()
 
     val pagerState = rememberPagerState(monthNum.dec())
     val scope = rememberCoroutineScope()
     val filters = viewModel.getFilters()
 
-    LaunchedEffect(pagerState, currentYear, filters.value) {
+    LaunchedEffect(monthNum) {
+        scope.launch {
+            pagerState.scrollToPage(monthNum)
+        }
+    }
+
+    LaunchedEffect(pagerState.currentPage, currentYear, filters.value) {
         // Collect from the pager state a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.currentPage }.collect { page ->
             viewModel.setMonth(page)
-            monthNum = page
 
             //current page
-            viewModel.loadAllHolidaysOfMonth(monthNum, currentYear)
+            viewModel.loadAllHolidaysOfMonth(page, currentYear)
             //next page data
-            viewModel.loadAllHolidaysOfMonth(monthNum + 1, currentYear)
+            viewModel.loadAllHolidaysOfMonth(page + 1, currentYear)
             //previous page data
-            viewModel.loadAllHolidaysOfMonth(monthNum - 1, currentYear)
+            viewModel.loadAllHolidaysOfMonth(page - 1, currentYear)
         }
     }
 
     Column(Modifier.fillMaxHeight()) {
         MonthTabs(pagerState = pagerState) {
-            monthNum = it
             scope.launch {
-                pagerState.animateScrollToPage(monthNum)
+                pagerState.scrollToPage(it)
             }
         }
 

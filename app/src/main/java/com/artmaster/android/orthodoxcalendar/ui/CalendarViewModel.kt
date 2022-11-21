@@ -223,8 +223,8 @@ class CalendarViewModel : ViewModel() {
         if (now.year != year.value) {
             setYear(now.year)
         }
-        if (now.month != month.value) {
-            setYear(now.year)
+        if (now.monthWith0 != month.value) {
+            setMonth(now.monthWith0)
         }
         if (now.dayOfMonth != dayOfMonth.value) {
             setDayOfMonth(now.dayOfMonth)
