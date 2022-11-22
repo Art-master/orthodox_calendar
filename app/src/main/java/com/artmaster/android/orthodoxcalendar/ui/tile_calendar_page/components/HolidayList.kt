@@ -3,11 +3,9 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +22,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 
@@ -50,9 +49,8 @@ fun HolidayListPreview() {
         )
     )
     day.holidays.addAll(getHolidays(time))
-    val data = remember {
-        mutableStateOf(listOf(day))
-    }
+    val data = remember { mutableStateOf(listOf(day)) }
+
     HolidayList(data = data)
 }
 
@@ -124,9 +122,17 @@ fun HolidayList(
     data: MutableState<List<Day>>,
     onDayClick: (day: Day) -> Unit = {},
     onHolidayClick: (day: Holiday) -> Unit = {},
+    viewModel: CalendarViewModel? = null
 ) {
+    val listState = rememberLazyListState()
+    val dayOfYear = viewModel?.getDayOfYear()
+
+    LaunchedEffect(dayOfYear?.value) {
+        listState.scrollToItem(dayOfYear!!.value.dec())
+    }
+
     val days = data.value
-    LazyColumn(modifier) {
+    LazyColumn(modifier = modifier, state = listState) {
         items(days) { day ->
             if (day.holidays.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(20.0.dp))

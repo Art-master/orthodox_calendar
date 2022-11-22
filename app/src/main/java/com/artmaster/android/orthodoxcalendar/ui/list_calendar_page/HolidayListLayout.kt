@@ -55,7 +55,7 @@ fun HolidayPagerListLayout(
     LaunchedEffect(currentYear) {
         scope.launch {
             val index = currentYear - availableYears.first()
-            pagerState.animateScrollToPage(index)
+            if (pagerState.currentPage != index) pagerState.scrollToPage(index)
         }
     }
 
@@ -83,7 +83,7 @@ fun HolidayPagerListLayout(
 
         YearsTabs(pagerState = pagerState) {
             scope.launch {
-                pagerState.animateScrollToPage(it)
+                pagerState.scrollToPage(it)
             }
         }
 
@@ -99,6 +99,7 @@ fun HolidayPagerListLayout(
                     modifier = Modifier
                         .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
+                    viewModel = viewModel,
                     onDayClick = onDayClick,
                     onHolidayClick = onHolidayClick
                 )
@@ -114,7 +115,7 @@ fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {
         // We animate the scaleX + scaleY, between 85% and 100%
         lerp(
-            start = 0.8.dp,
+            start = 0.6.dp,
             stop = 1.dp,
             fraction = 1f - pageOffset.coerceIn(0f, 1f)
         ).also { scale ->

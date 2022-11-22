@@ -63,7 +63,7 @@ class InitAppActivity : ComponentActivity() {
                         SnackbarHost(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .padding(bottom = 50.dp, start = 15.dp, end = 15.dp),
+                                .padding(bottom = 90.dp, start = 15.dp, end = 15.dp),
                             hostState = snackState
                         ) { data: SnackbarData ->
                             StyledSnackBar(message = data.message)

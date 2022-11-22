@@ -15,17 +15,19 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class CalendarViewModel : ViewModel() {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
-    private val currentTime = Time()
+    private val initTime = Time()
 
-    private val dayOfMonth = mutableStateOf(currentTime.dayOfMonth)
-    private val month = mutableStateOf(currentTime.month)
-    private val year = mutableStateOf(currentTime.year)
-    val availableYears = getAvailableYears(currentYear = currentTime.year)
+    private val dayOfMonth = mutableStateOf(initTime.dayOfMonth)
+    private val dayOfYear = mutableStateOf(initTime.dayOfYear)
+    private val month = mutableStateOf(initTime.month)
+    private val year = mutableStateOf(initTime.year)
+    val availableYears = getAvailableYears(currentYear = initTime.year)
 
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
@@ -79,7 +81,7 @@ class CalendarViewModel : ViewModel() {
 
     fun loadAllHolidaysOfCurrentYear() {
         viewModelScope.launch {
-            loadAllHolidaysOfYear(currentTime.year)
+            loadAllHolidaysOfYear(year.value)
         }
     }
 
@@ -162,8 +164,12 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun setYear(year: Int) {
-        clearCaches()
+        clearMonthCache()
         this.year.value = year
+    }
+
+    fun clearMonthCache() {
+        daysByMonthCache.forEach { it.value.value = emptyList() }
     }
 
     fun clearCaches() {
@@ -181,9 +187,25 @@ class CalendarViewModel : ViewModel() {
 
     fun setDayOfMonth(day: Int) {
         dayOfMonth.value = day
+
+        initTime.calendar.apply {
+            set(Calendar.YEAR, year.value)
+            set(Calendar.MONTH, month.value)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth.value)
+        }
+
+        dayOfYear.value = initTime.dayOfYear
     }
 
     fun getDayOfMonth() = dayOfMonth
+
+    fun getDayOfYear() = dayOfYear
+    fun setDayOfYear(day: Int) {
+        dayOfYear.value = day
+
+        initTime.calendar.set(year.value, month.value, day)
+        dayOfMonth.value = initTime.dayOfMonth
+    }
 
 
     fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>> {
@@ -201,12 +223,12 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun getAllHolidaysOfYear(): List<Holiday> {
-        val days = daysByYearsCache[currentTime.year]?.value?.flatMap { d -> d.holidays }
+        val days = daysByYearsCache[year.value]?.value?.flatMap { d -> d.holidays }
         return days!!
     }
 
     fun getHolidayById(id: Long): Holiday {
-        val days = daysByYearsCache[currentTime.year]?.value
+        val days = daysByYearsCache[year.value]?.value
         var holiday = Holiday()
         days?.forEach { day ->
             val found = day.holidays.find { it.id == id }
