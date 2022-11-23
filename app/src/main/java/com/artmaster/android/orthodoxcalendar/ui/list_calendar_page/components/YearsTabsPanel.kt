@@ -19,7 +19,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.common.getYears
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
-import com.artmaster.android.orthodoxcalendar.ui.theme.WindowBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -42,7 +42,7 @@ fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
 
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = WindowBackground,
+        backgroundColor = TabsBackground,
         contentColor = Color.Gray,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(

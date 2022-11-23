@@ -4,11 +4,10 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.ui.graphics.Color
 
 val Error = Color(0xFFD32F2F)
-val ErrorInactive = Color(0XFFFFCDD2)
-
 
 val Background = Color(0xFFFBF5CF)
-val TopBarColor = Color(0xFFFAF0B6)
+val TopBarColor = Color(0xFFFAE1B6)
+val TabsBackground = Color(0xFFFAEBB6)
 
 val CheckBoxCheckmarkColor = Color(0xFFD32F2F)
 val CheckBoxCheckedColor = Color(0xFFC09831)
@@ -26,7 +25,6 @@ val DefaultTextColor = Color(0XFF757575)
 val HeadSymbolTextColor = Color(0XFFE53935)
 val OldDateTextColor = Color(0xFF2196F3)
 
-val WindowBackground = Color(0XFFFBF5CF)
 val HeaderTextColor = Color(0XFFE53935)
 
 

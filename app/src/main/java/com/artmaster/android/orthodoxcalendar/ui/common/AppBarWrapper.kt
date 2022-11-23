@@ -117,7 +117,7 @@ fun AppBar(
     if (forceVisibility || (e.value != null && visibility))
         Surface(
             modifier = Modifier
-                .padding(bottom = 5.dp)
+                .padding(bottom = 1.dp)
 /*                .background(brush =
                     verticalGradient(
                         0.0f to Color.Red,

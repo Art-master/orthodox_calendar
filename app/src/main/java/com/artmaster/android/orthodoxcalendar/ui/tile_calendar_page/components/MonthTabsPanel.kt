@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
-import com.artmaster.android.orthodoxcalendar.ui.theme.WindowBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -39,7 +39,7 @@ fun MonthTabs(pagerState: PagerState, onClick: (month: Int) -> Unit = {}) {
     val items = stringArrayResource(id = R.array.months_names_gen)
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = WindowBackground,
+        backgroundColor = TabsBackground,
         contentColor = Color.Gray,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
