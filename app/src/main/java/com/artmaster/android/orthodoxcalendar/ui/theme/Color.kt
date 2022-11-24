@@ -24,8 +24,9 @@ val NameDay = Color(0XFFFF6D00)
 val DefaultTextColor = Color(0XFF757575)
 val HeadSymbolTextColor = Color(0XFFE53935)
 val OldDateTextColor = Color(0xFF2196F3)
+val TileBorderColor = DefaultTextColor
 
-val HeaderTextColor = Color(0XFFE53935)
+val HeaderTextColor = Color(0XFF757575)
 
 
 val EditTextBackground = Background

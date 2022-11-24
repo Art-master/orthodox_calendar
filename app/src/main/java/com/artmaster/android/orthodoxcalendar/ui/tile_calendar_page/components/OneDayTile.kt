@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -31,7 +32,11 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 
 @Composable
-fun PreviewGrid(size: Dp = 50.dp, holidayType: Holiday.Type = Holiday.Type.AVERAGE_PEPPY) {
+fun PreviewGrid(
+    size: Dp = 50.dp,
+    holidayType: Holiday.Type = Holiday.Type.AVERAGE_PEPPY,
+    isActive: Boolean = false
+) {
     val time = Time()
     AppTheme {
         Box(
@@ -60,7 +65,7 @@ fun PreviewGrid(size: Dp = 50.dp, holidayType: Holiday.Type = Holiday.Type.AVERA
                             Fasting.Permission.CAVIAR,
                         )
                     )
-                ), isActive = false
+                ), isActive = isActive
             )
         }
     }
@@ -70,6 +75,12 @@ fun PreviewGrid(size: Dp = 50.dp, holidayType: Holiday.Type = Holiday.Type.AVERA
 @Composable
 fun NormalPreview() {
     PreviewGrid(holidayType = Holiday.Type.MAIN)
+}
+
+@Preview(widthDp = 50, heightDp = 50)
+@Composable
+fun ActiveTilePreview() {
+    PreviewGrid(holidayType = Holiday.Type.MAIN, isActive = true)
 }
 
 @Preview(widthDp = 150, heightDp = 150)
@@ -110,17 +121,18 @@ fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: (holiday: Day) 
             .aspectRatio(1f)
             .background(holidayColor, shape = RoundedCornerShape(6.dp))
             .border(
-                width = 1.dp,
-                color = if (isActive) Color.Red else Color.Black,
+                width = if (isActive) 2.dp else 1.dp,
+                color = if (isActive) Color.Black else TileBorderColor,
                 shape = RoundedCornerShape(6.dp)
             )
+            .shadow(elevation = 150.dp, shape = RoundedCornerShape(5.dp))
             .clickable {
                 onClick(day)
             }
     ) {
         Text(
             modifier = Modifier
-                .fillMaxSize(0.5f)
+                .fillMaxSize(0.7f)
                 .padding(start = 2.dp, top = 1.dp),
             text = day.dayOfMonth.toString(),
             fontSize = with(LocalDensity.current) {
@@ -131,7 +143,7 @@ fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: (holiday: Day) 
             textAlign = TextAlign.Left
         )
         if (day.holidays.isNotEmpty()) {
-            HolidaysIndicator(this, holidayColor)
+            HolidaysIndicator(this)
         }
 
         HolidayPermissions(this, day = day)
@@ -236,7 +248,7 @@ fun PermissionImage(resId: Int, modifier: Modifier) {
 }
 
 @Composable
-fun HolidaysIndicator(parent: BoxScope, holidayColor: Color) {
+fun HolidaysIndicator(parent: BoxScope) {
     parent.apply {
 
         val strokeColor = listOf(Color(0xFFFFFFFF), Color(0xFFFFFFFF))
