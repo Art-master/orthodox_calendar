@@ -1,8 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
-@Immutable
+@Stable
 data class Day(
     val year: Int,
     val month: Int, //with 0

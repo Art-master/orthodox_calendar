@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.holiday_page.components
+package com.artmaster.android.orthodoxcalendar.ui.holiday_page
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayPage
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

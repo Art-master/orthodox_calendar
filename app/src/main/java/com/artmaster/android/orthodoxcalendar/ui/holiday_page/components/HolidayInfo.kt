@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -97,74 +98,80 @@ fun HolidayPage(
             alignment = Alignment.Center
         )
 
-        if (holiday.isCreatedByUser) {
-            UserHolidayControlMenu(
-                holiday = holiday,
-                onEditClick = onEditClick,
-                onDeleteClick = { modalState.value = true }
-            )
-        }
 
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(top = (configuration.screenHeightDp / 1.5).dp) // height control
-                .drawBehind {
-                    // Shadow
-                    drawRoundRect(
-                        color = Color.Black,
-                        topLeft = Offset(0f, -10f),
-                        alpha = 0.3f,
-                        cornerRadius = CornerRadius(40f, 40f)
-                    )
-                }
-                .clip(RoundedCornerShape(20.dp))
-                .background(Background)
+                .padding(top = (configuration.screenHeightDp / 1.6).dp)// height control
         ) {
-
-            HolidayPageTitle(holiday = holiday)
-
-            var scrollActivate by remember { mutableStateOf(false) }
-            var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
-
-            if (scroll.isScrollInProgress && scrollActivate.not()) {
-                scrollActivate = true
+            if (holiday.isCreatedByUser) {
+                UserHolidayControlMenu(
+                    modifier = Modifier
+                        .offset(y = (10).dp)
+                        .zIndex(10f),
+                    holiday = holiday,
+                    onEditClick = onEditClick,
+                    onDeleteClick = { modalState.value = true }
+                )
             }
+            Column(
+                modifier = Modifier
+                    .drawBehind {
+                        // Shadow
+                        drawRoundRect(
+                            color = Color.Black,
+                            topLeft = Offset(0f, -10f),
+                            alpha = 0.3f,
+                            cornerRadius = CornerRadius(40f, 40f)
+                        )
+                    }
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Background)
+            ) {
+                HolidayPageTitle(holiday = holiday)
 
-            if (fullHolidayInfo == null) {
-                // Empty space for starting scrolling
-                Spacer(modifier = Modifier.height(300.0.dp))
-            }
+                var scrollActivate by remember { mutableStateOf(false) }
+                var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
 
-            // Lazy loading when user scrolling page
-            if (scrollActivate) {
-
-                LaunchedEffect(holiday) {
-                    val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
-                    fullHolidayInfo = data
+                if (scroll.isScrollInProgress && scrollActivate.not()) {
+                    scrollActivate = true
                 }
 
-                // if full data loaded (etc. include holiday description)
-                fullHolidayInfo?.let {
-                    Divider()
-                    HolidayDescriptionLayout(holiday = it)
+                if (fullHolidayInfo == null) {
+                    // Empty space for starting scrolling
+                    Spacer(modifier = Modifier.height(300.0.dp))
+                }
+
+                // Lazy loading when user scrolling page
+                if (scrollActivate) {
+
+                    LaunchedEffect(holiday) {
+                        val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
+                        fullHolidayInfo = data
+                    }
+
+                    // if full data loaded (etc. include holiday description)
+                    fullHolidayInfo?.let {
+                        Divider()
+                        HolidayDescriptionLayout(holiday = it)
+                    }
                 }
             }
-        }
 
-        DeleteHolidayDialog(
-            state = modalState.value,
-            onRejectClick = { modalState.value = false }) {
-            onDeleteClick(holiday)
-            modalState.value = false
+            DeleteHolidayDialog(
+                state = modalState.value,
+                onRejectClick = { modalState.value = false }) {
+                onDeleteClick(holiday)
+                modalState.value = false
+            }
         }
     }
 }
 
 @Composable
-fun HolidayPageTitle(holiday: Holiday) {
+fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(160.dp)
             .padding(top = 5.dp),

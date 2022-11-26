@@ -56,7 +56,7 @@ fun Preview() {
     }
 
     val monthData = remember {
-        mutableStateOf(emptyList<Day>())
+        mutableStateOf<List<Day>>(days)
     }
 
     HolidayTileMonthLayout(data = monthData, dayOfMonth = 4)
@@ -72,8 +72,6 @@ fun HolidayTileMonthLayout(
     onHolidayClick: (holiday: Holiday) -> Unit = {}
 ) {
 
-    val days = data.value
-
     val state = rememberDrawerState(DrawerValue.Closed)
     val drawerState = rememberBottomSheetScaffoldState(state)
 
@@ -83,7 +81,7 @@ fun HolidayTileMonthLayout(
         modifier = Modifier.padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (days.isEmpty()) {
+        if (data.value.isEmpty()) {
             Spinner()
         } else {
             val day = data.value[dayOfMonth.dec()]
@@ -104,7 +102,7 @@ fun HolidayTileMonthLayout(
                 sheetPeekHeight = sheetPeekHeight
 
             ) {
-                TilesGridLayout(days, dayOfMonth, onDayClick)
+                TilesGridLayout(data, dayOfMonth, onDayClick)
             }
         }
     }

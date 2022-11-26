@@ -11,7 +11,7 @@ import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
 import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.filters.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.filters.Tabs
-import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayInfoPager
+import com.artmaster.android.orthodoxcalendar.ui.holiday_page.HolidayInfoPager
 import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPagerListLayout

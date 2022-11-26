@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -125,7 +124,6 @@ fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: (holiday: Day) 
                 color = if (isActive) Color.Black else TileBorderColor,
                 shape = RoundedCornerShape(6.dp)
             )
-            .shadow(elevation = 150.dp, shape = RoundedCornerShape(5.dp))
             .clickable {
                 onClick(day)
             }

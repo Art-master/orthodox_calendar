@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,8 +55,8 @@ fun ShowMonth() {
         else dayInWeek.inc()
     }
 
-    val data = remember { days.toList() }
-    TilesGridLayout(data = data, selectedDayOfMonth = time.dayOfMonth)
+    val data = remember { mutableStateOf(days.toList()) }
+    TilesGridLayout(days = data, selectedDayOfMonth = time.dayOfMonth)
 }
 
 const val MAX_COLUMN_COUNT = 6
@@ -62,12 +64,14 @@ const val DAYS_IN_WEEK_COUNT = 7
 
 @Composable
 fun TilesGridLayout(
-    data: List<Day>,
+    days: MutableState<List<Day>>,
     selectedDayOfMonth: Int,
     onDayClick: (day: Day) -> Unit = {}
 ) {
 
     var daysCount = 0
+    val data = days.value
+    val daysCountStartOffset = data.first().dayInWeek.dec()
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(0.9f),
@@ -79,7 +83,6 @@ fun TilesGridLayout(
 
             val week = item % MAX_COLUMN_COUNT
             val dayWith0 = item / MAX_COLUMN_COUNT
-            val daysCountStartOffset = data.first().dayInWeek.dec()
             val dayIndex = ((week.dec() * DAYS_IN_WEEK_COUNT) + dayWith0) - daysCountStartOffset
 
             if (week == 0) {

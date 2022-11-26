@@ -21,19 +21,20 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.FloatingButtonColor
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 fun UserHolidayControlMenuPreview() {
     Box(Modifier.fillMaxSize()) {
-        UserHolidayControlMenu(Holiday())
+        UserHolidayControlMenu(holiday = Holiday())
     }
 }
 
 
 @Composable
 fun UserHolidayControlMenu(
+    modifier: Modifier = Modifier,
     holiday: Holiday,
     onEditClick: (holiday: Holiday) -> Unit = {},
     onDeleteClick: (holiday: Holiday) -> Unit = {}
 ) {
 
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         FloatingActionButton(
             modifier = Modifier
                 .size(45.dp)
