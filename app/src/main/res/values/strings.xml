@@ -51,19 +51,6 @@
     <string name="arrow_left">&lt;</string>
     <string name="arrow_right">&gt;</string>
 
-    <string-array name="loading_strings_array">
-        <item>\"Покайтесь,\n ибо приблизилось \n Царство Небесное.\" \n (Мф. 4:17)</item>
-        <item>\"Воззови ко Мне - и Я отвечу тебе, \n покажу тебе великое и недоступное, \n чего ты не знаешь.\" \n (Иер.33:3)</item>
-        <item>\"Утешайся Господом,\n и Он  исполнит желание \n сердца твоего.\" \n (Пс.37:4)</item>
-        <item>\"Ищите же прежде \n Царства Божия\n и правды Его,\n и это все\n приложится вам.\" \n (Мф. 6:33)</item>
-        <item>\"..какой мерой отмерите,\n такой же\n отмерится и вам.\" \n (Лк.6:38)</item>
-        <item>\"Просите и воздастся вам,\n ищите и найдёте.\"\n (Мф.7:7)</item>
-        <item>\"Блаженны, изгнанные\n за правду,\n ибо их есть\n  Царство Небесное.\"\n (Мф.5:10)</item>
-        <item>\"Много званых,\n  но мало избранных.\"\n (Лк.14:24)</item>
-        <item>\"Терпением вашим\n спасайте души ваши.\"\n (Лк.21:19)</item>
-        <item>\"Блаженны чистые сердцем,\n ибо они Бога узрят.\"\n (Лк.21:19)</item>
-    </string-array>
-
     <!--icon_tile menu text-->
 
     <string name="num_example_1">1</string>
@@ -88,6 +75,8 @@
     <string name="colors">Цвета</string>
     <string name="images">Изображения</string>
     <string name="contacts">Контакты</string>
+    <string name="others_recommendations">Другие рекоммендации</string>
+    <string name="stop_anim_recommendation">1. Удерживая палец на экране загрузки, можно остановить анимацию и прочитать текст.</string>
 
     <!--Settings subtypes-->
     <string name="settings_notifications_header">Уведомления</string>
@@ -110,39 +99,6 @@
     <string name="settings_off_start_anim">Отключить стартовую анимацию</string>
     <string name="settings_days">дн.</string>
     <string name="settings_hours">ч.</string>
-
-    <string-array name="spinner_days_numbers">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-        <item>23</item>
-        <item>24</item>
-        <item>25</item>
-        <item>26</item>
-        <item>27</item>
-        <item>28</item>
-        <item>29</item>
-        <item>30</item>
-    </string-array>
 
     <string-array name="user_holidays_names">
         <!-- @see Holiday.Type ids -->

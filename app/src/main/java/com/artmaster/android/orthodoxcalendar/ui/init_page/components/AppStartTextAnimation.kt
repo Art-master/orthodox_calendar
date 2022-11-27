@@ -1,14 +1,26 @@
 package com.artmaster.android.orthodoxcalendar.ui.init_page.components
 
+import android.view.MotionEvent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import java.util.*
 
 @Preview
@@ -17,6 +29,7 @@ fun Preview() {
     AppStartTextAnimation(time = 6000)
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
 
@@ -27,14 +40,53 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
         strings[num]
     }
 
+    var userTouchScreen by remember { mutableStateOf(false) }
+    var firstComplete by remember { mutableStateOf(false) }
+    val onFirstPartComplete = remember { { firstComplete = true } }
+
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> userTouchScreen = true
+                    MotionEvent.ACTION_UP -> userTouchScreen = false
+                }
+                true
+            },
         contentAlignment = Alignment.Center
     ) {
-        DisappearingTextView(
-            title = title,
-            animDurationMs = time,
-            onComplete = onComplete
-        )
+        if (firstComplete.not() || userTouchScreen) {
+            DisappearingTextAnimation(
+                title = title,
+                animDurationMs = time,
+                withReverse = false,
+                onComplete = onFirstPartComplete
+            ) {
+                AppearanceText(string = it)
+            }
+        } else {
+            DisappearingTextAnimation(
+                title = title,
+                animDurationMs = time,
+                withReverse = false,
+                revertValue = true,
+                onComplete = onComplete
+            ) {
+                AppearanceText(string = it)
+            }
+        }
+
     }
+}
+
+@Composable
+fun AppearanceText(string: AnnotatedString) {
+    Text(
+        textAlign = TextAlign.Center,
+        style = TextStyle(color = Color.Transparent),
+        text = string, color = DefaultTextColor,
+        fontSize = 35.sp,
+        fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
+    )
 }

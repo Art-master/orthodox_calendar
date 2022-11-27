@@ -86,6 +86,9 @@ fun AppInfoLayout() {
             HelpFontImage(strFontId = R.string.name_day, color = NameDay)
         }
 
+        DividerWithText(text = stringResource(id = R.string.others_recommendations))
+        StyledText(title = stringResource(id = R.string.stop_anim_recommendation))
+
         DividerWithText(text = stringResource(id = R.string.contacts))
 
         Contacts()

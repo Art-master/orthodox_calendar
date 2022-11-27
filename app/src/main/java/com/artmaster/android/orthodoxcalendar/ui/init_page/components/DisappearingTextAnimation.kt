@@ -6,6 +6,7 @@ import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
@@ -22,15 +23,24 @@ import kotlin.random.Random
 @Preview
 @Composable
 fun DisappearingTextPreview() {
-    DisappearingTextView(title = "Какой-то очень длинный текст", 6000)
+    DisappearingTextAnimation(title = "Какой-то очень длинный текст", 6000) {
+        Text(
+            textAlign = TextAlign.Center,
+            text = it, color = DefaultTextColor,
+            fontSize = 35.sp,
+            fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
+        )
+    }
 }
 
 @Composable
-fun DisappearingTextView(
+fun DisappearingTextAnimation(
     title: String,
     animDurationMs: Int,
+    revertValue: Boolean = false,
     withReverse: Boolean = true,
-    onComplete: () -> Unit = {}
+    onComplete: (() -> Unit)? = null,
+    content: @Composable (string: AnnotatedString) -> Unit
 ) {
 
     val animStartBySymbols = remember {
@@ -48,22 +58,19 @@ fun DisappearingTextView(
             iterations = if (withReverse) 2 else 1
         ),
         finishedListener = {
-            onComplete.invoke()
+            onComplete?.invoke()
         }
     )
 
+    // For animation launch
     SideEffect { targetValue = animDurationMs.toFloat() }
 
     val annotatedString = buildAnnotatedString {
         title.forEachIndexed { index, char ->
 
             val value = animStartBySymbols[index]
-            var alpha = calculateAlpha(value, animation, animDurationMs)
-
-            // for excluding blinking text
-            if (animation == 0f || animation == animDurationMs.toFloat()) alpha = 0f
-
-            val color = DefaultTextColor.copy(alpha = alpha)
+            val alpha = calculateAlpha(value, animation, animDurationMs)
+            val color = DefaultTextColor.copy(alpha = if (revertValue) 1f - alpha else alpha)
 
             withStyle(style = SpanStyle(color = color)) {
                 append(char)
@@ -71,13 +78,9 @@ fun DisappearingTextView(
         }
     }
 
-    Text(
-        textAlign = TextAlign.Center,
-        text = annotatedString, color = DefaultTextColor,
-        fontSize = 35.sp,
-        fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
-    )
+    content.invoke(annotatedString)
 }
+
 
 fun calculateAlpha(value: Int, animValue: Float, animDuration: Int): Float {
     val delta = 1 / (animDuration - value).toFloat()
