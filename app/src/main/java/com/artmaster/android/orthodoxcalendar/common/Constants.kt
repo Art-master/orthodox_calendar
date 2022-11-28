@@ -19,6 +19,7 @@ class Constants {
         const val VIEW_PAGER_SPEED = 800 //ms
         const val MONTH_COUNT = 12
         const val PROJECT_DIR = "com.artmaster.android.orthodoxcalendar"
+        const val DATA_VERSION = 4
     }
 
     enum class Keys constructor(val value: String) {

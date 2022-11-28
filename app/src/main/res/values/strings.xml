@@ -156,5 +156,6 @@
 
     <string name="no_holidays">Нет событий</string>
     <string name="no_description">Описание отсутствует</string>
+    <string name="nothing_found">Ничего не найдено</string>
 
 </resources>

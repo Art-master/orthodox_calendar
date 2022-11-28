@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.DATA_VERSION
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOAD_APP
-import com.artmaster.android.orthodoxcalendar.common.Settings.Name.SPEED_UP_START_ANIMATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,7 +17,8 @@ class LoadDataViewModel : ViewModel() {
     private val repository = App.appComponent.getRepository()
     private val fileParser = App.appComponent.getFileParser()
 
-    private val isOffAnimation = preferences.get(Settings.Name.OFF_START_ANIMATION)
+    private val isOffAnimation = preferences.get(OFF_START_ANIMATION)
+    private val userDataVersion = preferences.get(USER_DATA_VERSION)
     val animationTime = getLoadingAnimTime()
 
     private fun getLoadingAnimTime(): Long {
@@ -41,6 +42,11 @@ class LoadDataViewModel : ViewModel() {
                     val data = fileParser.getData()
                     repository.insertHolidays(data)
                     preferences.set(FIRST_LOAD_APP, Settings.TRUE)
+                } else if (userDataVersion.toInt() != DATA_VERSION) {
+                    val data = fileParser.getData()
+                    repository.deleteCommonHolidays()
+                    repository.insertHolidays(data)
+                    preferences.set(USER_DATA_VERSION, userDataVersion.toInt().inc().toString())
                 }
 
                 callback.invoke()

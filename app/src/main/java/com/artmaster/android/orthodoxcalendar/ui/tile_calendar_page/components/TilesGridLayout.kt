@@ -17,6 +17,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.common.Empty
 
 @Preview
 @Composable
@@ -71,6 +72,12 @@ fun TilesGridLayout(
 
     var daysCount = 0
     val data = days.value
+
+    if (data.isEmpty()) {
+        Empty()
+        return
+    }
+
     val daysCountStartOffset = data.first().dayInWeek.dec()
 
     LazyVerticalGrid(
