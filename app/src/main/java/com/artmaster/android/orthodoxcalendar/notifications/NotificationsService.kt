@@ -10,16 +10,15 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 
 class NotificationsService : Service() {
 
     private val prefs = App.appComponent.getPreferences()
     private val dataProvider = DataProvider()
+
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
 
     private var allowSound = false
     private var allowVibration = false
@@ -36,7 +35,8 @@ class NotificationsService : Service() {
         if (intent != null) {
             updatePermissions()
             if (allowTodayNotification or allowTimeNotification or allowNameDays or
-                    allowBirthdays or allowMemoryDays) {
+                allowBirthdays or allowMemoryDays
+            ) {
 
                 if (timeCoincidence()) {
                     checkNotifications()
@@ -71,7 +71,7 @@ class NotificationsService : Service() {
     override fun onBind(intent: Intent?): Nothing? = null
 
     private fun checkNotifications() {
-        GlobalScope.launch {
+        scope.launch {
             withContext(Dispatchers.IO) {
                 val currentTime = Time()
                 val days = dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year)
@@ -123,11 +123,11 @@ class NotificationsService : Service() {
 
     private fun buildNotification(description: String, holiday: Holiday) {
         Notification(applicationContext, holiday)
-                .setSound(allowSound)
-                .setVibration(allowVibration)
-                .setName(description)
-                .setMsgText(holiday.title)
-                .build()
+            .setSound(allowSound)
+            .setVibration(allowVibration)
+            .setName(description)
+            .setMsgText(holiday.title)
+            .build()
     }
 
     private fun notificationsByTime(time: Time, days: List<Day>) {
@@ -146,7 +146,12 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun checkRestDaysNotify(timeNotification: Int, time: Time, days: List<Day>, numNotifyDay: Int) {
+    private fun checkRestDaysNotify(
+        timeNotification: Int,
+        time: Time,
+        days: List<Day>,
+        numNotifyDay: Int
+    ) {
         if (timeNotification > 1) {
             val restDays = days.subList(time.dayOfMonth - 1, numNotifyDay)
             notifyAboutRestOfDaysTo(restDays, time)
@@ -155,7 +160,6 @@ class NotificationsService : Service() {
 
     private fun notifyAboutRestOfDaysTo(days: List<Day>, time: Time) {
         for (i in days.size - 1 downTo 1) {
-            if (i == 0) continue
             for (holiday in days[i].holidays) {
                 if (!allowAverageHolidays && isAverageHoliday(holiday)) continue
                 if (!allowNameDays && holiday.typeId == Type.USERS_NAME_DAY.id) continue
@@ -179,5 +183,11 @@ class NotificationsService : Service() {
             time.calendar.set(Calendar.MONTH, time.month + 1)
         }
         return dataProvider.getMonthDays(time.month, time.year)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+
     }
 }

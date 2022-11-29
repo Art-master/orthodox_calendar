@@ -1,10 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.api.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData.Companion.fill
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
-import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import java.util.*
 
 /**

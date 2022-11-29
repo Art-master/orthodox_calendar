@@ -1,12 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.data.di
 
 import android.content.Context
+import com.artmaster.android.orthodoxcalendar.api.AppDatabase
+import com.artmaster.android.orthodoxcalendar.api.AppFileParser
+import com.artmaster.android.orthodoxcalendar.api.AppPreferences
+import com.artmaster.android.orthodoxcalendar.api.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.data.di.modules.ContextModule
 import com.artmaster.android.orthodoxcalendar.data.di.modules.RepositoryModule
-import com.artmaster.android.orthodoxcalendar.impl.AppDatabase
-import com.artmaster.android.orthodoxcalendar.impl.AppFileParser
-import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
-import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import dagger.Component
 import javax.inject.Singleton
 

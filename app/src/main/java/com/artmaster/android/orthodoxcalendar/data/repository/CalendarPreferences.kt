@@ -2,9 +2,9 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.artmaster.android.orthodoxcalendar.api.AppPreferences
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.SETTINGS_FILE_NAME
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import javax.inject.Inject
 
 /**
