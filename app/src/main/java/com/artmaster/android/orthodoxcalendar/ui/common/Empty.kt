@@ -32,7 +32,7 @@ fun Empty() {
                 .align(Alignment.Center),
             color = DefaultTextColor,
             text = stringResource(id = R.string.nothing_found),
-            fontSize = 23.sp,
+            fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.cyrillic_old)),
             textAlign = TextAlign.Center
         )

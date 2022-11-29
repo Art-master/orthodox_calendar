@@ -17,7 +17,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.common.Empty
 
 @Preview
 @Composable
@@ -74,7 +73,7 @@ fun TilesGridLayout(
     val data = days.value
 
     if (data.isEmpty()) {
-        Empty()
+        Spinner()
         return
     }
 

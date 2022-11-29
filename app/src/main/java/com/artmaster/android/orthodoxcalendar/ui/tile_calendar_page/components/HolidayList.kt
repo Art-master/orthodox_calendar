@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
+import com.artmaster.android.orthodoxcalendar.ui.common.Empty
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 
 @Preview
@@ -132,6 +134,15 @@ fun HolidayList(
     }
 
     val days = data.value
+    val noHolidays = rememberSaveable(days) {
+        mutableStateOf(days.isNotEmpty() && !days.any { day -> day.holidays.isNotEmpty() })
+    }
+
+    if (noHolidays.value) {
+        Empty()
+        return
+    }
+
     LazyColumn(modifier = modifier, state = listState) {
         items(days) { day ->
             if (day.holidays.isNotEmpty()) {

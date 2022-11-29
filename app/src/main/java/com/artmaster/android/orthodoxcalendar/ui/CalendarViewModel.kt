@@ -168,7 +168,7 @@ class CalendarViewModel : ViewModel() {
         this.year.value = year
     }
 
-    fun clearMonthCache() {
+    private fun clearMonthCache() {
         daysByMonthCache.forEach { it.value.value = emptyList() }
     }
 
