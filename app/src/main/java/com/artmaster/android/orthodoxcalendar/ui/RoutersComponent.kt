@@ -8,9 +8,6 @@ import androidx.navigation.compose.composable
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
-import com.artmaster.android.orthodoxcalendar.ui.filters.CalendarToolsDrawer
-import com.artmaster.android.orthodoxcalendar.ui.filters.MultiFabItem
-import com.artmaster.android.orthodoxcalendar.ui.filters.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.holiday_page.HolidayInfoPager
 import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
@@ -18,6 +15,9 @@ import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPager
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.HolidayTileLayout
+import com.artmaster.android.orthodoxcalendar.ui.tools.CalendarToolsDrawer
+import com.artmaster.android.orthodoxcalendar.ui.tools.MultiFabItem
+import com.artmaster.android.orthodoxcalendar.ui.tools.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLayout
 
 @Composable

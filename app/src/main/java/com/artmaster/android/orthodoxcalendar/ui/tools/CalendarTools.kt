@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui.filters
+package com.artmaster.android.orthodoxcalendar.ui.tools
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.filters.MultitoolState.COLLAPSED
-import com.artmaster.android.orthodoxcalendar.ui.filters.MultitoolState.EXPANDED
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.COLLAPSED
+import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.EXPANDED
 import kotlinx.coroutines.launch
 
 
@@ -64,18 +64,20 @@ fun CalendarToolsDrawer(
 
     val onToolItemClick = remember {
         { item: MultiFabItem ->
-            when (item.identifier) {
-                Tabs.FILTERS.name -> {
-                    coroutineScope.launch {
-                        drawerState.open()
+            if (multiToolState == EXPANDED) {
+                when (item.identifier) {
+                    Tabs.FILTERS.name -> {
+                        coroutineScope.launch {
+                            drawerState.open()
+                        }
                     }
+                    Tabs.NEW_EVENT.name -> {}
+                    else -> throw IllegalStateException("Wrong item name")
                 }
-                Tabs.NEW_EVENT.name -> {}
-                else -> throw IllegalStateException("Wrong item name")
+                isToolsPanelVisible = false
+                multiToolState = COLLAPSED
+                onToolClick(item)
             }
-            isToolsPanelVisible = false
-            multiToolState = COLLAPSED
-            onToolClick(item)
         }
     }
 
@@ -161,7 +163,7 @@ fun MultiFloatingActionButton(
             updateTransition(targetState = toState, label = "transition")
 
         val scale: Float by transition.animateFloat(label = "scale") { state ->
-            if (state == EXPANDED) 56f else 0f
+            if (state == EXPANDED) 66f else 0f
         }
 
         val alpha: Float by transition.animateFloat(
@@ -193,7 +195,7 @@ fun MultiFloatingActionButton(
         ) {
             items.forEach { item ->
                 MiniFabItem(item, alpha, shadow, scale, showLabels, onFabItemClicked)
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
             FloatingActionButton(
                 modifier = Modifier
@@ -238,14 +240,14 @@ private fun MiniFabItem(
         if (showLabel) {
             Text(
                 item.label,
-                fontSize = 23.sp,
+                fontSize = 25.sp,
                 fontFamily = FontFamily(Font(R.font.cyrillic_old)),
                 color = DefaultTextColor,
                 modifier = Modifier
                     .alpha(animateFloatAsState(targetValue = alpha).value)
                     .shadow(animateDpAsState(targetValue = shadow).value)
-                    .background(color = FiltersLabelColor)
-                    .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
+                    .background(color = FloatingButtonColorLight)
+                    .padding(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
                     .clickable(onClick = { onFabItemClicked(item) })
             )
             Spacer(modifier = Modifier.width(16.dp))
