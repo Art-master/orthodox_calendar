@@ -117,7 +117,9 @@ class NotificationsService : Service() {
                 getString(R.string.today) + " " + type
             numDays == 1 -> getString(R.string.tomorrow) + " " + type
             numDays > 1 -> getString(R.string.after_days, numDays) + " " + type
-            else -> type.capitalize(Locale.ROOT)
+            else -> type.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
+            }
         }
     }
 
