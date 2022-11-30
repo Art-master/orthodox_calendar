@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +53,7 @@ fun HolidayPagePreview() {
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
-    HolidayPage(viewModel = null, holiday = holiday)
+    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
 }
 
 
@@ -63,10 +64,13 @@ fun HolidayPage(
     viewModel: CalendarViewModel?,
     holiday: Holiday,
     onEditClick: (holiday: Holiday) -> Unit = {},
-    onDeleteClick: (holiday: Holiday) -> Unit = {}
+    onDeleteClick: (holiday: Holiday) -> Unit = {},
+    titleHeightInitSize: Int = 0 //initial state for preview
 ) {
 
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+
     val drawableId = remember {
         val imageId = holiday.imageId
         if (imageId.isEmpty()) {
@@ -80,13 +84,17 @@ fun HolidayPage(
 
     val scroll = rememberScrollState(0)
     val modalState = remember { mutableStateOf(false) }
+    var titleHeight by rememberSaveable { mutableStateOf(titleHeightInitSize) }
+    val titlePadding = with(LocalDensity.current) {
+        configuration.screenHeightDp.dp - titleHeight.toDp()
+    }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scroll),
     ) {
-        val configuration = LocalConfiguration.current
+
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,22 +106,23 @@ fun HolidayPage(
             alignment = Alignment.Center
         )
 
+        if (holiday.isCreatedByUser) {
+            UserHolidayControlMenu(
+                modifier = Modifier
+                    .padding(top = titlePadding)
+                    .offset(y = (-35).dp)
+                    .zIndex(10f),
+                holiday = holiday,
+                onEditClick = onEditClick,
+                onDeleteClick = { modalState.value = true }
+            )
+        }
 
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(top = (configuration.screenHeightDp / 1.6).dp)// height control
+                .padding(top = titlePadding)// height control
         ) {
-            if (holiday.isCreatedByUser) {
-                UserHolidayControlMenu(
-                    modifier = Modifier
-                        .offset(y = (10).dp)
-                        .zIndex(10f),
-                    holiday = holiday,
-                    onEditClick = onEditClick,
-                    onDeleteClick = { modalState.value = true }
-                )
-            }
             Column(
                 modifier = Modifier
                     .drawBehind {
@@ -128,7 +137,10 @@ fun HolidayPage(
                     .clip(RoundedCornerShape(20.dp))
                     .background(Background)
             ) {
-                HolidayPageTitle(holiday = holiday)
+                HolidayPageTitle(
+                    modifier = Modifier.onSizeChanged { titleHeight = it.height },
+                    holiday = holiday
+                )
 
                 var scrollActivate by remember { mutableStateOf(false) }
                 var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
@@ -173,7 +185,6 @@ fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(160.dp)
             .padding(top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -193,7 +204,7 @@ fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
                 textAlign = TextAlign.Right
             )
             Text(
-                modifier = Modifier.fillMaxWidth(0.9f),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 color = DefaultTextColor,
                 text = holiday.title,
                 fontSize = 20.sp,
