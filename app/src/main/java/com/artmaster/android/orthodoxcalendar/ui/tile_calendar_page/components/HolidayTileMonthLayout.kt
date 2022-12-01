@@ -84,7 +84,7 @@ fun HolidayTileMonthLayout(
         if (data.value.isEmpty()) {
             Spinner()
         } else {
-            val day = data.value[dayOfMonth.dec()]
+            val day = getDay(data.value, dayOfMonth)
 
             BottomSheetScaffold(
                 modifier = modifier,
@@ -102,8 +102,12 @@ fun HolidayTileMonthLayout(
                 sheetPeekHeight = sheetPeekHeight
 
             ) {
-                TilesGridLayout(data, dayOfMonth, onDayClick)
+                TilesGridLayout(data, day.dayOfMonth, onDayClick)
             }
         }
     }
+}
+
+fun getDay(data: List<Day>, dayOfMonth: Int): Day {
+    return if (data.size > dayOfMonth.dec()) data[dayOfMonth.dec()] else data.last()
 }

@@ -59,7 +59,7 @@ fun ShowMonth() {
     TilesGridLayout(days = data, selectedDayOfMonth = time.dayOfMonth)
 }
 
-const val MAX_COLUMN_COUNT = 6
+const val MAX_COLUMN_COUNT = 7
 const val DAYS_IN_WEEK_COUNT = 7
 
 @Composable
@@ -80,7 +80,7 @@ fun TilesGridLayout(
     val daysCountStartOffset = data.first().dayInWeek.dec()
 
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxWidth(0.9f),
+        modifier = Modifier.fillMaxWidth(),
         columns = GridCells.Fixed(MAX_COLUMN_COUNT),
         userScrollEnabled = false,
         contentPadding = PaddingValues(1.dp)

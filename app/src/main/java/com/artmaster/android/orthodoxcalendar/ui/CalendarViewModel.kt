@@ -180,7 +180,22 @@ class CalendarViewModel : ViewModel() {
     fun getYear() = year
 
     fun setMonth(month: Int) {
+        checkDayNumberForThisMonth(month)
+
         this.month.value = month
+    }
+
+    private fun checkDayNumberForThisMonth(month: Int) {
+        if (dayOfMonth.value < 28) return
+
+        initTime.calendar.apply {
+            set(Calendar.YEAR, year.value)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, 0)
+        }
+        if (dayOfMonth.value > initTime.daysInMonth) {
+            dayOfMonth.value = initTime.daysInMonth
+        }
     }
 
     fun getMonth() = month

@@ -8,10 +8,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -70,20 +71,8 @@ fun DropDownYearMenu(height: Dp, currentYear: Int, onYearSelect: (year: Int) -> 
             )
             ItemContent(
                 modifier = Modifier
-                    .padding(start = 5.dp, end = 5.dp)
-                    .drawBehind {
-                        val trianglePath = Path().apply {
-                            moveTo(x = size.width / 2, y = size.height)
-                            lineTo(x = 20f, y = size.height - 15f)
-                            lineTo(x = size.width - 20f, y = size.height - 15f)
-                            close()
-                        }
-                        drawPath(
-                            path = trianglePath,
-                            color = DefaultTextColor,
-                            style = Fill
-                        )
-                    },
+                    .padding(start = 5.dp, end = 5.dp),
+                //.drawBehind { drawArrowDown(this, size) },
                 text = items[selectedIndex],
                 color = HeadSymbolTextColor,
                 onClick = { expanded = true })
@@ -132,6 +121,22 @@ fun DropDownYearMenu(height: Dp, currentYear: Int, onYearSelect: (year: Int) -> 
                 }
             }
         }
+    }
+}
+
+fun drawArrowDown(scope: DrawScope, size: Size) {
+    scope.apply {
+        val trianglePath = Path().apply {
+            moveTo(x = size.width / 2, y = size.height)
+            lineTo(x = 20f, y = size.height - 15f)
+            lineTo(x = size.width - 20f, y = size.height - 15f)
+            close()
+        }
+        drawPath(
+            path = trianglePath,
+            color = DefaultTextColor,
+            style = Fill
+        )
     }
 }
 
