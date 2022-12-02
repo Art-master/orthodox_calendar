@@ -132,7 +132,7 @@ dependencies {
     compileOnly "org.glassfish:javax.annotation:3.1.1"
 
     //LeakCanary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -141,9 +141,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
-
-    //Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
 
     // compose image loading
     implementation "io.coil-kt:coil:2.2.1"

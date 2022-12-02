@@ -59,27 +59,31 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     }
 
     fun build() {
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notification = getBuilder(notificationManager)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(notificationName)
-                .setContentText(msgText)
-                .setAutoCancel(true)
-                .setLights(Color.BLUE, 3000, 3000)
-                .setContentIntent(createIntent())
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(notificationName)
+            .setContentText(msgText)
+            .setAutoCancel(true)
+            .setLights(Color.BLUE, 3000, 3000)
+            .setContentIntent(createIntent())
 
-        if(soundEnable) notification.setSound(soundUri)
+        if (soundEnable) notification.setSound(soundUri)
         if (vibrationEnable) notification.setVibrate(vibrationSchema)
 
         notificationManager.notify(holiday.id.toInt(), notification.build())
     }
 
     private fun createIntent(): PendingIntent {
+        val flags = if (Build.VERSION.SDK_INT >= 23) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+        } else {
+            PendingIntent.FLAG_ONE_SHOT
+        }
+
         val notificationIntent = getIntent(context, holiday, ArrayList())
-        return PendingIntent.getActivity(
-            context, holiday.id.toInt(), notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent, flags)
     }
 
     private fun getIntent(context: Context, holiday: Holiday, filters: ArrayList<Filter>): Intent {
@@ -102,21 +106,21 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     @TargetApi(Build.VERSION_CODES.O)
     private fun createChannel(): NotificationChannel {
         return NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-                .apply {
-                    description = "Orthodox calendar"
-                    enableLights(true)
-                    setSound(soundUri, buildAudioAttributes())
-                    lightColor = Color.BLUE
-                    enableVibration(true)
-                    soundEnable = true
-                }
+            .apply {
+                description = "Orthodox calendar"
+                enableLights(true)
+                setSound(soundUri, buildAudioAttributes())
+                lightColor = Color.BLUE
+                enableVibration(true)
+                soundEnable = true
+            }
     }
 
     private fun buildAudioAttributes(): AudioAttributes {
         return AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .build()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .build()
     }
 
     private fun buildSoundUri(): Uri {

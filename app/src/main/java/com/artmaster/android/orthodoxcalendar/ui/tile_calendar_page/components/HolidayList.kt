@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -168,6 +170,8 @@ fun OneDayHolidayList(
     headerHeight: Dp = 93.dp,
     onHolidayClick: (holiday: Holiday) -> Unit = {}
 ) {
+    val scroll = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,8 +184,9 @@ fun OneDayHolidayList(
         Divider()
         Column(
             modifier = Modifier
+                .verticalScroll(scroll)
                 .fillMaxSize()
-                .padding(top = 25.dp)
+                .padding(top = 10.dp)
         ) {
             if (day.holidays.isNotEmpty()) {
                 day.holidays.forEach {
@@ -190,6 +195,7 @@ fun OneDayHolidayList(
                 }
             } else NoItems()
         }
+        Spacer(modifier = Modifier.height(20.0.dp))
     }
 }
 
