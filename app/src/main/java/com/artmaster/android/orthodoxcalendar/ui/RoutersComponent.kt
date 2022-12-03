@@ -22,6 +22,7 @@ import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLa
 
 @Composable
 fun AppNavigationComponent(
+    startRoute: String = Navigation.INIT_PAGE.route,
     calendarViewModel: CalendarViewModel,
     initViewModel: LoadDataViewModel,
     settingsViewModel: SettingsViewModel,
@@ -52,7 +53,7 @@ fun AppNavigationComponent(
 
     NavHost(
         navController = navController,
-        startDestination = Navigation.INIT_PAGE.route
+        startDestination = startRoute
     ) {
         composable(Navigation.INIT_PAGE.route) {
             AppStartTextAnimation(initViewModel.animationTime.toInt()) {

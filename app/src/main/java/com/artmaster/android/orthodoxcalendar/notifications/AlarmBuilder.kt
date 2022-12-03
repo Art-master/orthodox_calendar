@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.common.Constants.Action
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.*
@@ -23,7 +24,9 @@ object AlarmBuilder {
         if (isNotificationDisable()) return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        launchAlarm(alarmMgr, buildCalendarByAppSettings().timeInMillis, createIntent(context))
+        val timeInMillis = buildCalendarByAppSettings().timeInMillis
+        //timeInMillis = System.currentTimeMillis() + 5_000 //TO DO DEBUG
+        launchAlarm(alarmMgr, timeInMillis, createIntent(context))
     }
 
     // Set the alarm to start at by setting time
@@ -62,6 +65,7 @@ object AlarmBuilder {
         }
 
         return Intent(context, AlarmReceiver::class.java).let { intent ->
+            intent.action = Action.NOTIFICATION.value
             PendingIntent.getBroadcast(context, 0, intent, flags)
         }
     }
@@ -69,7 +73,7 @@ object AlarmBuilder {
     private fun isNotificationDisable(): Boolean {
         val isEnableToday = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TODAY)
         val isEnableBefore = prefs.get(Settings.Name.IS_ENABLE_NOTIFICATION_TIME)
-        return isEnableToday == Settings.FALSE || isEnableBefore == Settings.FALSE
+        return isEnableToday == Settings.FALSE && isEnableBefore == Settings.FALSE
     }
 
     private fun getHoursBySettings(): Int {

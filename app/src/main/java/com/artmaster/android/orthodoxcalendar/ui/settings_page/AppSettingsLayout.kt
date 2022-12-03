@@ -124,18 +124,6 @@ fun SettingsLayout(
             getSettingValue = getSettingValue,
             title = stringResource(id = R.string.settings_notifications_sound)
         )
-        CheckBoxSettings(
-            setting = Settings.Name.STANDARD_SOUND,
-            onSettingChange = onSettingChange,
-            getSettingValue = getSettingValue,
-            title = stringResource(id = R.string.settings_notifications_sound_default)
-        )
-        CheckBoxSettings(
-            setting = Settings.Name.VIBRATION_OF_NOTIFICATION,
-            onSettingChange = onSettingChange,
-            getSettingValue = getSettingValue,
-            title = stringResource(id = R.string.settings_notifications_vibration)
-        )
         CheckBoxSettingsWithEditBox(
             setting = Settings.Name.IS_ENABLE_NOTIFICATION_TIME,
             linkedSetting = Settings.Name.TIME_OF_NOTIFICATION,
