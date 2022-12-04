@@ -21,7 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import kotlinx.coroutines.delay
 import java.util.*
+
+const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 
 @Preview
 @Composable
@@ -41,8 +44,16 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
     }
 
     var userTouchScreen by remember { mutableStateOf(false) }
+    var needToPauseAnimation by remember { mutableStateOf(false) }
     var firstComplete by remember { mutableStateOf(false) }
     val onFirstPartComplete = remember { { firstComplete = true } }
+
+    LaunchedEffect(userTouchScreen) {
+        needToPauseAnimation = if (userTouchScreen) {
+            delay(USER_TOUCH_STOP_ANIM_TIME_MS)
+            userTouchScreen
+        } else false
+    }
 
     Box(
         modifier = Modifier
@@ -56,7 +67,7 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
             },
         contentAlignment = Alignment.Center
     ) {
-        if (firstComplete.not() || userTouchScreen) {
+        if (firstComplete.not() || needToPauseAnimation) {
             DisappearingTextAnimation(
                 title = title,
                 animDurationMs = time,
@@ -78,6 +89,10 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
         }
 
     }
+}
+
+fun needToPauseAnimation(userTouchScreenTime: Long): Boolean {
+    return (System.currentTimeMillis() - userTouchScreenTime) >= USER_TOUCH_STOP_ANIM_TIME_MS
 }
 
 @Composable
