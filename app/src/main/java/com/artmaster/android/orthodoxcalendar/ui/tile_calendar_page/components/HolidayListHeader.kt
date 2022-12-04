@@ -103,7 +103,7 @@ fun ItemHeader(
             textAlign = TextAlign.Center
         )
 
-        StyleDatesText(day = day.dayOfMonth, month = day.month)
+        StyleDatesText(day = day.dayOfMonth, month = day.month, year = day.year)
         FastingText(day = day)
     }
 }
@@ -124,9 +124,9 @@ fun Ornament(builder: AnnotatedString.Builder, text: String) {
 }
 
 @Composable
-fun StyleDatesText(day: Int, month: Int) {
+fun StyleDatesText(day: Int, month: Int, year: Int) {
     val calendar = GregorianCalendar()
-    calendar.set(Time().year, month, day)
+    calendar.set(year, month, day)
 
     var monthName = stringArrayResource(id = R.array.months_names_acc)[calendar.get(MONTH)]
     val newDate = "${calendar.get(DAY_OF_MONTH)} " + monthName.lowercase()

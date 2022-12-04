@@ -60,7 +60,7 @@ class DataProvider : RepositoryConnector {
 
 
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
             val dayNum = holiday.day
 
@@ -84,7 +84,7 @@ class DataProvider : RepositoryConnector {
         val time = Time()
 
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
 
             // Filters
@@ -141,7 +141,7 @@ class DataProvider : RepositoryConnector {
     ): List<Holiday> {
         val hds: ArrayList<Holiday> = ArrayList()
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             if (holiday.day == 0) {
                 dynamicData.calcHolidayDateIfDynamic(holiday)
             }

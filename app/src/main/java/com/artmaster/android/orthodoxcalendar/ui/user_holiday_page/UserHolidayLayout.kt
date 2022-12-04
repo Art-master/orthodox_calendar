@@ -134,7 +134,8 @@ fun UserHolidayLayout(
 
     val onCheckAndSave = remember {
         { holiday: Holiday ->
-            if (!yearEnabled) holiday.year = 0
+            if (!yearEnabled || holiday.typeId == Type.USERS_NAME_DAY.id) holiday.year = 0
+
             holiday.isCreatedByUser = true
             onSave(holiday)
         }

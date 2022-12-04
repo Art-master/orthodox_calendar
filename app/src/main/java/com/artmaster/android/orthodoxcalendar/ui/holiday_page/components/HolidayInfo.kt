@@ -22,12 +22,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -38,11 +42,13 @@ import androidx.compose.ui.zIndex
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
+import java.util.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
@@ -65,6 +71,9 @@ fun UserHolidayPagePreview() {
         isCreatedByUser = true,
         title = "Иван Иванович Иванов",
         typeId = Holiday.Type.USERS_BIRTHDAY.id,
+        day = 13,
+        month = Holiday.Month.DECEMBER.num.inc(),
+        year = 1967,
         description = ""
     )
 
@@ -198,6 +207,7 @@ fun HolidayPage(
 
 @Composable
 fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
+    val userHolidayNames = stringArrayResource(id = R.array.user_holidays_names)
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -222,7 +232,7 @@ fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
             Text(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 color = DefaultTextColor,
-                text = holiday.title,
+                text = buildHolidayTitle(holiday, userHolidayNames),
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
                 textAlign = TextAlign.Center
@@ -237,9 +247,58 @@ fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
             )
         }
 
-        StyleDatesText(day = holiday.day, month = holiday.getMonthWith0())
+        if (holiday.isCreatedByUser) {
+            UserHolidayDatesText(holiday = holiday)
+        } else {
+            StyleDatesText(day = holiday.day, month = holiday.getMonthWith0(), year = holiday.year)
+        }
+    }
+}
+
+fun buildHolidayTitle(holiday: Holiday, userHolidayNames: Array<String>): String {
+    return if (holiday.isCreatedByUser) {
+        val resId = when (holiday.typeId) {
+            Holiday.Type.USERS_BIRTHDAY.id -> Holiday.Type.USERS_BIRTHDAY.resId
+            Holiday.Type.USERS_NAME_DAY.id -> Holiday.Type.USERS_NAME_DAY.resId
+            Holiday.Type.USERS_MEMORY_DAY.id -> Holiday.Type.USERS_MEMORY_DAY.resId
+            else -> throw IllegalStateException()
+        }
+        userHolidayNames[resId] + "\n \n" + holiday.title
+    } else holiday.title
+}
+
+@Composable
+fun UserHolidayDatesText(holiday: Holiday) {
+    val calendar = GregorianCalendar()
+    calendar.set(holiday.year, holiday.getMonthWith0(), holiday.day)
+
+    val monthName = stringArrayResource(id = R.array.months_names_acc)[calendar.get(Calendar.MONTH)]
+    var newDate = "${calendar.get(Calendar.DAY_OF_MONTH)} " + monthName.lowercase()
+    if (holiday.year > 0) newDate += " ${holiday.year} ${stringResource(id = R.string.year_title_short)}"
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = HeadSymbolTextColor)) {
+            append(newDate)
+        }
+        if (holiday.typeId == Holiday.Type.USERS_BIRTHDAY.id && holiday.year > 0) {
+            val yearsNum = Time().year - holiday.year
+            if (yearsNum > 0) {
+                append("\n (")
+                withStyle(style = SpanStyle(color = OldDateTextColor)) {
+                    append("${stringResource(R.string.age_title)}: $yearsNum")
+                }
+                append(") ")
+            }
+        }
     }
 
+    Text(
+        color = DefaultTextColor,
+        text = annotatedString,
+        fontSize = 20.sp,
+        fontFamily = FontFamily(Font(R.font.cyrillic_old)),
+        textAlign = TextAlign.Center
+    )
 }
 
 @Composable
