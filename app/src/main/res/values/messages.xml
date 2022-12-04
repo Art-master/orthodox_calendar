@@ -7,4 +7,5 @@
     <string name="holiday_confirmation_header">Удаление события</string>
     <string name="holiday_confirmation_msg">Удалить текущее событие?</string>
     <string name="time_has_reset_msg">Текущее время сброшено</string>
+    <string name="no_image">Нет изображения</string>
 </resources>

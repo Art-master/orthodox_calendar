@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
@@ -22,12 +23,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,9 +41,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
-import com.artmaster.android.orthodoxcalendar.ui.theme.Background
-import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
-import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -48,9 +49,23 @@ import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.S
 fun HolidayPagePreview() {
     val holiday = Holiday(
         imageId = "image1",
-        isCreatedByUser = true,
+        isCreatedByUser = false,
         title = "Перенесение из Мальты в Гатчину креста из части Древа Животворящего Креста Господня, Филермской иконы Божией Матери и правой руки мощей святого Иоанна Крестителя",
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
+    )
+
+    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
+@Composable
+fun UserHolidayPagePreview() {
+    val holiday = Holiday(
+        imageId = "",
+        isCreatedByUser = true,
+        title = "Иван Иванович Иванов",
+        typeId = Holiday.Type.USERS_BIRTHDAY.id,
+        description = ""
     )
 
     HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
@@ -73,13 +88,8 @@ fun HolidayPage(
 
     val drawableId = remember {
         val imageId = holiday.imageId
-        if (imageId.isEmpty()) {
-            return@remember R.drawable.image_holiday
-        }
-        val id = context.resources.getIdentifier(imageId, "drawable", context.packageName)
-        if (id == 0) { // if not found
-            R.drawable.image_holiday
-        } else id
+        if (imageId.isEmpty()) return@remember 0
+        context.resources.getIdentifier(imageId, "drawable", context.packageName)
     }
 
     val scroll = rememberScrollState(0)
@@ -89,22 +99,28 @@ fun HolidayPage(
         configuration.screenHeightDp.dp - titleHeight.toDp()
     }
 
+    val imageHeight = (configuration.screenHeightDp / 1.2).dp
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scroll),
     ) {
+        if (drawableId != 0) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Background)
+                    .height(imageHeight),
+                painter = painterResource(id = drawableId),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                alignment = Alignment.Center
+            )
+        } else {
+            NoImageLayout(imageHeight)
+        }
 
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Background)
-                .height((configuration.screenHeightDp / 1.2).dp),
-            painter = painterResource(id = drawableId),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            alignment = Alignment.Center
-        )
 
         if (holiday.isCreatedByUser) {
             UserHolidayControlMenu(
@@ -285,4 +301,41 @@ fun HolidayDescriptionLayout(holiday: Holiday) {
                 justifiedTextViewCompose.onDraw(this)
             }
         })
+}
+
+@Composable
+fun NoImageLayout(imageHeight: Dp) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 30.dp)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        NoImageLayout,
+                        NoImageLayoutSecondary
+                    )
+                )
+            )
+            .height(imageHeight),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Image(
+            modifier = Modifier.size(60.dp),
+            painter = painterResource(id = R.drawable.ic_no_image),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            alignment = Alignment.Center
+        )
+        Text(
+            textAlign = TextAlign.Center,
+            style = TextStyle(color = Color.Transparent),
+            text = stringResource(id = R.string.no_image),
+            color = NoImageLayoutText,
+            fontSize = 25.sp,
+            fontFamily = FontFamily(Font(R.font.cyrillic_old))
+        )
+    }
 }

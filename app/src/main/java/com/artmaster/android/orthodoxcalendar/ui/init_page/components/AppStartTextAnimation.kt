@@ -97,7 +97,8 @@ fun AppearanceText(string: AnnotatedString) {
     Text(
         textAlign = TextAlign.Center,
         style = TextStyle(color = Color.Transparent),
-        text = string, color = DefaultTextColor,
+        text = string,
+        color = DefaultTextColor,
         fontSize = 35.sp,
         fontFamily = FontFamily(Font(R.font.decorated, FontWeight.Normal))
     )
