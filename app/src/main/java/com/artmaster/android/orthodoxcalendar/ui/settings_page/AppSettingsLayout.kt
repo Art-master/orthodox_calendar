@@ -242,6 +242,8 @@ fun CheckBoxSettingsWithEditBox(
                 backgroundColor = EditTextBackground,
                 focusedIndicatorColor = EditTextIndicatorColor,
                 cursorColor = EditTextCursorColor,
+                leadingIconColor = CursorColor,
+                trailingIconColor = CursorColor,
                 disabledTextColor = DisabledTextColor
             )
         )

@@ -91,9 +91,6 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
     }
 }
 
-fun needToPauseAnimation(userTouchScreenTime: Long): Boolean {
-    return (System.currentTimeMillis() - userTouchScreenTime) >= USER_TOUCH_STOP_ANIM_TIME_MS
-}
 
 @Composable
 fun AppearanceText(string: AnnotatedString) {
