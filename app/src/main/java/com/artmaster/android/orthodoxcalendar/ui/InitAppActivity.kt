@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.util.Consumer
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Constants.Action
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
@@ -42,22 +43,23 @@ class InitAppActivity : ComponentActivity() {
         }
 
         setContent {
-            val startRoute by remember {
-                val id = savedInstanceState?.getString(Constants.ExtraData.HOLIDAY_ID.value)
-                mutableStateOf(id ?: Navigation.INIT_PAGE.route)
-            }
-
+            val startRoute by remember { mutableStateOf(Navigation.INIT_PAGE.route) }
             val navController = rememberNavController()
             val snackState = remember { SnackbarHostState() }
 
 
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> {
-                    if (it.action == Constants.Action.OPEN_HOLIDAY_PAGE.value) {
+                    intent = it
+                    if (it.action == Action.OPEN_HOLIDAY_PAGE.value) {
                         val id = it.getLongExtra(Constants.ExtraData.HOLIDAY_ID.value, 0)
                         navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${id}")
                     }
                 }
+
+                val id = intent?.getLongExtra(Constants.ExtraData.HOLIDAY_ID.value, 0) ?: 0
+                if (id > 0) navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${id}")
+
                 addOnNewIntentListener(listener)
                 onDispose { removeOnNewIntentListener(listener) }
             }

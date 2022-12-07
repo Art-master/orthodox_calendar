@@ -80,9 +80,9 @@ class Notification(private val context: Context, private val holiday: Holiday) {
 
     private fun createIntent(): PendingIntent {
         val flags = if (Build.VERSION.SDK_INT >= 23) {
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         } else {
-            PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_UPDATE_CURRENT
         }
 
         val notificationIntent = getIntent(context, holiday)
@@ -92,8 +92,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     private fun getIntent(context: Context, holiday: Holiday): Intent {
         val intent = Intent(context, InitAppActivity::class.java)
         intent.action = Constants.Action.OPEN_HOLIDAY_PAGE.value
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(ExtraData.HOLIDAY_ID.value, holiday.id)
         return intent
     }

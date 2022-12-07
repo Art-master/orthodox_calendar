@@ -25,7 +25,7 @@ object AlarmBuilder {
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val timeInMillis = buildCalendarByAppSettings().timeInMillis
-        //timeInMillis = System.currentTimeMillis() + 5_000 //TO DO DEBUG
+        //timeInMillis = System.currentTimeMillis() + 10_000 //DEBUG
         launchAlarm(alarmMgr, timeInMillis, createIntent(context))
     }
 

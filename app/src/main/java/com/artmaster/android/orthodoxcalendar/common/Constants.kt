@@ -22,14 +22,13 @@ class Constants {
     }
 
     enum class ExtraData constructor(val value: String) {
-        HOLIDAY_ID("$PROJECT_DIR.common.holiday_id"),
-        HOLIDAY("$PROJECT_DIR.common.holiday"),
-        NOTIFICATION("$PROJECT_DIR.common.holiday.notification"),
+        HOLIDAY_ID("$PROJECT_DIR.holiday_id"),
+        HOLIDAY("$PROJECT_DIR.holiday")
     }
 
     enum class Action constructor(val value: String) {
-        NOTIFICATION("$PROJECT_DIR.common.holiday.notification"),
-        OPEN_HOLIDAY_PAGE("$PROJECT_DIR.common.holiday.open")
+        NOTIFICATION("$PROJECT_DIR.holiday.NOTIFICATION"),
+        OPEN_HOLIDAY_PAGE("$PROJECT_DIR.OPEN_HOLIDAY")
     }
 }
 
