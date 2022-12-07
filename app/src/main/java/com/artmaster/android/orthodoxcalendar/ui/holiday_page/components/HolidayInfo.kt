@@ -301,6 +301,8 @@ fun UserHolidayDatesText(holiday: Holiday) {
     )
 }
 
+val PADDING_BOTTOM = 40.dp
+
 @Composable
 fun HolidayDescriptionLayout(holiday: Holiday) {
     if (holiday.description.isEmpty()) {
@@ -348,7 +350,7 @@ fun HolidayDescriptionLayout(holiday: Holiday) {
     }
 
     val height = justifiedTextViewCompose.getCalculatedHeight()
-    val dpHeight = with(LocalDensity.current) { height.toDp() }
+    val dpHeight = with(LocalDensity.current) { height.toDp() + PADDING_BOTTOM }
     Canvas(modifier = Modifier
         .fillMaxWidth()
         .height(dpHeight)
