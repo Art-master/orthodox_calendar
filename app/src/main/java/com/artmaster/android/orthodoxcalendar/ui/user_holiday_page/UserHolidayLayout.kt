@@ -20,22 +20,15 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_DAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun UserHolidayLayoutPreview() {
-    val time = Time()
-
-    val holiday = Holiday(
-        title = "Новый",
-        year = time.year,
-        month = time.month,
-        day = time.dayOfMonth,
-        typeId = Type.USERS_BIRTHDAY.id
-    )
-
-    UserHolidayLayout(holiday)
+    UserHolidayLayout(0)
 }
 
 val padding = 8.dp
@@ -48,14 +41,28 @@ val time = Time()
 
 @Composable
 fun UserHolidayLayout(
-    holiday: Holiday? = null, onSave: (Holiday) -> Unit = {}
+    holidayId: Long? = null,
+    viewModel: CalendarViewModel = CalendarViewModel(),
+    onSave: (Holiday) -> Unit = {}
 ) {
-    val scroll = rememberScrollState(0)
+    val scope = rememberCoroutineScope()
+    var target by rememberSaveable { mutableStateOf(Holiday()) }
     val title = stringResource(id = R.string.add_holiday)
 
-    var target by rememberSaveable {
-        mutableStateOf(holiday?.copy() ?: createNewHolidayTemplate(title))
+    LaunchedEffect(Unit) {
+        if (holidayId != null) {
+            scope.launch(Dispatchers.IO) {
+                target = viewModel.getFullHolidayById(holidayId)
+            }
+        } else target = createNewHolidayTemplate(title)
     }
+
+    if (target.id == 0L) {
+        Empty()
+        return
+    }
+
+    val scroll = rememberScrollState(0)
 
     val months = stringArrayResource(id = R.array.months_names_gen)
     val types = stringArrayResource(id = R.array.user_holidays_names)
@@ -135,7 +142,7 @@ fun UserHolidayLayout(
     val onCheckAndSave = remember {
         { holiday: Holiday ->
             if (!yearEnabled || holiday.typeId == Type.USERS_NAME_DAY.id) holiday.year = 0
-
+            holiday.description = holiday.description.trim()
             holiday.isCreatedByUser = true
             onSave(holiday)
         }

@@ -242,17 +242,8 @@ class CalendarViewModel : ViewModel() {
         return days!!
     }
 
-    fun getHolidayById(id: Long): Holiday {
-        val days = daysByYearsCache[year.value]?.value
-        var holiday = Holiday()
-        days?.forEach { day ->
-            val found = day.holidays.find { it.id == id }
-            if (found != null) {
-                holiday = found
-                return@forEach
-            }
-        }
-        return holiday
+    suspend fun getFullHolidayById(id: Long): Holiday {
+        return repository.getFullHolidayData(id, year.value)
     }
 
     fun resetTime() {

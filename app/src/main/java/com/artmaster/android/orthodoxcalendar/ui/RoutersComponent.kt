@@ -50,7 +50,6 @@ fun AppNavigationComponent(
         }
     }
 
-
     NavHost(
         navController = navController,
         startDestination = startRoute
@@ -115,13 +114,10 @@ fun AppNavigationComponent(
             )
         }
         composable(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments!!.getString("id")!!
-            val holiday = if (id != "0") {
-                calendarViewModel.getHolidayById(id.toLong())
-            } else null
-
-            UserHolidayLayout(holiday) { data ->
-                if (holiday == null) {
+            val id = backStackEntry.arguments!!.getString("id")!!.toLong()
+            val isNewHoliday = id == 0L
+            UserHolidayLayout(if (isNewHoliday) null else id) { data ->
+                if (isNewHoliday) {
                     calendarViewModel.insertHoliday(data) {
                         calendarViewModel.clearCaches()
                         calendarViewModel.loadAllHolidaysOfCurrentYear()

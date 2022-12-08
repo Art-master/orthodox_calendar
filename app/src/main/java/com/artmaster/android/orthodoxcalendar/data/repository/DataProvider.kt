@@ -102,11 +102,11 @@ class DataProvider : RepositoryConnector {
         }
     }
 
-    override fun getData(year: Int, filters: Collection<Filter>): List<Holiday> {
+    override suspend fun getData(year: Int, filters: Collection<Filter>): List<Holiday> {
         return getAllData(year, filters).sorted()
     }
 
-    override fun getYearDays(year: Int, filters: Collection<Filter>): List<Day> {
+    override suspend fun getYearDays(year: Int, filters: Collection<Filter>): List<Day> {
         val time = Time()
         time.calendar.set(year, 0, 1) // in calendar month with 0
         val daysCount = time.daysInYear
@@ -151,7 +151,7 @@ class DataProvider : RepositoryConnector {
         return hds
     }
 
-    override fun getMonthData(month: Int, year: Int): List<Holiday> {
+    override suspend fun getMonthData(month: Int, year: Int): List<Holiday> {
         val db = database.get(context)
         val holidaysFromDb = db.holidayDao().getByMonth(month)
         db.close()
@@ -159,7 +159,7 @@ class DataProvider : RepositoryConnector {
         return holidays.sorted()
     }
 
-    override fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
+    override suspend fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
         val holidaysInMonth = getMonthData(month, year)
         val holidaysInDay: ArrayList<Holiday> = ArrayList()
         for (holiday in holidaysInMonth) {
@@ -183,14 +183,14 @@ class DataProvider : RepositoryConnector {
         return typeIds
     }
 
-    override fun getHolidaysByTime(time: Time): List<Holiday> {
+    override suspend fun getHolidaysByTime(time: Time): List<Holiday> {
         val db = database.get(context)
         val holidays = db.holidayDao().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
         db.close()
         return calculateDynamicData(holidays, time.year)
     }
 
-    override fun insert(holiday: Holiday): Holiday {
+    override suspend fun insert(holiday: Holiday): Holiday {
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holidayDao = database.get(context).holidayDao()
         val id = holidayDao.insertHoliday(holiday)
@@ -204,7 +204,7 @@ class DataProvider : RepositoryConnector {
         return holiday
     }
 
-    override fun insertHolidays(holidays: List<Holiday>) {
+    override suspend fun insertHolidays(holidays: List<Holiday>) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.insertAllHolidays(holidays)
 
@@ -214,7 +214,7 @@ class DataProvider : RepositoryConnector {
         database.close()
     }
 
-    override fun update(holiday: Holiday) {
+    override suspend fun update(holiday: Holiday) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.update(holiday)
 
@@ -229,7 +229,7 @@ class DataProvider : RepositoryConnector {
 
     }
 
-    override fun getFullHolidayData(id: Long, year: Int): Holiday {
+    override suspend fun getFullHolidayData(id: Long, year: Int): Holiday {
         val holidayDao = database.get(context).holidayDao()
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
@@ -242,7 +242,7 @@ class DataProvider : RepositoryConnector {
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
 
-    override fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.delete(id)
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
@@ -251,7 +251,7 @@ class DataProvider : RepositoryConnector {
         database.close()
     }
 
-    override fun deleteCommonHolidays() {
+    override suspend fun deleteCommonHolidays() {
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         fullHolidayDao.deleteCommonHolidays()
         val holidayDao = database.get(context).holidayDao()
