@@ -22,7 +22,6 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
@@ -51,7 +50,7 @@ fun UserHolidayLayout(
 
     LaunchedEffect(Unit) {
         if (holidayId != null) {
-            scope.launch(Dispatchers.IO) {
+            scope.launch {
                 target = viewModel.getFullHolidayById(holidayId)
             }
         } else target = createNewHolidayTemplate(title)
@@ -77,14 +76,14 @@ fun UserHolidayLayout(
     var dayError by rememberSaveable { mutableStateOf("") }
     val onDayChange = remember {
         { day: String ->
-            dayError =
-                if (day.isEmpty() || !day.isDigitsOnly() || day.toInt() > MAX_DAYS_IN_MONTH_COUNT
-                ) "error" else ""
-
-            if (day.isEmpty()) {
-                target = target.copy(day = 0)
-            } else if (day.isDigitsOnly()) {
-                target = target.copy(day = day.toInt())
+            if (day.isDigitsOnly() && day.length <= 2) {
+                dayError =
+                    if (day.isEmpty() || day.toInt() > MAX_DAYS_IN_MONTH_COUNT) "error" else ""
+                target = if (day.isEmpty()) {
+                    target.copy(day = 0)
+                } else {
+                    target.copy(day = day.toInt())
+                }
             }
         }
     }
@@ -102,7 +101,10 @@ fun UserHolidayLayout(
             if (yearEnabled) {
                 val time = Time()
                 time.calendar.set(time.year, index, time.dayOfMonth)
-                if (target.day > time.daysInMonth) dayError = "error"
+                if (target.day > time.daysInMonth) {
+                    target = target.copy(day = time.daysInMonth)
+                    dayError = ""
+                }
             }
 
             target = target.copy(month = index.inc())
@@ -120,14 +122,15 @@ fun UserHolidayLayout(
     var yearError by rememberSaveable { mutableStateOf("") }
     val onYearChange = remember {
         { year: String ->
-            yearError =
-                if (year.isEmpty() || !year.isDigitsOnly() || year.toInt() > time.year) "error" else ""
-
-            if (year.isEmpty()) {
-                target = target.copy(year = 0)
-            } else if (year.length <= MAX_YEAR_LENGTH && year.isDigitsOnly()) {
-                target = target.copy(year = year.toInt())
+            if (year.isDigitsOnly() && year.length <= MAX_YEAR_LENGTH) {
+                yearError = if (year.isEmpty() || year.toInt() > time.year) "error" else ""
+                target = if (year.isEmpty()) {
+                    target.copy(year = 0)
+                } else {
+                    target.copy(year = year.toInt())
+                }
             }
+
         }
     }
 
@@ -143,6 +146,7 @@ fun UserHolidayLayout(
         { holiday: Holiday ->
             if (!yearEnabled || holiday.typeId == Type.USERS_NAME_DAY.id) holiday.year = 0
             holiday.description = holiday.description.trim()
+            holiday.title = holiday.title.trim()
             holiday.isCreatedByUser = true
             onSave(holiday)
         }

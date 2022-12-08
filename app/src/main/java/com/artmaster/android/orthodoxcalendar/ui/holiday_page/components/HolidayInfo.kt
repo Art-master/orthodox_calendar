@@ -164,7 +164,8 @@ fun HolidayPage(
             ) {
                 HolidayPageTitle(
                     modifier = Modifier.onSizeChanged { titleHeight = it.height },
-                    holiday = holiday
+                    holiday = holiday,
+                    currentYear = viewModel?.getYear()?.value ?: Time().year
                 )
 
                 var scrollActivate by remember { mutableStateOf(false) }
@@ -183,8 +184,7 @@ fun HolidayPage(
                 if (scrollActivate) {
 
                     LaunchedEffect(holiday) {
-                        val data = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
-                        fullHolidayInfo = data
+                        fullHolidayInfo = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
                     }
 
                     // if full data loaded (etc. include holiday description)
@@ -206,7 +206,7 @@ fun HolidayPage(
 }
 
 @Composable
-fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
+fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday, currentYear: Int) {
     val userHolidayNames = stringArrayResource(id = R.array.user_holidays_names)
     Column(
         modifier = modifier
@@ -248,7 +248,7 @@ fun HolidayPageTitle(modifier: Modifier = Modifier, holiday: Holiday) {
         }
 
         if (holiday.isCreatedByUser) {
-            UserHolidayDatesText(holiday = holiday)
+            UserHolidayDatesText(holiday = holiday, currentYear = currentYear)
         } else {
             StyleDatesText(day = holiday.day, month = holiday.getMonthWith0(), year = holiday.year)
         }
@@ -268,7 +268,7 @@ fun buildHolidayTitle(holiday: Holiday, userHolidayNames: Array<String>): String
 }
 
 @Composable
-fun UserHolidayDatesText(holiday: Holiday) {
+fun UserHolidayDatesText(holiday: Holiday, currentYear: Int) {
     val calendar = GregorianCalendar()
     calendar.set(holiday.year, holiday.getMonthWith0(), holiday.day)
 
@@ -281,7 +281,7 @@ fun UserHolidayDatesText(holiday: Holiday) {
             append(newDate)
         }
         if (holiday.typeId == Holiday.Type.USERS_BIRTHDAY.id && holiday.year > 0) {
-            val yearsNum = Time().year - holiday.year
+            val yearsNum = currentYear - holiday.year
             if (yearsNum > 0) {
                 append("\n (")
                 withStyle(style = SpanStyle(color = OldDateTextColor)) {

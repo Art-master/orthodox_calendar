@@ -237,13 +237,15 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
+    suspend fun getFullHolidayById(id: Long): Holiday {
+        return withContext(Dispatchers.IO) {
+            repository.getFullHolidayData(id, year.value)
+        }
+    }
+
     fun getAllHolidaysOfYear(): List<Holiday> {
         val days = daysByYearsCache[year.value]?.value?.flatMap { d -> d.holidays }
         return days!!
-    }
-
-    suspend fun getFullHolidayById(id: Long): Holiday {
-        return repository.getFullHolidayData(id, year.value)
     }
 
     fun resetTime() {

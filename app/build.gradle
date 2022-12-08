@@ -10,7 +10,7 @@ android {
         applicationId "com.artmaster.android.orthodoxcalendar"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 36
+        versionCode 37
         versionName "5.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
