@@ -34,10 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
@@ -190,7 +187,7 @@ fun HolidayPage(
                     // if full data loaded (etc. include holiday description)
                     fullHolidayInfo?.let {
                         Divider()
-                        HolidayDescriptionLayout(holiday = it)
+                        HolidayDescriptionLayout(description = fullHolidayInfo!!.description.trim())
                     }
                 }
             }
@@ -304,8 +301,8 @@ fun UserHolidayDatesText(holiday: Holiday, currentYear: Int) {
 val PADDING_BOTTOM = 40.dp
 
 @Composable
-fun HolidayDescriptionLayout(holiday: Holiday) {
-    if (holiday.description.isEmpty()) {
+fun HolidayDescriptionLayout(description: String) {
+    if (description.isEmpty()) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -332,7 +329,7 @@ fun HolidayDescriptionLayout(holiday: Holiday) {
             setTextColor(DefaultTextColor)
             setFont(R.font.cyrillic_old)
             setLeadingMargin(3, 9)
-            setText(holiday.description.substring(startIndex = 1))
+            setText(description.substring(startIndex = 1))
             calculate()
         }
     }
@@ -345,7 +342,7 @@ fun HolidayDescriptionLayout(holiday: Holiday) {
             setTextColor(HeadSymbolTextColor)
             setFont(R.font.bukvica)
             setTextScaleX(1.5f)
-            setHeadSymbol(holiday.description.first())
+            setHeadSymbol(description.first())
         }
     }
 

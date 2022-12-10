@@ -22,6 +22,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.common.*
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
@@ -45,7 +46,7 @@ fun UserHolidayLayout(
     onSave: (Holiday) -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
-    var target by rememberSaveable { mutableStateOf(Holiday()) }
+    var target by rememberSaveable { mutableStateOf(Holiday(id = -1)) }
     val title = stringResource(id = R.string.add_holiday)
 
     LaunchedEffect(Unit) {
@@ -56,8 +57,8 @@ fun UserHolidayLayout(
         } else target = createNewHolidayTemplate(title)
     }
 
-    if (target.id == 0L) {
-        Empty()
+    if (target.id == -1L) {
+        Spinner()
         return
     }
 
