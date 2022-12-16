@@ -1,9 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.holiday_page
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.GraphicsLayerScope
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Devices
@@ -16,9 +14,7 @@ import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import kotlin.math.absoluteValue
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
@@ -64,22 +60,18 @@ fun HolidayInfoPager(
         state = pagerState,
         key = { r -> r }
     ) { page ->
-        val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-        if (needToShowLayout(pageOffset)) {
-            HolidayPage(
-                modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                viewModel = viewModel,
-                holiday = holidays[page],
-                onEditClick = onEditClick,
-                onDeleteClick = onDeleteClick
-            )
-        }
+        HolidayPage(
+            //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+            viewModel = viewModel,
+            holiday = holidays[page],
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick
+        )
     }
 }
 
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.8f
-
+//TODO wrong scale factor for tablets
 fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {
         // We animate the scaleX + scaleY, between 85% and 100%

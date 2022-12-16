@@ -1,6 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -9,6 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -78,11 +82,19 @@ fun TilesGridLayout(
     }
 
     val daysCountStartOffset = data.first().dayInWeek.dec()
+    val configuration = LocalConfiguration.current
+
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = if (isLandscape) Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.4f)
+        else Modifier.fillMaxWidth(),
+
         columns = GridCells.Fixed(MAX_COLUMN_COUNT),
         userScrollEnabled = false,
+        horizontalArrangement = Arrangement.Center,
         contentPadding = PaddingValues(1.dp)
     ) {
         items(MAX_COLUMN_COUNT * DAYS_IN_WEEK_COUNT) { item ->

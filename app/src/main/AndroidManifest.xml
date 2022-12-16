@@ -24,7 +24,8 @@
         <activity
             android:name=".ui.InitAppActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,17 +37,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+            <!--            <intent-filter>
+                            <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                            <category android:name="android.intent.category.BROWSABLE" />
+                            <category android:name="android.intent.category.DEFAULT" />
 
-                <data
-                    android:host="orthodoxcalendar.com"
-                    android:pathPrefix="/jobs"
-                    android:scheme="https" />
-            </intent-filter>
+                            <data
+                                android:host="orthodoxcalendar.com"
+                                android:pathPrefix="/calendar"
+                                android:scheme="https" />
+                        </intent-filter>-->
         </activity>
 
         <service

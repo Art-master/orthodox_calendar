@@ -6,7 +6,6 @@ import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.GraphicsLayerScope
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
@@ -96,8 +95,7 @@ fun HolidayPagerListLayout(
 
             if (needToShowLayout(pageOffset)) {
                 HolidayList(
-                    modifier = Modifier
-                        .graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                    //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
                     viewModel = viewModel,
                     onDayClick = onDayClick,
@@ -111,6 +109,7 @@ fun HolidayPagerListLayout(
 
 fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
 
+//TODO wrong scale factor for tablets
 fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
     scope.apply {
         // We animate the scaleX + scaleY, between 85% and 100%
