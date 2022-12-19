@@ -122,16 +122,17 @@ fun AppNavigationComponent(
         composable(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/{id}") { backStackEntry ->
             val id = backStackEntry.arguments!!.getString("id")!!.toLong()
             val isNewHoliday = id == 0L
-            UserHolidayLayout(if (isNewHoliday) null else id) { data ->
+            UserHolidayLayout(
+                holidayId = if (isNewHoliday) null else id,
+                viewModel = calendarViewModel
+            ) { data ->
                 if (isNewHoliday) {
                     calendarViewModel.insertHoliday(data) {
-                        calendarViewModel.clearCaches()
                         calendarViewModel.loadAllHolidaysOfCurrentYear()
                         navigateToHolidayPage(navController, it.id)
                     }
                 } else {
                     calendarViewModel.updateHoliday(data) {
-                        calendarViewModel.clearCaches()
                         calendarViewModel.loadAllHolidaysOfCurrentYear()
                         navigateToHolidayPage(navController, data.id)
                     }

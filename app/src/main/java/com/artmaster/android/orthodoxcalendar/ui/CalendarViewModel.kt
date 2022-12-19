@@ -172,7 +172,7 @@ class CalendarViewModel : ViewModel() {
         daysByMonthCache.forEach { it.value.value = emptyList() }
     }
 
-    fun clearCaches() {
+    private fun clearCaches() {
         daysByMonthCache.forEach { it.value.value = emptyList() }
         daysByYearsCache.forEach { it.value.value = emptyList() }
     }

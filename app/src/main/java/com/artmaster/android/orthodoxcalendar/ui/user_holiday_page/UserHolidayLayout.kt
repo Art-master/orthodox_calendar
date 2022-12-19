@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_DAY
@@ -149,6 +150,10 @@ fun UserHolidayLayout(
             holiday.description = holiday.description.trim()
             holiday.title = holiday.title.trim()
             holiday.isCreatedByUser = true
+
+            checkHolidayFilters(holiday.typeId) {
+                viewModel.addFilter(it)
+            }
             onSave(holiday)
         }
     }
@@ -270,4 +275,13 @@ fun createNewHolidayTemplate(title: String): Holiday {
         year = time.year
         this.title = title
     }
+}
+
+fun checkHolidayFilters(typeId: Int, onFilterApply: (filter: Filter) -> Unit) {
+    if (Filter.values().any { it.enabled })
+        when (typeId) {
+            Type.USERS_NAME_DAY.id -> onFilterApply(Filter.NAME_DAYS)
+            Type.USERS_BIRTHDAY.id -> onFilterApply(Filter.BIRTHDAYS)
+            Type.USERS_MEMORY_DAY.id -> onFilterApply(Filter.MEMORY_DAYS)
+        }
 }
