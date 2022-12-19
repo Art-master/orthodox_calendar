@@ -15,6 +15,7 @@ import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPager
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsLayoutWrapper
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.HolidayTileLayout
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.artmaster.android.orthodoxcalendar.ui.tools.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.tools.Tabs
@@ -55,7 +56,8 @@ fun AppNavigationComponent(
         startDestination = startRoute
     ) {
         composable(Navigation.INIT_PAGE.route) {
-            AppStartTextAnimation(initViewModel.animationTime.toInt()) {
+            AppStartTextAnimation(duration = initViewModel.animationTime.toInt()) {
+
                 val route = if (calendarViewModel.firstLoadingTileCalendar())
                     Navigation.TILE_CALENDAR
                 else Navigation.LIST_CALENDAR
@@ -68,29 +70,33 @@ fun AppNavigationComponent(
             }
         }
         composable(Navigation.TILE_CALENDAR.route) {
-            CalendarToolsDrawer(
-                viewModel = calendarViewModel,
-                onToolClick = onToolItemClick
-            ) {
-                HolidayTileLayout(
-                    calendarViewModel,
-                    onDayClick,
-                    onHolidayClick
-                )
-            }
+            if (initViewModel.isDatabasePrepared) {
+                CalendarToolsDrawer(
+                    viewModel = calendarViewModel,
+                    onToolClick = onToolItemClick
+                ) {
+                    HolidayTileLayout(
+                        calendarViewModel,
+                        onDayClick,
+                        onHolidayClick
+                    )
+                }
+            } else Spinner()
         }
         composable(Navigation.LIST_CALENDAR.route) {
-            CalendarToolsDrawer(
-                viewModel = calendarViewModel,
-                onToolClick = onToolItemClick
-            ) {
-                HolidayPagerListLayout(
-                    calendarViewModel,
-                    onDayClick,
-                    onHolidayClick
-                )
+            if (initViewModel.isDatabasePrepared) {
+                CalendarToolsDrawer(
+                    viewModel = calendarViewModel,
+                    onToolClick = onToolItemClick
+                ) {
+                    HolidayPagerListLayout(
+                        calendarViewModel,
+                        onDayClick,
+                        onHolidayClick
+                    )
 
-            }
+                }
+            } else Spinner()
         }
         composable("${Navigation.HOLIDAY_PAGE.route}/{id}") { backStackEntry ->
             val onEditClick = remember {

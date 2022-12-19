@@ -29,12 +29,17 @@ const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 @Preview
 @Composable
 fun Preview() {
-    AppStartTextAnimation(time = 6000)
+    AppStartTextAnimation(duration = 6000)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
+fun AppStartTextAnimation(duration: Int, onComplete: () -> Unit = {}) {
+
+    if (duration == 0) {
+        onComplete()
+        return
+    }
 
     val strings = stringArrayResource(R.array.loading_strings_array)
 
@@ -70,7 +75,7 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
         if (firstComplete.not() || needToPauseAnimation) {
             DisappearingTextAnimation(
                 title = title,
-                animDurationMs = time,
+                animDurationMs = duration,
                 withReverse = false,
                 onComplete = onFirstPartComplete
             ) {
@@ -79,7 +84,7 @@ fun AppStartTextAnimation(time: Int, onComplete: () -> Unit = {}) {
         } else {
             DisappearingTextAnimation(
                 title = title,
-                animDurationMs = time,
+                animDurationMs = duration,
                 withReverse = false,
                 revertValue = true,
                 onComplete = onComplete

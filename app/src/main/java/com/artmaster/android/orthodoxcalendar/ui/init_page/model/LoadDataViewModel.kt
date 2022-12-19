@@ -1,5 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.ui.init_page.model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artmaster.android.orthodoxcalendar.App
@@ -20,6 +23,8 @@ class LoadDataViewModel : ViewModel() {
     private val isOffAnimation = preferences.get(OFF_START_ANIMATION)
     private val userDataVersion = preferences.get(USER_DATA_VERSION)
     val animationTime = getLoadingAnimTime()
+
+    var isDatabasePrepared by mutableStateOf(false)
 
     private fun getLoadingAnimTime(): Long {
         if (isShowStartAnimation().not()) return 0
@@ -48,7 +53,7 @@ class LoadDataViewModel : ViewModel() {
                     repository.insertHolidays(data)
                     preferences.set(USER_DATA_VERSION, userDataVersion.toInt().inc().toString())
                 }
-
+                isDatabasePrepared = true
                 callback.invoke()
             }
         }
