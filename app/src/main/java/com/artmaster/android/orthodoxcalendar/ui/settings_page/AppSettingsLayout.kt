@@ -23,6 +23,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
@@ -179,6 +180,8 @@ fun CheckBoxSettings(
     CheckBox(title = title, state = state.toBoolean(), onCheck = onCheck)
 }
 
+const val MAX_VALUE_LENGTH = 2
+
 @Composable
 fun CheckBoxSettingsWithEditBox(
     setting: Settings.Name,
@@ -220,14 +223,16 @@ fun CheckBoxSettingsWithEditBox(
             enabled = flag,
             isError = isError,
             onValueChange = {
-                isError = if (it.isEmpty() || it.toInt() !in 1 until maxNumber) {
-                    onSettingChange(linkedSetting, linkedSetting.defValue)
-                    true
-                } else {
-                    onSettingChange(linkedSetting, it)
-                    false
-                }
-                text = it
+                val str = it.trim()
+                isError =
+                    if (str.isEmpty() || !str.isDigitsOnly() || str.toInt() !in 1 until maxNumber) {
+                        onSettingChange(linkedSetting, linkedSetting.defValue)
+                        true
+                    } else {
+                        onSettingChange(linkedSetting, str)
+                        false
+                    }
+                if (str.length <= MAX_VALUE_LENGTH) text = str
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
