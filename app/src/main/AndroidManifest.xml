@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.QUICKBOOT_POWERON" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
 
     <application
         android:name=".App"
@@ -18,7 +23,9 @@
         android:uiOptions="splitActionBarWhenNarrow">
         <activity
             android:name=".ui.InitAppActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,18 +33,22 @@
             </intent-filter>
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="com.artmaster.android.orthodoxcalendar.common.OPEN_HOLIDAY" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="orthodoxcalendar.com"
-                    android:pathPrefix="/jobs"
-                    android:scheme="https" />
             </intent-filter>
+
+            <!--            <intent-filter>
+                            <action android:name="android.intent.action.VIEW" />
+
+                            <category android:name="android.intent.category.BROWSABLE" />
+                            <category android:name="android.intent.category.DEFAULT" />
+
+                            <data
+                                android:host="orthodoxcalendar.com"
+                                android:pathPrefix="/calendar"
+                                android:scheme="https" />
+                        </intent-filter>-->
         </activity>
-        <activity android:name=".ui.user_holiday.mvp.UserHolidayActivity" />
 
         <service
             android:name=".notifications.NotificationsService"

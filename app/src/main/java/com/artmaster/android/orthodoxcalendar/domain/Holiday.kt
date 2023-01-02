@@ -67,7 +67,7 @@ data class Holiday(
         return monthComparison
     }
 
-    enum class Type(val id: Int) {
+    enum class Type(val id: Int, val resId: Int = 0) {
         MAIN(1), // главный
         TWELVE_MOVABLE(2), // великий двунадесятый переходящий
         TWELVE_NOT_MOVABLE(3), // великий двунадесятый неподвижный
@@ -77,9 +77,9 @@ data class Holiday(
         AVERAGE_PEPPY(7), // средний бденный
         COMMON_MEMORY_DAY(8), // день памяти
 
-        USERS_MEMORY_DAY(9), // пользовательский день памяти
-        USERS_NAME_DAY(10), // именины
-        USERS_BIRTHDAY(11), // день рождения
+        USERS_MEMORY_DAY(9, 0), // пользовательский день памяти
+        USERS_NAME_DAY(10, 1), // именины
+        USERS_BIRTHDAY(11, 2), // день рождения
     }
 
     enum class DayOfWeek(val num: Int) {

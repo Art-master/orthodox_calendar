@@ -1,10 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
+import com.artmaster.android.orthodoxcalendar.api.RepositoryConnector
 import com.artmaster.android.orthodoxcalendar.domain.*
 import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData.Companion.fill
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
-import com.artmaster.android.orthodoxcalendar.impl.RepositoryConnector
 import java.util.*
 
 /**
@@ -60,7 +60,7 @@ class DataProvider : RepositoryConnector {
 
 
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
             val dayNum = holiday.day
 
@@ -84,7 +84,7 @@ class DataProvider : RepositoryConnector {
         val time = Time()
 
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             dynamicData.calcHolidayDateIfDynamic(holiday)
 
             // Filters
@@ -102,11 +102,11 @@ class DataProvider : RepositoryConnector {
         }
     }
 
-    override fun getData(year: Int, filters: Collection<Filter>): List<Holiday> {
+    override suspend fun getData(year: Int, filters: Collection<Filter>): List<Holiday> {
         return getAllData(year, filters).sorted()
     }
 
-    override fun getYearDays(year: Int, filters: Collection<Filter>): List<Day> {
+    override suspend fun getYearDays(year: Int, filters: Collection<Filter>): List<Day> {
         val time = Time()
         time.calendar.set(year, 0, 1) // in calendar month with 0
         val daysCount = time.daysInYear
@@ -141,7 +141,7 @@ class DataProvider : RepositoryConnector {
     ): List<Holiday> {
         val hds: ArrayList<Holiday> = ArrayList()
         for (holiday in holidays) {
-            holiday.year = year
+            if (holiday.isCreatedByUser.not()) holiday.year = year
             if (holiday.day == 0) {
                 dynamicData.calcHolidayDateIfDynamic(holiday)
             }
@@ -151,7 +151,7 @@ class DataProvider : RepositoryConnector {
         return hds
     }
 
-    override fun getMonthData(month: Int, year: Int): List<Holiday> {
+    override suspend fun getMonthData(month: Int, year: Int): List<Holiday> {
         val db = database.get(context)
         val holidaysFromDb = db.holidayDao().getByMonth(month)
         db.close()
@@ -159,7 +159,7 @@ class DataProvider : RepositoryConnector {
         return holidays.sorted()
     }
 
-    override fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
+    override suspend fun getDayData(day: Int, month: Int, year: Int): List<Holiday> {
         val holidaysInMonth = getMonthData(month, year)
         val holidaysInDay: ArrayList<Holiday> = ArrayList()
         for (holiday in holidaysInMonth) {
@@ -169,11 +169,10 @@ class DataProvider : RepositoryConnector {
     }
 
     private fun getDataFromDb(): List<Holiday> {
-        val data = HolidaysCache.holidays
-        if (data.isEmpty().not()) return data
+        if (HolidaysCache.isNotEmpty()) return HolidaysCache.getCopy()
         val db = database.get(context)
         val holidays = db.holidayDao().getAll()
-        HolidaysCache.holidays = holidays
+        HolidaysCache.set(holidays)
         db.close()
         return holidays
     }
@@ -184,14 +183,14 @@ class DataProvider : RepositoryConnector {
         return typeIds
     }
 
-    override fun getHolidaysByTime(time: Time): List<Holiday> {
+    override suspend fun getHolidaysByTime(time: Time): List<Holiday> {
         val db = database.get(context)
         val holidays = db.holidayDao().getHolidaysByDayAndMonth(time.monthWith0, time.dayOfMonth)
         db.close()
         return calculateDynamicData(holidays, time.year)
     }
 
-    override fun insert(holiday: Holiday): Holiday {
+    override suspend fun insert(holiday: Holiday): Holiday {
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holidayDao = database.get(context).holidayDao()
         val id = holidayDao.insertHoliday(holiday)
@@ -200,14 +199,13 @@ class DataProvider : RepositoryConnector {
         val additionalData = AdditionalHolidayData().fill(holiday)
         additionalData.holidayId = id
         fullHolidayDao.insert(additionalData)
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
         database.close()
         return holiday
     }
 
-    override fun insertHolidays(holidays: List<Holiday>) {
+    override suspend fun insertHolidays(holidays: List<Holiday>) {
         val holidayDao = database.get(context).holidayDao()
-        holidayDao.deleteTable()
         holidayDao.insertAllHolidays(holidays)
 
         val fullDataList = holidays.map { AdditionalHolidayData().fill(it) }
@@ -216,11 +214,11 @@ class DataProvider : RepositoryConnector {
         database.close()
     }
 
-    override fun update(holiday: Holiday) {
+    override suspend fun update(holiday: Holiday) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.update(holiday)
 
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
 
         val additionalHolidayDataDao = database.get(context).additionalHolidayDataDao()
         val data = additionalHolidayDataDao.getFullDataByHolidayId(holiday.id)
@@ -231,10 +229,11 @@ class DataProvider : RepositoryConnector {
 
     }
 
-    override fun getFullHolidayData(id: Long, year: Int): Holiday {
+    override suspend fun getFullHolidayData(id: Long, year: Int): Holiday {
         val holidayDao = database.get(context).holidayDao()
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
+        database.close()
 
         //year insert dynamically if holiday is not created by user
         if (holiday.isCreatedByUser.not()) holiday.year = year
@@ -243,12 +242,20 @@ class DataProvider : RepositoryConnector {
         return holiday.mergeFullData(fullHolidayDao.getFullDataByHolidayId(holiday.id))
     }
 
-    override fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long) {
         val holidayDao = database.get(context).holidayDao()
         holidayDao.delete(id)
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
-        HolidaysCache.holidays = emptyList()
+        HolidaysCache.clear()
         fullHolidayDao.delete(id)
+        database.close()
+    }
+
+    override suspend fun deleteCommonHolidays() {
+        val fullHolidayDao = database.get(context).additionalHolidayDataDao()
+        fullHolidayDao.deleteCommonHolidays()
+        val holidayDao = database.get(context).holidayDao()
+        holidayDao.deleteCommonHolidays()
         database.close()
     }
 }

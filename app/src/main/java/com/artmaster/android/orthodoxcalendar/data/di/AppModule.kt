@@ -1,8 +1,8 @@
 package com.artmaster.android.orthodoxcalendar.data.di
 
+import com.artmaster.android.orthodoxcalendar.api.AppPreferences
 import com.artmaster.android.orthodoxcalendar.data.di.modules.DatabaseModule
 import com.artmaster.android.orthodoxcalendar.data.repository.CalendarPreferences
-import com.artmaster.android.orthodoxcalendar.impl.AppPreferences
 import dagger.Binds
 import dagger.Module
 import dagger.android.support.AndroidSupportInjectionModule

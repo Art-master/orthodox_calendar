@@ -41,4 +41,7 @@ interface HolidayDao {
 
     @Query("DELETE FROM holidays")
     fun deleteTable()
+
+    @Query("DELETE FROM holidays WHERE created_by_user = 0")
+    fun deleteCommonHolidays()
 }

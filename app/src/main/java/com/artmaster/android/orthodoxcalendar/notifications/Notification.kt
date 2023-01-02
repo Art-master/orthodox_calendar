@@ -18,9 +18,10 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
+import com.artmaster.android.orthodoxcalendar.common.Constants.ExtraData
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.ui.InitAppActivity
 
 class Notification(private val context: Context, private val holiday: Holiday) {
     companion object {
@@ -32,7 +33,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
 
     private var msgText = ""
     private var notificationName = ""
-    private var soundUri = buildSoundUri()
+    private var soundUri: Uri? = null
     private val isStandardSound = prefs.get(Settings.Name.STANDARD_SOUND).toBoolean()
     private var soundEnable: Boolean = true
     private var vibrationEnable: Boolean = true
@@ -50,6 +51,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
 
     fun setSound(isEnable: Boolean = true): Notification {
         soundEnable = isEnable
+        soundUri = if (isEnable) buildSoundUri() else null
         return this
     }
 
@@ -59,34 +61,39 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     }
 
     fun build() {
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notification = getBuilder(notificationManager)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(notificationName)
-                .setContentText(msgText)
-                .setAutoCancel(true)
-                .setLights(Color.BLUE, 3000, 3000)
-                .setContentIntent(createIntent())
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(notificationName)
+            .setContentText(msgText)
+            .setAutoCancel(true)
+            .setLights(Color.BLUE, 3000, 3000)
+            .setContentIntent(createIntent())
+            .setStyle(NotificationCompat.BigTextStyle().bigText(msgText))
 
-        if(soundEnable) notification.setSound(soundUri)
-        if (vibrationEnable) notification.setVibrate(vibrationSchema)
+        if (soundEnable) notification.setSound(soundUri)
+        else notification.setSilent(true)
 
         notificationManager.notify(holiday.id.toInt(), notification.build())
     }
 
     private fun createIntent(): PendingIntent {
-        val notificationIntent = getIntent(context, holiday, ArrayList())
-        return PendingIntent.getActivity(
-            context, holiday.id.toInt(), notificationIntent,
+        val flags = if (Build.VERSION.SDK_INT >= 23) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
             PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        }
+
+        val notificationIntent = getIntent(context, holiday)
+        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent, flags)
     }
 
-    private fun getIntent(context: Context, holiday: Holiday, filters: ArrayList<Filter>): Intent {
-        val intent = Intent(context, this::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        intent.putExtra(Constants.Keys.HOLIDAY.value, holiday)
-        intent.putExtra(Constants.Keys.FILTERS.value, filters)
+    private fun getIntent(context: Context, holiday: Holiday): Intent {
+        val intent = Intent(context, InitAppActivity::class.java)
+        intent.action = Constants.Action.OPEN_HOLIDAY_PAGE.value
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        intent.putExtra(ExtraData.HOLIDAY_ID.value, holiday.id)
         return intent
     }
 
@@ -102,24 +109,23 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     @TargetApi(Build.VERSION_CODES.O)
     private fun createChannel(): NotificationChannel {
         return NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-                .apply {
-                    description = "Orthodox calendar"
-                    enableLights(true)
-                    setSound(soundUri, buildAudioAttributes())
-                    lightColor = Color.BLUE
-                    enableVibration(true)
-                    soundEnable = true
-                }
+            .apply {
+                description = "Orthodox calendar"
+                enableLights(true)
+                setSound(soundUri, buildAudioAttributes())
+                lightColor = Color.WHITE
+                enableVibration(false)
+            }
     }
 
     private fun buildAudioAttributes(): AudioAttributes {
         return AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .build()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .build()
     }
 
-    private fun buildSoundUri(): Uri {
+    private fun buildSoundUri(): Uri? {
         return if (isStandardSound) {
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         } else {
