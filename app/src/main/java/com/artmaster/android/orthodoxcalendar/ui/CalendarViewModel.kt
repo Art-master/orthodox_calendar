@@ -25,7 +25,7 @@ class CalendarViewModel : ViewModel() {
 
     private val dayOfMonth = mutableStateOf(initTime.dayOfMonth)
     private val dayOfYear = mutableStateOf(initTime.dayOfYear)
-    private val month = mutableStateOf(initTime.month)
+    private val month = mutableStateOf(initTime.monthWith0)
     private val year = mutableStateOf(initTime.year)
     val availableYears = getAvailableYears(currentYear = initTime.year)
 
