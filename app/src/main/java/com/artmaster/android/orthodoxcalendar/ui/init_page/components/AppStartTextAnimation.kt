@@ -29,12 +29,12 @@ const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 @Preview
 @Composable
 fun Preview() {
-    AppStartTextAnimation(duration = 6000)
+    AppStartTextAnimation(duration = 6000, 20)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AppStartTextAnimation(duration: Int, onComplete: () -> Unit = {}) {
+fun AppStartTextAnimation(duration: Int, resIndex: Int?, onComplete: () -> Unit = {}) {
 
     if (duration == 0) {
         onComplete()
@@ -45,7 +45,7 @@ fun AppStartTextAnimation(duration: Int, onComplete: () -> Unit = {}) {
 
     val title = remember {
         val num = Random().nextInt(strings.size.dec())
-        strings[num]
+        strings[resIndex ?: num]
     }
 
     var userTouchScreen by remember { mutableStateOf(false) }

@@ -56,7 +56,7 @@ fun AppNavigationComponent(
         startDestination = startRoute
     ) {
         composable(Navigation.INIT_PAGE.route) {
-            AppStartTextAnimation(duration = initViewModel.animationTime.toInt()) {
+            AppStartTextAnimation(duration = initViewModel.animationTime.toInt(), resIndex = null) {
 
                 val route = if (calendarViewModel.firstLoadingTileCalendar())
                     Navigation.TILE_CALENDAR
