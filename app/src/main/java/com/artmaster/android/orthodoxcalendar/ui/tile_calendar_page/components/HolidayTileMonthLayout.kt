@@ -75,10 +75,10 @@ fun HolidayTileMonthLayout(
     val state = rememberDrawerState(DrawerValue.Closed)
     val drawerState = rememberBottomSheetScaffoldState(state)
 
-    val sheetPeekHeight = 100.dp
+    val sheetPeekHeight = 120.dp
 
     Column(
-        modifier = Modifier.padding(15.dp),
+        modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (data.value.isEmpty()) {

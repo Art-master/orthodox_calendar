@@ -29,7 +29,7 @@ const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 @Preview
 @Composable
 fun Preview() {
-    AppStartTextAnimation(duration = 6000, 20)
+    AppStartTextAnimation(duration = 6000, 50)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
