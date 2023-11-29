@@ -73,7 +73,6 @@ fun HolidayTileMonthLayout(
 ) {
 
     val state = rememberDrawerState(DrawerValue.Closed)
-    val drawerState = rememberBottomSheetScaffoldState(state)
 
     val sheetPeekHeight = 120.dp
 
@@ -85,10 +84,9 @@ fun HolidayTileMonthLayout(
             Spinner()
         } else {
             val day = getDay(data.value, dayOfMonth)
-
             BottomSheetScaffold(
                 modifier = modifier,
-                scaffoldState = drawerState,
+                scaffoldState = rememberBottomSheetScaffoldState(),
                 sheetContent = {
                     OneDayHolidayList(
                         day = day,
