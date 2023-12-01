@@ -3,7 +3,11 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +76,7 @@ fun HolidayTileMonthLayout(
     onHolidayClick: (holiday: Holiday) -> Unit = {}
 ) {
 
-    val state = rememberDrawerState(DrawerValue.Closed)
+    val state = rememberBottomSheetState(BottomSheetValue.Collapsed)
 
     val sheetPeekHeight = 120.dp
 
@@ -86,7 +90,7 @@ fun HolidayTileMonthLayout(
             val day = getDay(data.value, dayOfMonth)
             BottomSheetScaffold(
                 modifier = modifier,
-                scaffoldState = rememberBottomSheetScaffoldState(),
+                scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = state),
                 sheetContent = {
                     OneDayHolidayList(
                         day = day,
