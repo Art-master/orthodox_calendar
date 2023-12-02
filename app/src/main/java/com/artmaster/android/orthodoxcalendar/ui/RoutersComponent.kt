@@ -20,6 +20,7 @@ import com.artmaster.android.orthodoxcalendar.ui.tools.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.tools.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLayout
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 
 @Composable
 fun AppNavigationComponent(

@@ -2,13 +2,24 @@ package com.artmaster.android.orthodoxcalendar.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
@@ -20,10 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
 
 enum class Item {
@@ -118,7 +129,7 @@ fun AppBar(
         Surface(
             modifier = Modifier
                 .padding(bottom = 1.dp)
-/*                .background(brush =
+                /*                .background(brush =
                     verticalGradient(
                         0.0f to Color.Red,
                         0.5f to Color.Green,

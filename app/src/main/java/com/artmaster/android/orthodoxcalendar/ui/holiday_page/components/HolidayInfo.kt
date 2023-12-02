@@ -40,11 +40,11 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import java.util.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)

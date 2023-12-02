@@ -1,19 +1,49 @@
 package com.artmaster.android.orthodoxcalendar.ui.tools
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Transition
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.ModalDrawer
+import androidx.compose.material.Text
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -32,28 +62,37 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.theme.Background
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.FiltersContentColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.FloatingButtonColorLight
+import com.artmaster.android.orthodoxcalendar.ui.theme.ShadowColor
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.COLLAPSED
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.EXPANDED
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import kotlinx.coroutines.launch
-
 
 enum class Tabs {
     FILTERS, NEW_EVENT
 }
 
+private const val BUTTON_SIZE = 45f
+private const val MAIN_BUTTON_ALPHA = 0.7f
+private const val ICON_APPEARANCE_THRESHOLD = 0.6f
+private const val ANIMATION_DURATION_MS = 500
+
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun ToolsPreview() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Tools(parent = this, isVisible = true, multiToolState = EXPANDED)
+    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {
+
     }
 }
 
 @Composable
 fun CalendarToolsDrawer(
-    viewModel: CalendarViewModel,
+    viewModel: ICalendarViewModel,
     onToolClick: (MultiFabItem) -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -71,6 +110,7 @@ fun CalendarToolsDrawer(
                             drawerState.open()
                         }
                     }
+
                     Tabs.NEW_EVENT.name -> {}
                     else -> throw IllegalStateException("Wrong item name")
                 }
@@ -162,23 +202,22 @@ fun MultiFloatingActionButton(
         val transition: Transition<MultitoolState> =
             updateTransition(targetState = toState, label = "transition")
 
-        val scale: Float by transition.animateFloat(label = "scale") { state ->
-            if (state == EXPANDED) 66f else 0f
+        val scale: Float by transition.animateFloat(
+            label = "scale",
+            transitionSpec = { tween(durationMillis = ANIMATION_DURATION_MS) }
+        ) { state ->
+            if (state == EXPANDED) (BUTTON_SIZE * 3) else 0f
         }
 
         val alpha: Float by transition.animateFloat(
             label = "alpha",
-            transitionSpec = {
-                tween(durationMillis = 50)
-            }
+            transitionSpec = { tween(durationMillis = ANIMATION_DURATION_MS) }
         ) { state ->
             if (state == EXPANDED) 1f else 0f
         }
         val shadow: Dp by transition.animateDp(
             label = "shadow",
-            transitionSpec = {
-                tween(durationMillis = 50)
-            }
+            transitionSpec = { tween(durationMillis = ANIMATION_DURATION_MS) }
         ) { state ->
             if (state == EXPANDED) 2.dp else 0.dp
         }
@@ -199,10 +238,10 @@ fun MultiFloatingActionButton(
             }
             FloatingActionButton(
                 modifier = Modifier
-                    .alpha(0.5f)
-                    .size(45.dp)
+                    .alpha(if (alpha < MAIN_BUTTON_ALPHA) MAIN_BUTTON_ALPHA else alpha)
+                    .size(BUTTON_SIZE.dp)
                     .padding(bottom = 8.dp, end = 8.dp),
-                backgroundColor = FloatingButtonColor,
+                backgroundColor = FloatingButtonColorLight,
                 contentColor = FiltersContentColor,
                 elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 onClick = {
@@ -215,7 +254,9 @@ fun MultiFloatingActionButton(
                 Icon(
                     painter = fabIcon,
                     contentDescription = "",
-                    modifier = Modifier.rotate(rotation)
+                    modifier = Modifier
+                        .rotate(rotation)
+                        .scale(2f)
                 )
             }
         }
@@ -244,8 +285,18 @@ private fun MiniFabItem(
                 fontFamily = FontFamily(Font(R.font.cyrillic_old)),
                 color = DefaultTextColor,
                 modifier = Modifier
-                    .alpha(animateFloatAsState(targetValue = alpha).value)
-                    .shadow(animateDpAsState(targetValue = shadow).value)
+                    .alpha(
+                        animateFloatAsState(
+                            targetValue = alpha,
+                            label = "floating btn alpha"
+                        ).value
+                    )
+                    .shadow(
+                        animateDpAsState(
+                            targetValue = shadow,
+                            label = "floating btn shadow"
+                        ).value
+                    )
                     .background(color = FloatingButtonColorLight)
                     .padding(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
                     .clickable(onClick = { onFabItemClicked(item) })
@@ -265,19 +316,26 @@ private fun MiniFabItem(
                 )
                 .clickable(onClick = { onFabItemClicked(item) })
         ) {
+            val calculatedBtnSize = (size.height / 1.5).toFloat()
+            val radius = if (scale >= calculatedBtnSize) calculatedBtnSize else scale
             drawCircle(
                 Color(ShadowColor.value),
                 center = Offset(this.center.x + 2f, this.center.y + 7f),
-                radius = scale
+                radius = radius,
+                alpha = alpha
             )
-            drawCircle(color = FloatingButtonColorLight, scale)
+            drawCircle(
+                color = FloatingButtonColorLight,
+                radius = radius,
+                alpha = alpha
+            )
             drawImage(
                 item.icon,
                 topLeft = Offset(
                     (this.center.x) - (item.icon.width / 2),
                     (this.center.y) - (item.icon.width / 2)
                 ),
-                alpha = alpha
+                alpha = if (alpha < ICON_APPEARANCE_THRESHOLD) 0f else alpha
             )
         }
     }

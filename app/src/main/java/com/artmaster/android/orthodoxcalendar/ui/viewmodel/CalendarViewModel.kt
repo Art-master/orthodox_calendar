@@ -1,4 +1,4 @@
-package com.artmaster.android.orthodoxcalendar.ui
+package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -15,9 +15,9 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Calendar
 
-class CalendarViewModel : ViewModel() {
+class CalendarViewModel : ViewModel(), ICalendarViewModel {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
 
@@ -49,7 +49,7 @@ class CalendarViewModel : ViewModel() {
 
     private fun initFilters() {
         val filters = HashSet<Filter>()
-        Filter.values().forEach {
+        Filter.entries.forEach {
             val data = preferences.get(it.settingName)
             if (data == Settings.TRUE) filters.add(it)
         }
@@ -67,7 +67,7 @@ class CalendarViewModel : ViewModel() {
         return years
     }
 
-    suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int) {
+    override suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int) {
         if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
 
         withContext(Dispatchers.IO) {
@@ -79,13 +79,13 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun loadAllHolidaysOfCurrentYear() {
+    override fun loadAllHolidaysOfCurrentYear() {
         viewModelScope.launch {
             loadAllHolidaysOfYear(year.value)
         }
     }
 
-    suspend fun loadAllHolidaysOfYear(year: Int) {
+    override suspend fun loadAllHolidaysOfYear(year: Int) {
         if (year !in availableYears.first()..availableYears.last()) return
 
         val prev = daysByYearsCache[year]
@@ -103,31 +103,31 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun addFilter(item: Filter) {
+    override fun addFilter(item: Filter) {
         val copyData = HashSet(filters.value)
         copyData.add(item)
         filters.value = copyData
         item.enabled = true
     }
 
-    fun removeFilter(item: Filter) {
+    override fun removeFilter(item: Filter) {
         val copyData = HashSet(filters.value)
         copyData.remove(item)
         filters.value = copyData
         item.enabled = false
     }
 
-    fun clearAllFilters() {
+    override fun clearAllFilters() {
         filters.value = HashSet()
-        Filter.values().forEach { it.enabled = false }
+        Filter.entries.forEach { it.enabled = false }
     }
 
 
-    fun getFilters(): MutableState<Set<Filter>> {
+    override fun getFilters(): MutableState<Set<Filter>> {
         return filters
     }
 
-    fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {}) {
+    override fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.insert(holiday)
@@ -139,7 +139,7 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {}) {
+    override fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.update(holiday)
@@ -151,7 +151,7 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit = {}) {
+    override fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.deleteById(id)
@@ -163,7 +163,7 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun setYear(year: Int) {
+    override fun setYear(year: Int) {
         clearMonthCache()
         this.year.value = year
     }
@@ -177,9 +177,9 @@ class CalendarViewModel : ViewModel() {
         daysByYearsCache.forEach { it.value.value = emptyList() }
     }
 
-    fun getYear() = year
+    override fun getYear() = year
 
-    fun setMonth(month: Int) {
+    override fun setMonth(month: Int) {
         checkDayNumberForThisMonth(month)
 
         this.month.value = month
@@ -198,9 +198,9 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun getMonth() = month
+    override fun getMonth() = month
 
-    fun setDayOfMonth(day: Int) {
+    override fun setDayOfMonth(day: Int) {
         dayOfMonth.value = day
 
         initTime.calendar.apply {
@@ -212,10 +212,10 @@ class CalendarViewModel : ViewModel() {
         dayOfYear.value = initTime.dayOfYear
     }
 
-    fun getDayOfMonth() = dayOfMonth
+    override fun getDayOfMonth() = dayOfMonth
 
-    fun getDayOfYear() = dayOfYear
-    fun setDayOfYear(day: Int) {
+    override fun getDayOfYear() = dayOfYear
+    override fun setDayOfYear(day: Int) {
         dayOfYear.value = day
 
         initTime.calendar.set(year.value, month.value, day)
@@ -223,32 +223,32 @@ class CalendarViewModel : ViewModel() {
     }
 
 
-    fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>> {
+    override fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>> {
         return daysByMonthCache[monthNum]!!
     }
 
-    fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
+    override fun getCurrentYearData(yearNum: Int): MutableState<List<Day>> {
         return daysByYearsCache[yearNum]!!
     }
 
-    suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday {
+    override suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday {
         return withContext(Dispatchers.IO) {
             repository.getFullHolidayData(holidayId, year)
         }
     }
 
-    suspend fun getFullHolidayById(id: Long): Holiday {
+    override suspend fun getFullHolidayById(id: Long): Holiday {
         return withContext(Dispatchers.IO) {
             repository.getFullHolidayData(id, year.value)
         }
     }
 
-    fun getAllHolidaysOfYear(): List<Holiday> {
+    override fun getAllHolidaysOfYear(): List<Holiday> {
         val days = daysByYearsCache[year.value]?.value?.flatMap { d -> d.holidays }
         return days!!
     }
 
-    fun resetTime() {
+    override fun resetTime() {
         val now = Time()
         if (now.year != year.value) {
             setYear(now.year)
@@ -261,6 +261,6 @@ class CalendarViewModel : ViewModel() {
         }
     }
 
-    fun firstLoadingTileCalendar() =
+    override fun firstLoadingTileCalendar() =
         preferences.get(Settings.Name.FIRST_LOADING_TILE_CALENDAR).toBoolean()
 }

@@ -1,6 +1,11 @@
 package com.artmaster.android.orthodoxcalendar.ui.holiday_page
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
@@ -9,9 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayPage
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState

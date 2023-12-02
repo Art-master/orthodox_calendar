@@ -1,9 +1,15 @@
 package com.artmaster.android.orthodoxcalendar.ui.list_calendar_page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.layout.ScaleFactor
@@ -14,10 +20,10 @@ import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayList
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
