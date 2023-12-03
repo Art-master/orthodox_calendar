@@ -55,7 +55,7 @@ fun HolidayPagerListLayout(
 
     val pagerState = rememberPagerState(startIndex)
     val scope = rememberCoroutineScope()
-    val filters = viewModel.getFilters()
+    val filters = viewModel.getActiveFilters()
 
     LaunchedEffect(currentYear) {
         scope.launch {

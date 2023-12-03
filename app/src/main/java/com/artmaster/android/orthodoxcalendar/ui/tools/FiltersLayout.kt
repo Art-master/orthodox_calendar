@@ -27,23 +27,13 @@ import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledButton
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 
 @Preview
 @Composable
 fun FiltersLayoutPreview() {
-    val onFilterChange = remember { { _: Filter, _: Boolean -> } }
-    val clearAllFilters = remember { {} }
-
-    val filters = remember {
-        mutableStateOf(Filter.entries.toTypedArray())
-    }
-
-    FiltersLayout(
-        filters = filters,
-        onFilterChange = onFilterChange,
-        clearAllFilters = clearAllFilters
-    )
+    FiltersLayoutWrapper(CalendarViewModelFake())
 }
 
 @Composable
@@ -52,9 +42,9 @@ fun FiltersLayoutWrapper(viewModel: ICalendarViewModel) {
     val onFilterChange = remember {
         { filter: Filter, enabled: Boolean ->
             if (enabled) {
-                viewModel.addFilter(filter)
+                viewModel.addActiveFilter(filter)
             } else {
-                viewModel.removeFilter(filter)
+                viewModel.removeActiveFilter(filter)
             }
         }
     }

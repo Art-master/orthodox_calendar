@@ -41,20 +41,34 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.CacheDrawScope
+import androidx.compose.ui.draw.DrawResult
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -63,9 +77,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
+import com.artmaster.android.orthodoxcalendar.ui.theme.BadgeTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.FiltersContentColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.FloatingButtonColorLight
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.ShadowColor
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.COLLAPSED
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.EXPANDED
@@ -85,9 +101,13 @@ private const val ANIMATION_DURATION_MS = 500
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun ToolsPreview() {
-    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {
+    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {}
+}
 
-    }
+@Preview(showBackground = true, device = Devices.TABLET)
+@Composable
+fun ToolsPreviewTablet() {
+    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {}
 }
 
 @Composable
@@ -141,6 +161,7 @@ fun CalendarToolsDrawer(
             }
         }
         Tools(
+            viewModel = viewModel,
             parent = this,
             isVisible = isToolsPanelVisible,
             multiToolState = multiToolState,
@@ -152,6 +173,7 @@ fun CalendarToolsDrawer(
 
 @Composable
 fun Tools(
+    viewModel: ICalendarViewModel,
     parent: BoxScope,
     isVisible: Boolean = true,
     multiToolState: MultitoolState = COLLAPSED,
@@ -172,7 +194,8 @@ fun Tools(
             MultiFabItem(
                 identifier = Tabs.FILTERS.name,
                 icon = ImageBitmap.imageResource(R.drawable.ic_filter),
-                label = stringResource(id = R.string.filters_title)
+                label = stringResource(id = R.string.filters_title),
+                eventsCount = viewModel.getActiveFilters().value.size
             )
         ),
         onFabItemClicked = onItemClicked,
@@ -184,7 +207,8 @@ fun Tools(
 class MultiFabItem(
     val identifier: String,
     val icon: ImageBitmap,
-    val label: String
+    val label: String,
+    val eventsCount: Int = 0
 )
 
 @Composable
@@ -225,6 +249,9 @@ fun MultiFloatingActionButton(
             if (state == EXPANDED) 180f else 0f
         }
 
+        val textMeasurer = rememberTextMeasurer()
+        var hasBadges: Boolean
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -232,18 +259,44 @@ fun MultiFloatingActionButton(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {
+            hasBadges = false
             items.forEach { item ->
-                MiniFabItem(item, alpha, shadow, scale, showLabels, onFabItemClicked)
+                if (item.eventsCount > 0) hasBadges = true
+                MiniFabItem(
+                    item = item,
+                    alpha = alpha,
+                    shadow = shadow,
+                    scale = scale,
+                    withDot = item.eventsCount > 0,
+                    dotText = item.eventsCount.toString(),
+                    showLabel = showLabels,
+                    onFabItemClicked = onFabItemClicked
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
             FloatingActionButton(
                 modifier = Modifier
                     .alpha(if (alpha < MAIN_BUTTON_ALPHA) MAIN_BUTTON_ALPHA else alpha)
                     .size(BUTTON_SIZE.dp)
-                    .padding(bottom = 8.dp, end = 8.dp),
+                    .padding(bottom = 8.dp, end = 8.dp)
+                    .drawWithCache {
+                        val alfaInverted = 1 - alpha
+                        val dotSizeOriginal = (size.width / 8f)
+                        val dotSize = dotSizeOriginal * alfaInverted
+                        val x = size.width - (dotSizeOriginal * 1.8f)
+                        val y = dotSizeOriginal * 1.8f
+                        drawDot(
+                            x = x,
+                            y = y,
+                            dotSize = dotSize,
+                            textMeasurer = textMeasurer,
+                            alpha = if (hasBadges) 1f else 0f,
+                            scope = this
+                        )
+                    },
                 backgroundColor = FloatingButtonColorLight,
                 contentColor = FiltersContentColor,
-                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                elevation = FloatingActionButtonDefaults.elevation(2.dp),
                 onClick = {
                     stateChanged(
                         if (transition.currentState == EXPANDED) {
@@ -263,6 +316,89 @@ fun MultiFloatingActionButton(
     }
 }
 
+private fun drawDot(
+    x: Float,
+    y: Float,
+    dotSize: Float,
+    textMeasurer: TextMeasurer,
+    text: String? = null,
+    alpha: Float = 1f,
+    scope: CacheDrawScope
+): DrawResult {
+    return with(scope) {
+        val path = Path()
+        path.addOval(
+            Rect(
+                topLeft = Offset.Zero,
+                bottomRight = Offset(size.width, size.height)
+            )
+        )
+        onDrawWithContent {
+            clipPath(path) {
+                // this draws the actual image - if you don't call drawContent, it wont
+                // render anything
+                this@onDrawWithContent.drawContent()
+            }
+            drawDot(
+                x = x,
+                y = y,
+                dotSize = dotSize,
+                textMeasurer = textMeasurer,
+                text = text,
+                alpha = alpha,
+                scope = this
+            )
+        }
+    }
+}
+
+private fun drawDot(
+    x: Float,
+    y: Float,
+    dotSize: Float,
+    textMeasurer: TextMeasurer,
+    text: String? = null,
+    alpha: Float = 1f,
+    scope: DrawScope
+) {
+    with(scope) {
+        // Clip a white border for the content
+        drawCircle(
+            Background,
+            radius = dotSize,
+            center = Offset(x = x, y = y),
+            alpha = alpha,
+        )
+        // draw the red circle indication
+        drawCircle(
+            HeadSymbolTextColor,
+            radius = dotSize * 0.8f,
+            center = Offset(x = x, y = y),
+            alpha = alpha
+        )
+        text?.let {
+            val textLayoutResult: TextLayoutResult =
+                textMeasurer.measure(
+                    text = AnnotatedString(it),
+                    style = TextStyle(
+                        color = BadgeTextColor,
+                        fontSize = (dotSize / 2).sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            val size = textLayoutResult.size
+            drawText(
+                textLayoutResult = textLayoutResult,
+                topLeft = Offset(
+                    x = x - (size.width / 2),
+                    y = y - (size.height / 2)
+                ),
+                alpha = alpha
+            )
+        }
+    }
+}
+
 @Composable
 private fun MiniFabItem(
     item: MultiFabItem,
@@ -270,9 +406,12 @@ private fun MiniFabItem(
     shadow: Dp,
     scale: Float,
     showLabel: Boolean,
+    withDot: Boolean = false,
+    dotText: String? = null,
     onFabItemClicked: (item: MultiFabItem) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val textMeasurer = rememberTextMeasurer()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -329,8 +468,24 @@ private fun MiniFabItem(
                 radius = radius,
                 alpha = alpha
             )
+            if (withDot && alpha > 0) {
+                val dotSizeOriginal = (size.width / 3f)
+                val dotSize = dotSizeOriginal * alpha
+                val x = size.width + (dotSizeOriginal * 0.1f)
+                val y = -(dotSizeOriginal * 0.2f)
+                drawDot(
+                    x = x,
+                    y = y,
+                    dotSize = dotSize,
+                    textMeasurer = textMeasurer,
+                    text = dotText,
+                    alpha = alpha,
+                    scope = this
+                )
+            }
+
             drawImage(
-                item.icon,
+                image = item.icon,
                 topLeft = Offset(
                     (this.center.x) - (item.icon.width / 2),
                     (this.center.y) - (item.icon.width / 2)

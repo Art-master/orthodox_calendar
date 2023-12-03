@@ -20,11 +20,11 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
 
     }
 
-    override fun addFilter(item: Filter) {
+    override fun addActiveFilter(item: Filter) {
 
     }
 
-    override fun removeFilter(item: Filter) {
+    override fun removeActiveFilter(item: Filter) {
 
     }
 
@@ -33,8 +33,8 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
     }
 
 
-    override fun getFilters(): MutableState<Set<Filter>> {
-        return mutableStateOf(HashSet())
+    override fun getActiveFilters(): MutableState<Set<Filter>> {
+        return mutableStateOf(Filter.entries.toSet())
     }
 
     override fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit) {

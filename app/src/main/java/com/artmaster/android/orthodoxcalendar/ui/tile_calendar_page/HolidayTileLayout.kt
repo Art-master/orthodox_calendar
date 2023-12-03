@@ -79,7 +79,7 @@ fun HolidayTileLayout(
 
     val pagerState = rememberPagerState(monthNum)
     val scope = rememberCoroutineScope()
-    val filters = viewModel.getFilters()
+    val filters = viewModel.getActiveFilters()
 
     LaunchedEffect(monthNum) {
         scope.launch {

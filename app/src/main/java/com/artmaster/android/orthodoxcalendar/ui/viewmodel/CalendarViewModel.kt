@@ -41,7 +41,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
             }
         }
 
-    private lateinit var filters: MutableState<Set<Filter>>
+    private lateinit var activeFilters: MutableState<Set<Filter>>
 
     init {
         initFilters()
@@ -54,7 +54,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
             if (data == Settings.TRUE) filters.add(it)
         }
 
-        this@CalendarViewModel.filters = mutableStateOf(filters)
+        this@CalendarViewModel.activeFilters = mutableStateOf(filters)
     }
 
     private fun getAvailableYears(currentYear: Int): List<Int> {
@@ -71,7 +71,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         if (monthNumWith0 !in 0..MONTH_COUNT.dec()) return
 
         withContext(Dispatchers.IO) {
-            val value = repository.getMonthDays(monthNumWith0, year, filters.value)
+            val value = repository.getMonthDays(monthNumWith0, year, activeFilters.value)
             withContext(Dispatchers.Main) {
                 val monthData = getCurrentMonthData(monthNumWith0)
                 monthData.value = value
@@ -95,7 +95,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         }
 
         withContext(Dispatchers.IO) {
-            val value = repository.getYearDays(year, filters.value)
+            val value = repository.getYearDays(year, activeFilters.value)
             withContext(Dispatchers.Main) {
                 val data = getCurrentYearData(year)
                 data.value = value
@@ -103,28 +103,28 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         }
     }
 
-    override fun addFilter(item: Filter) {
-        val copyData = HashSet(filters.value)
+    override fun addActiveFilter(item: Filter) {
+        val copyData = HashSet(activeFilters.value)
         copyData.add(item)
-        filters.value = copyData
+        activeFilters.value = copyData
         item.enabled = true
     }
 
-    override fun removeFilter(item: Filter) {
-        val copyData = HashSet(filters.value)
+    override fun removeActiveFilter(item: Filter) {
+        val copyData = HashSet(activeFilters.value)
         copyData.remove(item)
-        filters.value = copyData
+        activeFilters.value = copyData
         item.enabled = false
     }
 
     override fun clearAllFilters() {
-        filters.value = HashSet()
+        activeFilters.value = HashSet()
         Filter.entries.forEach { it.enabled = false }
     }
 
 
-    override fun getFilters(): MutableState<Set<Filter>> {
-        return filters
+    override fun getActiveFilters(): MutableState<Set<Filter>> {
+        return activeFilters
     }
 
     override fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit) {

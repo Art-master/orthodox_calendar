@@ -171,7 +171,7 @@ fun UserHolidayLayout(
             holiday.isCreatedByUser = true
 
             checkHolidayFilters(holiday.typeId) {
-                viewModel.addFilter(it)
+                viewModel.addActiveFilter(it)
             }
             onSave(holiday)
         }
@@ -297,7 +297,7 @@ fun createNewHolidayTemplate(title: String): Holiday {
 }
 
 fun checkHolidayFilters(typeId: Int, onFilterApply: (filter: Filter) -> Unit) {
-    if (Filter.values().any { it.enabled })
+    if (Filter.entries.any { it.enabled })
         when (typeId) {
             Type.USERS_NAME_DAY.id -> onFilterApply(Filter.NAME_DAYS)
             Type.USERS_BIRTHDAY.id -> onFilterApply(Filter.BIRTHDAYS)

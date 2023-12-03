@@ -25,6 +25,7 @@ val Birthday = Color(0XFFFF6D00)
 val NameDay = Color(0XFFFF6D00)
 
 val DefaultTextColor = Color(0XFF757575)
+val BadgeTextColor = Color(0xFF505050)
 val HeadSymbolTextColor = Color(0XFFE53935)
 val OldDateTextColor = Color(0xFF2196F3)
 val TileBorderColor = DefaultTextColor
@@ -41,7 +42,6 @@ val DisabledTextColor = DefaultTextColor.copy(alpha = 0.5f)
 val FloatingButtonColor = Color(0xFFFF6D00)
 val FloatingButtonColorLight = Color(0xFFE9A877)
 val FiltersContentColor = Color(0xFF4E453F)
-val FiltersLabelColor = Color(0xFFD3CFCC)
 
 
 val LinksColor = Color.Blue

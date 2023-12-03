@@ -10,10 +10,10 @@ interface ICalendarViewModel {
     fun loadAllHolidaysOfCurrentYear()
 
     suspend fun loadAllHolidaysOfYear(year: Int)
-    fun addFilter(item: Filter)
-    fun removeFilter(item: Filter)
+    fun addActiveFilter(item: Filter)
+    fun removeActiveFilter(item: Filter)
     fun clearAllFilters()
-    fun getFilters(): MutableState<Set<Filter>>
+    fun getActiveFilters(): MutableState<Set<Filter>>
     fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {})
     fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {})
     fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit = {})
