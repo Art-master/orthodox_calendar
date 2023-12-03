@@ -76,6 +76,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.BadgeTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
@@ -87,6 +88,8 @@ import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.COLLAPSED
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultitoolState.EXPANDED
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 import kotlinx.coroutines.launch
 
 enum class Tabs {
@@ -101,18 +104,25 @@ private const val ANIMATION_DURATION_MS = 500
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
 fun ToolsPreview() {
-    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {}
+    CalendarToolsDrawer(
+        viewModel = CalendarViewModelFake(),
+        settingsViewModel = SettingsViewModelFake()
+    ) {}
 }
 
 @Preview(showBackground = true, device = Devices.TABLET)
 @Composable
 fun ToolsPreviewTablet() {
-    CalendarToolsDrawer(viewModel = CalendarViewModelFake()) {}
+    CalendarToolsDrawer(
+        viewModel = CalendarViewModelFake(),
+        settingsViewModel = SettingsViewModelFake()
+    ) {}
 }
 
 @Composable
 fun CalendarToolsDrawer(
     viewModel: ICalendarViewModel,
+    settingsViewModel: ISettingsViewModel,
     onToolClick: (MultiFabItem) -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -120,6 +130,9 @@ fun CalendarToolsDrawer(
     val coroutineScope = rememberCoroutineScope()
     var isToolsPanelVisible by remember { mutableStateOf(true) }
     var multiToolState by remember { mutableStateOf(COLLAPSED) }
+    val needToHideTools = remember { settingsViewModel.getSetting(Settings.Name.HIDE_TOOL_PANEL) }
+    val toolsToLeftSide =
+        remember { settingsViewModel.getSetting(Settings.Name.TOOL_PANEL_MOVE_TO_LEFT) }
 
     val onToolItemClick = remember {
         { item: MultiFabItem ->
@@ -144,30 +157,37 @@ fun CalendarToolsDrawer(
     LaunchedEffect(key1 = drawerState.currentValue) {
         if (drawerState.isClosed) isToolsPanelVisible = true
     }
+    val isToolsToLeftSide = toolsToLeftSide?.value.toBoolean()
+    val direction = if (isToolsToLeftSide) LayoutDirection.Rtl else LayoutDirection.Ltr
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            ModalDrawer(
-                drawerState = drawerState,
-                drawerBackgroundColor = Background,
-                drawerContentColor = Background,
-                drawerContent = {
-                    FiltersLayoutWrapper(viewModel = viewModel)
-                }
-            ) {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    content()
+    CompositionLocalProvider(LocalLayoutDirection provides direction) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            val drawerDir = if (isToolsToLeftSide) LayoutDirection.Ltr else LayoutDirection.Rtl
+            CompositionLocalProvider(LocalLayoutDirection provides drawerDir) {
+                ModalDrawer(
+                    drawerState = drawerState,
+                    drawerBackgroundColor = Background,
+                    drawerContentColor = Background,
+                    drawerContent = {
+                        FiltersLayoutWrapper(viewModel = viewModel)
+                    }
+                ) {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        content()
+                    }
                 }
             }
+            if (needToHideTools?.value.toBoolean().not()) {
+                Tools(
+                    viewModel = viewModel,
+                    parent = this,
+                    isVisible = isToolsPanelVisible,
+                    multiToolState = multiToolState,
+                    stateChanged = { multiToolState = it },
+                    onItemClicked = onToolItemClick
+                )
+            }
         }
-        Tools(
-            viewModel = viewModel,
-            parent = this,
-            isVisible = isToolsPanelVisible,
-            multiToolState = multiToolState,
-            stateChanged = { multiToolState = it },
-            onItemClicked = onToolItemClick
-        )
     }
 }
 

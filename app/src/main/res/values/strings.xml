@@ -97,6 +97,8 @@
     <string name="settings_first_load_view">Первым загружать плиточный календарь</string>
     <string name="settings_speed_up_start_anim">Ускорить стартовую анимацию</string>
     <string name="settings_off_start_anim">Отключить стартовую анимацию</string>
+    <string name="settings_hide_tool_panel">Скрыть кнопку действий</string>
+    <string name="settings_tool_panel_move_to_left">Переместить кнопку действий влево</string>
     <string name="settings_days">дн.</string>
     <string name="settings_hours">ч.</string>
 

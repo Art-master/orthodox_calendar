@@ -13,7 +13,6 @@ import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTe
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsLayoutWrapper
-import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.HolidayTileLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.artmaster.android.orthodoxcalendar.ui.tools.CalendarToolsDrawer
@@ -21,6 +20,7 @@ import com.artmaster.android.orthodoxcalendar.ui.tools.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.tools.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLayout
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
 @Composable
 fun AppNavigationComponent(
@@ -46,6 +46,7 @@ fun AppNavigationComponent(
                 Tabs.NEW_EVENT.name -> {
                     navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/0")
                 }
+
                 Tabs.FILTERS.name -> {} //No actions
                 else -> throw IllegalStateException("Wrong item name")
             }
@@ -74,6 +75,7 @@ fun AppNavigationComponent(
             if (initViewModel.isDatabasePrepared) {
                 CalendarToolsDrawer(
                     viewModel = calendarViewModel,
+                    settingsViewModel = settingsViewModel,
                     onToolClick = onToolItemClick
                 ) {
                     HolidayTileLayout(
@@ -88,6 +90,7 @@ fun AppNavigationComponent(
             if (initViewModel.isDatabasePrepared) {
                 CalendarToolsDrawer(
                     viewModel = calendarViewModel,
+                    settingsViewModel = settingsViewModel,
                     onToolClick = onToolItemClick
                 ) {
                     HolidayPagerListLayout(

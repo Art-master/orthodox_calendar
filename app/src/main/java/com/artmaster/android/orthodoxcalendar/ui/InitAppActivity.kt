@@ -30,9 +30,9 @@ import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
-import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
 class InitAppActivity : ComponentActivity() {
 

@@ -39,6 +39,8 @@ class Settings {
             "0",
             Int::class.java
         ),
+        HIDE_TOOL_PANEL("$PROJECT_DIR.hide_tool_panel", FALSE),
+        TOOL_PANEL_MOVE_TO_LEFT("$PROJECT_DIR.tool_panel_move_to_left", FALSE),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),

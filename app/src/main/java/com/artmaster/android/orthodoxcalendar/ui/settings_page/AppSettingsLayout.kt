@@ -1,13 +1,22 @@
 package com.artmaster.android.orthodoxcalendar.ui.settings_page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,8 +38,15 @@ import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
 import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
-import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.theme.CursorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.DisabledTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextCursorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextIndicatorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -161,6 +177,18 @@ fun SettingsLayout(
             onSettingChange = onSettingChange,
             getSettingValue = getSettingValue,
             title = stringResource(id = R.string.settings_off_start_anim)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_TOOL_PANEL,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_tool_panel)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.TOOL_PANEL_MOVE_TO_LEFT,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_tool_panel_move_to_left)
         )
     }
 }
