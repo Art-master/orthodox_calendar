@@ -8,6 +8,11 @@ import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
 class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
+
+    private var activeFilters: MutableState<Set<Filter>> = mutableStateOf(
+        hashSetOf(Filter.BIRTHDAYS, Filter.AVERAGE_HOLIDAYS)
+    )
+
     override suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int) {
 
     }
@@ -20,21 +25,28 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
 
     }
 
-    override fun addActiveFilter(item: Filter) {
-
+    override fun addActiveFilter(filter: Filter) {
+        val copyData = HashSet(activeFilters.value)
+        copyData.add(filter)
+        activeFilters.value = copyData
+        filter.enabled = true
     }
 
-    override fun removeActiveFilter(item: Filter) {
-
+    override fun removeActiveFilter(filter: Filter) {
+        val copyData = HashSet(activeFilters.value)
+        copyData.remove(filter)
+        activeFilters.value = copyData
+        filter.enabled = false
     }
 
     override fun clearAllFilters() {
-
+        activeFilters.value = HashSet()
+        Filter.entries.forEach { it.enabled = false }
     }
 
 
     override fun getActiveFilters(): MutableState<Set<Filter>> {
-        return mutableStateOf(Filter.entries.toSet())
+        return activeFilters
     }
 
     override fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit) {

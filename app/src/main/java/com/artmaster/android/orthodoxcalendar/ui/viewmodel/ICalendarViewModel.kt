@@ -8,10 +8,9 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 interface ICalendarViewModel {
     suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int)
     fun loadAllHolidaysOfCurrentYear()
-
     suspend fun loadAllHolidaysOfYear(year: Int)
-    fun addActiveFilter(item: Filter)
-    fun removeActiveFilter(item: Filter)
+    fun addActiveFilter(filter: Filter)
+    fun removeActiveFilter(filter: Filter)
     fun clearAllFilters()
     fun getActiveFilters(): MutableState<Set<Filter>>
     fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {})
@@ -27,9 +26,7 @@ interface ICalendarViewModel {
     fun setDayOfYear(day: Int)
     fun getCurrentMonthData(monthNum: Int): MutableState<List<Day>>
     fun getCurrentYearData(yearNum: Int): MutableState<List<Day>>
-
     suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday
-
     suspend fun getFullHolidayById(id: Long): Holiday
     fun getAllHolidaysOfYear(): List<Holiday>
     fun resetTime()

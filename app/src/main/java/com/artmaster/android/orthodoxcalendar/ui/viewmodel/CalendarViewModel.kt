@@ -41,7 +41,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
             }
         }
 
-    private lateinit var activeFilters: MutableState<Set<Filter>>
+    private var activeFilters: MutableState<Set<Filter>> = mutableStateOf(hashSetOf())
 
     init {
         initFilters()
@@ -51,7 +51,10 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         val filters = HashSet<Filter>()
         Filter.entries.forEach {
             val data = preferences.get(it.settingName)
-            if (data == Settings.TRUE) filters.add(it)
+            if (data == Settings.TRUE) {
+                it.enabled = true
+                filters.add(it)
+            }
         }
 
         this@CalendarViewModel.activeFilters = mutableStateOf(filters)
@@ -103,23 +106,41 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         }
     }
 
-    override fun addActiveFilter(item: Filter) {
+    override fun addActiveFilter(filter: Filter) {
         val copyData = HashSet(activeFilters.value)
-        copyData.add(item)
+        copyData.add(filter)
         activeFilters.value = copyData
-        item.enabled = true
+        filter.enabled = true
+        saveFilter(filter)
     }
 
-    override fun removeActiveFilter(item: Filter) {
+    private fun saveFilter(filter: Filter) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                preferences.set(filter.settingName, filter.enabled.toString())
+            }
+        }
+    }
+
+    override fun removeActiveFilter(filter: Filter) {
         val copyData = HashSet(activeFilters.value)
-        copyData.remove(item)
+        copyData.remove(filter)
         activeFilters.value = copyData
-        item.enabled = false
+        filter.enabled = false
+        saveFilter(filter)
     }
 
     override fun clearAllFilters() {
         activeFilters.value = HashSet()
         Filter.entries.forEach { it.enabled = false }
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                Filter.entries.forEach {
+                    preferences.set(it.settingName, it.enabled.toString())
+                }
+            }
+        }
     }
 
 
