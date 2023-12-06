@@ -39,7 +39,8 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.common.Empty
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
-import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 
 @Preview
 @Composable
@@ -66,7 +67,7 @@ fun HolidayListPreview() {
     day.holidays.addAll(getHolidays(time))
     val data = remember { mutableStateOf(listOf(day)) }
 
-    HolidayList(data = data)
+    HolidayList(data = data, viewModel = CalendarViewModelFake())
 }
 
 fun getHolidays(time: Time = Time()): List<Holiday> {
@@ -137,13 +138,13 @@ fun HolidayList(
     data: MutableState<List<Day>>,
     onDayClick: (day: Day) -> Unit = {},
     onHolidayClick: (day: Holiday) -> Unit = {},
-    viewModel: CalendarViewModel? = null
+    viewModel: ICalendarViewModel
 ) {
     val listState = rememberLazyListState()
-    val dayOfYear = viewModel?.getDayOfYear()
+    val dayOfYear = viewModel.getDayOfYear()
 
-    LaunchedEffect(dayOfYear?.value) {
-        listState.scrollToItem(dayOfYear!!.value.dec())
+    LaunchedEffect(dayOfYear.value) {
+        listState.scrollToItem(dayOfYear.value.dec())
     }
 
     val days = data.value

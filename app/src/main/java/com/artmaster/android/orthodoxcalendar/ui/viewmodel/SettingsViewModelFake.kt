@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 class SettingsViewModelFake : ViewModel(), ISettingsViewModel {
     private val settings = HashMap<String, MutableState<String>>(Settings.Name.entries.size)
-    override val isInit = mutableStateOf(false)
+    override val isInit = mutableStateOf(true)
 
     init {
         initSettings()
@@ -19,7 +19,7 @@ class SettingsViewModelFake : ViewModel(), ISettingsViewModel {
 
     private fun initSettings() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
                 val map = HashMap<String, String>(Settings.Name.entries.size)
                 Settings.Name.entries.forEach { setting ->
                     map[setting.value] = setting.defValue

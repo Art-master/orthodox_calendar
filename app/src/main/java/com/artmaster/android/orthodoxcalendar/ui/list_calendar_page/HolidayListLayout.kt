@@ -23,7 +23,8 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayList
-import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -36,7 +37,7 @@ import kotlin.math.absoluteValue
 fun HolidayListLayoutPreview() {
     MaterialTheme {
         CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-            HolidayPagerListLayout()
+            HolidayPagerListLayout(viewModel = CalendarViewModelFake())
         }
     }
 }
@@ -44,12 +45,12 @@ fun HolidayListLayoutPreview() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayPagerListLayout(
-    viewModel: CalendarViewModel = CalendarViewModel(),
+    viewModel: ICalendarViewModel,
     onDayClick: (day: Day) -> Unit = {},
     onHolidayClick: (day: Holiday) -> Unit = {},
 ) {
 
-    val availableYears = viewModel.availableYears
+    val availableYears = viewModel.getAvailableYears()
     val startIndex = viewModel.getYear().value - availableYears.first()
     val currentYear by viewModel.getYear()
 

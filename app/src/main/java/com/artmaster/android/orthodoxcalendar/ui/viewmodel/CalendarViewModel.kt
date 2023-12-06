@@ -27,7 +27,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
     private val dayOfYear = mutableStateOf(initTime.dayOfYear)
     private val month = mutableStateOf(initTime.monthWith0)
     private val year = mutableStateOf(initTime.year)
-    val availableYears = getAvailableYears(currentYear = initTime.year)
+    private val availableYears = getAvailableYears(currentYear = initTime.year)
 
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
         .apply {
@@ -86,6 +86,10 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         viewModelScope.launch {
             loadAllHolidaysOfYear(year.value)
         }
+    }
+
+    override fun getAvailableYears(): List<Int> {
+        return availableYears
     }
 
     override suspend fun loadAllHolidaysOfYear(year: Int) {

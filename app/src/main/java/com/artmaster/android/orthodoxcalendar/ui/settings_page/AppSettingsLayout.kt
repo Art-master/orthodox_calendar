@@ -46,28 +46,18 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextCursorColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextIndicatorColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewSettingsLayout() {
-    val onSettingChange = remember { { _: Settings.Name, _: String -> } }
-    val getSettingValue = remember {
-        { name: Settings.Name ->
-            if (name.type == Int::class.java) "10" else "false"
-        }
-    }
-
-    SettingsLayout(
-        isInit = true,
-        onSettingChange = onSettingChange,
-        getSettingValue = getSettingValue
-    )
-
+    SettingsLayoutWrapper(viewModel = SettingsViewModelFake())
 }
 
 @Composable
-fun SettingsLayoutWrapper(viewModel: SettingsViewModel = SettingsViewModel()) {
+fun SettingsLayoutWrapper(viewModel: ISettingsViewModel = SettingsViewModel()) {
 
     val onSettingChange = remember {
         { setting: Settings.Name, value: String -> viewModel.setSetting(setting, value) }

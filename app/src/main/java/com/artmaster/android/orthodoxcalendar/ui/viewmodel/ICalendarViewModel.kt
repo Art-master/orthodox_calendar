@@ -8,6 +8,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 interface ICalendarViewModel {
     suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int)
     fun loadAllHolidaysOfCurrentYear()
+    fun getAvailableYears(): List<Int>
     suspend fun loadAllHolidaysOfYear(year: Int)
     fun addActiveFilter(filter: Filter)
     fun removeActiveFilter(filter: Filter)
