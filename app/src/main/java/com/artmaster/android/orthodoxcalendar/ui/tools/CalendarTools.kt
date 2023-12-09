@@ -154,6 +154,12 @@ fun CalendarToolsDrawer(
         }
     }
 
+    val stateChanged = remember {
+        { _: MultitoolState ->
+            multiToolState = if (multiToolState == COLLAPSED) EXPANDED else COLLAPSED
+        }
+    }
+
     LaunchedEffect(key1 = drawerState.currentValue) {
         if (drawerState.isClosed) isToolsPanelVisible = true
     }
@@ -183,7 +189,7 @@ fun CalendarToolsDrawer(
                     parent = this,
                     isVisible = isToolsPanelVisible,
                     multiToolState = multiToolState,
-                    stateChanged = { multiToolState = it },
+                    stateChanged = stateChanged,
                     onItemClicked = onToolItemClick
                 )
             }

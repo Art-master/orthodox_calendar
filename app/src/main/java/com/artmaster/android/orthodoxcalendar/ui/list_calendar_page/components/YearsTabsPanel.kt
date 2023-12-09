@@ -6,10 +6,10 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +20,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.common.getYears
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.TabsRowContentColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -43,7 +44,7 @@ fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         backgroundColor = TabsBackground,
-        contentColor = Color.Gray,
+        contentColor = TabsRowContentColor,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -51,11 +52,13 @@ fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
         }
     ) {
         items.forEachIndexed { index, title ->
-            Tab(
-                text = { YearName(title = title) },
-                selected = pagerState.currentPage == index,
-                onClick = { onClick(index) },
-            )
+            key(title) {
+                Tab(
+                    text = { YearName(title = title) },
+                    selected = pagerState.currentPage == index,
+                    onClick = { onClick(index) },
+                )
+            }
         }
     }
 }

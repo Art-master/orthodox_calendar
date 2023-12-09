@@ -2,9 +2,11 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -21,6 +23,7 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -101,12 +104,25 @@ fun HolidayTileLayout(
         }
     }
 
-    Column(Modifier.fillMaxHeight()) {
-        MonthTabs(pagerState = pagerState) {
+    val onTabClick = remember {
+        { page: Int ->
             scope.launch {
-                pagerState.scrollToPage(it)
+                pagerState.scrollToPage(page)
             }
+            Unit
         }
+    }
+
+    Column(Modifier.fillMaxHeight()) {
+        MonthTabs(
+            currentPage = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            },
+            onClick = onTabClick
+        )
 
         HorizontalPager(
             count = MONTH_COUNT,

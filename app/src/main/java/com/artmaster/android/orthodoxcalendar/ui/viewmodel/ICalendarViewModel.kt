@@ -1,10 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 
+@Immutable
 interface ICalendarViewModel {
     suspend fun loadAllHolidaysOfMonth(monthNumWith0: Int, year: Int)
     fun loadAllHolidaysOfCurrentYear()

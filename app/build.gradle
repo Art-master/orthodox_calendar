@@ -83,7 +83,7 @@ dependencies {
     implementation "androidx.compose.compiler:compiler:1.5.5"
 
     // Material Design
-    def material_version = "1.6.0-beta01"
+    def material_version = "1.5.4"
     implementation "androidx.compose.material:material:$material_version"
     // Material design icons
     implementation "androidx.compose.material:material-icons-core:$material_version"
@@ -144,6 +144,8 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.2.1"
 
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    implementation 'io.github.theapache64:rebugger:1.0.0-rc01'
 
     //Tests
     androidTestImplementation 'org.mockito:mockito-core:4.8.1'

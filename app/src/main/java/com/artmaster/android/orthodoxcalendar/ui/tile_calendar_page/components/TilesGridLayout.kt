@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -98,23 +99,24 @@ fun TilesGridLayout(
         contentPadding = PaddingValues(1.dp)
     ) {
         items(MAX_COLUMN_COUNT * DAYS_IN_WEEK_COUNT) { item ->
-
             val week = item % MAX_COLUMN_COUNT
             val dayWith0 = item / MAX_COLUMN_COUNT
             val dayIndex = ((week.dec() * DAYS_IN_WEEK_COUNT) + dayWith0) - daysCountStartOffset
 
-            if (week == 0) {
-                DayOfWeekName(dayOfWeekNum = (dayWith0).inc())
+            key(dayIndex) {
+                if (week == 0) {
+                    DayOfWeekName(dayOfWeekNum = (dayWith0).inc())
 
-            } else if (dayIndex >= 0 && dayIndex.inc() <= data.size) {
-                daysCount++
-                val isActive = dayIndex.inc() == selectedDayOfMonth
+                } else if (dayIndex >= 0 && dayIndex.inc() <= data.size) {
+                    daysCount++
+                    val isActive = dayIndex.inc() == selectedDayOfMonth
 
-                DayOfMonthTile(
-                    day = data[dayIndex],
-                    isActive = isActive,
-                    onClick = onDayClick
-                )
+                    DayOfMonthTile(
+                        day = data[dayIndex],
+                        isActive = isActive,
+                        onClick = onDayClick
+                    )
+                }
             }
         }
     }
