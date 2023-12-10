@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +49,9 @@ fun HolidayItem(holiday: Holiday, onClick: ((holiday: Holiday) -> Unit)? = null)
             .clickable(onClick = onHolidayClick)
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth(0.1f),
+            modifier = Modifier
+                .fillMaxWidth(0.1f)
+                .offset(y = (-10).dp), // It depends on font size. Make icon position on the same y with holiday desc
             color = params.second,
             text = stringResource(id = params.first),
             fontSize = 30.sp,
