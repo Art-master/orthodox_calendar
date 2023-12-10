@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,11 +17,13 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -61,16 +65,17 @@ fun ItemHeaderPreview() {
             )
         )
     )
-    ItemHeader(day = day)
+    ItemHeader(day = day, showDaysOfWeek = false)
 }
 
 @Composable
 fun ItemHeader(
     day: Day,
-    headerHeight: Dp = 300.dp,
+    headerHeight: Dp = Dp.Unspecified,
     showDaysOfWeek: Boolean = false,
     onClick: ((day: Day) -> Unit)? = null
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     val title = day.run {
 
         if (showDaysOfWeek) {
@@ -87,26 +92,35 @@ fun ItemHeader(
         Modifier
             .fillMaxWidth()
             .height(headerHeight)
-            .clickable(onClick = onDayClick),
+            .clickable(
+                onClick = onDayClick,
+                interactionSource = interactionSource,
+                indication = null
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        val annotatedString = buildAnnotatedString {
-            Ornament(builder = this, text = stringResource(id = R.string.ornament_for_headers_left))
-            append(title)
-            Ornament(
-                builder = this,
-                text = stringResource(id = R.string.ornament_for_headers_right)
+        if (showDaysOfWeek) {
+            val annotatedString = buildAnnotatedString {
+                Ornament(
+                    builder = this,
+                    text = stringResource(id = R.string.ornament_for_headers_left)
+                )
+                append(title)
+                Ornament(
+                    builder = this,
+                    text = stringResource(id = R.string.ornament_for_headers_right)
+                )
+            }
+
+            Text(
+                color = if (day.dayInWeek == Holiday.DayOfWeek.SUNDAY.num) HeaderTextColor else DefaultTextColor,
+                text = annotatedString,
+                fontSize = 30.sp,
+                fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
+                textAlign = TextAlign.Center
             )
         }
-
-        Text(
-            color = if (day.dayInWeek == Holiday.DayOfWeek.SUNDAY.num) HeaderTextColor else DefaultTextColor,
-            text = annotatedString,
-            fontSize = 30.sp,
-            fontFamily = FontFamily(Font(R.font.cyrillic_old, FontWeight.Normal)),
-            textAlign = TextAlign.Center
-        )
 
         StyleDatesText(day = day.dayOfMonth, month = day.month, year = day.year)
         FastingText(day = day)
@@ -165,12 +179,13 @@ fun FastingText(day: Day) {
     val text = stringResource(id = drawableId)
 
     Text(
-        modifier = Modifier.padding(top = 10.dp),
+        modifier = Modifier.padding(top = 3.dp),
         color = DefaultTextColor,
         text = text,
         fontSize = 20.sp,
         fontFamily = FontFamily(Font(R.font.cyrillic_old)),
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        style = TextStyle(textDecoration = TextDecoration.Underline)
     )
 }
 

@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -38,8 +41,12 @@ import com.artmaster.android.orthodoxcalendar.domain.Fasting
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
+import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.common.Empty
+import com.artmaster.android.orthodoxcalendar.ui.theme.Background
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 
@@ -141,7 +148,6 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
 @Composable
 fun HolidayList(
     modifier: Modifier = Modifier,
-    headerHeight: Dp = 90.dp,
     data: MutableState<List<Day>>,
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (day: Holiday) -> Unit,
@@ -169,19 +175,37 @@ fun HolidayList(
             key(day.month + day.dayInWeek) {
                 if (day.holidays.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(10.0.dp))
+                    DayOfWeekTitle(day)
                     ItemHeader(
                         day = day,
-                        showDaysOfWeek = true,
-                        headerHeight = headerHeight,
+                        showDaysOfWeek = false,
                         onClick = onDayClick
                     )
-                    day.holidays.forEach {
-                        HolidayItem(holiday = it, onClick = onHolidayClick)
-                    }
-                    Divider()
+                    HolidayList(day = day, onHolidayClick = onHolidayClick)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DayOfWeekTitle(day: Day) {
+    val name = stringArrayResource(R.array.daysNames)[day.dayInWeek.dec()]
+    val textColor = if (day.dayInWeek == Holiday.DayOfWeek.SUNDAY.num) {
+        HeadSymbolTextColor
+    } else HeaderTextColor
+    DividerWithText {
+        Text(
+            modifier = Modifier
+                .background(Background)
+                .padding(start = 3.dp, end = 3.dp)
+                .offset(y = 6.dp),
+            color = textColor,
+            text = name,
+            fontSize = 30.sp,
+            fontFamily = FontFamily(Font(R.font.cyrillic_old)),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -210,13 +234,18 @@ fun OneDayHolidayList(
                 .padding(top = 10.dp)
         ) {
             if (day.holidays.isNotEmpty()) {
-                day.holidays.forEach {
-                    //AnimatedVisibility(visible = true)
-                    HolidayItem(holiday = it, onClick = onHolidayClick)
-                }
+                HolidayList(day = day, onHolidayClick = onHolidayClick)
             } else NoItems()
         }
         Spacer(modifier = Modifier.height(20.0.dp))
+    }
+}
+
+@Composable
+fun HolidayList(day: Day, onHolidayClick: (holiday: Holiday) -> Unit) {
+    day.holidays.forEach {
+        //AnimatedVisibility(visible = true)
+        HolidayItem(holiday = it, onClick = onHolidayClick)
     }
 }
 
