@@ -1,9 +1,17 @@
 package com.artmaster.android.orthodoxcalendar.ui.holiday_page.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -21,7 +29,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.FloatingButtonColor
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 fun UserHolidayControlMenuPreview() {
     Box(Modifier.fillMaxSize()) {
-        UserHolidayControlMenu(holiday = Holiday())
+        UserHolidayControlMenu(holiday = Holiday(), onEditClick = {}, onDeleteClick = {})
     }
 }
 
@@ -30,9 +38,12 @@ fun UserHolidayControlMenuPreview() {
 fun UserHolidayControlMenu(
     modifier: Modifier = Modifier,
     holiday: Holiday,
-    onEditClick: (holiday: Holiday) -> Unit = {},
-    onDeleteClick: (holiday: Holiday) -> Unit = {}
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit
 ) {
+
+    val onEditClickRemembered by rememberUpdatedState { onEditClick(holiday) }
+    val onDeleteClickRemembered by rememberUpdatedState { onDeleteClick(holiday) }
 
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         FloatingActionButton(
@@ -42,7 +53,8 @@ fun UserHolidayControlMenu(
                 .padding(top = 8.dp, end = 8.dp),
             backgroundColor = FloatingButtonColor,
             contentColor = FiltersContentColor,
-            onClick = { onEditClick(holiday) }) {
+            onClick = onEditClickRemembered
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_edit_24),
                 contentDescription = "",
@@ -56,7 +68,8 @@ fun UserHolidayControlMenu(
                 .padding(top = 8.dp, end = 8.dp),
             backgroundColor = Error,
             contentColor = FiltersContentColor,
-            onClick = { onDeleteClick(holiday) }) {
+            onClick = onDeleteClickRemembered
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_delete_24),
                 contentDescription = "",

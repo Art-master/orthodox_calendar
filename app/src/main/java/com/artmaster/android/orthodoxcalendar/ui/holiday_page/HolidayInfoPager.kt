@@ -24,7 +24,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
 fun HolidayInfoPagerPreview() {
-    HolidayInfoPager(viewModel = null, holidayId = 0L)
+    HolidayInfoPager(viewModel = null, holidayId = 0L, onDeleteClick = {}, onEditClick = {})
 }
 
 
@@ -33,8 +33,8 @@ fun HolidayInfoPagerPreview() {
 fun HolidayInfoPager(
     viewModel: CalendarViewModel?,
     holidayId: Long,
-    onEditClick: (holiday: Holiday) -> Unit = {},
-    onDeleteClick: (holiday: Holiday) -> Unit = {}
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit
 ) {
     viewModel ?: return
 

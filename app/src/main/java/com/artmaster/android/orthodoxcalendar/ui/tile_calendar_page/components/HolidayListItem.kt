@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -37,13 +39,14 @@ fun ItemListPreview() {
 }
 
 @Composable
-fun HolidayItem(holiday: Holiday, onClick: (holiday: Holiday) -> Unit = {}) {
+fun HolidayItem(holiday: Holiday, onClick: ((holiday: Holiday) -> Unit)? = null) {
     val params = getTypyconFontImageAndColor(holiday = holiday)
-    Row(modifier = Modifier
-        .padding(top = 10.dp)
-        .clickable {
-            onClick.invoke(holiday)
-        }) {
+    val onHolidayClick by rememberUpdatedState { onClick?.invoke(holiday) ?: Unit }
+    Row(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .clickable(onClick = onHolidayClick)
+    ) {
         Text(
             modifier = Modifier.fillMaxWidth(0.1f),
             color = params.second,
@@ -70,10 +73,12 @@ fun getTypyconFontImageAndColor(holiday: Holiday): Pair<Int, Color> {
         Holiday.Type.TWELVE_MOVABLE.id,
         Holiday.Type.TWELVE_NOT_MOVABLE.id,
         Holiday.Type.GREAT_NOT_TWELVE.id -> R.string.head_holiday to Color.Red
+
         Holiday.Type.AVERAGE_POLYLEIC.id -> R.string.average_polyleic_holiday to Color.Red
         Holiday.Type.AVERAGE_PEPPY.id -> R.string.average_peppy_holiday to Color.Red
         Holiday.Type.COMMON_MEMORY_DAY.id,
         Holiday.Type.USERS_MEMORY_DAY.id -> R.string.memorial_day to Color.Black
+
         Holiday.Type.USERS_BIRTHDAY.id -> R.string.birthday to Easter
         Holiday.Type.USERS_NAME_DAY.id -> R.string.name_day to Easter
         else -> 0 to Color.Black

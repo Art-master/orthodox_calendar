@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -56,7 +57,9 @@ fun AppBarPreview() {
         year = year,
         initCalendarType = CalendarType.TILE,
         navController = navController,
-        forceVisibility = true
+        forceVisibility = true,
+        onTimeReset = {},
+        onYearChange = {}
     )
 }
 
@@ -102,8 +105,8 @@ fun AppBarWrapper(
 fun AppBar(
     year: MutableState<Int>,
     initCalendarType: CalendarType,
-    onYearChange: (year: Int) -> Unit = {},
-    onTimeReset: () -> Unit = {},
+    onYearChange: (year: Int) -> Unit,
+    onTimeReset: () -> Unit,
     navController: NavHostController,
     forceVisibility: Boolean = false
 ) {
@@ -215,16 +218,17 @@ fun getCalendarIcon(currentCalendarType: CalendarType) =
 
 
 @Composable
-fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: () -> Unit = {}) {
+fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: (() -> Unit)? = null) {
     val background = if (item == selectedItem) SelectedItemColor else Color.Transparent
+    val onClickRemembered by rememberUpdatedState { onClick?.invoke() ?: Unit }
     IconButton(
         modifier = Modifier
             .height(APP_BAR_HEIGHT)
             .background(background),
-        onClick = onClick
+        onClick = onClickRemembered
     ) {
         Icon(
-            modifier = Modifier.clickable { onClick() },
+            modifier = Modifier.clickable(onClick = onClickRemembered),
             painter = painterResource(iconId),
             contentDescription = item.name
         )

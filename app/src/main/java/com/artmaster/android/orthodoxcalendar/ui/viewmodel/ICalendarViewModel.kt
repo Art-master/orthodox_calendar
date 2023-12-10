@@ -16,9 +16,9 @@ interface ICalendarViewModel {
     fun removeActiveFilter(filter: Filter)
     fun clearAllFilters()
     fun getActiveFilters(): MutableState<Set<Filter>>
-    fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {})
-    fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit = {})
-    fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit = {})
+    fun insertHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit)
+    fun updateHoliday(holiday: Holiday, onComplete: (holiday: Holiday) -> Unit)
+    fun deleteHoliday(id: Long, onComplete: ((id: Long) -> Unit)? = null)
     fun setYear(year: Int)
     fun getYear(): MutableState<Int>
     fun setMonth(month: Int)

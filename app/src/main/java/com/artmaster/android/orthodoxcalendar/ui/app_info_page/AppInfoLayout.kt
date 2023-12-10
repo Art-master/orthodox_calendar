@@ -1,11 +1,27 @@
 package com.artmaster.android.orthodoxcalendar.ui.app_info_page
 
 import android.content.Intent
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -27,7 +43,15 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledText
-import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.theme.Birthday
+import com.artmaster.android.orthodoxcalendar.ui.theme.DayOfSolidWeek
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.Easter
+import com.artmaster.android.orthodoxcalendar.ui.theme.FastingDay
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadHoliday
+import com.artmaster.android.orthodoxcalendar.ui.theme.LinksColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.NameDay
+import com.artmaster.android.orthodoxcalendar.ui.theme.TwelveHoliday
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 @Composable
@@ -169,6 +193,16 @@ fun Contacts() {
     val email = stringResource(id = R.string.app_email)
     val emailSubject = stringResource(id = R.string.app_email_subject)
 
+    val openMail by rememberUpdatedState {
+        val i = Intent(Intent.ACTION_SEND)
+        val emailAddress = arrayOf(email)
+        i.putExtra(Intent.EXTRA_EMAIL, emailAddress)
+        i.putExtra(Intent.EXTRA_SUBJECT, emailSubject)
+        i.type = "message/rfc822"
+
+        ctx.startActivity(Intent.createChooser(i, ""))
+    }
+
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -187,17 +221,7 @@ fun Contacts() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 2.dp, top = 2.dp, bottom = 20.dp)
-            .clickable {
-                val i = Intent(Intent.ACTION_SEND)
-                val emailAddress = arrayOf(email)
-                i.putExtra(Intent.EXTRA_EMAIL, emailAddress)
-                i.putExtra(Intent.EXTRA_SUBJECT, emailSubject)
-                i.type = "message/rfc822"
-
-                ctx.startActivity(Intent.createChooser(i, ""))
-
-
-            },
+            .clickable(onClick = openMail),
         text = email,
         fontSize = with(LocalDensity.current) {
             (20 / fontScale).sp

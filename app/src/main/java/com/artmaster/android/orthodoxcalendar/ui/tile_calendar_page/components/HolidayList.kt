@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -67,7 +68,11 @@ fun HolidayListPreview() {
     day.holidays.addAll(getHolidays(time))
     val data = remember { mutableStateOf(listOf(day)) }
 
-    HolidayList(data = data, viewModel = CalendarViewModelFake())
+    HolidayList(
+        data = data,
+        viewModel = CalendarViewModelFake(),
+        onHolidayClick = {},
+        onDayClick = {})
 }
 
 fun getHolidays(time: Time = Time()): List<Holiday> {
@@ -103,7 +108,8 @@ fun HolidayListOneDayPreview() {
                     Fasting.Permission.CAVIAR,
                 )
             )
-        )
+        ),
+        onHolidayClick = {}
     )
 }
 
@@ -127,7 +133,8 @@ fun HolidayListOneDayWithoutHolidaysPreview() {
                     Fasting.Permission.CAVIAR,
                 )
             )
-        )
+        ),
+        onHolidayClick = {}
     )
 }
 
@@ -136,8 +143,8 @@ fun HolidayList(
     modifier: Modifier = Modifier,
     headerHeight: Dp = 90.dp,
     data: MutableState<List<Day>>,
-    onDayClick: (day: Day) -> Unit = {},
-    onHolidayClick: (day: Holiday) -> Unit = {},
+    onDayClick: (day: Day) -> Unit,
+    onHolidayClick: (day: Holiday) -> Unit,
     viewModel: ICalendarViewModel
 ) {
     val listState = rememberLazyListState()
@@ -159,18 +166,20 @@ fun HolidayList(
 
     LazyColumn(modifier = modifier, state = listState) {
         items(days) { day ->
-            if (day.holidays.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(20.0.dp))
-                ItemHeader(
-                    day = day,
-                    showDaysOfWeek = true,
-                    headerHeight = headerHeight,
-                    onClick = onDayClick
-                )
-                day.holidays.forEach {
-                    HolidayItem(holiday = it, onClick = onHolidayClick)
+            key(day.month + day.dayInWeek) {
+                if (day.holidays.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(10.0.dp))
+                    ItemHeader(
+                        day = day,
+                        showDaysOfWeek = true,
+                        headerHeight = headerHeight,
+                        onClick = onDayClick
+                    )
+                    day.holidays.forEach {
+                        HolidayItem(holiday = it, onClick = onHolidayClick)
+                    }
+                    Divider()
                 }
-                Divider()
             }
         }
     }
@@ -180,7 +189,7 @@ fun HolidayList(
 fun OneDayHolidayList(
     day: Day,
     headerHeight: Dp = 93.dp,
-    onHolidayClick: (holiday: Holiday) -> Unit = {}
+    onHolidayClick: (holiday: Holiday) -> Unit
 ) {
     val scroll = rememberScrollState()
 

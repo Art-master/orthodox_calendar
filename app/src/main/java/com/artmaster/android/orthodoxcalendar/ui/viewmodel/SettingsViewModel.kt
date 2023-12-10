@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Immutable
 class SettingsViewModel : ViewModel(), ISettingsViewModel {
     private val preferences = App.appComponent.getPreferences()
 

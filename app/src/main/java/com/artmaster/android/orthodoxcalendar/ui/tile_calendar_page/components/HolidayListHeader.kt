@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -32,9 +34,10 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeaderTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.OldDateTextColor
-import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
+import java.util.Date
+import java.util.GregorianCalendar
 
 @Preview
 @Composable
@@ -66,7 +69,7 @@ fun ItemHeader(
     day: Day,
     headerHeight: Dp = 300.dp,
     showDaysOfWeek: Boolean = false,
-    onClick: (day: Day) -> Unit = {}
+    onClick: ((day: Day) -> Unit)? = null
 ) {
     val title = day.run {
 
@@ -78,11 +81,13 @@ fun ItemHeader(
         //"$dw$dayOfMonth ${stringArrayResource(R.array.months_names_acc)[day.month]}"
     }
 
+    val onDayClick by rememberUpdatedState { onClick?.invoke(day) ?: Unit }
+
     Column(
         Modifier
             .fillMaxWidth()
             .height(headerHeight)
-            .clickable { onClick(day) },
+            .clickable(onClick = onDayClick),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 

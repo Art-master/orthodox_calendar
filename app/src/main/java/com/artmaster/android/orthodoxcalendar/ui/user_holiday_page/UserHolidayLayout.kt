@@ -63,7 +63,7 @@ val time = Time()
 fun UserHolidayLayout(
     holidayId: Long? = null,
     viewModel: CalendarViewModel = CalendarViewModel(),
-    onSave: (Holiday) -> Unit = {}
+    onSave: ((Holiday) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     var target by rememberSaveable { mutableStateOf(Holiday(id = -1)) }
@@ -164,7 +164,8 @@ fun UserHolidayLayout(
     }
 
     val onCheckAndSave = remember {
-        { holiday: Holiday ->
+        {
+            val holiday = target
             if (!yearEnabled || holiday.typeId == Type.USERS_NAME_DAY.id) holiday.year = 0
             holiday.description = holiday.description.trim()
             holiday.title = holiday.title.trim()
@@ -173,7 +174,7 @@ fun UserHolidayLayout(
             checkHolidayFilters(holiday.typeId) {
                 viewModel.addActiveFilter(it)
             }
-            onSave(holiday)
+            onSave?.invoke(holiday) ?: Unit
         }
     }
 
@@ -279,7 +280,8 @@ fun UserHolidayLayout(
                             && descriptionError.isEmpty()
                             && yearError.isEmpty()
                             && dayError.isEmpty(),
-                    onClick = { onCheckAndSave(target) })
+                    onClick = onCheckAndSave
+                )
             }
         }
     }

@@ -4,7 +4,12 @@ import android.view.MotionEvent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,19 +27,19 @@ import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Random
 
 const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 
 @Preview
 @Composable
 fun Preview() {
-    AppStartTextAnimation(duration = 6000, 50)
+    AppStartTextAnimation(duration = 6000, resIndex = 50, onComplete = {})
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AppStartTextAnimation(duration: Int, resIndex: Int?, onComplete: () -> Unit = {}) {
+fun AppStartTextAnimation(duration: Int, resIndex: Int?, onComplete: () -> Unit) {
 
     if (duration == 0) {
         onComplete()

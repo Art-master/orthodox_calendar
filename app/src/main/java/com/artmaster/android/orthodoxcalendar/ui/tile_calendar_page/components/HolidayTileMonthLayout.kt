@@ -63,7 +63,7 @@ fun Preview() {
         mutableStateOf<List<Day>>(days)
     }
 
-    HolidayTileMonthLayout(data = monthData, dayOfMonth = 4)
+    HolidayTileMonthLayout(data = monthData, dayOfMonth = 4, onHolidayClick = {}, onDayClick = {})
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -72,8 +72,8 @@ fun HolidayTileMonthLayout(
     modifier: Modifier = Modifier,
     data: MutableState<List<Day>>,
     dayOfMonth: Int,
-    onDayClick: (day: Day) -> Unit = {},
-    onHolidayClick: (holiday: Holiday) -> Unit = {}
+    onDayClick: (day: Day) -> Unit,
+    onHolidayClick: (holiday: Holiday) -> Unit
 ) {
 
     val state = rememberBottomSheetState(BottomSheetValue.Collapsed)

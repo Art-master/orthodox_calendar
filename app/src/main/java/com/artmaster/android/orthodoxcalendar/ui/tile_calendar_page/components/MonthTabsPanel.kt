@@ -6,8 +6,10 @@ import androidx.compose.material.TabPosition
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.res.stringArrayResource
@@ -46,7 +48,7 @@ fun ShowTabs() {
 fun MonthTabs(
     currentPage: Int,
     indicator: @Composable @UiComposable (tabPositions: List<TabPosition>) -> Unit,
-    onClick: (month: Int) -> Unit = {}
+    onClick: ((month: Int) -> Unit)? = null
 ) {
     val items = stringArrayResource(id = R.array.months_names_gen)
     val monthNames = remember { items }
@@ -59,10 +61,11 @@ fun MonthTabs(
     ) {
         monthNames.forEachIndexed { index, title ->
             key(title) {
+                val onItemClickRemembered by rememberUpdatedState { onClick?.invoke(index) ?: Unit }
                 Tab(
                     text = { MonthName(title = title) },
                     selected = currentPage == index,
-                    onClick = { onClick.invoke(index) },
+                    onClick = onItemClickRemembered,
                 )
             }
         }

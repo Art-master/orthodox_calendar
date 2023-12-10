@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,7 +37,7 @@ fun ShowTabs() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
+fun YearsTabs(pagerState: PagerState, onClick: ((yearIndex: Int) -> Unit)? = null) {
     val items by remember {
         mutableStateOf(getYears(Time().year))
     }
@@ -53,10 +54,11 @@ fun YearsTabs(pagerState: PagerState, onClick: (yearIndex: Int) -> Unit = {}) {
     ) {
         items.forEachIndexed { index, title ->
             key(title) {
+                val onItemClickRemembered by rememberUpdatedState { onClick?.invoke(index) ?: Unit }
                 Tab(
                     text = { YearName(title = title) },
                     selected = pagerState.currentPage == index,
-                    onClick = { onClick(index) },
+                    onClick = onItemClickRemembered,
                 )
             }
         }

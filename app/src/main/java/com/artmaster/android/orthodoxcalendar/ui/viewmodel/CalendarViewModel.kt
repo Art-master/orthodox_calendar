@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
+@Immutable
 class CalendarViewModel : ViewModel(), ICalendarViewModel {
     private val preferences = App.appComponent.getPreferences()
     private val repository = App.appComponent.getRepository()
@@ -176,13 +178,13 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         }
     }
 
-    override fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit) {
+    override fun deleteHoliday(id: Long, onComplete: ((id: Long) -> Unit)?) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.deleteById(id)
                 clearCaches()
                 withContext(Dispatchers.Main) {
-                    onComplete(id)
+                    onComplete?.invoke(id)
                 }
             }
         }

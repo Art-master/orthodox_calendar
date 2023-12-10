@@ -37,7 +37,10 @@ import kotlin.math.absoluteValue
 fun HolidayListLayoutPreview() {
     MaterialTheme {
         CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-            HolidayPagerListLayout(viewModel = CalendarViewModelFake())
+            HolidayPagerListLayout(
+                viewModel = CalendarViewModelFake(),
+                onDayClick = {},
+                onHolidayClick = {})
         }
     }
 }
@@ -46,8 +49,8 @@ fun HolidayListLayoutPreview() {
 @Composable
 fun HolidayPagerListLayout(
     viewModel: ICalendarViewModel,
-    onDayClick: (day: Day) -> Unit = {},
-    onHolidayClick: (day: Holiday) -> Unit = {},
+    onDayClick: (day: Day) -> Unit,
+    onHolidayClick: (day: Holiday) -> Unit,
 ) {
 
     val availableYears = viewModel.getAvailableYears()

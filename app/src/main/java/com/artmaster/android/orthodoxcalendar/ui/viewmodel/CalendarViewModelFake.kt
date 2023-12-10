@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.artmaster.android.orthodoxcalendar.common.Constants
@@ -71,7 +72,7 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
 
     }
 
-    override fun deleteHoliday(id: Long, onComplete: (id: Long) -> Unit) {
+    override fun deleteHoliday(id: Long, onComplete: ((id: Long) -> Unit)?) {
 
     }
 
@@ -79,21 +80,21 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
 
     }
 
-    override fun getYear() = mutableStateOf(initTime.year)
+    override fun getYear() = mutableIntStateOf(initTime.year)
 
     override fun setMonth(month: Int) {
 
     }
 
-    override fun getMonth() = mutableStateOf(2)
+    override fun getMonth() = mutableIntStateOf(2)
 
     override fun setDayOfMonth(day: Int) {
 
     }
 
-    override fun getDayOfMonth() = mutableStateOf(2)
+    override fun getDayOfMonth() = mutableIntStateOf(2)
 
-    override fun getDayOfYear() = mutableStateOf(32)
+    override fun getDayOfYear() = mutableIntStateOf(32)
     override fun setDayOfYear(day: Int) {
 
     }
@@ -103,7 +104,7 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
         return mutableStateOf((1..30).map {
             val dayOfMonth = (it % 30)
             val dayInWeek = (it % 7)
-            val holidays = generateHolidays(monthNum, dayOfMonth, dayInWeek);
+            val holidays = generateHolidays(monthNum, dayOfMonth, dayInWeek)
             Day(initTime.year, monthNum, dayOfMonth, dayInWeek, holidays)
         }
             .toList())
@@ -114,7 +115,7 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
             val month = (it % 11)
             val dayOfMonth = (it % 30)
             val dayInWeek = (it % 7)
-            val holidays = generateHolidays(month, dayOfMonth, dayInWeek);
+            val holidays = generateHolidays(month, dayOfMonth, dayInWeek)
             Day(initTime.year, month, dayOfMonth, dayInWeek, holidays)
         }
             .toList())

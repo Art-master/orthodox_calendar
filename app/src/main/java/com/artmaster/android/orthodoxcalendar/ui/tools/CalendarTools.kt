@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -106,7 +107,8 @@ private const val ANIMATION_DURATION_MS = 500
 fun ToolsPreview() {
     CalendarToolsDrawer(
         viewModel = CalendarViewModelFake(),
-        settingsViewModel = SettingsViewModelFake()
+        settingsViewModel = SettingsViewModelFake(),
+        onToolClick = {}
     ) {}
 }
 
@@ -115,7 +117,8 @@ fun ToolsPreview() {
 fun ToolsPreviewTablet() {
     CalendarToolsDrawer(
         viewModel = CalendarViewModelFake(),
-        settingsViewModel = SettingsViewModelFake()
+        settingsViewModel = SettingsViewModelFake(),
+        onToolClick = {}
     ) {}
 }
 
@@ -123,7 +126,7 @@ fun ToolsPreviewTablet() {
 fun CalendarToolsDrawer(
     viewModel: ICalendarViewModel,
     settingsViewModel: ISettingsViewModel,
-    onToolClick: (MultiFabItem) -> Unit = {},
+    onToolClick: (MultiFabItem) -> Unit,
     content: @Composable () -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -203,8 +206,8 @@ fun Tools(
     parent: BoxScope,
     isVisible: Boolean = true,
     multiToolState: MultitoolState = COLLAPSED,
-    stateChanged: (fabstate: MultitoolState) -> Unit = {},
-    onItemClicked: (item: MultiFabItem) -> Unit = {}
+    stateChanged: (fabstate: MultitoolState) -> Unit,
+    onItemClicked: (item: MultiFabItem) -> Unit
 ) {
 
     MultiFloatingActionButton(
@@ -275,6 +278,14 @@ fun MultiFloatingActionButton(
             if (state == EXPANDED) 180f else 0f
         }
 
+        val stateChangedRemembered by rememberUpdatedState {
+            stateChanged(
+                if (transition.currentState == EXPANDED) {
+                    COLLAPSED
+                } else EXPANDED
+            )
+        }
+
         val textMeasurer = rememberTextMeasurer()
         var hasBadges: Boolean
 
@@ -323,13 +334,8 @@ fun MultiFloatingActionButton(
                 backgroundColor = FloatingButtonColorLight,
                 contentColor = FiltersContentColor,
                 elevation = FloatingActionButtonDefaults.elevation(2.dp),
-                onClick = {
-                    stateChanged(
-                        if (transition.currentState == EXPANDED) {
-                            COLLAPSED
-                        } else EXPANDED
-                    )
-                }) {
+                onClick = stateChangedRemembered
+            ) {
                 Icon(
                     painter = fabIcon,
                     contentDescription = "",
@@ -437,6 +443,7 @@ private fun MiniFabItem(
     onFabItemClicked: (item: MultiFabItem) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val onFabItemClickedRemembered by rememberUpdatedState { onFabItemClicked(item) }
     val textMeasurer = rememberTextMeasurer()
 
     Row(
@@ -464,7 +471,7 @@ private fun MiniFabItem(
                     )
                     .background(color = FloatingButtonColorLight)
                     .padding(start = 6.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
-                    .clickable(onClick = { onFabItemClicked(item) })
+                    .clickable(onClick = onFabItemClickedRemembered)
             )
             Spacer(modifier = Modifier.width(16.dp))
         }
@@ -479,7 +486,7 @@ private fun MiniFabItem(
                     ),
                     interactionSource = interactionSource
                 )
-                .clickable(onClick = { onFabItemClicked(item) })
+                .clickable(onClick = onFabItemClickedRemembered)
         ) {
             val calculatedBtnSize = (size.height / 1.5).toFloat()
             val radius = if (scale >= calculatedBtnSize) calculatedBtnSize else scale

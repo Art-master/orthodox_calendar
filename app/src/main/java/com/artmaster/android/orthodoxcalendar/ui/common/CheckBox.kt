@@ -9,6 +9,8 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
@@ -27,7 +29,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 fun CustomCheckBoxPreview() {
     AppTheme {
         Column(Modifier.fillMaxSize()) {
-            CheckBox(title = "Какое-то название", state = false)
+            CheckBox(title = "Какое-то название", state = false, onCheck = {})
         }
     }
 }
@@ -38,8 +40,9 @@ fun CheckBox(
     modifier: Modifier = Modifier,
     title: String,
     state: Boolean,
-    onCheck: (value: Boolean) -> Unit = {}
+    onCheck: (value: Boolean) -> Unit
 ) {
+    val onCheckboxClick by rememberUpdatedState { onCheck(state.not()) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -56,9 +59,7 @@ fun CheckBox(
         Text(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
-                    onCheck(state.not())
-                }
+                .clickable(onClick = onCheckboxClick)
                 .then(modifier),
             text = title,
             fontSize = 20.sp,

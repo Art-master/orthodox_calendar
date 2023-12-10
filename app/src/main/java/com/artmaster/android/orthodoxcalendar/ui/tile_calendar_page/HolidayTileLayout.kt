@@ -74,8 +74,8 @@ fun PreviewLayout() {
 @Composable
 fun HolidayTileLayout(
     viewModel: CalendarViewModel,
-    onDayClick: (day: Day) -> Unit = {},
-    onHolidayClick: (day: Holiday) -> Unit = {},
+    onDayClick: (day: Day) -> Unit,
+    onHolidayClick: (day: Holiday) -> Unit,
 ) {
     val monthNum by viewModel.getMonth()
     val currentYear by viewModel.getYear()

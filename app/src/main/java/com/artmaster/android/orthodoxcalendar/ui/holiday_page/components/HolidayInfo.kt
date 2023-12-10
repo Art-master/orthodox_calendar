@@ -57,7 +57,12 @@ fun HolidayPagePreview() {
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
-    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
+    HolidayPage(
+        viewModel = null,
+        holiday = holiday,
+        titleHeightInitSize = 800,
+        onEditClick = {},
+        onDeleteClick = {})
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -74,7 +79,12 @@ fun UserHolidayPagePreview() {
         description = ""
     )
 
-    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
+    HolidayPage(
+        viewModel = null,
+        holiday = holiday,
+        titleHeightInitSize = 800,
+        onEditClick = {},
+        onDeleteClick = {})
 }
 
 
@@ -84,8 +94,8 @@ fun HolidayPage(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel?,
     holiday: Holiday,
-    onEditClick: (holiday: Holiday) -> Unit = {},
-    onDeleteClick: (holiday: Holiday) -> Unit = {},
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
     titleHeightInitSize: Int = 0 //initial state for preview
 ) {
 
