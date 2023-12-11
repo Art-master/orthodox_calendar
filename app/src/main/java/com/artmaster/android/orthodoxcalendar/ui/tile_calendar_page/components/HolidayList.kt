@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -215,24 +217,31 @@ fun OneDayHolidayList(
     headerHeight: Dp = 93.dp,
     onHolidayClick: (holiday: Holiday) -> Unit
 ) {
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val scroll = rememberScrollState()
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.8f)
-            .padding(top = 15.dp)
+            .fillMaxWidth(if (isLandscape) 0.8f else 1f)
+            .fillMaxHeight(if (isLandscape) 1f else 0.8f)
+            .padding(top = if (isLandscape) 0.dp else 15.dp)
     ) {
 
-        ItemHeader(day = day, showDaysOfWeek = true, headerHeight = headerHeight)
+        if (isLandscape.not()) {
+            ItemHeader(day = day, showDaysOfWeek = true, headerHeight = headerHeight)
+            Divider()
+        }
 
-        Divider()
         Column(
             modifier = Modifier
                 .verticalScroll(scroll)
                 .fillMaxSize()
-                .padding(top = 10.dp)
+                .padding(top = if (isLandscape) 0.dp else 10.dp)
         ) {
+            if (isLandscape) { // if landscape orientation than move header into scroller
+                ItemHeader(day = day, showDaysOfWeek = true)
+                Divider()
+            }
             if (day.holidays.isNotEmpty()) {
                 HolidayList(day = day, onHolidayClick = onHolidayClick)
             } else NoItems()

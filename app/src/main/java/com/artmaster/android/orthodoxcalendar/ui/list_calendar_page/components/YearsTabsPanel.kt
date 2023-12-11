@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Time
@@ -56,6 +58,7 @@ fun YearsTabs(pagerState: PagerState, onClick: ((yearIndex: Int) -> Unit)? = nul
             key(title) {
                 val onItemClickRemembered by rememberUpdatedState { onClick?.invoke(index) ?: Unit }
                 Tab(
+                    modifier = Modifier.height(40.dp),
                     text = { YearName(title = title) },
                     selected = pagerState.currentPage == index,
                     onClick = onItemClickRemembered,

@@ -1,4 +1,4 @@
-package com.c23v.ui.theme
+package com.artmaster.android.orthodoxcalendar.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

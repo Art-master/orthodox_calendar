@@ -9,6 +9,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Filter
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import kotlin.random.Random
 
 class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
 
@@ -138,6 +139,7 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
         dayOfMonth: Int,
         dayInWeek: Int,
     ): ArrayList<Holiday> {
+        val randomHolidayType = Random.nextInt(Holiday.Type.entries.size - 1)
         return (1..5).map {
             Holiday(
                 year = initTime.year,
@@ -145,8 +147,7 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
                 day = dayOfMonth,
                 title = "Какой-то великий праздник $it",
                 id = it.toLong(),
-                typeId = if (it % 4 == 0) Holiday.Type.TWELVE_MOVABLE.id
-                else Holiday.Type.AVERAGE_PEPPY.id
+                typeId = Holiday.Type.entries[randomHolidayType].id
             )
         }
             .toList() as ArrayList<Holiday>

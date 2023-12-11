@@ -45,7 +45,7 @@ fun HolidayItem(holiday: Holiday, onClick: ((holiday: Holiday) -> Unit)? = null)
     val onHolidayClick by rememberUpdatedState { onClick?.invoke(holiday) ?: Unit }
     Row(
         modifier = Modifier
-            .padding(top = 10.dp)
+            .padding(top = 5.dp)
             .clickable(onClick = onHolidayClick)
     ) {
         Text(
