@@ -108,7 +108,7 @@ fun HolidayTileMonthLayoutLandscape(
     onHolidayClick: (holiday: Holiday) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 15.dp),
+        modifier = Modifier.padding(1.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (data.value.isEmpty()) {

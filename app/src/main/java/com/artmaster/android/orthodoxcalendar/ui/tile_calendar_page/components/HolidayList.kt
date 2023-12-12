@@ -183,6 +183,7 @@ fun HolidayList(
                         showDaysOfWeek = false,
                         onClick = onDayClick
                     )
+                    Spacer(modifier = Modifier.height(10.0.dp))
                     HolidayList(day = day, onHolidayClick = onHolidayClick)
                 }
             }
