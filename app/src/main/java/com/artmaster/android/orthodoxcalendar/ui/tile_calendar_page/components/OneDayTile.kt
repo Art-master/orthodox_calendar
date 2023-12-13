@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
@@ -135,10 +136,11 @@ fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: ((holiday: Day)
     val holidayColor = remember { getTypeHolidayColor(day) }
     val fontColor = remember { getTypeHolidayFontColor(day, holidayColor) }
     val onDayClick by rememberUpdatedState { onClick?.invoke(day) ?: Unit }
+    val interactionSource = remember { MutableInteractionSource() }
 
     Box(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .aspectRatio(1f)
             .background(holidayColor, shape = RoundedCornerShape(6.dp))
             .border(
@@ -146,12 +148,24 @@ fun DayOfMonthTile(day: Day, isActive: Boolean = false, onClick: ((holiday: Day)
                 color = if (isActive) Color.Black else TileBorderColor,
                 shape = RoundedCornerShape(6.dp)
             )
-            .clickable(onClick = onDayClick)
+            .clickable(
+                onClick = onDayClick,
+                enabled = true,
+                indication = null,
+                interactionSource = interactionSource
+            )
     ) {
         Text(
             modifier = Modifier
                 .fillMaxSize(0.7f)
-                .padding(start = 2.dp, top = 1.dp),
+                .padding(start = 2.dp, top = 1.dp)
+                .clickable(
+                    onClick = onDayClick,
+                    enabled = true,
+                    indication = null,
+                    interactionSource = interactionSource
+                ),
+
             text = day.dayOfMonth.toString(),
             fontSize = with(LocalDensity.current) {
                 (20 / fontScale).sp
@@ -263,6 +277,10 @@ fun PermissionImage(resId: Int, modifier: Modifier) {
     Image(
         modifier = Modifier
             .then(modifier)
+            .clickable(
+                enabled = false,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }) {}
             .rotate(0f)
             .fillMaxSize(0.25f),
         painter = painterResource(id = resId),

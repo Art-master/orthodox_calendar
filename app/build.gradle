@@ -62,7 +62,7 @@ android {
         freeCompilerArgs = ["-opt-in=kotlin.RequiresOptIn", "-Xjvm-default=all"]
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
     namespace 'com.artmaster.android.orthodoxcalendar'
     compileSdk 34
@@ -80,7 +80,7 @@ dependencies {
 
     //Compose
     implementation "androidx.compose.ui:ui:1.5.4"
-    implementation "androidx.compose.compiler:compiler:1.5.5"
+    implementation "androidx.compose.compiler:compiler:1.5.6"
 
     // Material Design
     def material_version = "1.5.4"
@@ -133,7 +133,7 @@ dependencies {
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation "androidx.core:core-ktx:1.12.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"

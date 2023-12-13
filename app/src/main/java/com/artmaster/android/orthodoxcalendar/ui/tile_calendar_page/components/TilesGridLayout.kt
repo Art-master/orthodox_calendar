@@ -54,12 +54,13 @@ fun TilesGridLayout(
     LazyVerticalGrid(
         modifier = if (isLandscape) Modifier
             .fillMaxHeight()
-            .fillMaxWidth(0.45f)
+            .fillMaxWidth(0.42f)
         else Modifier.fillMaxWidth(),
 
         columns = GridCells.Fixed(MAX_COLUMN_COUNT),
-        userScrollEnabled = false,
+        userScrollEnabled = true,
         horizontalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         contentPadding = PaddingValues(1.dp)
     ) {
         items(MAX_COLUMN_COUNT * DAYS_IN_WEEK_COUNT) { item ->

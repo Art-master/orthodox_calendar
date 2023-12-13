@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,8 @@ import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,13 +31,17 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 @Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
 @Composable
 fun Preview() {
-    val model = CalendarViewModelFake();
+    val model = CalendarViewModelFake()
+    val dayOfMonth = remember { mutableIntStateOf(1) }
 
     HolidayTileMonthLayout(
         data = model.getCurrentMonthData(1),
-        dayOfMonth = 4,
-        onHolidayClick = {},
-        onDayClick = {})
+        dayOfMonth = dayOfMonth.intValue,
+        onHolidayClick = {
+        },
+        onDayClick = {
+            dayOfMonth.intValue = it.dayOfMonth
+        })
 }
 
 @Composable
@@ -107,15 +114,12 @@ fun HolidayTileMonthLayoutLandscape(
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (holiday: Holiday) -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(1.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         if (data.value.isEmpty()) {
             Spinner()
         } else {
             val day = getDay(data.value, dayOfMonth)
-            Row {
+            Row(modifier = Modifier.fillMaxHeight()) {
                 TilesGridLayout(data, day.dayOfMonth, onDayClick)
                 Spacer(modifier = Modifier.height(10.0.dp))
                 OneDayHolidayList(
