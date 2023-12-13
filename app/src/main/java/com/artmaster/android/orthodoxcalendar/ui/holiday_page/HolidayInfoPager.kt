@@ -3,6 +3,7 @@ package com.artmaster.android.orthodoxcalendar.ui.holiday_page
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -16,7 +17,8 @@ import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayPage
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
-import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -24,14 +26,18 @@ import com.google.accompanist.pager.rememberPagerState
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
 @Composable
 fun HolidayInfoPagerPreview() {
-    HolidayInfoPager(viewModel = null, holidayId = 0L, onDeleteClick = {}, onEditClick = {})
+    HolidayInfoPager(
+        viewModel = CalendarViewModelFake(),
+        holidayId = 1L,
+        onDeleteClick = {},
+        onEditClick = {})
 }
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayInfoPager(
-    viewModel: CalendarViewModel?,
+    viewModel: ICalendarViewModel?,
     holidayId: Long,
     onEditClick: (holiday: Holiday) -> Unit,
     onDeleteClick: (holiday: Holiday) -> Unit
@@ -41,7 +47,7 @@ fun HolidayInfoPager(
     var isInit by remember { mutableStateOf(false) }
 
     val year = viewModel.getYear().value
-    var currentHolidayIndex by remember { mutableStateOf(0) }
+    var currentHolidayIndex by remember { mutableIntStateOf(0) }
     var holidays by remember { mutableStateOf(emptyList<Holiday>()) }
 
 
@@ -71,7 +77,8 @@ fun HolidayInfoPager(
             viewModel = viewModel,
             holiday = holidays[page],
             onEditClick = onEditClick,
-            onDeleteClick = onDeleteClick
+            onDeleteClick = onDeleteClick,
+            titleHeightInitSize = 30
         )
     }
 }

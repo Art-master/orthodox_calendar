@@ -2,6 +2,7 @@ package com.artmaster.android.orthodoxcalendar.ui.viewmodel
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,10 +26,10 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
 
     private val initTime = Time()
 
-    private val dayOfMonth = mutableStateOf(initTime.dayOfMonth)
-    private val dayOfYear = mutableStateOf(initTime.dayOfYear)
-    private val month = mutableStateOf(initTime.monthWith0)
-    private val year = mutableStateOf(initTime.year)
+    private val dayOfMonth = mutableIntStateOf(initTime.dayOfMonth)
+    private val dayOfYear = mutableIntStateOf(initTime.dayOfYear)
+    private val month = mutableIntStateOf(initTime.monthWith0)
+    private val year = mutableIntStateOf(initTime.year)
     private val availableYears = getAvailableYears(currentYear = initTime.year)
 
     private val daysByMonthCache = HashMap<Int, MutableState<List<Day>>>(MONTH_COUNT)
@@ -220,33 +221,33 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
             set(Calendar.MONTH, month)
             set(Calendar.DAY_OF_MONTH, 0)
         }
-        if (dayOfMonth.value > initTime.daysInMonth) {
-            dayOfMonth.value = initTime.daysInMonth
+        if (dayOfMonth.intValue > initTime.daysInMonth) {
+            dayOfMonth.intValue = initTime.daysInMonth
         }
     }
 
     override fun getMonth() = month
 
     override fun setDayOfMonth(day: Int) {
-        dayOfMonth.value = day
+        dayOfMonth.intValue = day
 
         initTime.calendar.apply {
-            set(Calendar.YEAR, year.value)
-            set(Calendar.MONTH, month.value)
-            set(Calendar.DAY_OF_MONTH, dayOfMonth.value)
+            set(Calendar.YEAR, year.intValue)
+            set(Calendar.MONTH, month.intValue)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth.intValue)
         }
 
-        dayOfYear.value = initTime.dayOfYear
+        dayOfYear.intValue = initTime.dayOfYear
     }
 
     override fun getDayOfMonth() = dayOfMonth
 
     override fun getDayOfYear() = dayOfYear
     override fun setDayOfYear(day: Int) {
-        dayOfYear.value = day
+        dayOfYear.intValue = day
 
-        initTime.calendar.set(year.value, month.value, day)
-        dayOfMonth.value = initTime.dayOfMonth
+        initTime.calendar.set(year.intValue, month.intValue, day)
+        dayOfMonth.intValue = initTime.dayOfMonth
     }
 
 
@@ -266,24 +267,37 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
 
     override suspend fun getFullHolidayById(id: Long): Holiday {
         return withContext(Dispatchers.IO) {
-            repository.getFullHolidayData(id, year.value)
+            repository.getFullHolidayData(id, year.intValue)
         }
     }
 
+    override fun getHolidayById(id: Long): Holiday {
+        for (data in daysByYearsCache.entries) {
+            for (day in data.value.value) {
+                for (holiday in day.holidays) {
+                    if (holiday.id == id) {
+                        return holiday
+                    }
+                }
+            }
+        }
+        throw IllegalStateException("Не найдено праздника id=$id")
+    }
+
     override fun getAllHolidaysOfYear(): List<Holiday> {
-        val days = daysByYearsCache[year.value]?.value?.flatMap { d -> d.holidays }
+        val days = daysByYearsCache[year.intValue]?.value?.flatMap { d -> d.holidays }
         return days!!
     }
 
     override fun resetTime() {
         val now = Time()
-        if (now.year != year.value) {
+        if (now.year != year.intValue) {
             setYear(now.year)
         }
-        if (now.monthWith0 != month.value) {
+        if (now.monthWith0 != month.intValue) {
             setMonth(now.monthWith0)
         }
-        if (now.dayOfMonth != dayOfMonth.value) {
+        if (now.dayOfMonth != dayOfMonth.intValue) {
             setDayOfMonth(now.dayOfMonth)
         }
     }

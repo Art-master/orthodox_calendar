@@ -31,6 +31,7 @@ interface ICalendarViewModel {
     fun getCurrentYearData(yearNum: Int): MutableState<List<Day>>
     suspend fun getFullHolidayInfo(holidayId: Long, year: Int): Holiday
     suspend fun getFullHolidayById(id: Long): Holiday
+    fun getHolidayById(id: Long): Holiday
     fun getAllHolidaysOfYear(): List<Holiday>
     fun resetTime()
     fun firstLoadingTileCalendar(): Boolean

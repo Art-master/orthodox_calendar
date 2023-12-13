@@ -44,7 +44,8 @@ import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
-import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import java.util.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -80,7 +81,7 @@ fun UserHolidayPagePreview() {
     )
 
     HolidayPage(
-        viewModel = null,
+        viewModel = CalendarViewModelFake(),
         holiday = holiday,
         titleHeightInitSize = 800,
         onEditClick = {},
@@ -92,7 +93,7 @@ fun UserHolidayPagePreview() {
 @Composable
 fun HolidayPage(
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel?,
+    viewModel: ICalendarViewModel?,
     holiday: Holiday,
     onEditClick: (holiday: Holiday) -> Unit,
     onDeleteClick: (holiday: Holiday) -> Unit,
@@ -110,9 +111,10 @@ fun HolidayPage(
 
     val scroll = rememberScrollState(0)
     val modalState = remember { mutableStateOf(false) }
-    var titleHeight by rememberSaveable { mutableStateOf(titleHeightInitSize) }
+    var titleHeight by rememberSaveable { mutableIntStateOf(titleHeightInitSize) }
     val titlePadding = with(LocalDensity.current) {
-        configuration.screenHeightDp.dp - titleHeight.toDp()
+        val value = configuration.screenHeightDp.dp - titleHeight.toDp()
+        if (value.value > 0) value else 10.dp
     }
 
     val imageHeight = (configuration.screenHeightDp / 1.2).dp

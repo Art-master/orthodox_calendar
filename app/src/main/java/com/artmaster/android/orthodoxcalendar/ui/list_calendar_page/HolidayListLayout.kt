@@ -22,7 +22,7 @@ import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayList
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayListWrapper
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -104,7 +104,7 @@ fun HolidayPagerListLayout(
             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
             if (needToShowLayout(pageOffset)) {
-                HolidayList(
+                HolidayListWrapper(
                     //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                     data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
                     viewModel = viewModel,

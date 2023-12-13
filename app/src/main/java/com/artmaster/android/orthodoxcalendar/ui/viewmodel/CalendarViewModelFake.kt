@@ -126,6 +126,10 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
         return Holiday()
     }
 
+    override fun getHolidayById(id: Long): Holiday {
+        return Holiday()
+    }
+
     override suspend fun getFullHolidayById(id: Long): Holiday {
         return Holiday()
     }
