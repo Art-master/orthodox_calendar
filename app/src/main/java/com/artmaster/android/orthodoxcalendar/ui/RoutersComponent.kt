@@ -40,6 +40,18 @@ fun AppNavigationComponent(
         }
     }
 
+    val onEditClick = remember {
+        { holiday: Holiday ->
+            navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/${holiday.id}")
+        }
+    }
+    val onDeleteClick = remember {
+        { holiday: Holiday ->
+            calendarViewModel.deleteHoliday(holiday.id)
+            navigateToCalendar(navController)
+        }
+    }
+
     val onToolItemClick = remember {
         { item: MultiFabItem ->
             when (item.identifier) {
@@ -96,6 +108,8 @@ fun AppNavigationComponent(
                     HolidayPagerListLayout(
                         calendarViewModel,
                         onDayClick,
+                        onEditClick,
+                        onDeleteClick,
                         onHolidayClick
                     )
 
@@ -103,18 +117,6 @@ fun AppNavigationComponent(
             } else Spinner()
         }
         composable("${Navigation.HOLIDAY_PAGE.route}/{id}") { backStackEntry ->
-            val onEditClick = remember {
-                { holiday: Holiday ->
-                    navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/${holiday.id}")
-                }
-            }
-            val onDeleteClick = remember {
-                { holiday: Holiday ->
-                    calendarViewModel.deleteHoliday(holiday.id)
-                    navigateToCalendar(navController)
-                }
-            }
-
             val id = backStackEntry.arguments!!.getString("id")!!
             HolidayInfoPager(
                 viewModel = calendarViewModel,

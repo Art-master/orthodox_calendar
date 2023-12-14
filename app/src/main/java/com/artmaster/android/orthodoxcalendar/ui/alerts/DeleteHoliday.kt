@@ -39,7 +39,7 @@ fun DeleteHolidayDialog(
 
     val onClickRejectRemembered by rememberUpdatedState {
         openDialog = false
-        onConfirmClick()
+        onRejectClick()
     }
 
 
@@ -57,12 +57,12 @@ fun DeleteHolidayDialog(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     StyledButton(
-                        title = stringResource(id = R.string.button_reject),
+                        title = stringResource(id = R.string.button_confirm),
                         modifier = Modifier.weight(1f),
                         onClick = onClickConfirmRemembered
                     )
                     StyledButton(
-                        title = stringResource(id = R.string.button_confirm),
+                        title = stringResource(id = R.string.button_reject),
                         modifier = Modifier.weight(1f),
                         onClick = onClickRejectRemembered
                     )

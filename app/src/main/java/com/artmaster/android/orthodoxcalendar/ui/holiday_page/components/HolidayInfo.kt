@@ -97,13 +97,14 @@ fun HolidayPage(
     holiday: Holiday,
     onEditClick: (holiday: Holiday) -> Unit,
     onDeleteClick: (holiday: Holiday) -> Unit,
+    isHeaderEnable: Boolean = true,
     titleHeightInitSize: Int = 0 //initial state for preview
 ) {
 
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
-    val drawableId = remember {
+    val drawableId = remember(holiday.id) {
         val imageId = holiday.imageId
         if (imageId.isEmpty()) return@remember 0
         context.resources.getIdentifier(imageId, "drawable", context.packageName)
@@ -139,7 +140,6 @@ fun HolidayPage(
             NoImageLayout(imageHeight)
         }
 
-
         if (holiday.isCreatedByUser) {
             UserHolidayControlMenu(
                 modifier = Modifier
@@ -161,21 +161,25 @@ fun HolidayPage(
                 modifier = Modifier
                     .drawBehind {
                         // Shadow
-                        drawRoundRect(
-                            color = Color.Black,
-                            topLeft = Offset(0f, -10f),
-                            alpha = 0.3f,
-                            cornerRadius = CornerRadius(40f, 40f)
-                        )
+                        if (isHeaderEnable) {
+                            drawRoundRect(
+                                color = Color.Black,
+                                topLeft = Offset(0f, -10f),
+                                alpha = 0.3f,
+                                cornerRadius = CornerRadius(40f, 40f)
+                            )
+                        }
                     }
                     .clip(RoundedCornerShape(20.dp))
                     .background(Background)
             ) {
-                HolidayPageTitle(
-                    modifier = Modifier.onSizeChanged { titleHeight = it.height },
-                    holiday = holiday,
-                    currentYear = viewModel?.getYear()?.value ?: Time().year
-                )
+                if (isHeaderEnable) {
+                    HolidayPageTitle(
+                        modifier = Modifier.onSizeChanged { titleHeight = it.height },
+                        holiday = holiday,
+                        currentYear = viewModel?.getYear()?.value ?: Time().year
+                    )
+                }
 
                 var scrollActivate by remember { mutableStateOf(false) }
                 var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }

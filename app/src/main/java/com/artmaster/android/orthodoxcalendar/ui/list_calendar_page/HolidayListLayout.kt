@@ -40,6 +40,8 @@ fun HolidayListLayoutPreview() {
             HolidayPagerListLayout(
                 viewModel = CalendarViewModelFake(),
                 onDayClick = {},
+                onEditClick = {},
+                onDeleteClick = {},
                 onHolidayClick = {})
         }
     }
@@ -50,6 +52,8 @@ fun HolidayListLayoutPreview() {
 fun HolidayPagerListLayout(
     viewModel: ICalendarViewModel,
     onDayClick: (day: Day) -> Unit,
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
     onHolidayClick: (day: Holiday) -> Unit,
 ) {
 
@@ -109,6 +113,8 @@ fun HolidayPagerListLayout(
                     data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
                     viewModel = viewModel,
                     onDayClick = onDayClick,
+                    onEditClick = onEditClick,
+                    onDeleteClick = onDeleteClick,
                     onHolidayClick = onHolidayClick
                 )
             }

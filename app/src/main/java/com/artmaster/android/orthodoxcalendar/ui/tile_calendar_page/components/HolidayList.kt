@@ -110,12 +110,14 @@ fun HolidayListWrapper(
     data: MutableState<List<Day>>,
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (day: Holiday) -> Unit,
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
     viewModel: ICalendarViewModel
 ) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     if (isLandscape) {
-        HolidayListLandscape(modifier, data, onDayClick, viewModel)
+        HolidayListLandscape(modifier, data, onDayClick, onEditClick, onDeleteClick, viewModel)
     } else {
         HolidayList(modifier, data, onDayClick, onHolidayClick, viewModel)
     }
@@ -170,15 +172,19 @@ fun HolidayListLandscape(
     modifier: Modifier = Modifier,
     data: MutableState<List<Day>>,
     onDayClick: (day: Day) -> Unit,
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
     viewModel: ICalendarViewModel
 ) {
     val listState = rememberLazyListState()
     val dayOfYear = viewModel.getDayOfYear()
 
-    val holiday = rememberSaveable(data.value.isNotEmpty()) {
-        val currentDayNum = viewModel.getDayOfYear()
+    val holiday = rememberSaveable(data.value) {
         val current = if (data.value.isNotEmpty()) {
-            data.value[currentDayNum.value.dec()].holidays.first()
+            val holidays = data.value[dayOfYear.value.dec()].holidays
+            if (holidays.isEmpty()) {
+                viewModel.getAllHolidaysOfYear().first()
+            } else holidays.first()
         } else null
 
         mutableStateOf(current)
@@ -224,8 +230,9 @@ fun HolidayListLandscape(
                 //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
                 viewModel = viewModel,
                 holiday = it,
-                onEditClick = {},
-                onDeleteClick = {},
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+                isHeaderEnable = false,
                 titleHeightInitSize = 100
             )
         }

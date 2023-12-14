@@ -297,20 +297,23 @@ fun MultiFloatingActionButton(
             verticalArrangement = Arrangement.Bottom
         ) {
             hasBadges = false
-            items.forEach { item ->
-                if (item.eventsCount > 0) hasBadges = true
-                MiniFabItem(
-                    item = item,
-                    alpha = alpha,
-                    shadow = shadow,
-                    scale = scale,
-                    withDot = item.eventsCount > 0,
-                    dotText = item.eventsCount.toString(),
-                    showLabel = showLabels,
-                    onFabItemClicked = onFabItemClicked
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+            if (alpha > 0f) {
+                items.forEach { item ->
+                    if (item.eventsCount > 0) hasBadges = true
+                    MiniFabItem(
+                        item = item,
+                        alpha = alpha,
+                        shadow = shadow,
+                        scale = scale,
+                        withDot = item.eventsCount > 0,
+                        dotText = item.eventsCount.toString(),
+                        showLabel = showLabels,
+                        onFabItemClicked = onFabItemClicked
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
+
             FloatingActionButton(
                 modifier = Modifier
                     .alpha(if (alpha < MAIN_BUTTON_ALPHA) MAIN_BUTTON_ALPHA else alpha)
