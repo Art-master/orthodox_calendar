@@ -41,6 +41,8 @@ class Settings {
         ),
         HIDE_TOOL_PANEL("$PROJECT_DIR.hide_tool_panel", FALSE),
         TOOL_PANEL_MOVE_TO_LEFT("$PROJECT_DIR.tool_panel_move_to_left", FALSE),
+        HIDE_HORIZONTAL_YEARS_TAB("$PROJECT_DIR.hide_horizontal_years_tab", FALSE),
+        HIDE_HORIZONTAL_MONTHS_TAB("$PROJECT_DIR.hide_horizontal_months_tab", FALSE),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),

@@ -7,6 +7,6 @@ import com.artmaster.android.orthodoxcalendar.common.Settings
 @Immutable
 interface ISettingsViewModel {
     val isInit: MutableState<Boolean>
-    fun getSetting(setting: Settings.Name): MutableState<String>?
+    fun getSetting(setting: Settings.Name): MutableState<String>
     fun setSetting(setting: Settings.Name, value: String)
 }

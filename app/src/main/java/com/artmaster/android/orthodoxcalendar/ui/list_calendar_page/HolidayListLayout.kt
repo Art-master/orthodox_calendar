@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.common.Constants
+
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_YEARS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
@@ -25,6 +27,8 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayListWrapper
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -39,6 +43,7 @@ fun HolidayListLayoutPreview() {
         CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
             HolidayPagerListLayout(
                 viewModel = CalendarViewModelFake(),
+                settingsViewModel = SettingsViewModelFake(),
                 onDayClick = {},
                 onEditClick = {},
                 onDeleteClick = {},
@@ -51,6 +56,7 @@ fun HolidayListLayoutPreview() {
 @Composable
 fun HolidayPagerListLayout(
     viewModel: ICalendarViewModel,
+    settingsViewModel: ISettingsViewModel,
     onDayClick: (day: Day) -> Unit,
     onEditClick: (holiday: Holiday) -> Unit,
     onDeleteClick: (holiday: Holiday) -> Unit,
@@ -93,10 +99,11 @@ fun HolidayPagerListLayout(
     }
 
     Column(Modifier.fillMaxHeight()) {
-
-        YearsTabs(pagerState = pagerState) {
-            scope.launch {
-                pagerState.scrollToPage(it)
+        if (!settingsViewModel.getSetting(HIDE_HORIZONTAL_YEARS_TAB).value.toBoolean()) {
+            YearsTabs(pagerState = pagerState) {
+                scope.launch {
+                    pagerState.scrollToPage(it)
+                }
             }
         }
 

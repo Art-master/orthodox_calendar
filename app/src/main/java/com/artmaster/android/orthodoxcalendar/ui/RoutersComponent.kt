@@ -92,6 +92,7 @@ fun AppNavigationComponent(
                 ) {
                     HolidayTileLayout(
                         calendarViewModel,
+                        settingsViewModel,
                         onDayClick,
                         onHolidayClick
                     )
@@ -107,6 +108,7 @@ fun AppNavigationComponent(
                 ) {
                     HolidayPagerListLayout(
                         calendarViewModel,
+                        settingsViewModel,
                         onDayClick,
                         onEditClick,
                         onDeleteClick,

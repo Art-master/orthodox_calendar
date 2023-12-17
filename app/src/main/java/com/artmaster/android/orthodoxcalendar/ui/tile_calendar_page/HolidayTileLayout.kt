@@ -13,12 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayTileMonthLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.MonthTabs
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -30,13 +33,18 @@ import kotlin.math.absoluteValue
 @Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
 @Composable
 fun PreviewLayout() {
-    HolidayTileLayout(viewModel = CalendarViewModelFake(), onDayClick = {}, onHolidayClick = {})
+    HolidayTileLayout(
+        viewModel = CalendarViewModelFake(),
+        settingsViewModel = SettingsViewModelFake(),
+        onDayClick = {},
+        onHolidayClick = {})
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayTileLayout(
     viewModel: ICalendarViewModel,
+    settingsViewModel: ISettingsViewModel,
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (day: Holiday) -> Unit,
 ) {
@@ -77,15 +85,17 @@ fun HolidayTileLayout(
     }
 
     Column(Modifier.fillMaxHeight()) {
-        MonthTabs(
-            currentPage = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            },
-            onClick = onTabClick
-        )
+        if (!settingsViewModel.getSetting(HIDE_HORIZONTAL_MONTHS_TAB).value.toBoolean()) {
+            MonthTabs(
+                currentPage = pagerState.currentPage,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    )
+                },
+                onClick = onTabClick
+            )
+        }
 
         HorizontalPager(
             count = MONTH_COUNT,

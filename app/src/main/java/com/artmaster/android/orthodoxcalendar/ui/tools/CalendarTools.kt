@@ -166,7 +166,7 @@ fun CalendarToolsDrawer(
     LaunchedEffect(key1 = drawerState.currentValue) {
         if (drawerState.isClosed) isToolsPanelVisible = true
     }
-    val isToolsToLeftSide = toolsToLeftSide?.value.toBoolean()
+    val isToolsToLeftSide = toolsToLeftSide.value.toBoolean()
     val direction = if (isToolsToLeftSide) LayoutDirection.Rtl else LayoutDirection.Ltr
 
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
@@ -186,7 +186,7 @@ fun CalendarToolsDrawer(
                     }
                 }
             }
-            if (needToHideTools?.value.toBoolean().not()) {
+            if (needToHideTools.value.toBoolean().not()) {
                 Tools(
                     viewModel = viewModel,
                     parent = this,

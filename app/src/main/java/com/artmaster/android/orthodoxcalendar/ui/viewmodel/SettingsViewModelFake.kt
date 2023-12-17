@@ -35,7 +35,7 @@ class SettingsViewModelFake : ViewModel(), ISettingsViewModel {
         }
     }
 
-    override fun getSetting(setting: Settings.Name) = settings[setting.value]
+    override fun getSetting(setting: Settings.Name) = settings[setting.value]!!
     override fun setSetting(setting: Settings.Name, value: String) {
         settings[setting.value]?.value = value
     }

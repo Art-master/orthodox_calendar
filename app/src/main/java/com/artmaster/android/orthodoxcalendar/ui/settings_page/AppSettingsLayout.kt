@@ -64,7 +64,7 @@ fun SettingsLayoutWrapper(viewModel: ISettingsViewModel = SettingsViewModel()) {
     }
 
     val getSettingValue = remember {
-        { setting: Settings.Name -> viewModel.getSetting(setting)!!.value }
+        { setting: Settings.Name -> viewModel.getSetting(setting).value }
     }
 
     SettingsLayout(
@@ -179,6 +179,18 @@ fun SettingsLayout(
             onSettingChange = onSettingChange,
             getSettingValue = getSettingValue,
             title = stringResource(id = R.string.settings_tool_panel_move_to_left)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_HORIZONTAL_YEARS_TAB,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_horizontal_years_tab)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_horizontal_months_tab)
         )
     }
 }

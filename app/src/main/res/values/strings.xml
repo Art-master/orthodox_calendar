@@ -99,6 +99,8 @@
     <string name="settings_off_start_anim">Отключить стартовую анимацию</string>
     <string name="settings_hide_tool_panel">Скрыть кнопку действий</string>
     <string name="settings_tool_panel_move_to_left">Переместить кнопку действий влево</string>
+    <string name="settings_hide_horizontal_years_tab">Скрыть вкладки выбора года</string>
+    <string name="settings_hide_horizontal_months_tab">Скрыть вкладки выбора месяца</string>
     <string name="settings_days">дн.</string>
     <string name="settings_hours">ч.</string>
 
