@@ -12,8 +12,12 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants.Action
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import java.util.*
-import java.util.Calendar.*
+import java.util.Calendar
+import java.util.Calendar.DAY_OF_YEAR
+import java.util.Calendar.HOUR_OF_DAY
+import java.util.Calendar.MINUTE
+import java.util.Calendar.getInstance
+import java.util.TimeZone
 
 
 object AlarmBuilder {
@@ -50,7 +54,10 @@ object AlarmBuilder {
     }
 
     private fun launchAlarm(alarmManager: AlarmManager, triggerTime: Long, intent: PendingIntent) {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, intent)
+            alarmManager.canScheduleExactAlarms()
+        } else if (Build.VERSION.SDK_INT >= 23) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, intent)
         } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, intent)

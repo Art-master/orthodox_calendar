@@ -140,6 +140,14 @@ fun SettingsLayout(
             postfix = stringResource(id = R.string.settings_days)
         )
         CheckBoxSettingsWithEditBox(
+            setting = Settings.Name.FASTING_NOTIFY_ALLOW,
+            linkedSetting = Settings.Name.TIME_OF_FASTING_NOTIFICATION_IN_DAYS,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_fasting_notify_allow),
+            postfix = stringResource(id = R.string.settings_days)
+        )
+        CheckBoxSettingsWithEditBox(
             setting = Settings.Name.IS_ENABLE_NOTIFICATION_IN_TIME,
             linkedSetting = Settings.Name.HOURS_OF_NOTIFICATION,
             onSettingChange = onSettingChange,

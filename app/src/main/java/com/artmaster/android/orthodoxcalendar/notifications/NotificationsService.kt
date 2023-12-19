@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.notifications
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import com.artmaster.android.orthodoxcalendar.App
@@ -7,9 +8,11 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type.*
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Time
+import com.artmaster.android.orthodoxcalendar.domain.Time.Month.DECEMBER
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -27,6 +30,7 @@ class NotificationsService : Service() {
     private var allowNameDays = false
     private var allowBirthdays = false
     private var allowMemoryDays = false
+    private var allowFastingNotification = false
 
     private var allowTodayNotification = false
     private var allowTimeNotification = false
@@ -49,16 +53,17 @@ class NotificationsService : Service() {
     }
 
     private fun updatePermissions() {
-        allowSound = prefs.get(SOUND_OF_NOTIFICATION).toBoolean()
-        allowVibration = prefs.get(VIBRATION_OF_NOTIFICATION).toBoolean()
+        allowSound = prefs.getBoolean(SOUND_OF_NOTIFICATION)
+        allowVibration = prefs.getBoolean(VIBRATION_OF_NOTIFICATION)
 
-        allowAverageHolidays = prefs.get(AVERAGE_HOLIDAYS_NOTIFY_ALLOW).toBoolean()
-        allowNameDays = prefs.get(NAME_DAYS_NOTIFY_ALLOW).toBoolean()
-        allowBirthdays = prefs.get(BIRTHDAYS_NOTIFY_ALLOW).toBoolean()
-        allowMemoryDays = prefs.get(MEMORY_DAYS_NOTIFY_ALLOW).toBoolean()
+        allowAverageHolidays = prefs.getBoolean(AVERAGE_HOLIDAYS_NOTIFY_ALLOW)
+        allowNameDays = prefs.getBoolean(NAME_DAYS_NOTIFY_ALLOW)
+        allowBirthdays = prefs.getBoolean(BIRTHDAYS_NOTIFY_ALLOW)
+        allowMemoryDays = prefs.getBoolean(MEMORY_DAYS_NOTIFY_ALLOW)
+        allowFastingNotification = prefs.getBoolean(FASTING_NOTIFY_ALLOW)
 
-        allowTodayNotification = prefs.get(IS_ENABLE_NOTIFICATION_TODAY).toBoolean()
-        allowTimeNotification = prefs.get(IS_ENABLE_NOTIFICATION_TIME).toBoolean()
+        allowTodayNotification = prefs.getBoolean(IS_ENABLE_NOTIFICATION_TODAY)
+        allowTimeNotification = prefs.getBoolean(IS_ENABLE_NOTIFICATION_TIME)
     }
 
     private fun timeCoincidence(): Boolean {
@@ -77,12 +82,16 @@ class NotificationsService : Service() {
                 val days = dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year)
 
                 if (allowTimeNotification) {
-                    notificationsByTime(currentTime, days)
+                    notificationsInCertainTime(currentTime, days)
                 }
 
                 if (allowTodayNotification) {
                     val holidays = days[currentTime.dayOfMonth - 1].holidays
                     prepareNotificationsHolidays(holidays, currentTime)
+                }
+
+                if (allowFastingNotification) {
+                    fastingNotifications(currentTime, days)
                 }
             }
         }
@@ -96,7 +105,7 @@ class NotificationsService : Service() {
             if (!allowMemoryDays && holiday.typeId == Type.USERS_MEMORY_DAY.id) continue
 
             val description = getDescription(holiday, time, getTimeNotification())
-            buildNotification(description, holiday)
+            buildNotification(description, holiday.id, holiday.title)
         }
     }
 
@@ -115,6 +124,7 @@ class NotificationsService : Service() {
         return when {
             holiday.day == time.dayOfMonth && holiday.month == time.month ->
                 getString(R.string.today) + " " + type
+
             numDays == 1 -> getString(R.string.tomorrow) + " " + type
             numDays > 1 -> getString(R.string.after_days, numDays) + " " + type
             else -> type.replaceFirstChar {
@@ -123,28 +133,28 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun buildNotification(description: String, holiday: Holiday) {
-        Notification(applicationContext, holiday)
+    private fun buildNotification(description: String, id: Long, title: String) {
+        Notification(applicationContext, id)
             .setSound(allowSound)
             .setVibration(allowVibration)
             .setName(description)
-            .setMsgText(holiday.title)
+            .setMsgText(title)
             .build()
     }
 
-    private fun notificationsByTime(time: Time, days: List<Day>) {
-        val userDaysNotification = getTimeNotification()
-        val numNotifyDay = time.dayOfMonth + userDaysNotification - 1
+    private fun notificationsInCertainTime(time: Time, days: List<Day>) {
+        val usersNumDaysNotification = getTimeNotification()
+        val numNotifyDay = time.dayOfMonth + usersNumDaysNotification - 1
 
-        if (time.dayOfMonth + userDaysNotification > time.daysInMonth) {
+        if (time.dayOfMonth + usersNumDaysNotification > time.daysInMonth) {
             val daysTwoMonths = days as ArrayList
             daysTwoMonths.addAll(getDaysOfNextMonth())
 
             prepareNotificationsHolidays(daysTwoMonths[numNotifyDay].holidays, time)
-            checkRestDaysNotify(userDaysNotification, time, daysTwoMonths, numNotifyDay)
+            checkRestDaysNotify(usersNumDaysNotification, time, daysTwoMonths, numNotifyDay)
         } else {
             prepareNotificationsHolidays(days[numNotifyDay].holidays, time)
-            checkRestDaysNotify(userDaysNotification, time, days, numNotifyDay)
+            checkRestDaysNotify(usersNumDaysNotification, time, days, numNotifyDay)
         }
     }
 
@@ -169,22 +179,65 @@ class NotificationsService : Service() {
                 if (!allowMemoryDays && holiday.typeId == Type.USERS_MEMORY_DAY.id) continue
 
                 val description = getDescription(holiday, time, i)
-                buildNotification(description, holiday)
+                buildNotification(description, holiday.id, holiday.title)
             }
         }
     }
 
-    private fun getTimeNotification() = prefs.get(TIME_OF_NOTIFICATION).toInt()
+    private fun getTimeNotification() = prefs.getInt(TIME_OF_NOTIFICATION)
+    private fun getFastingTimeNotification() = prefs.getInt(TIME_OF_FASTING_NOTIFICATION_IN_DAYS)
 
     private fun getDaysOfNextMonth(): List<Day> {
         val time = Time()
-        if (time.month == Time.Month.DECEMBER.num) {
-            time.calendar.set(Calendar.MONTH, 0)
+        if (time.month == DECEMBER.num) {
+            time.calendar.set(Calendar.MONTH, Time.Month.JANUARY.num)
             time.calendar.set(Calendar.YEAR, time.year + 1)
         } else {
             time.calendar.set(Calendar.MONTH, time.month + 1)
         }
         return dataProvider.getMonthDays(time.month, time.year)
+    }
+
+    private fun fastingNotifications(time: Time, days: List<Day>) {
+        val usersNumDaysNotification = getFastingTimeNotification()
+        val numNotifyDay = time.dayOfMonth + usersNumDaysNotification - 1
+
+        if (time.dayOfMonth + usersNumDaysNotification > time.daysInMonth) {
+            val daysTwoMonths = days as ArrayList
+            daysTwoMonths.addAll(getDaysOfNextMonth())
+        }
+
+        prepareFastingNotifications(days[numNotifyDay - 1], days[numNotifyDay], time)
+        checkRestDaysNotify(usersNumDaysNotification, time, days, numNotifyDay)
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun prepareFastingNotifications(prevDay: Day, current: Day, time: Time) {
+        if (current.fasting.type == FASTING_DAY) return
+
+        val fastingStart = if (prevDay.fasting.type == NONE && current.fasting.type != NONE) {
+            true
+        } else if (prevDay.fasting.type != NONE && current.fasting.type == NONE) {
+            false
+        } else null
+
+        fastingStart?.let {
+            val resId =
+                resources.getIdentifier(current.fasting.type.resourceName, "string", packageName)
+            val type = getString(resId)
+            val description = getFastingDescription(it, getTimeNotification())
+            buildNotification(description, 0, type)
+        }
+    }
+
+    private fun getFastingDescription(fastingStart: Boolean, numDays: Int): String {
+        val suffix = getString(if (fastingStart) R.string.start else R.string.end)
+
+        return when {
+            numDays == 1 -> getString(R.string.tomorrow) + " " + suffix
+            numDays > 1 -> getString(R.string.after_days, numDays) + " " + suffix
+            else -> ""
+        }
     }
 
     override fun onDestroy() {

@@ -17,6 +17,16 @@ class CalendarPreferences @Inject constructor(context: Context) : AppPreferences
         return preferences.getString(settName.value, settName.defValue) ?: settName.defValue
     }
 
+    override fun getBoolean(settName: Settings.Name): Boolean {
+        val settings = preferences.getString(settName.value, settName.defValue) ?: settName.defValue
+        return settings.toBoolean()
+    }
+
+    override fun getInt(settName: Settings.Name): Int {
+        val settings = preferences.getString(settName.value, settName.defValue) ?: settName.defValue
+        return settings.toInt()
+    }
+
     override fun set(settings: Settings.Name, value: String) {
         preferences.edit().putString(settings.value, value).apply()
     }

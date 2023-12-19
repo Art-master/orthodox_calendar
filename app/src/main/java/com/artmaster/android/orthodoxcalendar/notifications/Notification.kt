@@ -20,10 +20,9 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
 import com.artmaster.android.orthodoxcalendar.common.Constants.ExtraData
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.InitAppActivity
 
-class Notification(private val context: Context, private val holiday: Holiday) {
+class Notification(private val context: Context, private val id: Long) {
     companion object {
         const val CHANNEL_ID = "$PROJECT_DIR.notifications.channel.message"
         const val CHANNEL_NAME = "orthodox_calendar"
@@ -75,7 +74,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
         if (soundEnable) notification.setSound(soundUri)
         else notification.setSilent(true)
 
-        notificationManager.notify(holiday.id.toInt(), notification.build())
+        notificationManager.notify(id.toInt(), notification.build())
     }
 
     private fun createIntent(): PendingIntent {
@@ -85,15 +84,15 @@ class Notification(private val context: Context, private val holiday: Holiday) {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
 
-        val notificationIntent = getIntent(context, holiday)
-        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent, flags)
+        val notificationIntent = getIntent(context)
+        return PendingIntent.getActivity(context, id.toInt(), notificationIntent, flags)
     }
 
-    private fun getIntent(context: Context, holiday: Holiday): Intent {
+    private fun getIntent(context: Context): Intent {
         val intent = Intent(context, InitAppActivity::class.java)
         intent.action = Constants.Action.OPEN_HOLIDAY_PAGE.value
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.putExtra(ExtraData.HOLIDAY_ID.value, holiday.id)
+        intent.putExtra(ExtraData.HOLIDAY_ID.value, id)
         return intent
     }
 
@@ -102,6 +101,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
             notificationManager.createNotificationChannel(createChannel())
             NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
+            @Suppress("DEPRECATION")
             NotificationCompat.Builder(context)
         }
     }

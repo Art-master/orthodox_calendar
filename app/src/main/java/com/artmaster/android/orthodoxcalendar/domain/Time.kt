@@ -1,6 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Wrapper for work with time
@@ -96,6 +100,7 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
     }
 
     enum class Month(val num: Int) {
+        JANUARY(0),
         DECEMBER(11)
     }
 }

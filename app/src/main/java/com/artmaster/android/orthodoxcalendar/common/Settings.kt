@@ -29,6 +29,12 @@ class Settings {
         NAME_DAYS_NOTIFY_ALLOW("$PROJECT_DIR.name_days_notification", TRUE),
         BIRTHDAYS_NOTIFY_ALLOW("$PROJECT_DIR.birthdays_notification", TRUE),
         MEMORY_DAYS_NOTIFY_ALLOW("$PROJECT_DIR.memory_days_notification", TRUE),
+        TIME_OF_FASTING_NOTIFICATION_IN_DAYS(
+            "$PROJECT_DIR.time_of_fasting_notification",
+            "3",
+            Int::class.java
+        ),
+        FASTING_NOTIFY_ALLOW("$PROJECT_DIR.fasting_notify_allow", TRUE),
         FIRST_LOADING_TILE_CALENDAR("$PROJECT_DIR.first_load_tile_calendar", FALSE),
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
