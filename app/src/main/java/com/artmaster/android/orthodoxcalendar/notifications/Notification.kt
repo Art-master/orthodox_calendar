@@ -14,6 +14,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
@@ -36,7 +37,8 @@ class Notification(private val context: Context, private val id: Long) {
     private val isStandardSound = prefs.get(Settings.Name.STANDARD_SOUND).toBoolean()
     private var soundEnable: Boolean = true
     private var vibrationEnable: Boolean = true
-    private var vibrationSchema = longArrayOf(100, 300, 100, 300)
+    private var color: Int? = null
+    private var priority: Int = PRIORITY_DEFAULT
 
     fun setMsgText(text: String): Notification {
         msgText = text
@@ -59,6 +61,16 @@ class Notification(private val context: Context, private val id: Long) {
         return this
     }
 
+    fun setColor(argb: Int?): Notification {
+        color = argb
+        return this
+    }
+
+    fun setPriority(priority: Int): Notification {
+        this.priority = priority
+        return this
+    }
+
     fun build() {
         val notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -69,10 +81,17 @@ class Notification(private val context: Context, private val id: Long) {
             .setAutoCancel(true)
             .setLights(Color.BLUE, 3000, 3000)
             .setContentIntent(createIntent())
+            .setPriority(priority)
             .setStyle(NotificationCompat.BigTextStyle().bigText(msgText))
 
         if (soundEnable) notification.setSound(soundUri)
         else notification.setSilent(true)
+
+        color?.let {
+            notification
+                .setColorized(true)
+                .setColor(it)
+        }
 
         notificationManager.notify(id.toInt(), notification.build())
     }

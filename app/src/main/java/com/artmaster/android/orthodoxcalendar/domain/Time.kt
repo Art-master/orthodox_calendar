@@ -1,5 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
+import com.artmaster.android.orthodoxcalendar.common.Debug.Time.debugEnabled
+import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getDay
+import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getMonth
+import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getYear
+
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -9,7 +14,7 @@ import java.util.TimeZone
 /**
  * Wrapper for work with time
  */
-class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())) {
+class Time(var calendar: Calendar = initCalendar()) {
 
     constructor(year: Int, month: Int, day: Int) : this() {
         calendar.set(Calendar.YEAR, year)
@@ -60,8 +65,10 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
         return calculateDate(time.year, time.month, time.dayOfMonth, 0, param, dateCalc)
     }
 
-    fun calculateDate(year: Int = this.year, month: Int = this.month, day: Int = this.dayOfMonth,
-                      param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int): Calendar {
+    fun calculateDate(
+        year: Int = this.year, month: Int = this.month, day: Int = this.dayOfMonth,
+        param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int
+    ): Calendar {
         return calculateDate(year, month, day, 0, param, dateCalc)
     }
 
@@ -72,8 +79,10 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
      * @param dateCalc calculated data (num days or hours or other) May be minus in value
      * @return calendar object
      */
-    fun calculateDate(year: Int = this.year, month: Int = this.month, day: Int = this.dayOfMonth,
-                      hour: Int = this.hour, param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int): Calendar {
+    fun calculateDate(
+        year: Int = this.year, month: Int = this.month, day: Int = this.dayOfMonth,
+        hour: Int = this.hour, param: Int = Calendar.DAY_OF_YEAR, dateCalc: Int
+    ): Calendar {
         val calendar = Calendar.getInstance()
         calendar.timeZone = TimeZone.getDefault()
         calendar.set(year, month, day, hour, 0)
@@ -103,4 +112,15 @@ class Time(var calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), 
         JANUARY(0),
         DECEMBER(11)
     }
+}
+
+fun initCalendar(): Calendar {
+    val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+    if (debugEnabled()) {
+        calendar.set(Calendar.YEAR, getYear())
+        calendar.set(Calendar.MONTH, getMonth())
+        calendar.set(Calendar.DAY_OF_MONTH, getDay())
+    }
+
+    return calendar
 }

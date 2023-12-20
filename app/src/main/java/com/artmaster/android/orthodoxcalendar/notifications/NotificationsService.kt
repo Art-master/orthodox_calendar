@@ -3,8 +3,11 @@ package com.artmaster.android.orthodoxcalendar.notifications
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
+import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Debug.Notification.debugEnabled
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -67,6 +70,9 @@ class NotificationsService : Service() {
     }
 
     private fun timeCoincidence(): Boolean {
+        if (debugEnabled()) {
+            return true
+        }
         val time = Time()
         return time.hour == getHoursInSettings()
     }
@@ -81,6 +87,10 @@ class NotificationsService : Service() {
                 val currentTime = Time()
                 val days = dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year)
 
+                if (allowFastingNotification) {
+                    fastingNotifications(currentTime, days)
+                }
+
                 if (allowTimeNotification) {
                     notificationsInCertainTime(currentTime, days)
                 }
@@ -88,10 +98,6 @@ class NotificationsService : Service() {
                 if (allowTodayNotification) {
                     val holidays = days[currentTime.dayOfMonth - 1].holidays
                     prepareNotificationsHolidays(holidays, currentTime)
-                }
-
-                if (allowFastingNotification) {
-                    fastingNotifications(currentTime, days)
                 }
             }
         }
@@ -133,12 +139,20 @@ class NotificationsService : Service() {
         }
     }
 
-    private fun buildNotification(description: String, id: Long, title: String) {
+    private fun buildNotification(
+        description: String,
+        id: Long,
+        title: String,
+        priority: Int = PRIORITY_DEFAULT,
+        color: Int? = null
+    ) {
         Notification(applicationContext, id)
             .setSound(allowSound)
             .setVibration(allowVibration)
             .setName(description)
             .setMsgText(title)
+            .setColor(color)
+            .setPriority(priority)
             .build()
     }
 
@@ -207,26 +221,30 @@ class NotificationsService : Service() {
             daysTwoMonths.addAll(getDaysOfNextMonth())
         }
 
-        prepareFastingNotifications(days[numNotifyDay - 1], days[numNotifyDay], time)
-        checkRestDaysNotify(usersNumDaysNotification, time, days, numNotifyDay)
+        prepareFastingNotifications(days[numNotifyDay - 1], days[numNotifyDay])
     }
 
     @SuppressLint("DiscouragedApi")
-    private fun prepareFastingNotifications(prevDay: Day, current: Day, time: Time) {
+    private fun prepareFastingNotifications(prevDay: Day, current: Day) {
         if (current.fasting.type == FASTING_DAY) return
 
-        val fastingStart = if (prevDay.fasting.type == NONE && current.fasting.type != NONE) {
+        val fastingStarts = if (prevDay.fasting.type == NONE && current.fasting.type != NONE) {
             true
         } else if (prevDay.fasting.type != NONE && current.fasting.type == NONE) {
             false
         } else null
 
-        fastingStart?.let {
-            val resId =
-                resources.getIdentifier(current.fasting.type.resourceName, "string", packageName)
+        fastingStarts?.let {
+            val resName = if (fastingStarts) {
+                current.fasting.type.resourceName
+            } else {
+                prevDay.fasting.type.resourceName
+            }
+
+            val resId = resources.getIdentifier(resName, "string", packageName)
             val type = getString(resId)
-            val description = getFastingDescription(it, getTimeNotification())
-            buildNotification(description, 0, type)
+            val description = getFastingDescription(it, getFastingTimeNotification())
+            buildNotification(description, 0, type, PRIORITY_HIGH, null)
         }
     }
 

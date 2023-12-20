@@ -10,6 +10,8 @@ import android.os.Build
 import android.util.Log
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants.Action
+import com.artmaster.android.orthodoxcalendar.common.Debug.Notification.debugEnabled
+import com.artmaster.android.orthodoxcalendar.common.Debug.Notification.getNotificationPeriodMs
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import java.util.Calendar
@@ -28,8 +30,12 @@ object AlarmBuilder {
         if (isNotificationDisable()) return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val timeInMillis = buildCalendarByAppSettings().timeInMillis
-        //timeInMillis = System.currentTimeMillis() + 10_000 //DEBUG
+        var timeInMillis = buildCalendarByAppSettings().timeInMillis
+
+        if (debugEnabled()) {
+            timeInMillis = getNotificationPeriodMs()
+        }
+
         launchAlarm(alarmMgr, timeInMillis, createIntent(context))
     }
 
