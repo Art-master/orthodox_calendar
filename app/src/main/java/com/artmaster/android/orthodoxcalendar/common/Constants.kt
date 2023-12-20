@@ -2,7 +2,7 @@ package com.artmaster.android.orthodoxcalendar.common
 
 class Constants {
 
-    enum class HolidayList constructor(val value: Int) {
+    enum class HolidayList(val value: Int) {
         PAGE_SIZE(15)
     }
 
@@ -21,12 +21,11 @@ class Constants {
         const val DATA_VERSION = 6
     }
 
-    enum class ExtraData constructor(val value: String) {
-        HOLIDAY_ID("$PROJECT_DIR.holiday_id"),
-        HOLIDAY("$PROJECT_DIR.holiday")
+    enum class ExtraData(val value: String) {
+        HOLIDAY_ID("$PROJECT_DIR.holiday_id")
     }
 
-    enum class Action constructor(val value: String) {
+    enum class Action(val value: String) {
         NOTIFICATION("$PROJECT_DIR.holiday.NOTIFICATION"),
         OPEN_HOLIDAY_PAGE("$PROJECT_DIR.OPEN_HOLIDAY")
     }

@@ -120,6 +120,12 @@ fun HolidayPage(
 
     val imageHeight = (configuration.screenHeightDp / 1.2).dp
 
+    val onRejectClickRemembered by rememberUpdatedState { modalState.value = false }
+    val onConfirmClickRemembered by rememberUpdatedState {
+        onDeleteClick(holiday)
+        modalState.value = false
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -210,10 +216,9 @@ fun HolidayPage(
 
             DeleteHolidayDialog(
                 state = modalState.value,
-                onRejectClick = { modalState.value = false }) {
-                onDeleteClick(holiday)
-                modalState.value = false
-            }
+                onRejectClick = onRejectClickRemembered,
+                onConfirmClick = onConfirmClickRemembered
+            )
         }
     }
 }

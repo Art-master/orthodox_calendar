@@ -244,7 +244,7 @@ class NotificationsService : Service() {
             val resId = resources.getIdentifier(resName, "string", packageName)
             val type = getString(resId)
             val description = getFastingDescription(it, getFastingTimeNotification())
-            buildNotification(description, 0, type, PRIORITY_HIGH, null)
+            buildNotification(description, -1L, type, PRIORITY_HIGH, null)
         }
     }
 

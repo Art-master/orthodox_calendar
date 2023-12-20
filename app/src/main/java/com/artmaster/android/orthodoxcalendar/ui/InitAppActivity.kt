@@ -58,7 +58,11 @@ class InitAppActivity : ComponentActivity() {
                     intent = it
                     if (it.action == Action.OPEN_HOLIDAY_PAGE.value) {
                         val id = it.getLongExtra(Constants.ExtraData.HOLIDAY_ID.value, 0)
-                        navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${id}")
+                        if (id == -1L) {
+                            navigateToCalendar(navController, settingsViewModel)
+                        } else {
+                            navController.navigate("${Navigation.HOLIDAY_PAGE.route}/${id}")
+                        }
                     }
                 }
 

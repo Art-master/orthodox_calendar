@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
@@ -48,7 +49,7 @@ fun AppNavigationComponent(
     val onDeleteClick = remember {
         { holiday: Holiday ->
             calendarViewModel.deleteHoliday(holiday.id)
-            navigateToCalendar(navController)
+            navigateToCalendar(navController, settingsViewModel)
         }
     }
 
@@ -164,11 +165,8 @@ private fun navigateToHolidayPage(navController: NavHostController, id: Long) {
     }
 }
 
-private fun navigateToCalendar(navController: NavHostController) {
-    val currentRoute = navController.currentDestination?.route ?: ""
-    val targetRoute = if (currentRoute == Navigation.TILE_CALENDAR.route) {
-        Navigation.LIST_CALENDAR.route
-    } else Navigation.TILE_CALENDAR.route
-
-    navController.navigate(targetRoute)
+fun navigateToCalendar(navController: NavHostController, model: SettingsViewModel) {
+    if (model.getSetting(Settings.Name.FIRST_LOADING_TILE_CALENDAR).value.toBoolean()) {
+        navController.navigate(Navigation.TILE_CALENDAR.route)
+    } else navController.navigate(Navigation.LIST_CALENDAR.route)
 }
