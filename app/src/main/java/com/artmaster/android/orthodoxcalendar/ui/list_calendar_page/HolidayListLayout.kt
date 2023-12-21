@@ -11,14 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.GraphicsLayerScope
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.common.Constants
-
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_YEARS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -31,10 +25,8 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 @Preview
 @Composable
@@ -112,44 +104,16 @@ fun HolidayPagerListLayout(
             state = pagerState,
             key = { r -> r }
         ) { page ->
-            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-
-            if (needToShowLayout(pageOffset)) {
-                HolidayListWrapper(
-                    //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
-                    viewModel = viewModel,
-                    onDayClick = onDayClick,
-                    onEditClick = onEditClick,
-                    onDeleteClick = onDeleteClick,
-                    onHolidayClick = onHolidayClick
-                )
-            }
+            HolidayListWrapper(
+                //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset, pagerState) },
+                data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
+                viewModel = viewModel,
+                onDayClick = onDayClick,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+                onHolidayClick = onHolidayClick
+            )
         }
     }
 
-}
-
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
-
-//TODO wrong scale factor for tablets
-fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
-    scope.apply {
-        // We animate the scaleX + scaleY, between 85% and 100%
-        lerp(
-            start = 0.6.dp,
-            stop = 1.dp,
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).also { scale ->
-            scaleX = scale.toPx() / 3
-            scaleY = scale.toPx() / 3
-        }
-
-        // We animate the alpha, between 0% and 100%
-        alpha = lerp(
-            start = ScaleFactor(0f, 0f),
-            stop = ScaleFactor(1f, 1f),
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).scaleX
-    }
 }

@@ -167,6 +167,8 @@ fun HolidayList(
     }
 }
 
+private val Modifier = Modifier
+
 @Composable
 fun HolidayListLandscape(
     modifier: Modifier = Modifier,
@@ -221,7 +223,7 @@ fun HolidayListLandscape(
         }
         holiday.value?.let {
             HolidayPage(
-                //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
+                modifier = modifier,
                 viewModel = viewModel,
                 holiday = it,
                 onEditClick = onEditClick,

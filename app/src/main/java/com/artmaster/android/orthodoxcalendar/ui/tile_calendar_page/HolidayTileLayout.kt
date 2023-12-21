@@ -102,7 +102,6 @@ fun HolidayTileLayout(
             state = pagerState
         ) { page ->
             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-
             if (needToShowLayout(pageOffset)) {
                 HolidayTileMonthLayout(
                     data = viewModel.getCurrentMonthData(monthNum = page),
