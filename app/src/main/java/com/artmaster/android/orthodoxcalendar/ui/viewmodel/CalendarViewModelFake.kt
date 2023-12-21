@@ -138,6 +138,10 @@ class CalendarViewModelFake : ViewModel(), ICalendarViewModel {
         return (1..100).map { Holiday() }.toList()
     }
 
+    override fun getNearestHoliday(): Holiday? {
+        return Holiday()
+    }
+
     private fun generateHolidays(
         month: Int,
         dayOfMonth: Int,

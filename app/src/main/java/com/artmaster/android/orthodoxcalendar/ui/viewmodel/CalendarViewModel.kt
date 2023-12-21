@@ -289,6 +289,31 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         return days!!
     }
 
+    override fun getNearestHoliday(): Holiday? {
+        val data = getCurrentYearData(year.intValue).value
+        if (data.isEmpty()) return null
+
+        val holidays = data[dayOfYear.intValue.dec()].holidays
+        return if (holidays.isNotEmpty()) {
+            holidays.first()
+        } else {
+            getNextHoliday(dayOfYear.intValue)
+        }
+    }
+
+    private fun getNextHoliday(currentDayNum: Int): Holiday? {
+        val data = getCurrentYearData(year.intValue).value
+        for (i in currentDayNum until data.size) {
+            val holidays = data[i.dec()].holidays
+            if (holidays.isNotEmpty()) return holidays.first()
+        }
+        for (i in currentDayNum downTo 1) {
+            val holidays = data[i.dec()].holidays
+            if (holidays.isNotEmpty()) return holidays.first()
+        }
+        return null
+    }
+
     override fun resetTime() {
         val now = Time()
         if (now.year != year.intValue) {

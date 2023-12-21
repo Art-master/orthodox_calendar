@@ -33,6 +33,7 @@ interface ICalendarViewModel {
     suspend fun getFullHolidayById(id: Long): Holiday
     fun getHolidayById(id: Long): Holiday
     fun getAllHolidaysOfYear(): List<Holiday>
+    fun getNearestHoliday(): Holiday?
     fun resetTime()
     fun firstLoadingTileCalendar(): Boolean
 }

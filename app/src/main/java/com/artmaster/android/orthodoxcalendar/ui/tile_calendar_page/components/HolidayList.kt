@@ -180,13 +180,7 @@ fun HolidayListLandscape(
     val dayOfYear = viewModel.getDayOfYear()
 
     val holiday = rememberSaveable(data.value) {
-        val current = if (data.value.isNotEmpty()) {
-            val holidays = data.value[dayOfYear.value.dec()].holidays
-            if (holidays.isEmpty()) {
-                viewModel.getAllHolidaysOfYear().first()
-            } else holidays.first()
-        } else null
-
+        val current = viewModel.getNearestHoliday()
         mutableStateOf(current)
     }
     val onHolidayClick by rememberUpdatedState { h: Holiday ->
