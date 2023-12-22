@@ -9,8 +9,8 @@ android {
         compileSdk 33
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 50
-        versionName "5.8"
+        versionCode 51
+        versionName "5.9"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
         javaCompileOptions {
