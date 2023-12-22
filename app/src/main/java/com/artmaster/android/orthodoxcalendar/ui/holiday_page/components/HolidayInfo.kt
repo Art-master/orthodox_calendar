@@ -48,6 +48,7 @@ import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -112,7 +113,19 @@ fun HolidayPage(
         context.resources.getIdentifier(imageId, "drawable", context.packageName)
     }
 
+    val scope = rememberCoroutineScope()
     val scroll = rememberScrollState(0)
+    var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
+
+    LaunchedEffect(fullHolidayInfo) {
+        if (fullHolidayInfo == null) {
+            scope.launch {
+                scroll.scrollTo(0)
+            }
+        }
+
+    }
+
     val modalState = remember { mutableStateOf(false) }
     var titleHeight by rememberSaveable { mutableIntStateOf(titleHeightInitSize) }
     val titlePadding = with(LocalDensity.current) {
@@ -190,7 +203,6 @@ fun HolidayPage(
                 }
 
                 var scrollActivate by remember { mutableStateOf(false) }
-                var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
 
                 if (scroll.isScrollInProgress && scrollActivate.not()) {
                     scrollActivate = true
@@ -446,6 +458,7 @@ fun SourceLink(link: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 20.dp)
+            .offset(y = -(10).dp)
             .clickable(onClick = onLinkClick),
         text = stringResource(id = R.string.source),
         fontSize = with(LocalDensity.current) {
