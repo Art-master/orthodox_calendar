@@ -75,6 +75,7 @@
     <string name="colors">Цвета</string>
     <string name="images">Изображения</string>
     <string name="contacts">Контакты</string>
+    <string name="source">Источник</string>
     <string name="others_recommendations">Другие рекомендации</string>
     <string name="stop_anim_recommendation">1. Удерживая палец на экране загрузки, можно остановить анимацию и прочитать текст.</string>
 

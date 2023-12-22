@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -208,8 +210,21 @@ fun HolidayPage(
 
                     // if full data loaded (etc. include holiday description)
                     fullHolidayInfo?.let {
+                        val description = remember {
+                            fullHolidayInfo!!.description.substringBefore("<<").trim()
+                        }
+
+                        val link = remember {
+                            fullHolidayInfo!!.description
+                                .substringAfter("<<")
+                                .substringBefore(">>")
+                        }
+
                         Divider()
-                        HolidayDescriptionLayout(description = fullHolidayInfo!!.description.trim())
+                        HolidayDescriptionLayout(description = description)
+                        if (link.isNotBlank()) {
+                            SourceLink(link)
+                        }
                     }
                 }
             }
@@ -417,4 +432,28 @@ fun NoImageLayout(imageHeight: Dp) {
             fontFamily = FontFamily(Font(R.font.cyrillic_old))
         )
     }
+}
+
+@Composable
+fun SourceLink(link: String) {
+
+    val uriHandler = LocalUriHandler.current
+    val onLinkClick by rememberUpdatedState {
+        uriHandler.openUri(link)
+    }
+
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp)
+            .clickable(onClick = onLinkClick),
+        text = stringResource(id = R.string.source),
+        fontSize = with(LocalDensity.current) {
+            (20 / fontScale).sp
+        },
+        color = LinksColor,
+        fontFamily = FontFamily(Font(R.font.decorated)),
+        textAlign = TextAlign.Center,
+        textDecoration = TextDecoration.Underline
+    )
 }

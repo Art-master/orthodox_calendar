@@ -13,12 +13,10 @@ class Constants {
         const val SETTINGS_FILE_NAME = "calendar_settings"
         const val LOADING_ANIMATION_DURATION = 3000 //ms
         const val LOADING_ANIMATION_SPEED_UP = LOADING_ANIMATION_DURATION / 2
-        const val PLACEHOLDER_FOR_IMAGE = "image_holiday"
-        const val RESOURCE_FOR_IMAGE = "drawable"
         const val VIEW_PAGER_SPEED = 800 //ms
         const val MONTH_COUNT = 12
         const val PROJECT_DIR = "com.artmaster.android.orthodoxcalendar"
-        const val DATA_VERSION = 6
+        const val DATA_VERSION = 7
     }
 
     enum class ExtraData(val value: String) {
