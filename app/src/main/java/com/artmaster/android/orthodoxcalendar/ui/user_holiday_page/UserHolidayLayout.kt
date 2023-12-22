@@ -1,11 +1,26 @@
 package com.artmaster.android.orthodoxcalendar.ui.user_holiday_page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringArrayResource
@@ -21,9 +36,13 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type.COMMON_MEMORY_DAY
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
-import com.artmaster.android.orthodoxcalendar.ui.common.*
+import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
+import com.artmaster.android.orthodoxcalendar.ui.common.EditText
+import com.artmaster.android.orthodoxcalendar.ui.common.Header
+import com.artmaster.android.orthodoxcalendar.ui.common.Select
+import com.artmaster.android.orthodoxcalendar.ui.common.StyledButton
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true, device = Devices.PIXEL_3)
@@ -44,7 +63,7 @@ val time = Time()
 fun UserHolidayLayout(
     holidayId: Long? = null,
     viewModel: CalendarViewModel = CalendarViewModel(),
-    onSave: (Holiday) -> Unit = {}
+    onSave: ((Holiday) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     var target by rememberSaveable { mutableStateOf(Holiday(id = -1)) }
@@ -145,16 +164,17 @@ fun UserHolidayLayout(
     }
 
     val onCheckAndSave = remember {
-        { holiday: Holiday ->
+        {
+            val holiday = target
             if (!yearEnabled || holiday.typeId == Type.USERS_NAME_DAY.id) holiday.year = 0
             holiday.description = holiday.description.trim()
             holiday.title = holiday.title.trim()
             holiday.isCreatedByUser = true
 
             checkHolidayFilters(holiday.typeId) {
-                viewModel.addFilter(it)
+                viewModel.addActiveFilter(it)
             }
-            onSave(holiday)
+            onSave?.invoke(holiday) ?: Unit
         }
     }
 
@@ -260,7 +280,8 @@ fun UserHolidayLayout(
                             && descriptionError.isEmpty()
                             && yearError.isEmpty()
                             && dayError.isEmpty(),
-                    onClick = { onCheckAndSave(target) })
+                    onClick = onCheckAndSave
+                )
             }
         }
     }
@@ -278,7 +299,7 @@ fun createNewHolidayTemplate(title: String): Holiday {
 }
 
 fun checkHolidayFilters(typeId: Int, onFilterApply: (filter: Filter) -> Unit) {
-    if (Filter.values().any { it.enabled })
+    if (Filter.entries.any { it.enabled })
         when (typeId) {
             Type.USERS_NAME_DAY.id -> onFilterApply(Filter.NAME_DAYS)
             Type.USERS_BIRTHDAY.id -> onFilterApply(Filter.BIRTHDAYS)

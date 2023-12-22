@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.init_page.model
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,11 +10,15 @@ import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.DATA_VERSION
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOAD_APP
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.OFF_START_ANIMATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.SPEED_UP_START_ANIMATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.USER_DATA_VERSION
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Immutable
 class LoadDataViewModel : ViewModel() {
 
     private val preferences = App.appComponent.getPreferences()

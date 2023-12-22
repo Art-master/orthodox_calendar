@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="daysNamesAbb">
-        <item>ПН.</item>
-        <item>ВТ.</item>
-        <item>СР.</item>
-        <item>ЧТ.</item>
-        <item>ПТ.</item>
-        <item>СБ.</item>
-        <item>ВС.</item>
+        <item>ПН</item>
+        <item>ВТ</item>
+        <item>СР</item>
+        <item>ЧТ</item>
+        <item>ПТ</item>
+        <item>СБ</item>
+        <item>ВС</item>
     </string-array>
 
     <string-array name="daysNames">

@@ -29,6 +29,12 @@ class Settings {
         NAME_DAYS_NOTIFY_ALLOW("$PROJECT_DIR.name_days_notification", TRUE),
         BIRTHDAYS_NOTIFY_ALLOW("$PROJECT_DIR.birthdays_notification", TRUE),
         MEMORY_DAYS_NOTIFY_ALLOW("$PROJECT_DIR.memory_days_notification", TRUE),
+        TIME_OF_FASTING_NOTIFICATION_IN_DAYS(
+            "$PROJECT_DIR.time_of_fasting_notification",
+            "3",
+            Int::class.java
+        ),
+        FASTING_NOTIFY_ALLOW("$PROJECT_DIR.fasting_notify_allow", TRUE),
         FIRST_LOADING_TILE_CALENDAR("$PROJECT_DIR.first_load_tile_calendar", FALSE),
         STANDARD_SOUND("$PROJECT_DIR.standard_sound", FALSE),
         OFF_START_ANIMATION("$PROJECT_DIR.off_start_animation", FALSE),
@@ -39,6 +45,10 @@ class Settings {
             "0",
             Int::class.java
         ),
+        HIDE_TOOL_PANEL("$PROJECT_DIR.hide_tool_panel", FALSE),
+        TOOL_PANEL_MOVE_TO_LEFT("$PROJECT_DIR.tool_panel_move_to_left", FALSE),
+        HIDE_HORIZONTAL_YEARS_TAB("$PROJECT_DIR.hide_horizontal_years_tab", FALSE),
+        HIDE_HORIZONTAL_MONTHS_TAB("$PROJECT_DIR.hide_horizontal_months_tab", FALSE),
 
         //FILTERS
         FILTER_EASTER_HOLIDAY("$PROJECT_DIR.filter_easter_holiday", FALSE),

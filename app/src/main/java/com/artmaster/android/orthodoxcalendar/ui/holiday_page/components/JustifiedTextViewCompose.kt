@@ -352,7 +352,7 @@ class JustifiedTextViewCompose(private val context: Context) {
     }
 
     /** safe info about words in text */
-    private class TextBlockDrawable constructor(
+    private class TextBlockDrawable(
         var x: Int,
         var y: Int,
         var start: Int,

@@ -112,7 +112,7 @@ class DataProvider : RepositoryConnector {
         val daysCount = time.daysInYear
 
         val db = database.get(context)
-        val holidaysFromDb = db.holidayDao().getAll()
+        val holidaysFromDb = db.holidayDao().getAll() //IllegalStateException
         val days: ArrayList<Day> = ArrayList(daysCount)
 
         for (i in 1..daysCount) {

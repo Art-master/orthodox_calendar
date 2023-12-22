@@ -4,7 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -17,16 +22,27 @@ import com.artmaster.android.orthodoxcalendar.ui.common.StyledText
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_3)
 fun DeleteHolidayDialogPreview() {
-    DeleteHolidayDialog(true)
+    DeleteHolidayDialog(true, {}, {})
 }
 
 @Composable
 fun DeleteHolidayDialog(
     state: Boolean = false,
-    onRejectClick: () -> Unit = {},
-    onConfirmClick: () -> Unit = {}
+    onRejectClick: () -> Unit,
+    onConfirmClick: () -> Unit
 ) {
     var openDialog by remember(state) { mutableStateOf(state) }
+    val onClickConfirmRemembered by rememberUpdatedState {
+        openDialog = false
+        onConfirmClick()
+    }
+
+    val onClickRejectRemembered by rememberUpdatedState {
+        openDialog = false
+        onRejectClick()
+    }
+
+
     if (openDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -41,20 +57,14 @@ fun DeleteHolidayDialog(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     StyledButton(
-                        title = stringResource(id = R.string.button_reject),
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            openDialog = false
-                            onRejectClick()
-                        }
-                    )
-                    StyledButton(
                         title = stringResource(id = R.string.button_confirm),
                         modifier = Modifier.weight(1f),
-                        onClick = {
-                            openDialog = false
-                            onConfirmClick()
-                        }
+                        onClick = onClickConfirmRemembered
+                    )
+                    StyledButton(
+                        title = stringResource(id = R.string.button_reject),
+                        modifier = Modifier.weight(1f),
+                        onClick = onClickRejectRemembered
                     )
                 }
             }

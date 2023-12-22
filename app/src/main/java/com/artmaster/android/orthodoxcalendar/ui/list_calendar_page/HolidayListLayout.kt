@@ -1,36 +1,45 @@
 package com.artmaster.android.orthodoxcalendar.ui.list_calendar_page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.GraphicsLayerScope
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import com.artmaster.android.orthodoxcalendar.common.Constants
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_YEARS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
-import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayList
+import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayListWrapper
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 @Preview
 @Composable
 fun HolidayListLayoutPreview() {
     MaterialTheme {
         CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-            HolidayPagerListLayout()
+            HolidayPagerListLayout(
+                viewModel = CalendarViewModelFake(),
+                settingsViewModel = SettingsViewModelFake(),
+                onDayClick = {},
+                onEditClick = {},
+                onDeleteClick = {},
+                onHolidayClick = {})
         }
     }
 }
@@ -38,18 +47,21 @@ fun HolidayListLayoutPreview() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayPagerListLayout(
-    viewModel: CalendarViewModel = CalendarViewModel(),
-    onDayClick: (day: Day) -> Unit = {},
-    onHolidayClick: (day: Holiday) -> Unit = {},
+    viewModel: ICalendarViewModel,
+    settingsViewModel: ISettingsViewModel,
+    onDayClick: (day: Day) -> Unit,
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
+    onHolidayClick: (day: Holiday) -> Unit,
 ) {
 
-    val availableYears = viewModel.availableYears
+    val availableYears = viewModel.getAvailableYears()
     val startIndex = viewModel.getYear().value - availableYears.first()
     val currentYear by viewModel.getYear()
 
     val pagerState = rememberPagerState(startIndex)
     val scope = rememberCoroutineScope()
-    val filters = viewModel.getFilters()
+    val filters = viewModel.getActiveFilters()
 
     LaunchedEffect(currentYear) {
         scope.launch {
@@ -79,10 +91,11 @@ fun HolidayPagerListLayout(
     }
 
     Column(Modifier.fillMaxHeight()) {
-
-        YearsTabs(pagerState = pagerState) {
-            scope.launch {
-                pagerState.scrollToPage(it)
+        if (!settingsViewModel.getSetting(HIDE_HORIZONTAL_YEARS_TAB).value.toBoolean()) {
+            YearsTabs(pagerState = pagerState) {
+                scope.launch {
+                    pagerState.scrollToPage(it)
+                }
             }
         }
 
@@ -91,42 +104,16 @@ fun HolidayPagerListLayout(
             state = pagerState,
             key = { r -> r }
         ) { page ->
-            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-
-            if (needToShowLayout(pageOffset)) {
-                HolidayList(
-                    //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },
-                    data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
-                    viewModel = viewModel,
-                    onDayClick = onDayClick,
-                    onHolidayClick = onHolidayClick
-                )
-            }
+            HolidayListWrapper(
+                //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset, pagerState) },
+                data = viewModel.getCurrentYearData(yearNum = availableYears.first() + page),
+                viewModel = viewModel,
+                onDayClick = onDayClick,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
+                onHolidayClick = onHolidayClick
+            )
         }
     }
 
-}
-
-fun needToShowLayout(pageOffset: Float) = pageOffset < 0.6f
-
-//TODO wrong scale factor for tablets
-fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
-    scope.apply {
-        // We animate the scaleX + scaleY, between 85% and 100%
-        lerp(
-            start = 0.6.dp,
-            stop = 1.dp,
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).also { scale ->
-            scaleX = scale.toPx() / 3
-            scaleY = scale.toPx() / 3
-        }
-
-        // We animate the alpha, between 0% and 100%
-        alpha = lerp(
-            start = ScaleFactor(0f, 0f),
-            stop = ScaleFactor(1f, 1f),
-            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-        ).scaleX
-    }
 }

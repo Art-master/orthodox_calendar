@@ -14,16 +14,16 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.PROJECT_DIR
 import com.artmaster.android.orthodoxcalendar.common.Constants.ExtraData
 import com.artmaster.android.orthodoxcalendar.common.Settings
-import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.InitAppActivity
 
-class Notification(private val context: Context, private val holiday: Holiday) {
+class Notification(private val context: Context, private val id: Long) {
     companion object {
         const val CHANNEL_ID = "$PROJECT_DIR.notifications.channel.message"
         const val CHANNEL_NAME = "orthodox_calendar"
@@ -37,7 +37,8 @@ class Notification(private val context: Context, private val holiday: Holiday) {
     private val isStandardSound = prefs.get(Settings.Name.STANDARD_SOUND).toBoolean()
     private var soundEnable: Boolean = true
     private var vibrationEnable: Boolean = true
-    private var vibrationSchema = longArrayOf(100, 300, 100, 300)
+    private var color: Int? = null
+    private var priority: Int = PRIORITY_DEFAULT
 
     fun setMsgText(text: String): Notification {
         msgText = text
@@ -60,6 +61,16 @@ class Notification(private val context: Context, private val holiday: Holiday) {
         return this
     }
 
+    fun setColor(argb: Int?): Notification {
+        color = argb
+        return this
+    }
+
+    fun setPriority(priority: Int): Notification {
+        this.priority = priority
+        return this
+    }
+
     fun build() {
         val notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -70,12 +81,19 @@ class Notification(private val context: Context, private val holiday: Holiday) {
             .setAutoCancel(true)
             .setLights(Color.BLUE, 3000, 3000)
             .setContentIntent(createIntent())
+            .setPriority(priority)
             .setStyle(NotificationCompat.BigTextStyle().bigText(msgText))
 
         if (soundEnable) notification.setSound(soundUri)
         else notification.setSilent(true)
 
-        notificationManager.notify(holiday.id.toInt(), notification.build())
+        color?.let {
+            notification
+                .setColorized(true)
+                .setColor(it)
+        }
+
+        notificationManager.notify(id.toInt(), notification.build())
     }
 
     private fun createIntent(): PendingIntent {
@@ -85,15 +103,15 @@ class Notification(private val context: Context, private val holiday: Holiday) {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
 
-        val notificationIntent = getIntent(context, holiday)
-        return PendingIntent.getActivity(context, holiday.id.toInt(), notificationIntent, flags)
+        val notificationIntent = getIntent(context)
+        return PendingIntent.getActivity(context, id.toInt(), notificationIntent, flags)
     }
 
-    private fun getIntent(context: Context, holiday: Holiday): Intent {
+    private fun getIntent(context: Context): Intent {
         val intent = Intent(context, InitAppActivity::class.java)
         intent.action = Constants.Action.OPEN_HOLIDAY_PAGE.value
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.putExtra(ExtraData.HOLIDAY_ID.value, holiday.id)
+        intent.putExtra(ExtraData.HOLIDAY_ID.value, id)
         return intent
     }
 
@@ -102,6 +120,7 @@ class Notification(private val context: Context, private val holiday: Holiday) {
             notificationManager.createNotificationChannel(createChannel())
             NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
+            @Suppress("DEPRECATION")
             NotificationCompat.Builder(context)
         }
     }

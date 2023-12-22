@@ -1,7 +1,14 @@
 package com.artmaster.android.orthodoxcalendar.ui.common
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +44,24 @@ fun DividerPreview() {
 }
 
 @Composable
-fun DividerWithText(text: String, color: Color = HeaderTextColor) {
+fun DividerWithText(color: Color = HeaderTextColor, text: String) {
+    DividerWithText {
+        Text(
+            modifier = Modifier
+                .background(Background)
+                .padding(start = 3.dp, end = 3.dp)
+                .offset(y = 6.dp),
+            color = color,
+            text = text,
+            fontSize = 20.sp,
+            fontFamily = FontFamily(Font(R.font.cyrillic_old)),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun DividerWithText(color: Color = HeaderTextColor, content: @Composable () -> Unit) {
     Box(contentAlignment = Alignment.Center) {
         Row(
             modifier = Modifier.padding(top = 10.dp),
@@ -65,17 +89,7 @@ fun DividerWithText(text: String, color: Color = HeaderTextColor) {
                 textAlign = TextAlign.Center
             )
         }
-        Text(
-            modifier = Modifier
-                .background(Background)
-                .padding(start = 3.dp, end = 3.dp)
-                .offset(y = 6.dp),
-            color = color,
-            text = text,
-            fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.cyrillic_old)),
-            textAlign = TextAlign.Center
-        )
+        content()
     }
 }
 

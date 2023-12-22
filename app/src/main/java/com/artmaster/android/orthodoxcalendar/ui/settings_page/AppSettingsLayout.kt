@@ -1,13 +1,22 @@
 package com.artmaster.android.orthodoxcalendar.ui.settings_page
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,41 +32,39 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
 import com.artmaster.android.orthodoxcalendar.ui.common.DividerWithText
 import com.artmaster.android.orthodoxcalendar.ui.common.Header
-import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.theme.CursorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.DisabledTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextBackground
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextCursorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.EditTextIndicatorColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewSettingsLayout() {
-    val onSettingChange = remember { { _: Settings.Name, _: String -> } }
-    val getSettingValue = remember {
-        { name: Settings.Name ->
-            if (name.type == Int::class.java) "10" else "false"
-        }
-    }
-
-    SettingsLayout(
-        isInit = true,
-        onSettingChange = onSettingChange,
-        getSettingValue = getSettingValue
-    )
-
+    SettingsLayoutWrapper(viewModel = SettingsViewModelFake())
 }
 
 @Composable
-fun SettingsLayoutWrapper(viewModel: SettingsViewModel = SettingsViewModel()) {
+fun SettingsLayoutWrapper(viewModel: ISettingsViewModel = SettingsViewModel()) {
 
     val onSettingChange = remember {
         { setting: Settings.Name, value: String -> viewModel.setSetting(setting, value) }
     }
 
     val getSettingValue = remember {
-        { setting: Settings.Name -> viewModel.getSetting(setting)!!.value }
+        { setting: Settings.Name -> viewModel.getSetting(setting).value }
     }
 
     SettingsLayout(
@@ -133,6 +140,14 @@ fun SettingsLayout(
             postfix = stringResource(id = R.string.settings_days)
         )
         CheckBoxSettingsWithEditBox(
+            setting = Settings.Name.FASTING_NOTIFY_ALLOW,
+            linkedSetting = Settings.Name.TIME_OF_FASTING_NOTIFICATION_IN_DAYS,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_fasting_notify_allow),
+            postfix = stringResource(id = R.string.settings_days)
+        )
+        CheckBoxSettingsWithEditBox(
             setting = Settings.Name.IS_ENABLE_NOTIFICATION_IN_TIME,
             linkedSetting = Settings.Name.HOURS_OF_NOTIFICATION,
             onSettingChange = onSettingChange,
@@ -161,6 +176,30 @@ fun SettingsLayout(
             getSettingValue = getSettingValue,
             title = stringResource(id = R.string.settings_off_start_anim)
         )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_TOOL_PANEL,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_tool_panel)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.TOOL_PANEL_MOVE_TO_LEFT,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_tool_panel_move_to_left)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_HORIZONTAL_YEARS_TAB,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_horizontal_years_tab)
+        )
+        CheckBoxSettings(
+            setting = Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB,
+            onSettingChange = onSettingChange,
+            getSettingValue = getSettingValue,
+            title = stringResource(id = R.string.settings_hide_horizontal_months_tab)
+        )
     }
 }
 
@@ -178,6 +217,8 @@ fun CheckBoxSettings(
 
     CheckBox(title = title, state = state.toBoolean(), onCheck = onCheck)
 }
+
+const val MAX_VALUE_LENGTH = 2
 
 @Composable
 fun CheckBoxSettingsWithEditBox(
@@ -220,14 +261,16 @@ fun CheckBoxSettingsWithEditBox(
             enabled = flag,
             isError = isError,
             onValueChange = {
-                isError = if (it.isEmpty() || it.toInt() !in 1 until maxNumber) {
-                    onSettingChange(linkedSetting, linkedSetting.defValue)
-                    true
-                } else {
-                    onSettingChange(linkedSetting, it)
-                    false
-                }
-                text = it
+                val str = it.trim()
+                isError =
+                    if (str.isEmpty() || !str.isDigitsOnly() || str.toInt() !in 1 until maxNumber) {
+                        onSettingChange(linkedSetting, linkedSetting.defValue)
+                        true
+                    } else {
+                        onSettingChange(linkedSetting, str)
+                        false
+                    }
+                if (str.length <= MAX_VALUE_LENGTH) text = str
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,

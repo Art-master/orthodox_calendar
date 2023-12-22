@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
@@ -13,13 +14,14 @@ import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTe
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.HolidayPagerListLayout
 import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsLayoutWrapper
-import com.artmaster.android.orthodoxcalendar.ui.settings_page.SettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.HolidayTileLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.artmaster.android.orthodoxcalendar.ui.tools.CalendarToolsDrawer
 import com.artmaster.android.orthodoxcalendar.ui.tools.MultiFabItem
 import com.artmaster.android.orthodoxcalendar.ui.tools.Tabs
 import com.artmaster.android.orthodoxcalendar.ui.user_holiday_page.UserHolidayLayout
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
 @Composable
 fun AppNavigationComponent(
@@ -39,12 +41,25 @@ fun AppNavigationComponent(
         }
     }
 
+    val onEditClick = remember {
+        { holiday: Holiday ->
+            navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/${holiday.id}")
+        }
+    }
+    val onDeleteClick = remember {
+        { holiday: Holiday ->
+            calendarViewModel.deleteHoliday(holiday.id)
+            navigateToCalendar(navController, settingsViewModel)
+        }
+    }
+
     val onToolItemClick = remember {
         { item: MultiFabItem ->
             when (item.identifier) {
                 Tabs.NEW_EVENT.name -> {
                     navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/0")
                 }
+
                 Tabs.FILTERS.name -> {} //No actions
                 else -> throw IllegalStateException("Wrong item name")
             }
@@ -56,7 +71,7 @@ fun AppNavigationComponent(
         startDestination = startRoute
     ) {
         composable(Navigation.INIT_PAGE.route) {
-            AppStartTextAnimation(duration = initViewModel.animationTime.toInt()) {
+            AppStartTextAnimation(duration = initViewModel.animationTime.toInt(), resIndex = null) {
 
                 val route = if (calendarViewModel.firstLoadingTileCalendar())
                     Navigation.TILE_CALENDAR
@@ -73,10 +88,12 @@ fun AppNavigationComponent(
             if (initViewModel.isDatabasePrepared) {
                 CalendarToolsDrawer(
                     viewModel = calendarViewModel,
+                    settingsViewModel = settingsViewModel,
                     onToolClick = onToolItemClick
                 ) {
                     HolidayTileLayout(
                         calendarViewModel,
+                        settingsViewModel,
                         onDayClick,
                         onHolidayClick
                     )
@@ -87,11 +104,15 @@ fun AppNavigationComponent(
             if (initViewModel.isDatabasePrepared) {
                 CalendarToolsDrawer(
                     viewModel = calendarViewModel,
+                    settingsViewModel = settingsViewModel,
                     onToolClick = onToolItemClick
                 ) {
                     HolidayPagerListLayout(
                         calendarViewModel,
+                        settingsViewModel,
                         onDayClick,
+                        onEditClick,
+                        onDeleteClick,
                         onHolidayClick
                     )
 
@@ -99,18 +120,6 @@ fun AppNavigationComponent(
             } else Spinner()
         }
         composable("${Navigation.HOLIDAY_PAGE.route}/{id}") { backStackEntry ->
-            val onEditClick = remember {
-                { holiday: Holiday ->
-                    navController.navigate(route = "${Navigation.USERS_HOLIDAY_EDITOR.route}/${holiday.id}")
-                }
-            }
-            val onDeleteClick = remember {
-                { holiday: Holiday ->
-                    calendarViewModel.deleteHoliday(holiday.id)
-                    navigateToCalendar(navController)
-                }
-            }
-
             val id = backStackEntry.arguments!!.getString("id")!!
             HolidayInfoPager(
                 viewModel = calendarViewModel,
@@ -156,11 +165,8 @@ private fun navigateToHolidayPage(navController: NavHostController, id: Long) {
     }
 }
 
-private fun navigateToCalendar(navController: NavHostController) {
-    val currentRoute = navController.currentDestination?.route ?: ""
-    val targetRoute = if (currentRoute == Navigation.TILE_CALENDAR.route) {
-        Navigation.LIST_CALENDAR.route
-    } else Navigation.TILE_CALENDAR.route
-
-    navController.navigate(targetRoute)
+fun navigateToCalendar(navController: NavHostController, model: SettingsViewModel) {
+    if (model.getSetting(Settings.Name.FIRST_LOADING_TILE_CALENDAR).value.toBoolean()) {
+        navController.navigate(Navigation.TILE_CALENDAR.route)
+    } else navController.navigate(Navigation.LIST_CALENDAR.route)
 }

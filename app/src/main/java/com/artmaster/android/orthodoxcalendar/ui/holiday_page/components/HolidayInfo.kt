@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,11 +42,13 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
-import com.artmaster.android.orthodoxcalendar.ui.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
 import com.artmaster.android.orthodoxcalendar.ui.theme.*
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -57,7 +61,12 @@ fun HolidayPagePreview() {
         description = "Много текста описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника.Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника. Очень длинное описание для праздника"
     )
 
-    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
+    HolidayPage(
+        viewModel = null,
+        holiday = holiday,
+        titleHeightInitSize = 800,
+        onEditClick = {},
+        onDeleteClick = {})
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
@@ -74,7 +83,12 @@ fun UserHolidayPagePreview() {
         description = ""
     )
 
-    HolidayPage(viewModel = null, holiday = holiday, titleHeightInitSize = 800)
+    HolidayPage(
+        viewModel = CalendarViewModelFake(),
+        holiday = holiday,
+        titleHeightInitSize = 800,
+        onEditClick = {},
+        onDeleteClick = {})
 }
 
 
@@ -82,30 +96,50 @@ fun UserHolidayPagePreview() {
 @Composable
 fun HolidayPage(
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel?,
+    viewModel: ICalendarViewModel?,
     holiday: Holiday,
-    onEditClick: (holiday: Holiday) -> Unit = {},
-    onDeleteClick: (holiday: Holiday) -> Unit = {},
+    onEditClick: (holiday: Holiday) -> Unit,
+    onDeleteClick: (holiday: Holiday) -> Unit,
+    isHeaderEnable: Boolean = true,
     titleHeightInitSize: Int = 0 //initial state for preview
 ) {
 
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
-    val drawableId = remember {
+    val drawableId = remember(holiday.id) {
         val imageId = holiday.imageId
         if (imageId.isEmpty()) return@remember 0
         context.resources.getIdentifier(imageId, "drawable", context.packageName)
     }
 
+    val scope = rememberCoroutineScope()
     val scroll = rememberScrollState(0)
+    var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
+
+    LaunchedEffect(fullHolidayInfo) {
+        if (fullHolidayInfo == null) {
+            scope.launch {
+                scroll.scrollTo(0)
+            }
+        }
+
+    }
+
     val modalState = remember { mutableStateOf(false) }
-    var titleHeight by rememberSaveable { mutableStateOf(titleHeightInitSize) }
+    var titleHeight by rememberSaveable { mutableIntStateOf(titleHeightInitSize) }
     val titlePadding = with(LocalDensity.current) {
-        configuration.screenHeightDp.dp - titleHeight.toDp()
+        val value = configuration.screenHeightDp.dp - titleHeight.toDp()
+        if (value.value > 0) value else 10.dp
     }
 
     val imageHeight = (configuration.screenHeightDp / 1.2).dp
+
+    val onRejectClickRemembered by rememberUpdatedState { modalState.value = false }
+    val onConfirmClickRemembered by rememberUpdatedState {
+        onDeleteClick(holiday)
+        modalState.value = false
+    }
 
     Box(
         modifier = modifier
@@ -126,7 +160,6 @@ fun HolidayPage(
         } else {
             NoImageLayout(imageHeight)
         }
-
 
         if (holiday.isCreatedByUser) {
             UserHolidayControlMenu(
@@ -149,24 +182,27 @@ fun HolidayPage(
                 modifier = Modifier
                     .drawBehind {
                         // Shadow
-                        drawRoundRect(
-                            color = Color.Black,
-                            topLeft = Offset(0f, -10f),
-                            alpha = 0.3f,
-                            cornerRadius = CornerRadius(40f, 40f)
-                        )
+                        if (isHeaderEnable) {
+                            drawRoundRect(
+                                color = Color.Black,
+                                topLeft = Offset(0f, -10f),
+                                alpha = 0.3f,
+                                cornerRadius = CornerRadius(40f, 40f)
+                            )
+                        }
                     }
                     .clip(RoundedCornerShape(20.dp))
                     .background(Background)
             ) {
-                HolidayPageTitle(
-                    modifier = Modifier.onSizeChanged { titleHeight = it.height },
-                    holiday = holiday,
-                    currentYear = viewModel?.getYear()?.value ?: Time().year
-                )
+                if (isHeaderEnable) {
+                    HolidayPageTitle(
+                        modifier = Modifier.onSizeChanged { titleHeight = it.height },
+                        holiday = holiday,
+                        currentYear = viewModel?.getYear()?.value ?: Time().year
+                    )
+                }
 
                 var scrollActivate by remember { mutableStateOf(false) }
-                var fullHolidayInfo by remember { mutableStateOf<Holiday?>(null) }
 
                 if (scroll.isScrollInProgress && scrollActivate.not()) {
                     scrollActivate = true
@@ -186,18 +222,30 @@ fun HolidayPage(
 
                     // if full data loaded (etc. include holiday description)
                     fullHolidayInfo?.let {
+                        val description = remember {
+                            fullHolidayInfo!!.description.substringBefore("<<").trim()
+                        }
+
+                        val link = remember {
+                            fullHolidayInfo!!.description
+                                .substringAfter("<<")
+                                .substringBefore(">>")
+                        }
+
                         Divider()
-                        HolidayDescriptionLayout(description = fullHolidayInfo!!.description.trim())
+                        HolidayDescriptionLayout(description = description)
+                        if (link.isNotBlank()) {
+                            SourceLink(link)
+                        }
                     }
                 }
             }
 
             DeleteHolidayDialog(
                 state = modalState.value,
-                onRejectClick = { modalState.value = false }) {
-                onDeleteClick(holiday)
-                modalState.value = false
-            }
+                onRejectClick = onRejectClickRemembered,
+                onConfirmClick = onConfirmClickRemembered
+            )
         }
     }
 }
@@ -396,4 +444,29 @@ fun NoImageLayout(imageHeight: Dp) {
             fontFamily = FontFamily(Font(R.font.cyrillic_old))
         )
     }
+}
+
+@Composable
+fun SourceLink(link: String) {
+
+    val uriHandler = LocalUriHandler.current
+    val onLinkClick by rememberUpdatedState {
+        uriHandler.openUri(link)
+    }
+
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp)
+            .offset(y = -(10).dp)
+            .clickable(onClick = onLinkClick),
+        text = stringResource(id = R.string.source),
+        fontSize = with(LocalDensity.current) {
+            (20 / fontScale).sp
+        },
+        color = LinksColor,
+        fontFamily = FontFamily(Font(R.font.decorated)),
+        textAlign = TextAlign.Center,
+        textDecoration = TextDecoration.Underline
+    )
 }
