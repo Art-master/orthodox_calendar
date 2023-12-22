@@ -297,9 +297,10 @@ fun MultiFloatingActionButton(
             verticalArrangement = Arrangement.Bottom
         ) {
             hasBadges = false
-            if (alpha > 0f) {
-                items.forEach { item ->
-                    if (item.eventsCount > 0) hasBadges = true
+
+            items.forEach { item ->
+                if (item.eventsCount > 0) hasBadges = true
+                if (alpha > 0f) {
                     MiniFabItem(
                         item = item,
                         alpha = alpha,
