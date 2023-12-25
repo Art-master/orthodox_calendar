@@ -1,7 +1,10 @@
 package com.artmaster.android.orthodoxcalendar.ui
 
 import android.content.Intent
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.os.Bundle
+import android.provider.Settings.System
+import android.provider.Settings.System.ACCELEROMETER_ROTATION
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -28,6 +31,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Action
 import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
+import com.artmaster.android.orthodoxcalendar.ui.common.LockScreenOrientation
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
 import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
@@ -47,10 +51,15 @@ class InitAppActivity : ComponentActivity() {
             initNotifications()
         }
 
+        val screenAutorotateEnabled = System.getInt(contentResolver, ACCELEROMETER_ROTATION, 0) == 1
+
         setContent {
             val startRoute by remember { mutableStateOf(Navigation.INIT_PAGE.route) }
             val navController = rememberNavController()
             val snackState = remember { SnackbarHostState() }
+
+            val isSettingsInit = settingsViewModel.isInit
+            if (isSettingsInit.value.not()) return@setContent
 
 
             DisposableEffect(Unit) {
@@ -74,6 +83,10 @@ class InitAppActivity : ComponentActivity() {
             }
 
             MaterialTheme {
+                if (screenAutorotateEnabled.not()) {
+                    LockScreenOrientation(SCREEN_ORIENTATION_PORTRAIT)
+                }
+
                 CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column {
