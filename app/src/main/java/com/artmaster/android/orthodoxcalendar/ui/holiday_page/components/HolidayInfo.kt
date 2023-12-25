@@ -228,8 +228,8 @@ fun HolidayPage(
 
                         val link = remember {
                             fullHolidayInfo!!.description
-                                .substringAfter("<<")
-                                .substringBefore(">>")
+                                .substringAfter("<<", missingDelimiterValue = "")
+                                .substringBefore(">>", missingDelimiterValue = "")
                         }
 
                         Divider()
