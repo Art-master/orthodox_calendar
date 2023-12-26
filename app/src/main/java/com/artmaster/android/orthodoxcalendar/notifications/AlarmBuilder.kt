@@ -30,6 +30,10 @@ object AlarmBuilder {
         if (isNotificationDisable()) return
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!alarmMgr.canScheduleExactAlarms()) return
+        }
+
         var timeInMillis = buildCalendarByAppSettings().timeInMillis
 
         if (debugEnabled()) {

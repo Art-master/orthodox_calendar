@@ -14,7 +14,10 @@ import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FIRST_LOAD_AP
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.OFF_START_ANIMATION
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.SPEED_UP_START_ANIMATION
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.USER_DATA_VERSION
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -54,13 +57,20 @@ class LoadDataViewModel : ViewModel() {
                     preferences.set(FIRST_LOAD_APP, Settings.TRUE)
                 } else if (userDataVersion.toInt() != DATA_VERSION) {
                     val data = fileParser.getData()
-                    repository.deleteCommonHolidays()
-                    repository.insertHolidays(data)
+                    reloadHolidays(data)
                     preferences.set(USER_DATA_VERSION, userDataVersion.toInt().inc().toString())
                 }
                 isDatabasePrepared = true
                 callback.invoke()
             }
+        }
+    }
+
+    private suspend fun reloadHolidays(data: List<Holiday>) {
+        coroutineScope {
+            val delete = async { repository.deleteCommonHolidays() }
+            delete.await()
+            repository.insertHolidays(data)
         }
     }
 
