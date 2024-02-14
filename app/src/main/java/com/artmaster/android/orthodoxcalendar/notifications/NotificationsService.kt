@@ -226,7 +226,7 @@ class NotificationsService : Service() {
 
     @SuppressLint("DiscouragedApi")
     private fun prepareFastingNotifications(prevDay: Day, current: Day) {
-        if (current.fasting.type == FASTING_DAY) return
+        if (prevDay.fasting.type == FASTING_DAY || current.fasting.type == FASTING_DAY) return
 
         val fastingStarts = if (prevDay.fasting.type == NONE && current.fasting.type != NONE) {
             true

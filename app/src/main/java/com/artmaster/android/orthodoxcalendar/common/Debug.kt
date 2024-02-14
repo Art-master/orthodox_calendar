@@ -11,9 +11,9 @@ object Debug {
 
     object Time {
         fun debugEnabled() = isDebugBuild() && false
-        fun getYear() = 2023
-        fun getMonth() = 10
-        fun getDay() = 25
+        fun getYear() = 2024
+        fun getMonth() = 2
+        fun getDay() = 15
     }
 
     fun isDebugBuild() = BuildConfig.DEBUG
