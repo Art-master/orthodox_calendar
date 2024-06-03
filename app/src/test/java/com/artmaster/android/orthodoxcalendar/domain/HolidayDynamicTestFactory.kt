@@ -28,9 +28,17 @@ abstract class HolidayDynamicTestFactory {
         checkDynamicHoliday(2043, THE_EASTER, Holiday(month = 5, day = 3))
         checkDynamicHoliday(2049, THE_EASTER, Holiday(month = 4, day = 25))
 
-        checkDynamicHoliday(2009, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 12))
+        checkDynamicHoliday(
+            2009,
+            THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM,
+            Holiday(month = 4, day = 12)
+        )
         checkDynamicHoliday(2015, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 5))
-        checkDynamicHoliday(2019, THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM, Holiday(month = 4, day = 21))
+        checkDynamicHoliday(
+            2019,
+            THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM,
+            Holiday(month = 4, day = 21)
+        )
 
         checkDynamicHoliday(2007, THE_ASCENSION_OF_THE_LORD, Holiday(month = 5, day = 17))
         checkDynamicHoliday(2018, THE_ASCENSION_OF_THE_LORD, Holiday(month = 5, day = 17))
@@ -252,8 +260,29 @@ abstract class HolidayDynamicTestFactory {
 
     @Test
     fun checkPeterAndPaulFasting() {
-        var day = Day(year = 2020, month = Month.JUNE.num, dayInWeek = MONDAY.num, dayOfMonth = 15)
+        // 2024
+        var day = Day(year = 2024, month = Month.JUNE.num, dayInWeek = SUNDAY.num, dayOfMonth = 23)
+        checkFastingType(day, Type.NONE)
+
+        //24-29 June - solid week
+        day = Day(year = 2024, month = Month.JUNE.num, dayInWeek = MONDAY.num, dayOfMonth = 24)
+        checkFastingType(day, Type.SOLID_WEEK)
+
+        day = Day(year = 2024, month = Month.JUNE.num, dayInWeek = SATURDAY.num, dayOfMonth = 29)
+        checkFastingType(day, Type.SOLID_WEEK)
+
+        //1-12 July - fasting
+        day = Day(year = 2024, month = Month.JULY.num, dayInWeek = MONDAY.num, dayOfMonth = 1)
         checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
+
+        day = Day(year = 2024, month = Month.JULY.num, dayInWeek = THURSDAY.num, dayOfMonth = 11)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
+
+        day = Day(year = 2024, month = Month.JULY.num, dayInWeek = FRIDAY.num, dayOfMonth = 12)
+        checkFastingType(day, Type.FASTING_DAY)
+
+        day = Day(year = 2024, month = Month.JULY.num, dayInWeek = SATURDAY.num, dayOfMonth = 13)
+        checkFastingType(day, Type.NONE)
     }
 
     private fun checkFastingType(day: Day, expectedType: Type) {

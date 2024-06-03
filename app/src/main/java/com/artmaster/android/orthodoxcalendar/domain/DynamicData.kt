@@ -228,8 +228,8 @@ class DynamicData {
         val month = calendar.monthWith0
         val dayM = calendar.dayOfMonth
 
-        return (day.month == month && day.dayOfMonth >= dayM) or
-                (day.month == Month.JULY.num && day.dayOfMonth <= 12)
+        return (day.month == Month.JUNE.num && day.month == month && day.dayOfMonth >= dayM) or
+                (day.month == Month.JULY.num && day.dayOfMonth <= 11)
     }
 
     private fun fillDayAsPeterFasting(day: Day) {
