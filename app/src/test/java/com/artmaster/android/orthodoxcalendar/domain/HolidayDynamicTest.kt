@@ -1,7 +1,13 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-/*class HolidayDynamicTest : HolidayDynamicTestFactory() {
-    override fun checkDynamicHoliday(year: Int, type: Holiday.MovableDay, expectedHoliday: Holiday) {
+import org.junit.Assert
+
+class HolidayDynamicTest : HolidayDynamicTestFactory() {
+    override fun checkDynamicHoliday(
+        year: Int,
+        type: Holiday.MovableDay,
+        expectedHoliday: Holiday
+    ) {
         val holiday = Holiday(dynamicType = type.dynamicType)
         val dynamicHoliday = DynamicData()
         holiday.year = year
@@ -9,4 +15,4 @@ package com.artmaster.android.orthodoxcalendar.domain
         Assert.assertEquals("Wrong day", expectedHoliday.day, holiday.day)
         Assert.assertEquals("Wrong month", expectedHoliday.month, holiday.month)
     }
-}*/
+}

@@ -1,7 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.domain
 
-import com.artmaster.android.orthodoxcalendar.domain.Holiday.*
-import java.util.*
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Month
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay
+import java.util.Calendar
 
 /**
  * Calculated dynamic holidays
@@ -56,10 +58,16 @@ class DynamicData {
                 getHolidayDynamicDate(holiday.year, MovableDay.THE_EASTER.dayFromEaster)
 
             MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dynamicType ->
-                getHolidayDynamicDate(holiday.year, MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dayFromEaster)
+                getHolidayDynamicDate(
+                    holiday.year,
+                    MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM.dayFromEaster
+                )
 
             MovableDay.THE_ASCENSION_OF_THE_LORD.dynamicType ->
-                getHolidayDynamicDate(holiday.year, MovableDay.THE_ASCENSION_OF_THE_LORD.dayFromEaster)
+                getHolidayDynamicDate(
+                    holiday.year,
+                    MovableDay.THE_ASCENSION_OF_THE_LORD.dayFromEaster
+                )
 
             MovableDay.THE_HOLY_TRINITY.dynamicType ->
                 getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
@@ -89,7 +97,8 @@ class DynamicData {
                 getHolidayDynamicDate(holiday.year, MovableDay.SATURDAY_OF_TRINITY.dayFromEaster)
 
             MovableDay.SATURDAY_OF_PARENT_APOSTLE.dynamicType -> {
-                val date = getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
+                val date =
+                    getHolidayDynamicDate(holiday.year, MovableDay.THE_HOLY_TRINITY.dayFromEaster)
                 getHolidayDynamicDate(date.monthWith0, date.dayOfMonth, 6, holiday.year)
             }
 
@@ -102,9 +111,20 @@ class DynamicData {
                 when (time.dayOfWeek) {
                     DayOfWeek.SUNDAY.num -> time
                     in 0..2 -> {
-                        calculateLastDayOfWeekTime(Month.FEBRUARY.num, 7, holiday.year, Calendar.SUNDAY)
+                        calculateLastDayOfWeekTime(
+                            Month.FEBRUARY.num,
+                            7,
+                            holiday.year,
+                            Calendar.SUNDAY
+                        )
                     }
-                    else -> calculateNextDayOfWeekTime(Month.FEBRUARY.num, 7, holiday.year, Calendar.SUNDAY)
+
+                    else -> calculateNextDayOfWeekTime(
+                        Month.FEBRUARY.num,
+                        7,
+                        holiday.year,
+                        Calendar.SUNDAY
+                    )
                 }
             }
 
@@ -144,8 +164,10 @@ class DynamicData {
     private fun getHolidayDynamicDate(yearEaster: Int, valueForCalculate: Int): Time {
         val monthAndDay = getEasterMonthAndDay(yearEaster)
 
-        val cal = Time().calculateDate(yearEaster, monthAndDay.first,
-                monthAndDay.second, Calendar.DAY_OF_YEAR, valueForCalculate)
+        val cal = Time().calculateDate(
+            yearEaster, monthAndDay.first,
+            monthAndDay.second, Calendar.DAY_OF_YEAR, valueForCalculate
+        )
         return Time(cal)
     }
 
@@ -159,8 +181,13 @@ class DynamicData {
         }
     }
 
-    private fun getHolidayDynamicDate(month: Int, day: Int, valueForCalculate: Int, year: Int,
-                                      type: Int = Calendar.DAY_OF_YEAR): Time {
+    private fun getHolidayDynamicDate(
+        month: Int,
+        day: Int,
+        valueForCalculate: Int,
+        year: Int,
+        type: Int = Calendar.DAY_OF_YEAR
+    ): Time {
         val cal = Time().calculateDate(year, month, day, type, valueForCalculate)
         return Time(cal)
     }
@@ -213,6 +240,7 @@ class DynamicData {
                 list.add(Fasting.Permission.OIL)
                 list.add(Fasting.Permission.FISH)
             }
+
             DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num -> list.add(Fasting.Permission.STRICT)
         }
         day.fasting.permissions = list
@@ -251,23 +279,28 @@ class DynamicData {
                         list.add(Fasting.Permission.FISH)
                         list.add(Fasting.Permission.OIL)
                     }
+
                     29 -> list.add(Fasting.Permission.STRICT)
                 }
             }
+
             day.month == Month.DECEMBER.num -> {
                 when (day.dayOfMonth) {
                     1, 3, 4, 5, 7, 8, 10, 12, 14, 15, 17, 19, 21, 22, 28, 29 -> {
                         list.add(Fasting.Permission.FISH)
                         list.add(Fasting.Permission.OIL)
                     }
+
                     2, 9, 16, 23, 30 -> {
                         list.add(Fasting.Permission.HOT_NO_OIL)
                     }
+
                     6, 11, 13, 18, 20, 25, 27 -> {
                         list.add(Fasting.Permission.STRICT)
                     }
                 }
             }
+
             day.month == Month.JANUARY.num -> {
                 when (day.dayOfMonth) {
                     1, 3, 6 -> list.add(Fasting.Permission.STRICT)
@@ -314,6 +347,7 @@ class DynamicData {
             DayOfWeek.MONDAY.num, DayOfWeek.WEDNESDAY.num, DayOfWeek.FRIDAY.num -> {
                 list.add(Fasting.Permission.STRICT)
             }
+
             DayOfWeek.TUESDAY.num, DayOfWeek.THURSDAY.num -> {
                 list.add(Fasting.Permission.HOT_NO_OIL)
             }
@@ -322,6 +356,7 @@ class DynamicData {
                 list.add(Fasting.Permission.OIL)
                 list.add(Fasting.Permission.FISH)
             }
+
             DayOfWeek.SATURDAY.num, DayOfWeek.SUNDAY.num ->
                 list.add(Fasting.Permission.OIL)
         }
@@ -387,24 +422,31 @@ class DynamicData {
             MovableDay.SATURDAY_OF_PARENT_APOSTLE.dynamicType,
             MovableDay.PERSECUTED.dynamicType,
             MovableDay.RADUNYTSYA.dynamicType -> true
+
             else -> false
         }
     }
 
     private fun setSolidWeek(day: Day) {
+        //Christmas solid week
         if (day.month == Month.JANUARY.num && day.dayOfMonth in 8..17) {
             day.fasting.type = Fasting.Type.SOLID_WEEK
             day.fasting.permissions = emptyList()
             return
         }
+        //Meet solid week
         if (calculateSolidWeek(day, -69, -63)) return
+        //No meet solid week
         if (calculateSolidWeek(day, -55, -49, listOf(Fasting.Permission.NO_MEAT))) return
+
         if (calculateSolidWeek(day, 1, 7)) return
         if (calculateSolidWeek(day, 50, 56)) return
     }
 
-    private fun calculateSolidWeek(day: Day, timeFromEasterStart: Int, timeFromEasterEnd: Int,
-                                   permissions: List<Fasting.Permission> = emptyList()): Boolean {
+    private fun calculateSolidWeek(
+        day: Day, timeFromEasterStart: Int, timeFromEasterEnd: Int,
+        permissions: List<Fasting.Permission> = emptyList()
+    ): Boolean {
         var flag = false
         val timeStart = getHolidayDynamicDate(day.year, timeFromEasterStart)
         getHolidayDynamicDate(day.year, timeFromEasterEnd).apply {
@@ -415,7 +457,8 @@ class DynamicData {
                 }
             } else
                 if ((day.month == timeStart.monthWith0 && day.dayOfMonth >= timeStart.dayOfMonth) ||
-                        (day.month == monthWith0 && day.dayOfMonth < dayOfMonth)) {
+                    (day.month == monthWith0 && day.dayOfMonth < dayOfMonth)
+                ) {
                     flag = true
                     return@apply
                 }

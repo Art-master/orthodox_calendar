@@ -1,10 +1,20 @@
-/*
 package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type
-import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.FRIDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.MONDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SATURDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.SUNDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.THURSDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.TUESDAY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.DayOfWeek.WEDNESDAY
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Month
-import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.*
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.Month.JANUARY
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.PERSECUTED
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.THE_ASCENSION_OF_THE_LORD
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.THE_EASTER
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.THE_ENTRY_OF_THE_LORD_INTO_JERUSALEM
+import com.artmaster.android.orthodoxcalendar.domain.Holiday.MovableDay.THE_HOLY_TRINITY
 import org.junit.Assert
 import org.junit.Test
 
@@ -33,205 +43,220 @@ abstract class HolidayDynamicTestFactory {
 
     @Test
     fun checkFasting() {
-
         //2021
-        var day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 5)
-        checkFastingType(2021, day, Type.FASTING)
+        var day = Day(year = 2021, month = JANUARY.num, dayInWeek = FRIDAY.num, dayOfMonth = 5)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 7)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = THURSDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 8)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = THURSDAY.num, dayOfMonth = 8)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 13)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 13)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 15)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = FRIDAY.num, dayOfMonth = 15)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 18)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = MONDAY.num, dayOfMonth = 18)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 20)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 20)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 21)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = JANUARY.num, dayInWeek = THURSDAY.num, dayOfMonth = 21)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.FEBRUARY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 3)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day =
+            Day(year = 2021, month = Month.FEBRUARY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 3)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.FEBRUARY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 24)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day =
+            Day(year = 2021, month = Month.FEBRUARY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 24)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.MARCH.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 3)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.MARCH.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 3)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.MARCH.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 12)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = Month.MARCH.num, dayInWeek = FRIDAY.num, dayOfMonth = 12)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.APRIL.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 17)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.APRIL.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 17)
+        checkFastingType(day, Type.GREAT_FASTING)
 
-        day = Day(month = Month.APRIL.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 7)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.APRIL.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.GREAT_FASTING)
 
-        day = Day(month = Month.MAY.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 1)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.MAY.num, dayInWeek = SATURDAY.num, dayOfMonth = 1)
+        checkFastingType(day, Type.GREAT_FASTING)
 
-        day = Day(month = Month.MAY.num, dayInWeek = DayOfWeek.SUNDAY.num, dayOfMonth = 2)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.MAY.num, dayInWeek = SUNDAY.num, dayOfMonth = 2)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.MAY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 5)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = Month.MAY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 5)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.MAY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 7)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = Month.MAY.num, dayInWeek = FRIDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.MAY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 14)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.MAY.num, dayInWeek = FRIDAY.num, dayOfMonth = 14)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 16)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.JUNE.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 16)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 25)
-        checkFastingType(2021, day, Type.SOLID_WEEK)
+        day = Day(year = 2021, month = Month.JUNE.num, dayInWeek = FRIDAY.num, dayOfMonth = 25)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.SUNDAY.num, dayOfMonth = 27)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.JUNE.num, dayInWeek = SUNDAY.num, dayOfMonth = 27)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 28)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.JUNE.num, dayInWeek = MONDAY.num, dayOfMonth = 28)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
 
-        day = Day(month = Month.JULY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 7)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.JULY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
 
-        day = Day(month = Month.JULY.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 12)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.JULY.num, dayInWeek = MONDAY.num, dayOfMonth = 12)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
 
-        day = Day(month = Month.JULY.num, dayInWeek = DayOfWeek.TUESDAY.num, dayOfMonth = 13)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.JULY.num, dayInWeek = TUESDAY.num, dayOfMonth = 13)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JULY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 14)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.JULY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 14)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 12)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = THURSDAY.num, dayOfMonth = 12)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 13)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = FRIDAY.num, dayOfMonth = 13)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 14)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = SATURDAY.num, dayOfMonth = 14)
+        checkFastingType(day, Type.ASSUMPTION_FASTING)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 18)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 18)
+        checkFastingType(day, Type.ASSUMPTION_FASTING)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 27)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = FRIDAY.num, dayOfMonth = 27)
+        checkFastingType(day, Type.ASSUMPTION_FASTING)
 
-        day = Day(month = Month.AUGUST.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 28)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.AUGUST.num, dayInWeek = SATURDAY.num, dayOfMonth = 28)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.SEPTEMBER.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 10)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.SEPTEMBER.num, dayInWeek = FRIDAY.num, dayOfMonth = 10)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.SEPTEMBER.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 11)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day =
+            Day(year = 2021, month = Month.SEPTEMBER.num, dayInWeek = SATURDAY.num, dayOfMonth = 11)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.SEPTEMBER.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 22)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(
+            year = 2021,
+            month = Month.SEPTEMBER.num,
+            dayInWeek = WEDNESDAY.num,
+            dayOfMonth = 22
+        )
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.SEPTEMBER.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 27)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.SEPTEMBER.num, dayInWeek = MONDAY.num, dayOfMonth = 27)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.SEPTEMBER.num, dayInWeek = DayOfWeek.TUESDAY.num, dayOfMonth = 28)
-        checkFastingType(2021, day, Type.NONE)
+        day =
+            Day(year = 2021, month = Month.SEPTEMBER.num, dayInWeek = TUESDAY.num, dayOfMonth = 28)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.OCTOBER.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 14)
-        checkFastingType(2021, day, Type.NONE)
+        day = Day(year = 2021, month = Month.OCTOBER.num, dayInWeek = THURSDAY.num, dayOfMonth = 14)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.NOVEMBER.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 26)
-        checkFastingType(2021, day, Type.FASTING_DAY)
+        day = Day(year = 2021, month = Month.NOVEMBER.num, dayInWeek = FRIDAY.num, dayOfMonth = 26)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.NOVEMBER.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 27)
-        checkFastingType(2021, day, Type.NONE)
+        day =
+            Day(year = 2021, month = Month.NOVEMBER.num, dayInWeek = SATURDAY.num, dayOfMonth = 27)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.NOVEMBER.num, dayInWeek = DayOfWeek.SUNDAY.num, dayOfMonth = 28)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.NOVEMBER.num, dayInWeek = SUNDAY.num, dayOfMonth = 28)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 1)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = MONDAY.num, dayOfMonth = 1)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 4)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = SATURDAY.num, dayOfMonth = 4)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 9)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = THURSDAY.num, dayOfMonth = 9)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 17)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = FRIDAY.num, dayOfMonth = 17)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 29)
-        checkFastingType(2021, day, Type.FASTING)
+        day =
+            Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 29)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.DECEMBER.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 31)
-        checkFastingType(2021, day, Type.FASTING)
+        day = Day(year = 2021, month = Month.DECEMBER.num, dayInWeek = FRIDAY.num, dayOfMonth = 31)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
         //2022
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 1)
-        checkFastingType(2022, day, Type.FASTING)
+        day = Day(year = 2022, month = JANUARY.num, dayInWeek = FRIDAY.num, dayOfMonth = 1)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.WEDNESDAY.num, dayOfMonth = 6)
-        checkFastingType(2022, day, Type.FASTING)
+        day = Day(year = 2022, month = JANUARY.num, dayInWeek = WEDNESDAY.num, dayOfMonth = 6)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.THURSDAY.num, dayOfMonth = 7)
-        checkFastingType(2022, day, Type.NONE)
+        day = Day(year = 2022, month = JANUARY.num, dayInWeek = THURSDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.NONE)
 
         //2020
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 6)
-        checkFastingType(2020, day, Type.FASTING)
+        day = Day(year = 2020, month = JANUARY.num, dayInWeek = MONDAY.num, dayOfMonth = 6)
+        checkFastingType(day, Type.CHRISTMAS_FASTING)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.TUESDAY.num, dayOfMonth = 7)
-        checkFastingType(2020, day, Type.NONE)
+        day = Day(year = 2020, month = JANUARY.num, dayInWeek = TUESDAY.num, dayOfMonth = 7)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 17)
-        checkFastingType(2020, day, Type.SOLID_WEEK)
+        day = Day(year = 2020, month = JANUARY.num, dayInWeek = FRIDAY.num, dayOfMonth = 17)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JANUARY.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 18)
-        checkFastingType(2020, day, Type.FASTING_DAY)
+        day = Day(year = 2020, month = JANUARY.num, dayInWeek = SATURDAY.num, dayOfMonth = 18)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.FEBRUARY.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 10)
-        checkFastingType(2020, day, Type.SOLID_WEEK)
+        day = Day(year = 2020, month = Month.FEBRUARY.num, dayInWeek = MONDAY.num, dayOfMonth = 10)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.FEBRUARY.num, dayInWeek = DayOfWeek.FRIDAY.num, dayOfMonth = 21)
-        checkFastingType(2020, day, Type.FASTING_DAY)
+        day = Day(year = 2020, month = Month.FEBRUARY.num, dayInWeek = FRIDAY.num, dayOfMonth = 21)
+        checkFastingType(day, Type.FASTING_DAY)
 
-        day = Day(month = Month.MARCH.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 1)
-        checkFastingType(2020, day, Type.NONE)
+        day = Day(year = 2020, month = Month.MARCH.num, dayInWeek = SATURDAY.num, dayOfMonth = 1)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.MARCH.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 2)
-        checkFastingType(2020, day, Type.FASTING)
+        day = Day(year = 2020, month = Month.MARCH.num, dayInWeek = MONDAY.num, dayOfMonth = 2)
+        checkFastingType(day, Type.GREAT_FASTING)
 
-        day = Day(month = Month.APRIL.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 18)
-        checkFastingType(2020, day, Type.FASTING)
+        day = Day(year = 2020, month = Month.APRIL.num, dayInWeek = SATURDAY.num, dayOfMonth = 18)
+        checkFastingType(day, Type.GREAT_FASTING)
 
-        day = Day(month = Month.APRIL.num, dayInWeek = DayOfWeek.SUNDAY.num, dayOfMonth = 19)
-        checkFastingType(2020, day, Type.NONE)
+        day = Day(year = 2020, month = Month.APRIL.num, dayInWeek = SUNDAY.num, dayOfMonth = 19)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.SATURDAY.num, dayOfMonth = 13)
-        checkFastingType(2020, day, Type.SOLID_WEEK)
+        day = Day(year = 2020, month = Month.JUNE.num, dayInWeek = SATURDAY.num, dayOfMonth = 13)
+        checkFastingType(day, Type.SOLID_WEEK)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.SUNDAY.num, dayOfMonth = 14)
-        checkFastingType(2020, day, Type.NONE)
+        day = Day(year = 2020, month = Month.JUNE.num, dayInWeek = SUNDAY.num, dayOfMonth = 14)
+        checkFastingType(day, Type.NONE)
 
-        day = Day(month = Month.JUNE.num, dayInWeek = DayOfWeek.MONDAY.num, dayOfMonth = 15)
-        checkFastingType(2020, day, Type.FASTING)
+        day = Day(year = 2020, month = Month.JUNE.num, dayInWeek = MONDAY.num, dayOfMonth = 15)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
     }
 
-    private fun checkFastingType(year: Int, day: Day, expectedType: Type) {
-        day.year = year
+    @Test
+    fun checkPeterAndPaulFasting() {
+        var day = Day(year = 2020, month = Month.JUNE.num, dayInWeek = MONDAY.num, dayOfMonth = 15)
+        checkFastingType(day, Type.PETER_AND_PAUL_FASTING)
+    }
+
+    private fun checkFastingType(day: Day, expectedType: Type) {
         val data = DynamicData()
         data.fillFastingDay(day)
         data.fillOtherData(day)
@@ -249,4 +274,3 @@ abstract class HolidayDynamicTestFactory {
 
     abstract fun checkDynamicHoliday(year: Int, type: Holiday.MovableDay, expectedHoliday: Holiday)
 }
-*/
