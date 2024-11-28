@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.9.21'
-    ext.gradle_version = '8.2.0'
+    ext.gradle_version = '8.7.2'
     ext.room_version = '2.6.1'
     ext.dagger_version = '2.48'
     ext.leakcanary_version = "2.7"
