@@ -13,10 +13,9 @@ fun isLowPerformanceDevice(): Boolean {
     }
     val context = LocalContext.current
     val activityManager = context.getSystemService(ActivityManager::class.java)
-    val memoryClass = activityManager?.memoryClass ?: 0 // Approximate RAM in MB
 
     return remember {
-        val isLowMemory = memoryClass != 0 && memoryClass <= 512 // Less than 512MB RAM
+        val isLowMemory = activityManager.isLowRamDevice
         val isLowDensity = context.resources.displayMetrics.densityDpi < 240 // Low DPI screens
 
         isLowMemory || isLowDensity

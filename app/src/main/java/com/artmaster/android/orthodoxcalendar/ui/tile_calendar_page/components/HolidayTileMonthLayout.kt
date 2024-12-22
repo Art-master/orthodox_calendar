@@ -72,7 +72,7 @@ fun HolidayTileMonthLayout(
         LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     if (isLandscape) {
-        HolidayTileMonthLayoutLandscape(data, dayOfMonth, onDayClick, onHolidayClick)
+        HolidayTileMonthLayoutLandscape(modifier, data, dayOfMonth, onDayClick, onHolidayClick)
     } else {
         HolidayTileMonthLayoutPortrait(
             modifier,
@@ -141,12 +141,13 @@ fun HolidayTileMonthLayoutPortrait(
 
 @Composable
 fun HolidayTileMonthLayoutLandscape(
+    modifier: Modifier,
     data: MutableState<List<Day>>,
     dayOfMonth: Int,
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (holiday: Holiday) -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         if (data.value.isEmpty()) {
             Spinner()
         } else {

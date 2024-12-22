@@ -12,6 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
@@ -19,6 +23,7 @@ import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONT
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBarPreview
+import com.artmaster.android.orthodoxcalendar.ui.common.isLowPerformanceDevice
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayTileMonthLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.MonthTabs
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
@@ -62,6 +67,7 @@ fun HolidayTileLayout(
     val pagerState = rememberPagerState(monthNum)
     val scope = rememberCoroutineScope()
     val filters = viewModel.getActiveFilters()
+    val isLowPerformanceDevice = isLowPerformanceDevice()
 
     LaunchedEffect(monthNum) {
         scope.launch {
@@ -110,8 +116,13 @@ fun HolidayTileLayout(
             state = pagerState
         ) { page ->
             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
-            if (needToShowLayout(pageOffset)) {
+            if (!isLowPerformanceDevice || needToShowLayout(pageOffset)) {
                 HolidayTileMonthLayout(
+                    modifier = Modifier.graphicsLayer {
+                        if (!isLowPerformanceDevice) {
+                            graphicalLayerTransform(this, pageOffset)
+                        }
+                    },
                     settingsViewModel = settingsViewModel,
                     data = viewModel.getCurrentMonthData(monthNum = page),
                     dayOfMonth = viewModel.getDayOfMonth().value,
@@ -124,3 +135,14 @@ fun HolidayTileLayout(
 }
 
 fun needToShowLayout(pageOffset: Float) = pageOffset < 0.8f
+
+fun graphicalLayerTransform(scope: GraphicsLayerScope, pageOffset: Float) {
+    scope.apply {
+        // We animate the alpha, between 0% and 100%
+        alpha = lerp(
+            start = ScaleFactor(0f, 0f),
+            stop = ScaleFactor(1f, 1f),
+            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        ).scaleX
+    }
+}
