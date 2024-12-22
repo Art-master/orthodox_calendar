@@ -22,7 +22,7 @@ val Int.scaledSp: TextUnit
 
 
 @Composable
-fun ScreenAspectRatio(): Float {
+fun screenAspectRatio(): Float {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
     val screenHeight = configuration.screenHeightDp

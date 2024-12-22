@@ -72,7 +72,7 @@ fun HolidayTileMonthLayout(
         LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     if (isLandscape) {
-        HolidayTileMonthLayoutLandscape(modifier, data, dayOfMonth, onDayClick, onHolidayClick)
+        HolidayTileMonthLayoutLandscape(data, dayOfMonth, onDayClick, onHolidayClick)
     } else {
         HolidayTileMonthLayoutPortrait(
             modifier,
@@ -97,15 +97,17 @@ fun HolidayTileMonthLayoutPortrait(
 ) {
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
-    val aspectRatio = ScreenAspectRatio()
+    val aspectRatio = screenAspectRatio()
     val state = rememberBottomSheetState(BottomSheetValue.Collapsed)
 
+    // if the aspect ratio is not a square type
+    val goodAspectRatio = aspectRatio < 0.55
     // if screen height size is big then make BottomSheetScaffold height longer
-    val sheetPeekHeight = if (aspectRatio < 0.55) {
+    val sheetPeekHeight = if (goodAspectRatio) {
         val hideMenu = !settingsViewModel.getSetting(HIDE_HORIZONTAL_MONTHS_TAB).value.toBoolean()
         (screenHeightDp / 2.5).dp + if (hideMenu) 0.dp else holidayMonthTabsHeight
     } else defaultTileDayInfoSize
-    val headerHeight = defaultTileDayInfoSize
+    val headerHeight = if (goodAspectRatio) 80.dp else defaultTileDayInfoSize
 
     Column(
         modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 15.dp),
@@ -139,7 +141,6 @@ fun HolidayTileMonthLayoutPortrait(
 
 @Composable
 fun HolidayTileMonthLayoutLandscape(
-    modifier: Modifier = Modifier,
     data: MutableState<List<Day>>,
     dayOfMonth: Int,
     onDayClick: (day: Day) -> Unit,
