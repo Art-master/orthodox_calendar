@@ -21,13 +21,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsRowContentColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.holidayMonthTabsHeight
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
@@ -65,7 +65,7 @@ fun MonthTabs(
             key(title) {
                 val onItemClickRemembered by rememberUpdatedState { onClick?.invoke(index) ?: Unit }
                 Tab(
-                    modifier = Modifier.height(40.dp),
+                    modifier = Modifier.height(holidayMonthTabsHeight),
                     text = { MonthName(title = title) },
                     selected = currentPage == index,
                     onClick = onItemClickRemembered,

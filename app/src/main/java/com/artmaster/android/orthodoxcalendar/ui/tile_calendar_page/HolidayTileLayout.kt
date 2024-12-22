@@ -1,7 +1,9 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +18,7 @@ import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_C
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.ui.common.AppBarPreview
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayTileMonthLayout
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.MonthTabs
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
@@ -30,14 +33,19 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
+@Preview(device = Devices.PIXEL_7_PRO)
 @Composable
 fun PreviewLayout() {
-    HolidayTileLayout(
-        viewModel = CalendarViewModelFake(),
-        settingsViewModel = SettingsViewModelFake(),
-        onDayClick = {},
-        onHolidayClick = {})
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            AppBarPreview()
+            HolidayTileLayout(
+                viewModel = CalendarViewModelFake(),
+                settingsViewModel = SettingsViewModelFake(),
+                onDayClick = {},
+                onHolidayClick = {})
+        }
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -104,6 +112,7 @@ fun HolidayTileLayout(
             val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
             if (needToShowLayout(pageOffset)) {
                 HolidayTileMonthLayout(
+                    settingsViewModel = settingsViewModel,
                     data = viewModel.getCurrentMonthData(monthNum = page),
                     dayOfMonth = viewModel.getDayOfMonth().value,
                     onDayClick = onDayClick,

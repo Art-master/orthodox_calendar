@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,6 +37,7 @@ import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
+import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import kotlinx.coroutines.launch
 
 enum class Item {
@@ -52,7 +54,7 @@ val APP_BAR_HEIGHT = 49.dp
 @Composable
 fun AppBarPreview() {
     val navController = rememberNavController()
-    val year = remember { mutableStateOf(2022) }
+    val year = remember { mutableIntStateOf(2022) }
     AppBar(
         year = year,
         initCalendarType = CalendarType.TILE,
@@ -65,7 +67,7 @@ fun AppBarPreview() {
 
 @Composable
 fun AppBarWrapper(
-    viewModel: CalendarViewModel = CalendarViewModel(),
+    viewModel: ICalendarViewModel = CalendarViewModel(),
     navController: NavHostController,
     snackState: SnackbarHostState
 ) {
