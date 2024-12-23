@@ -205,7 +205,6 @@ class DataProvider : RepositoryConnector {
         additionalData.holidayId = id
         fullHolidayDao.insert(additionalData)
         HolidaysCache.clear()
-        database.close()
         return holiday
     }
 
@@ -216,7 +215,6 @@ class DataProvider : RepositoryConnector {
         val fullDataList = holidays.map { AdditionalHolidayData().fill(it) }
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         fullHolidayDao.insertAll(fullDataList)
-        database.close()
     }
 
     override suspend fun update(holiday: Holiday) {
@@ -230,7 +228,6 @@ class DataProvider : RepositoryConnector {
         val additionalData = data.fill(holiday)
 
         additionalHolidayDataDao.update(additionalData)
-        database.close()
 
     }
 
@@ -238,7 +235,6 @@ class DataProvider : RepositoryConnector {
         val holidayDao = database.get(context).holidayDao()
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         val holiday = holidayDao.getHolidayById(id)
-        database.close()
 
         //year insert dynamically if holiday is not created by user
         if (holiday.isCreatedByUser.not()) holiday.year = year
@@ -253,7 +249,6 @@ class DataProvider : RepositoryConnector {
         val fullHolidayDao = database.get(context).additionalHolidayDataDao()
         HolidaysCache.clear()
         fullHolidayDao.delete(id)
-        database.close()
     }
 
     override suspend fun deleteCommonHolidays() {
@@ -261,6 +256,5 @@ class DataProvider : RepositoryConnector {
         fullHolidayDao.deleteCommonHolidays()
         val holidayDao = database.get(context).holidayDao()
         holidayDao.deleteCommonHolidays()
-        database.close()
     }
 }
