@@ -23,14 +23,16 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
-@Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
+@Preview(showBackground = true, device = Devices.PIXEL_7A)
 @Composable
 fun HolidayInfoPagerPreview() {
     HolidayInfoPager(
         viewModel = CalendarViewModelFake(),
         holidayId = 1L,
         onDeleteClick = {},
-        onEditClick = {})
+        onEditClick = {},
+        skipInit = true
+    )
 }
 
 
@@ -40,11 +42,12 @@ fun HolidayInfoPager(
     viewModel: ICalendarViewModel?,
     holidayId: Long,
     onEditClick: (holiday: Holiday) -> Unit,
-    onDeleteClick: (holiday: Holiday) -> Unit
+    onDeleteClick: (holiday: Holiday) -> Unit,
+    skipInit: Boolean = false
 ) {
     viewModel ?: return
 
-    var isInit by remember { mutableStateOf(false) }
+    var isInit by remember { mutableStateOf(skipInit) }
 
     val year = viewModel.getYear().value
     var currentHolidayIndex by remember { mutableIntStateOf(0) }

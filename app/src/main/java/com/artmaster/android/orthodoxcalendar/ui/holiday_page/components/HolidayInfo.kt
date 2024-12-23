@@ -1,12 +1,35 @@
 package com.artmaster.android.orthodoxcalendar.ui.holiday_page.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +40,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -36,7 +60,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
@@ -44,14 +71,22 @@ import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.alerts.DeleteHolidayDialog
 import com.artmaster.android.orthodoxcalendar.ui.common.Divider
-import com.artmaster.android.orthodoxcalendar.ui.theme.*
+import com.artmaster.android.orthodoxcalendar.ui.theme.Background
+import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.LinksColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.NoImageLayout
+import com.artmaster.android.orthodoxcalendar.ui.theme.NoImageLayoutSecondary
+import com.artmaster.android.orthodoxcalendar.ui.theme.NoImageLayoutText
+import com.artmaster.android.orthodoxcalendar.ui.theme.OldDateTextColor
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.StyleDatesText
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 
-@Preview(showBackground = true, device = Devices.PIXEL_3, heightDp = 700)
+@Preview(showBackground = true, device = Devices.PIXEL_7_PRO)
 @Composable
 fun HolidayPagePreview() {
     val holiday = Holiday(
@@ -128,12 +163,11 @@ fun HolidayPage(
 
     val modalState = remember { mutableStateOf(false) }
     var titleHeight by rememberSaveable { mutableIntStateOf(titleHeightInitSize) }
+    val imageHeight = (configuration.screenHeightDp / 1.2).dp
     val titlePadding = with(LocalDensity.current) {
-        val value = configuration.screenHeightDp.dp - titleHeight.toDp()
+        val value = imageHeight - titleHeight.toDp()
         if (value.value > 0) value else 10.dp
     }
-
-    val imageHeight = (configuration.screenHeightDp / 1.2).dp
 
     val onRejectClickRemembered by rememberUpdatedState { modalState.value = false }
     val onConfirmClickRemembered by rememberUpdatedState {
@@ -196,16 +230,13 @@ fun HolidayPage(
             ) {
                 if (isHeaderEnable) {
                     HolidayPageTitle(
-                        modifier = Modifier.onSizeChanged { titleHeight = it.height },
+                        modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
+                                titleHeight = coordinates.size.height
+                            },
                         holiday = holiday,
                         currentYear = viewModel?.getYear()?.value ?: Time().year
                     )
-                }
-
-                var scrollActivate by remember { mutableStateOf(false) }
-
-                if (scroll.isScrollInProgress && scrollActivate.not()) {
-                    scrollActivate = true
                 }
 
                 if (fullHolidayInfo == null) {
@@ -214,29 +245,27 @@ fun HolidayPage(
                 }
 
                 // Lazy loading when user scrolling page
-                if (scrollActivate) {
 
-                    LaunchedEffect(holiday) {
-                        fullHolidayInfo = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
+                LaunchedEffect(holiday) {
+                    fullHolidayInfo = viewModel?.getFullHolidayInfo(holiday.id, holiday.year)
+                }
+
+                // if full data loaded (etc. include holiday description)
+                fullHolidayInfo?.let {
+                    val description = remember {
+                        fullHolidayInfo!!.description.substringBefore("<<").trim()
                     }
 
-                    // if full data loaded (etc. include holiday description)
-                    fullHolidayInfo?.let {
-                        val description = remember {
-                            fullHolidayInfo!!.description.substringBefore("<<").trim()
-                        }
+                    val link = remember {
+                        fullHolidayInfo!!.description
+                            .substringAfter("<<", missingDelimiterValue = "")
+                            .substringBefore(">>", missingDelimiterValue = "")
+                    }
 
-                        val link = remember {
-                            fullHolidayInfo!!.description
-                                .substringAfter("<<", missingDelimiterValue = "")
-                                .substringBefore(">>", missingDelimiterValue = "")
-                        }
-
-                        Divider()
-                        HolidayDescriptionLayout(description = description)
-                        if (link.isNotBlank()) {
-                            SourceLink(link)
-                        }
+                    Divider()
+                    HolidayDescriptionLayout(description = description)
+                    if (link.isNotBlank()) {
+                        SourceLink(link)
                     }
                 }
             }
