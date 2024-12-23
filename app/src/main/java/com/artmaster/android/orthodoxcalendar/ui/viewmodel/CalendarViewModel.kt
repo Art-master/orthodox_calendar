@@ -87,7 +87,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
 
     override fun loadAllHolidaysOfCurrentYear() {
         viewModelScope.launch {
-            loadAllHolidaysOfYear(year.value)
+            loadAllHolidaysOfYear(year.intValue)
         }
     }
 
@@ -99,7 +99,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
         if (year !in availableYears.first()..availableYears.last()) return
 
         val prev = daysByYearsCache[year]
-        val oldYear = getYear().value
+        val oldYear = getYear().intValue
         if (year != oldYear && prev != null && prev.value.isNotEmpty()) {
             return
         }
@@ -193,7 +193,7 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
 
     override fun setYear(year: Int) {
         clearMonthCache()
-        this.year.value = year
+        this.year.intValue = year
     }
 
     private fun clearMonthCache() {
@@ -210,14 +210,14 @@ class CalendarViewModel : ViewModel(), ICalendarViewModel {
     override fun setMonth(month: Int) {
         checkDayNumberForThisMonth(month)
 
-        this.month.value = month
+        this.month.intValue = month
     }
 
     private fun checkDayNumberForThisMonth(month: Int) {
-        if (dayOfMonth.value < 28) return
+        if (dayOfMonth.intValue < 28) return
 
         initTime.calendar.apply {
-            set(Calendar.YEAR, year.value)
+            set(Calendar.YEAR, year.intValue)
             set(Calendar.MONTH, month)
             set(Calendar.DAY_OF_MONTH, 0)
         }

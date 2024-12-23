@@ -2,10 +2,15 @@ package com.artmaster.android.orthodoxcalendar.data.repository
 
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.api.RepositoryConnector
-import com.artmaster.android.orthodoxcalendar.domain.*
+import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData
 import com.artmaster.android.orthodoxcalendar.domain.AdditionalHolidayData.Companion.fill
+import com.artmaster.android.orthodoxcalendar.domain.Day
+import com.artmaster.android.orthodoxcalendar.domain.DynamicData
+import com.artmaster.android.orthodoxcalendar.domain.Filter
+import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Companion.mergeFullData
-import java.util.*
+import com.artmaster.android.orthodoxcalendar.domain.Time
+import java.util.Calendar
 
 /**
  * Get data from storage and prepare it
@@ -112,7 +117,7 @@ class DataProvider : RepositoryConnector {
         val daysCount = time.daysInYear
 
         val db = database.get(context)
-        val holidaysFromDb = db.holidayDao().getAll() //IllegalStateException
+        val holidaysFromDb = db.holidayDao().getAll() // todo IllegalStateException
         val days: ArrayList<Day> = ArrayList(daysCount)
 
         for (i in 1..daysCount) {
