@@ -28,6 +28,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import kotlinx.coroutines.delay
 import java.util.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 const val USER_TOUCH_STOP_ANIM_TIME_MS = 500L
 
@@ -42,7 +43,10 @@ fun Preview() {
 fun AppStartTextAnimation(duration: Int, resIndex: Int?, onComplete: () -> Unit) {
 
     if (duration == 0) {
-        onComplete()
+        LaunchedEffect(Unit) {
+            delay(100.milliseconds)
+            onComplete()
+        }
         return
     }
 

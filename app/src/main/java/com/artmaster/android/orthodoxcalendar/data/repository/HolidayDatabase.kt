@@ -15,7 +15,7 @@ abstract class HolidayDatabase : RoomDatabase() {
     abstract fun additionalHolidayDataDao(): AdditionalHolidayDataDao
 
     companion object : AppDatabase {
-        var instance: HolidayDatabase? = null
+        private var instance: HolidayDatabase? = null
 
         override fun get(context: Context): HolidayDatabase {
             synchronized(HolidayDatabase::class) {

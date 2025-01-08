@@ -34,12 +34,12 @@ class LoadDataViewModel : ViewModel() {
 
     var isDatabasePrepared by mutableStateOf(false)
 
-    private fun getLoadingAnimTime(): Long {
+    private fun getLoadingAnimTime(): Int {
         if (isShowStartAnimation().not()) return 0
-        var time = Constants.LOADING_ANIMATION_DURATION.toLong()
+        var time = Constants.LOADING_ANIMATION_DURATION
         val isSpeedUpEnabled = preferences.get(SPEED_UP_START_ANIMATION)
         if (isSpeedUpEnabled == Settings.TRUE) {
-            time = Constants.LOADING_ANIMATION_SPEED_UP.toLong()
+            time = Constants.LOADING_ANIMATION_SPEED_UP
         }
         return time
     }
@@ -49,6 +49,11 @@ class LoadDataViewModel : ViewModel() {
     }
 
     fun fillDatabaseIfNeed(callback: () -> Unit) {
+        if (!isAppFirstLoad() && userDataVersion.toInt() == DATA_VERSION) { // prevent coroutine launching
+            isDatabasePrepared = true
+            callback.invoke()
+            return
+        }
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (isAppFirstLoad()) {
