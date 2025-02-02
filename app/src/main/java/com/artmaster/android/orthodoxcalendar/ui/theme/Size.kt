@@ -4,3 +4,4 @@ import androidx.compose.ui.unit.dp
 
 val defaultTileDayInfoSize = 120.dp
 val holidayMonthTabsHeight = 40.dp
+val appBarHeight = 40.dp

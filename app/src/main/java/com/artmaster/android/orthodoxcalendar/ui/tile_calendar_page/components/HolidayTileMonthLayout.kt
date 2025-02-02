@@ -22,14 +22,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.common.AppBarPreview
+import com.artmaster.android.orthodoxcalendar.ui.theme.appBarHeight
 import com.artmaster.android.orthodoxcalendar.ui.theme.defaultTileDayInfoSize
 import com.artmaster.android.orthodoxcalendar.ui.theme.holidayMonthTabsHeight
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
@@ -95,19 +99,29 @@ fun HolidayTileMonthLayoutPortrait(
     onDayClick: (day: Day) -> Unit,
     onHolidayClick: (holiday: Holiday) -> Unit
 ) {
-
+    val wasMenuHidden = settingsViewModel.getSetting(HIDE_HORIZONTAL_MONTHS_TAB).value.toBoolean()
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     val aspectRatio = screenAspectRatio()
     val state = rememberBottomSheetState(BottomSheetValue.Collapsed)
 
+    val tileGridHeight = remember { mutableIntStateOf(0) }
     // if the aspect ratio is not a square type
     val goodAspectRatio = aspectRatio < 0.55
     // if screen height size is big then make BottomSheetScaffold height longer
     val sheetPeekHeight = if (goodAspectRatio) {
-        val hideMenu = !settingsViewModel.getSetting(HIDE_HORIZONTAL_MONTHS_TAB).value.toBoolean()
-        (screenHeightDp / 2.5).dp + if (hideMenu) 0.dp else holidayMonthTabsHeight
+        val offset = 20.dp
+        val monthPanelHeight = if (wasMenuHidden) 0.dp else holidayMonthTabsHeight
+        with(LocalDensity.current) {
+            screenHeightDp.dp - tileGridHeight.intValue.toDp() - appBarHeight - monthPanelHeight - offset
+        }
     } else defaultTileDayInfoSize
     val headerHeight = if (goodAspectRatio) 80.dp else defaultTileDayInfoSize
+
+    val onGridSizeChanged = remember {
+        { size: IntSize ->
+            tileGridHeight.intValue = size.height
+        }
+    }
 
     Column(
         modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 15.dp),
@@ -133,7 +147,12 @@ fun HolidayTileMonthLayoutPortrait(
                 sheetPeekHeight = sheetPeekHeight
 
             ) {
-                TilesGridLayout(data, day.dayOfMonth, onDayClick)
+                TilesGridLayout(
+                    days = data,
+                    selectedDayOfMonth = day.dayOfMonth,
+                    onDayClick = onDayClick,
+                    modifier = Modifier.onSizeChanged(onGridSizeChanged)
+                )
             }
         }
     }

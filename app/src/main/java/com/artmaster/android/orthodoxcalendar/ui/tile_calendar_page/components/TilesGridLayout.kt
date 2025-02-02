@@ -35,7 +35,8 @@ const val DAYS_IN_WEEK_COUNT = 7
 fun TilesGridLayout(
     days: MutableState<List<Day>>,
     selectedDayOfMonth: Int,
-    onDayClick: (day: Day) -> Unit = {}
+    onDayClick: (day: Day) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
 
     var daysCount = 0
@@ -52,10 +53,10 @@ fun TilesGridLayout(
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LazyVerticalGrid(
-        modifier = if (isLandscape) Modifier
+        modifier = if (isLandscape) modifier
             .fillMaxHeight()
             .fillMaxWidth(0.42f)
-        else Modifier.fillMaxWidth(),
+        else modifier.fillMaxWidth(),
 
         columns = GridCells.Fixed(MAX_COLUMN_COUNT),
         userScrollEnabled = true,

@@ -36,6 +36,7 @@ import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.ui.Navigation
 import com.artmaster.android.orthodoxcalendar.ui.theme.SelectedItemColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TopBarColor
+import com.artmaster.android.orthodoxcalendar.ui.theme.appBarHeight
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import kotlinx.coroutines.launch
@@ -47,8 +48,6 @@ enum class Item {
 enum class CalendarType {
     TILE, LIST
 }
-
-val APP_BAR_HEIGHT = 49.dp
 
 @Preview
 @Composable
@@ -153,7 +152,7 @@ fun AppBar(
             color = TopBarColor,
             elevation = 3.dp
         ) {
-            DropDownYearMenu(height = APP_BAR_HEIGHT, currentYear = year.value) {
+            DropDownYearMenu(height = appBarHeight, currentYear = year.value) {
                 onYearChange(it)
             }
             Row(
@@ -225,7 +224,7 @@ fun MenuItem(iconId: Int, item: Item, selectedItem: Item, onClick: (() -> Unit)?
     val onClickRemembered by rememberUpdatedState { onClick?.invoke() ?: Unit }
     IconButton(
         modifier = Modifier
-            .height(APP_BAR_HEIGHT)
+            .height(appBarHeight)
             .background(background),
         onClick = onClickRemembered
     ) {
