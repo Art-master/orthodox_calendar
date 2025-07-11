@@ -34,6 +34,7 @@ import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.common.LockScreenOrientation
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
+import com.artmaster.android.orthodoxcalendar.ui.theme.HideSystemBars
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
@@ -53,6 +54,8 @@ class InitAppActivity : ComponentActivity() {
         val screenAutorotateEnabled = System.getInt(contentResolver, ACCELEROMETER_ROTATION, 0) == 1
 
         setContent {
+            HideSystemBars()
+
             val startRoute by remember { mutableStateOf(Navigation.INIT_PAGE.route) }
             val navController = rememberNavController()
             val snackState = remember { SnackbarHostState() }

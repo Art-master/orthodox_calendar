@@ -39,7 +39,6 @@ fun ApplicationsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    HideSystemBars()
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
