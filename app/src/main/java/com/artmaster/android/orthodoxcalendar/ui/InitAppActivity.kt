@@ -16,9 +16,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarData
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +34,6 @@ import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.common.LockScreenOrientation
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
-import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
@@ -87,7 +86,8 @@ class InitAppActivity : ComponentActivity() {
                     LockScreenOrientation(SCREEN_ORIENTATION_PORTRAIT)
                 }
 
-                CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+                val localRippleEnabled = compositionLocalOf { true }
+                CompositionLocalProvider(localRippleEnabled provides false) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column {
                             AppBarWrapper(

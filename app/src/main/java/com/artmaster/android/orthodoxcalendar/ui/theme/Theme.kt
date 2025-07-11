@@ -1,10 +1,16 @@
 package com.artmaster.android.orthodoxcalendar.ui.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 private val DarkColorPalette = darkColors(
     primary = TopBarColor,
@@ -33,6 +39,7 @@ fun ApplicationsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
+    HideSystemBars()
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -45,4 +52,23 @@ fun ApplicationsTheme(
         shapes = Shapes,
         content = content
     )
+}
+
+@Composable
+fun HideSystemBars() {
+    val view = LocalView.current
+    DisposableEffect(Unit) {
+        val window = (view.context as Activity).window
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowCompat.getInsetsController(window, view)
+
+        controller.hide(WindowInsetsCompat.Type.navigationBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        onDispose {
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            controller.show(WindowInsetsCompat.Type.navigationBars())
+        }
+    }
 }

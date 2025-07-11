@@ -30,7 +30,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +76,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.theme.Background
@@ -106,8 +107,8 @@ private const val ANIMATION_DURATION_MS = 500
 @Composable
 fun ToolsPreview() {
     CalendarToolsDrawer(
-        viewModel = CalendarViewModelFake(),
-        settingsViewModel = SettingsViewModelFake(),
+        viewModel = viewModel<CalendarViewModelFake>(),
+        settingsViewModel = viewModel<SettingsViewModelFake>(),
         onToolClick = {}
     ) {}
 }
@@ -116,8 +117,8 @@ fun ToolsPreview() {
 @Composable
 fun ToolsPreviewTablet() {
     CalendarToolsDrawer(
-        viewModel = CalendarViewModelFake(),
-        settingsViewModel = SettingsViewModelFake(),
+        viewModel = viewModel<CalendarViewModelFake>(),
+        settingsViewModel = viewModel<SettingsViewModelFake>(),
         onToolClick = {}
     ) {}
 }
@@ -483,7 +484,7 @@ private fun MiniFabItem(
             modifier = Modifier
                 .size(32.dp)
                 .indication(
-                    indication = rememberRipple(
+                    indication = ripple(
                         bounded = false,
                         radius = 20.dp,
                         color = FloatingButtonColorLight

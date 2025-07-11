@@ -20,10 +20,11 @@ abstract class HolidayDatabase : RoomDatabase() {
         override fun get(context: Context): HolidayDatabase {
             synchronized(HolidayDatabase::class) {
                 instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        HolidayDatabase::class.java,
-                        DATABASE_FILE_NAME)
-                        .fallbackToDestructiveMigration()
+                    context.applicationContext,
+                    HolidayDatabase::class.java,
+                    DATABASE_FILE_NAME
+                )
+                    .fallbackToDestructiveMigration(false)
                         .build()
                 return instance!!
             }

@@ -1,10 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.TabPosition
 import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,25 +25,26 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.HeadSymbolTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsRowContentColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.holidayMonthTabsHeight
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 
-@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 fun ShowTabs() {
-    val pagerState = rememberPagerState(1)
+    val pagerState = rememberPagerState(
+        initialPage = 1,
+        initialPageOffsetFraction = 0f,
+        pageCount = { MONTH_COUNT }
+    )
     MonthTabs(
         currentPage = pagerState.currentPage,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
             )
         })
 }

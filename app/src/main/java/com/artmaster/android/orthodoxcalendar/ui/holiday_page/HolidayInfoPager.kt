@@ -1,5 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.ui.holiday_page
 
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,20 +16,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.holiday_page.components.HolidayPage
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.Spinner
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 
 @Preview(showBackground = true, device = Devices.PIXEL_7A)
 @Composable
 fun HolidayInfoPagerPreview() {
     HolidayInfoPager(
-        viewModel = CalendarViewModelFake(),
+        viewModel = viewModel<CalendarViewModelFake>(),
         holidayId = 1L,
         onDeleteClick = {},
         onEditClick = {},
@@ -36,7 +36,6 @@ fun HolidayInfoPagerPreview() {
 }
 
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayInfoPager(
     viewModel: ICalendarViewModel?,
@@ -67,13 +66,13 @@ fun HolidayInfoPager(
         return
     }
 
-    val pagerState = rememberPagerState(currentHolidayIndex)
+    val pagerState = rememberPagerState(
+        initialPage = currentHolidayIndex,
+        initialPageOffsetFraction = 0f,
+        pageCount = { holidays.size }
+    )
 
-    HorizontalPager(
-        count = holidays.size,
-        state = pagerState,
-        key = { r -> r }
-    ) { page ->
+    HorizontalPager(state = pagerState, key = { r -> r }) { page ->
 
         HolidayPage(
             //modifier = Modifier.graphicsLayer { graphicalLayerTransform(this, pageOffset) },

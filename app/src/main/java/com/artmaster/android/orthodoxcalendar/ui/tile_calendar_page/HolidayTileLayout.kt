@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,13 +33,7 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 @Preview(device = Devices.PIXEL_7_PRO)
 @Composable
@@ -53,7 +50,6 @@ fun PreviewLayout() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayTileLayout(
     viewModel: ICalendarViewModel,
@@ -64,7 +60,11 @@ fun HolidayTileLayout(
     val monthNum by viewModel.getMonth()
     val currentYear by viewModel.getYear()
 
-    val pagerState = rememberPagerState(monthNum)
+    val pagerState = rememberPagerState(
+        initialPage = monthNum,
+        initialPageOffsetFraction = 0f,
+        pageCount = { MONTH_COUNT }
+    )
     val scope = rememberCoroutineScope()
     val filters = viewModel.getActiveFilters()
     val isLowPerformanceDevice = isLowPerformanceDevice()
@@ -104,18 +104,15 @@ fun HolidayTileLayout(
                 currentPage = pagerState.currentPage,
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                        Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
                     )
                 },
                 onClick = onTabClick
             )
         }
 
-        HorizontalPager(
-            count = MONTH_COUNT,
-            state = pagerState
-        ) { page ->
-            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+        HorizontalPager(state = pagerState) { page ->
+            val pageOffset = pagerState.currentPageOffsetFraction
             if (!isLowPerformanceDevice || needToShowLayout(pageOffset)) {
                 HolidayTileMonthLayout(
                     modifier = Modifier.graphicsLayer {

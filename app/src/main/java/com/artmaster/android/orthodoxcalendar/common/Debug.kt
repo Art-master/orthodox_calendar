@@ -1,6 +1,7 @@
 package com.artmaster.android.orthodoxcalendar.common
 
-import com.artmaster.android.orthodoxcalendar.BuildConfig
+import androidx.multidex.BuildConfig
+
 
 object Debug {
 

@@ -2,40 +2,40 @@ package com.artmaster.android.orthodoxcalendar.ui.list_calendar_page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_YEARS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components.YearsTabs
-import com.artmaster.android.orthodoxcalendar.ui.theme.NoRippleTheme
 import com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components.HolidayListWrapper
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModelFake
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ISettingsViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 @Preview
 @Composable
 fun HolidayListLayoutPreview() {
+    val localRippleEnabled = compositionLocalOf { true }
     MaterialTheme {
-        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        CompositionLocalProvider(localRippleEnabled provides false) {
             HolidayPagerListLayout(
-                viewModel = CalendarViewModelFake(),
-                settingsViewModel = SettingsViewModelFake(),
+                viewModel = viewModel<CalendarViewModelFake>(),
+                settingsViewModel = viewModel<SettingsViewModelFake>(),
                 onDayClick = {},
                 onEditClick = {},
                 onDeleteClick = {},
@@ -44,7 +44,6 @@ fun HolidayListLayoutPreview() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HolidayPagerListLayout(
     viewModel: ICalendarViewModel,
@@ -59,7 +58,11 @@ fun HolidayPagerListLayout(
     val startIndex = viewModel.getYear().value - availableYears.first()
     val currentYear by viewModel.getYear()
 
-    val pagerState = rememberPagerState(startIndex)
+    val pagerState = rememberPagerState(
+        initialPage = startIndex,
+        initialPageOffsetFraction = 0f,
+        pageCount = { Constants.HolidayList.PAGE_SIZE.value }
+    )
     val scope = rememberCoroutineScope()
     val filters = viewModel.getActiveFilters()
 
@@ -100,7 +103,6 @@ fun HolidayPagerListLayout(
         }
 
         HorizontalPager(
-            count = Constants.HolidayList.PAGE_SIZE.value,
             state = pagerState,
             key = { r -> r }
         ) { page ->

@@ -1,9 +1,12 @@
 package com.artmaster.android.orthodoxcalendar.ui.list_calendar_page.components
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,25 +22,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artmaster.android.orthodoxcalendar.R
+import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.ui.common.getYears
 import com.artmaster.android.orthodoxcalendar.ui.theme.DefaultTextColor
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsBackground
 import com.artmaster.android.orthodoxcalendar.ui.theme.TabsRowContentColor
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 
-@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 fun ShowTabs() {
-    val pagerState = rememberPagerState(1)
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f,
+        pageCount = { Constants.HolidayList.PAGE_SIZE.value }
+    )
+
     YearsTabs(pagerState = pagerState)
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun YearsTabs(pagerState: PagerState, onClick: ((yearIndex: Int) -> Unit)? = null) {
     val items by remember {
@@ -50,7 +53,7 @@ fun YearsTabs(pagerState: PagerState, onClick: ((yearIndex: Int) -> Unit)? = nul
         contentColor = TabsRowContentColor,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
             )
         }
     ) {
