@@ -5,12 +5,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 android {
+    compileSdk 35
     defaultConfig {
         applicationId "com.artmaster.android.orthodoxcalendar"
         minSdk 21
         targetSdk 35
-        versionCode 59
-        versionName "5.17"
+        versionCode 60
+        versionName "5.18"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
         javaCompileOptions {
