@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.ui.common.CheckBox
@@ -53,7 +54,7 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 @Preview(showBackground = true)
 @Composable
 fun PreviewSettingsLayout() {
-    SettingsLayoutWrapper(viewModel = SettingsViewModelFake())
+    SettingsLayoutWrapper(viewModel = viewModel<SettingsViewModelFake>())
 }
 
 @Composable

@@ -8,24 +8,29 @@ import android.provider.Settings.System.ACCELEROMETER_ROTATION
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarData
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.util.Consumer
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.artmaster.android.orthodoxcalendar.common.Constants
 import com.artmaster.android.orthodoxcalendar.common.Constants.Action
@@ -34,7 +39,6 @@ import com.artmaster.android.orthodoxcalendar.ui.common.AppBarWrapper
 import com.artmaster.android.orthodoxcalendar.ui.common.LockScreenOrientation
 import com.artmaster.android.orthodoxcalendar.ui.common.StyledSnackBar
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
-import com.artmaster.android.orthodoxcalendar.ui.theme.HideSystemBars
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.CalendarViewModel
 import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModel
 
@@ -54,14 +58,21 @@ class InitAppActivity : ComponentActivity() {
         val screenAutorotateEnabled = System.getInt(contentResolver, ACCELEROMETER_ROTATION, 0) == 1
 
         setContent {
-            HideSystemBars()
-
             val startRoute by remember { mutableStateOf(Navigation.INIT_PAGE.route) }
             val navController = rememberNavController()
             val snackState = remember { SnackbarHostState() }
 
             val isSettingsInit = settingsViewModel.isInit
             if (isSettingsInit.value.not()) return@setContent
+
+            val useDarkIcons = !isSystemInDarkTheme()
+            val view = LocalView.current
+            val insetsController = remember { WindowCompat.getInsetsController(window, view) }
+
+            // Set navigation icons dark
+            SideEffect {
+                insetsController.isAppearanceLightNavigationBars = useDarkIcons
+            }
 
 
             DisposableEffect(Unit) {
@@ -92,7 +103,7 @@ class InitAppActivity : ComponentActivity() {
                 val localRippleEnabled = compositionLocalOf { true }
                 CompositionLocalProvider(localRippleEnabled provides false) {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        Column {
+                        Column(modifier = Modifier.systemBarsPadding()) {
                             AppBarWrapper(
                                 viewModel = calendarViewModel,
                                 navController = navController,

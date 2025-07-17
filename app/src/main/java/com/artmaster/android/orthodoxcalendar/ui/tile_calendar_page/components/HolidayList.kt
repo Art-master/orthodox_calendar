@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Fasting
@@ -60,11 +61,11 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.ICalendarViewModel
 @Composable
 fun HolidayListPreview() {
     val time = Time()
-    val viewModel = CalendarViewModelFake()
+    val viewModel = viewModel<CalendarViewModelFake>()
 
     HolidayList(
         data = viewModel.getCurrentYearData(time.year),
-        viewModel = CalendarViewModelFake(),
+        viewModel = viewModel<CalendarViewModelFake>(),
         onHolidayClick = {},
         onDayClick = {})
 }
@@ -72,7 +73,7 @@ fun HolidayListPreview() {
 @Preview
 @Composable
 fun HolidayListOneDayPreview() {
-    val viewModel = CalendarViewModelFake()
+    val viewModel = viewModel<CalendarViewModelFake>()
     OneDayHolidayList(
         day = viewModel.getCurrentMonthData(1).value[0],
         onHolidayClick = {}

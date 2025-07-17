@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.common.Constants.Companion.MONTH_COUNT
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
@@ -42,8 +43,8 @@ fun PreviewLayout() {
         Column {
             AppBarPreview()
             HolidayTileLayout(
-                viewModel = CalendarViewModelFake(),
-                settingsViewModel = SettingsViewModelFake(),
+                viewModel = viewModel<CalendarViewModelFake>(),
+                settingsViewModel = viewModel<SettingsViewModelFake>(),
                 onDayClick = {},
                 onHolidayClick = {})
         }

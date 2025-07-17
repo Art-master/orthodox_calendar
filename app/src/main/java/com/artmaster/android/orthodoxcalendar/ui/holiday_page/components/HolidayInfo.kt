@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.OrtUtils.convertSpToPixels
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -119,7 +120,7 @@ fun UserHolidayPagePreview() {
     )
 
     HolidayPage(
-        viewModel = CalendarViewModelFake(),
+        viewModel = viewModel<CalendarViewModelFake>(),
         holiday = holiday,
         titleHeightInitSize = 800,
         onEditClick = {},

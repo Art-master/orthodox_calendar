@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.ui.tile_calendar_page.components
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HIDE_HORIZONTAL_MONTHS_TAB
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
@@ -43,7 +44,7 @@ import com.artmaster.android.orthodoxcalendar.ui.viewmodel.SettingsViewModelFake
 @Preview(device = Devices.PIXEL_7A)
 @Composable
 fun Preview() {
-    val model = CalendarViewModelFake()
+    val model = viewModel<CalendarViewModelFake>()
     val dayOfMonth = remember { mutableIntStateOf(1) }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -56,7 +57,7 @@ fun Preview() {
                     dayOfMonth.intValue = it.dayOfMonth
                 },
                 onHolidayClick = {},
-                settingsViewModel = SettingsViewModelFake()
+                settingsViewModel = viewModel<SettingsViewModelFake>()
             )
         }
     }
@@ -89,7 +90,7 @@ fun HolidayTileMonthLayout(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun HolidayTileMonthLayoutPortrait(
     modifier: Modifier = Modifier,

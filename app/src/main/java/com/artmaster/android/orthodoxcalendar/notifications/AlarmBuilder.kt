@@ -1,5 +1,6 @@
 package com.artmaster.android.orthodoxcalendar.notifications
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -8,6 +9,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.common.Constants.Action
 import com.artmaster.android.orthodoxcalendar.common.Debug.Notification.debugEnabled
@@ -24,7 +27,26 @@ import java.util.TimeZone
 
 object AlarmBuilder {
 
+    private const val REQUEST_CODE_NOTIFICATIONS = 1001
+
     private val prefs = App.appComponent.getPreferences()
+
+    fun checkPermissions(context: Context, activity: Activity) {
+        if (isNotificationDisable()) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val perm = ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
+            if (perm != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    activity,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_CODE_NOTIFICATIONS
+                )
+            }
+        }
+    }
 
     fun build(context: Context) {
         if (isNotificationDisable()) return

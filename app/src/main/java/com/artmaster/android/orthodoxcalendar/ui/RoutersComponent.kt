@@ -2,13 +2,16 @@ package com.artmaster.android.orthodoxcalendar.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.artmaster.android.orthodoxcalendar.common.Settings
 import com.artmaster.android.orthodoxcalendar.domain.Day
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
+import com.artmaster.android.orthodoxcalendar.notifications.AlarmBuilder
 import com.artmaster.android.orthodoxcalendar.ui.app_info_page.AppInfoLayout
+import com.artmaster.android.orthodoxcalendar.ui.common.findActivity
 import com.artmaster.android.orthodoxcalendar.ui.holiday_page.HolidayInfoPager
 import com.artmaster.android.orthodoxcalendar.ui.init_page.components.AppStartTextAnimation
 import com.artmaster.android.orthodoxcalendar.ui.init_page.model.LoadDataViewModel
@@ -31,6 +34,8 @@ fun AppNavigationComponent(
     settingsViewModel: SettingsViewModel,
     navController: NavHostController
 ) {
+    val ctx = LocalContext.current
+
     val onDayClick = remember {
         { day: Day -> calendarViewModel.setDayOfMonth(day = day.dayOfMonth) }
     }
@@ -81,6 +86,10 @@ fun AppNavigationComponent(
                         inclusive = true
                     }
                 }
+
+                //check notifications permissions and show
+                val activity = ctx.findActivity()!!
+                AlarmBuilder.checkPermissions(ctx, activity)
             }
         }
         composable(Navigation.TILE_CALENDAR.route) {
