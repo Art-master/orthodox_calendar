@@ -8,16 +8,34 @@ import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import com.artmaster.android.orthodoxcalendar.App
 import com.artmaster.android.orthodoxcalendar.R
 import com.artmaster.android.orthodoxcalendar.common.Debug.Notification.debugEnabled
-import com.artmaster.android.orthodoxcalendar.common.Settings.Name.*
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.AVERAGE_HOLIDAYS_NOTIFY_ALLOW
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.BIRTHDAYS_NOTIFY_ALLOW
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.FASTING_NOTIFY_ALLOW
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.HOURS_OF_NOTIFICATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.IS_ENABLE_NOTIFICATION_TIME
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.IS_ENABLE_NOTIFICATION_TODAY
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.MEMORY_DAYS_NOTIFY_ALLOW
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.NAME_DAYS_NOTIFY_ALLOW
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.SOUND_OF_NOTIFICATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.TIME_OF_FASTING_NOTIFICATION_IN_DAYS
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.TIME_OF_NOTIFICATION
+import com.artmaster.android.orthodoxcalendar.common.Settings.Name.VIBRATION_OF_NOTIFICATION
 import com.artmaster.android.orthodoxcalendar.data.repository.DataProvider
 import com.artmaster.android.orthodoxcalendar.domain.Day
-import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type.*
+import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type.FASTING_DAY
+import com.artmaster.android.orthodoxcalendar.domain.Fasting.Type.NONE
 import com.artmaster.android.orthodoxcalendar.domain.Holiday
 import com.artmaster.android.orthodoxcalendar.domain.Holiday.Type
 import com.artmaster.android.orthodoxcalendar.domain.Time
 import com.artmaster.android.orthodoxcalendar.domain.Time.Month.DECEMBER
-import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Calendar
+import java.util.Locale
 
 class NotificationsService : Service() {
 
@@ -85,7 +103,9 @@ class NotificationsService : Service() {
         scope.launch {
             withContext(Dispatchers.IO) {
                 val currentTime = Time()
-                val days = dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year)
+                val days =
+                    ArrayList(dataProvider.getMonthDays(currentTime.monthWith0, currentTime.year))
+                days.addAll(getDaysOfNextMonth())
 
                 if (allowFastingNotification) {
                     fastingNotifications(currentTime, days)
@@ -160,16 +180,8 @@ class NotificationsService : Service() {
         val usersNumDaysNotification = getTimeNotification()
         val numNotifyDay = time.dayOfMonth + usersNumDaysNotification - 1
 
-        if (time.dayOfMonth + usersNumDaysNotification > time.daysInMonth) {
-            val daysTwoMonths = days as ArrayList
-            daysTwoMonths.addAll(getDaysOfNextMonth())
-
-            prepareNotificationsHolidays(daysTwoMonths[numNotifyDay].holidays, time)
-            checkRestDaysNotify(usersNumDaysNotification, time, daysTwoMonths, numNotifyDay)
-        } else {
-            prepareNotificationsHolidays(days[numNotifyDay].holidays, time)
-            checkRestDaysNotify(usersNumDaysNotification, time, days, numNotifyDay)
-        }
+        prepareNotificationsHolidays(days[numNotifyDay].holidays, time)
+        checkRestDaysNotify(usersNumDaysNotification, time, days, numNotifyDay)
     }
 
     private fun checkRestDaysNotify(
@@ -203,23 +215,18 @@ class NotificationsService : Service() {
 
     private fun getDaysOfNextMonth(): List<Day> {
         val time = Time()
-        if (time.month == DECEMBER.num) {
+        if (time.monthWith0 == DECEMBER.num) {
             time.calendar.set(Calendar.MONTH, Time.Month.JANUARY.num)
-            time.calendar.set(Calendar.YEAR, time.year + 1)
+            time.calendar.add(Calendar.YEAR, 1)
         } else {
-            time.calendar.set(Calendar.MONTH, time.month + 1)
+            time.calendar.add(Calendar.MONTH, 1)
         }
-        return dataProvider.getMonthDays(time.month, time.year)
+        return dataProvider.getMonthDays(time.monthWith0, time.year)
     }
 
     private fun fastingNotifications(time: Time, days: List<Day>) {
         val usersNumDaysNotification = getFastingTimeNotification()
         val numNotifyDay = time.dayOfMonth + usersNumDaysNotification - 1
-
-        if (time.dayOfMonth + usersNumDaysNotification > time.daysInMonth) {
-            val daysTwoMonths = days as ArrayList
-            daysTwoMonths.addAll(getDaysOfNextMonth())
-        }
 
         prepareFastingNotifications(days[numNotifyDay - 1], days[numNotifyDay])
     }

@@ -2,7 +2,7 @@ package com.artmaster.android.orthodoxcalendar.domain
 
 import com.artmaster.android.orthodoxcalendar.common.Debug.Time.debugEnabled
 import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getDay
-import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getMonth
+import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getMonthWith0
 import com.artmaster.android.orthodoxcalendar.common.Debug.Time.getYear
 
 import java.util.Calendar
@@ -118,7 +118,7 @@ fun initCalendar(): Calendar {
     val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
     if (debugEnabled()) {
         calendar.set(Calendar.YEAR, getYear())
-        calendar.set(Calendar.MONTH, getMonth())
+        calendar.set(Calendar.MONTH, getMonthWith0())
         calendar.set(Calendar.DAY_OF_MONTH, getDay())
     }
 

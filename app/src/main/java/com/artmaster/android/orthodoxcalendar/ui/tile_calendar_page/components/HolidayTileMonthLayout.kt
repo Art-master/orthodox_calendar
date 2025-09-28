@@ -110,7 +110,7 @@ fun HolidayTileMonthLayoutPortrait(
     val goodAspectRatio = aspectRatio < 0.55
     // if screen height size is big then make BottomSheetScaffold height longer
     val sheetPeekHeight = if (goodAspectRatio) {
-        val offset = 20.dp
+        val offset = 55.dp
         val monthPanelHeight = if (wasMenuHidden) 0.dp else holidayMonthTabsHeight
         with(LocalDensity.current) {
             screenHeightDp.dp - tileGridHeight.intValue.toDp() - appBarHeight - monthPanelHeight - offset

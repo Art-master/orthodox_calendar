@@ -6,15 +6,15 @@ import androidx.multidex.BuildConfig
 object Debug {
 
     object Notification {
-        fun debugEnabled() = isDebugBuild() && false
+        fun debugEnabled() = false
         fun getNotificationPeriodMs() = System.currentTimeMillis() + 10_000
     }
 
     object Time {
-        fun debugEnabled() = isDebugBuild() && false
+        fun debugEnabled() = false
         fun getYear() = 2025
-        fun getMonth() = 7
-        fun getDay() = 14
+        fun getMonthWith0() = 10
+        fun getDay() = 25
     }
 
     fun isDebugBuild() = BuildConfig.DEBUG
